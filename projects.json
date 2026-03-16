@@ -290,6 +290,13 @@
     "url": "",
     "date": "2026-03-14"
   },
+  "qa-site-test1.html": {
+    "image": "bx bx-bug-alt",
+    "description": "A simulated web environment with intentional UI/UX and logical flaws, designed specifically for QA engineering practice and bug reporting.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-16-31"
+  },
   ".html": {
     "image": "",
     "description": "",

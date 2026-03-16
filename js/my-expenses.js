@@ -142,7 +142,7 @@ function render() {
         incomeLabel.innerText = "Доход";
         startBalanceForView = totalMonthIncome;
         
-        ['1', '2', '3', '4', '5'].forEach(w => {
+        ['1', '2', '3', '4', '5', '6'].forEach(w => {
             const weekStats = getWeekStats(monthData, w);
             expensesForView += weekStats.total;
             mergeCategories(categoriesForView, weekStats.categories);
@@ -202,7 +202,7 @@ function renderGlobalSavings() {
         if (year < 2026) continue;
 
         // 2. В 2026 году игнорируем Январь (month < 2)
-        if (year === 2026 && month < 2) continue;
+        // if (year === 2026 && month < 2) continue;
 
         // 3. Игнорируем будущее (то, что написано заранее)
         // Если год записи больше текущего реального года -> пропускаем

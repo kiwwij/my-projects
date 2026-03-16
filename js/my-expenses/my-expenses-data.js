@@ -1,4 +1,77 @@
 const database = {
+    "2026-01": {
+        income: { fix: 7643, extra: 0 },
+
+        weeks: {
+            1: {
+                food: 525,
+                snacks: 525,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            },
+            2: {
+                food: 944.5,
+                snacks: 944.5,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            },
+            3: {
+                food: 66,
+                snacks: 0,
+                services: 590,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 307,
+            },
+            4: {
+                food: 950,
+                snacks: 0,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 650,
+            },
+            5: {
+                food: 0,
+                snacks: 0,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            },
+            6: {
+                food: 0,
+                snacks: 0,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            }
+        }
+    },
+
     "2026-02": {
         // Доход: fix - стипендия/пенсия/зп, extra - подарки
         income: { fix: 7643.21, extra: 846 },
@@ -111,6 +184,79 @@ const database = {
                 other: 38,
             },
             4: {
+                food: 397.03,
+                snacks: 133.98,
+                services: 0,
+                games: 0, // возможно +100
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 54.99,
+            },
+            5: {
+                food: 0,
+                snacks: 0,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            },
+            6: {
+                food: 0,
+                snacks: 0,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            }
+        }
+    },
+
+    "2026-04": {
+        income: { fix: 5880.56, extra: 0 },
+
+        weeks: {
+            1: {
+                food: 0,
+                snacks: 0,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            },
+            2: {
+                food: 0,
+                snacks: 0,
+                services: 99,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            },
+            3: {
+                food: 0,
+                snacks: 0,
+                services: 0,
+                games: 0,
+                tech: 0,
+                health: 0,
+                clothes: 0,
+                saved: 0,
+                other: 0,
+            },
+            4: {
                 food: 0,
                 snacks: 0,
                 services: 0,
@@ -146,8 +292,8 @@ const database = {
         }
     },
 
-    "2026-04": {
-        income: { fix: 7880.56, extra: 0 },
+    "2026-05": {
+        income: { fix: 5880.56, extra: 0 },
 
         weeks: {
             1: {

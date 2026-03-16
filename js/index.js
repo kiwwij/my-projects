@@ -9,6 +9,7 @@ let inputBuffer = '';
 
 const container = document.getElementById('projects-grid');
 const searchInput = document.getElementById('search-input');
+const clearSearchBtn = document.getElementById('clear-search');
 
 let allProjects = [];
 
@@ -43,7 +44,6 @@ async function loadProjects() {
             });
         }
 
-        // Сортировка только по алфавиту
         htmlFiles.sort((a, b) => a.name.localeCompare(b.name));
 
         renderTechStats(htmlFiles, projectsConfig);
@@ -72,7 +72,6 @@ async function loadProjects() {
                 badgeHTML = `<div class="new-badge" title="Added in the last 2 weeks">new</div>`;
             }
 
-            // Возвращаем классические заглушки (Цветной фон + белая иконка/буква)
             let imageHTML;
             if (imageSource) {
                 if (imageSource.includes('/') || imageSource.includes('http')) {
@@ -111,7 +110,6 @@ async function loadProjects() {
             card.href = customUrl ? customUrl : `${folder}/${project.name}`;
             card.className = 'project-card';
             card.target = '_blank';
-            // Атрибуты для умного поиска
             card.setAttribute('data-name', displayName.toLowerCase());
             card.setAttribute('data-desc', description.toLowerCase());
             card.setAttribute('data-stack', stack.join(',').toLowerCase());
@@ -158,12 +156,28 @@ function showToast(message, duration = 2500) {
     }, duration);
 }
 
+let inputTimeout; // Таймер для сброса ввода
+
 document.addEventListener('keydown', (e) => {
+    // Игнорируем нажатия, если фокус находится в инпуте
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    // Сбрасываем старый таймер при каждом новом нажатии
+    clearTimeout(inputTimeout);
+
+    // Сначала добавляем символ в буфер
     inputBuffer += e.key.toLowerCase();
     if (inputBuffer.length > SECRET_CODE.length) {
         inputBuffer = inputBuffer.substring(inputBuffer.length - SECRET_CODE.length);
     }
 
+    // Если ничего не нажимать 1.5 секунды — буфер сбрасывается.
+    // Это нужно, чтобы случайные буквы не мешали хоткеям в будущем
+    inputTimeout = setTimeout(() => {
+        inputBuffer = '';
+    }, 1500);
+
+    // Проверяем, введен ли пароль целиком
     if (inputBuffer === SECRET_CODE) {
         const isCurrentlyUnlocked = localStorage.getItem('unlock_hidden') === 'true';
         if (!isCurrentlyUnlocked) {
@@ -173,7 +187,24 @@ document.addEventListener('keydown', (e) => {
             localStorage.removeItem('unlock_hidden');
             showToast('<i class="bx bx-lock-alt"></i> Secret mode deactivated.');
         }
+        inputBuffer = ''; // Сбрасываем буфер после успешного ввода
         setTimeout(() => location.reload(), 1200);
+        return; // Выходим, чтобы хоткеи не сработали
+    }
+
+    // Хоткеи (используем e.code для независимости от раскладки)
+    if (e.code === 'Slash' || e.key === '/') {
+        e.preventDefault();
+        document.getElementById('search-input').focus();
+    } else if (e.code === 'KeyR') {
+        e.preventDefault();
+        openRandomProject();
+    } else if (e.code === 'KeyT') {
+        // Переключаем тему ТОЛЬКО если прямо сейчас не вводится пароль ("hent...")
+        if (!inputBuffer.endsWith('hent')) {
+            e.preventDefault();
+            document.getElementById('color_mode').click();
+        }
     }
 });
 
@@ -234,9 +265,10 @@ function initTheme() {
     });
 }
 
-// Умный поиск (ищет по названию, описанию и стеку)
 searchInput.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
+    
+    clearSearchBtn.style.display = val.length > 0 ? 'block' : 'none';
 
     if (val === SECRET_CODE) {
         const isCurrentlyUnlocked = localStorage.getItem('unlock_hidden') === 'true';
@@ -266,6 +298,26 @@ searchInput.addEventListener('input', (e) => {
     updateProjectCount();
 });
 
+clearSearchBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearSearchBtn.style.display = 'none';
+    searchInput.dispatchEvent(new Event('input'));
+    searchInput.focus();
+});
+
+function openRandomProject() {
+    const visibleProjects = allProjects.filter(card => card.style.display !== 'none');
+    if (visibleProjects.length > 0) {
+        const randomIndex = Math.floor(Math.random() * visibleProjects.length);
+        const randomProject = visibleProjects[randomIndex];
+        window.open(randomProject.href, '_blank');
+    } else {
+        showToast('<i class="bx bx-error"></i> No projects found!');
+    }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProject);
+
 document.getElementById('current-year').textContent = new Date().getFullYear();
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
@@ -282,12 +334,10 @@ const techColors = {
 
 let currentFilter = null;
 
-// Обновленная функция рендера статистики: Топ 5 + Облако тегов
 function renderTechStats(files, projectsConfig) {
     const statsContainer = document.getElementById('tech-stats');
     if (!statsContainer) return;
 
-    // Создаем контейнер для облака тегов, если его нет
     let cloudContainer = document.getElementById('tech-cloud');
     if (!cloudContainer) {
         cloudContainer = document.createElement('div');
@@ -320,13 +370,12 @@ function renderTechStats(files, projectsConfig) {
 
     const sortedStats = Object.entries(totalStats).sort(([, a], [, b]) => b - a);
     
-    // Берем только Топ-5 для цветной полосы
     const top5 = sortedStats.slice(0, 5);
     const top5Count = top5.reduce((sum, item) => sum + item[1], 0);
     const others = sortedStats.slice(5);
 
     statsContainer.innerHTML = top5.map(([tech, count]) => {
-        const percentage = (count / top5Count) * 100; // Ширина относительно топ-5
+        const percentage = (count / top5Count) * 100;
         const realPercent = Math.round((count / totalCount) * 100);
         const color = techColors[tech] || getRandomColor();
 
@@ -335,7 +384,6 @@ function renderTechStats(files, projectsConfig) {
             title="${tech.toUpperCase()}: ${count} projects (${realPercent}%)"></div>`;
     }).join('');
 
-    // Остальные выводим как теги
     cloudContainer.innerHTML = others.map(([tech, count]) => {
         return `<span class="tech-tag" id="tag-${tech}" onclick="filterByTech('${tech}')">
             <i class='${getTechIcon(tech)}'></i> ${tech} <span class="tag-count">${count}</span>

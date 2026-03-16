@@ -1,0 +1,47 @@
+.analytics-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+    gap: 15px; 
+    margin-bottom: 25px; 
+}
+
+.metric-card { 
+    padding: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+}
+
+.metric-card h3 { 
+    font-size: 0.85rem; 
+    opacity: 0.7; 
+    margin-bottom: 8px; 
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.metric-card h2 { 
+    font-size: 1.6rem; 
+    font-weight: 600;
+}
+
+.metric-card .sub-text {
+    font-size: 0.8rem;
+    opacity: 0.5;
+    margin-top: 5px;
+}
+
+.chart-container { position: relative; height: 300px; width: 100%; margin-top: 15px; }
+.tall-chart { height: 400px; }
+        
+.charts-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 900px) {
+    .charts-layout { grid-template-columns: 1fr 1fr; }
+    .full-width-chart { grid-column: 1 / -1; }
+}

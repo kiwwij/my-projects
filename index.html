@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/index/achievements.css">
 </head>
 <body>
     <div class="main-wrapper">
@@ -38,10 +39,18 @@
                     My projects
                     <span id="project-count" class="count-badge">0</span>
                 </h2>
-                <div class="search-wrapper">
-                    <i class='bx bx-search'></i>
-                    <input type="text" id="search-input" placeholder="Find a project...">
+                
+                <div class="actions-wrapper">
+                    <button id="random-btn" class="icon-btn" title="Open random project (R)">
+                        <i class='bx bx-dice-5'></i>
+                    </button>
+                    <div class="search-wrapper">
+                        <i class='bx bx-search search-icon'></i>
+                        <input type="text" id="search-input" placeholder="Find a project...">
+                        <i class='bx bx-x clear-search' id="clear-search"></i>
+                    </div>
                 </div>
+
                 <div id="tech-stats" class="tech-stats"></div>
             </div>
             <div id="projects-grid" class="grid">
@@ -55,6 +64,7 @@
                 </div>
             </div>
         </main>
+        
         <footer>
             <a href="https://github.com/kiwwij" target="_blank">
                 <i class='bx bxl-github'></i> GitHub
@@ -65,12 +75,17 @@
             </a>
             <span>•</span>
             <span id="current-year"></span>
+            <span>•</span>
+            <span id="achievement-progress" class="ach-progress" title="Hidden Achievements">🏆 0/7</span>
         </footer>
     </div>
+    
     <button onclick="topFunction()" id="scrollTopBtn" title="Go to top">
         <i class='bx bx-up-arrow-alt'></i>
     </button>
+
     <div id="toast-container"></div>
     <script src="js/index.js"></script>
+    <script src="js/index/achievements.js"></script>
 </body>
 </html>

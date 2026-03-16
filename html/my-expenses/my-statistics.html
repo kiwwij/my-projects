@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полная статистика</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    
+    <link rel="stylesheet" href="../../css/my-expenses.css">
+    
+    <link rel="stylesheet" href="../../css/my-expenses/my-statistics.css">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="main-wrapper" id="stats-wrapper" style="display: none;">
+        <header>
+            <div class="logo-area">
+                <a href="../my-expenses.html" style="color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                    <i class='bx bx-arrow-back'></i> 
+                    <h1>Глубокая аналитика</h1>
+                </a>
+            </div>
+            <button id="theme-toggle" class="icon-btn" title="Сменить тему">
+                <i class='bx bx-moon'></i>
+            </button>
+        </header>
+
+        <div class="analytics-grid">
+            <div class="card metric-card">
+                <h3><i class='bx bx-wallet'></i> Всего заработано</h3>
+                <h2 id="m-total-income" class="plus">0 ₴</h2>
+                <div class="sub-text" id="m-avg-income">В среднем: 0 ₴/мес</div>
+            </div>
+            <div class="card metric-card">
+                <h3><i class='bx bx-credit-card'></i> Всего потрачено</h3>
+                <h2 id="m-total-expense" class="minus">0 ₴</h2>
+                <div class="sub-text" id="m-avg-expense">В среднем: 0 ₴/мес</div>
+            </div>
+            <div class="card metric-card">
+                <h3><i class='bx bx-safe'></i> Отложено (Копилка)</h3>
+                <h2 id="m-total-saved">0 ₴</h2>
+                <div class="sub-text" id="m-save-rate">Сохранено: 0% от дохода</div>
+            </div>
+            <div class="card metric-card">
+                <h3><i class='bx bx-calendar-exclamation'></i> Самый затратный месяц</h3>
+                <h2 id="m-top-month" style="color: var(--text-color);">—</h2>
+                <div class="sub-text" id="m-top-month-val">Сумма: 0 ₴</div>
+            </div>
+            <div class="card metric-card" style="grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between;">
+                <div>
+                    <h3><i class='bx bx-pie-chart-alt'></i> Главная статья расходов</h3>
+                    <h2 id="m-top-category" style="color: var(--text-color);">—</h2>
+                </div>
+                <div style="text-align: right;">
+                    <div id="m-top-category-val" style="font-size: 1.4rem; font-weight: 600;">0 ₴</div>
+                    <div class="sub-text" id="m-top-category-pct">0% от всех трат</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-layout">
+            <div class="card full-width-chart">
+                <h3 style="margin-bottom: 5px;">Доходы против Расходов</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6;">Сравнение денежных потоков по месяцам</p>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 5px;">Топ категорий трат</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6;">На что уходит больше всего денег</p>
+                <div class="chart-container tall-chart">
+                    <canvas id="hBarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 5px;">Динамика копилки</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6;">Рост общего баланса сбережений</p>
+                <div class="chart-container tall-chart">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/my-expenses/my-expenses-data.js"></script>
+    <script src="../../js/my-expenses/my-statistics.js"></script>
+</body>
+</html>
