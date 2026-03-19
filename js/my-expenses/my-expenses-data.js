@@ -184,12 +184,12 @@ const database = {
                 other: 38,
             },
             4: {
-                food: 397.03,
-                snacks: 133.98,
+                food: 657.07,
+                snacks: 292.95,
                 services: 0,
-                games: 0, // возможно +100
+                games: 100,
                 tech: 0,
-                health: 0,
+                health: 89.99,
                 clothes: 0,
                 saved: 0,
                 other: 54.99,

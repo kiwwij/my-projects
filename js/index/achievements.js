@@ -61,7 +61,8 @@ function unlockAchievement(id) {
     el.innerHTML = `
         <div class="achievement-icon"><i class='bx ${ach.icon}'></i></div>
         <div class="achievement-text">
-            <span class="achievement-title">Achievement Unlocked</span>
+            <span class="achievement-subtitle">Achievement unlocked</span>
+            <span class="achievement-title">${ach.title}</span>
             <span class="achievement-desc">${ach.desc}</span>
         </div>
     `;

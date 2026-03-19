@@ -10,31 +10,43 @@
 }
 
 .achievement-toast {
-    background: #1e1e1e;
-    color: #fff;
+    /* Используем переменные темы, чтобы подстраиваться под сайт */
+    background: var(--card-bg);
+    color: var(--text-main);
     border-radius: 12px;
     padding: 16px 20px;
     display: flex;
     align-items: center;
     gap: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Делаем так, чтобы плашка выделялась */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    
     transform: translateY(30px) scale(0.9);
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     min-width: 300px;
+    max-width: 400px;
     position: relative;
     overflow: hidden;
 }
 
+/* Усиливаем тень для тёмной темы, чтобы не сливалось */
+[data-theme="dark"] .achievement-toast {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Акцентная левая полоса */
 .achievement-toast::before {
     content: '';
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 4px;
-    background: var(--accent, #0984e3);
+    width: 5px;
+    background: var(--accent);
 }
 
 .achievement-toast.show {
@@ -42,16 +54,22 @@
     opacity: 1;
 }
 
+/* Красивая подсвеченная иконка */
 .achievement-icon {
-    background: rgba(255, 255, 255, 0.1);
-    width: 45px;
-    height: 45px;
+    background: rgba(9, 132, 227, 0.1); /* Светло-синий фон */
+    color: var(--accent);
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
+    font-size: 2rem;
     flex-shrink: 0;
+}
+
+[data-theme="dark"] .achievement-icon {
+    background: rgba(88, 166, 255, 0.15);
 }
 
 .achievement-text {
@@ -59,18 +77,31 @@
     flex-direction: column;
 }
 
-.achievement-title {
-    font-size: 0.8rem;
+/* Маленькая надпись сверху */
+.achievement-subtitle {
+    font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--accent, #58a6ff);
-    font-weight: 800;
-    margin-bottom: 2px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 3px;
 }
 
+/* Главное название ачивки */
+.achievement-title {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    font-weight: 800;
+    margin-bottom: 4px;
+    line-height: 1.1;
+}
+
+/* Описание */
 .achievement-desc {
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    line-height: 1.3;
 }
 
 .ach-progress {

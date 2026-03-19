@@ -35,4 +35,4 @@ The core logic is entirely client-side and driven by `index.js`:
 ---
 
 ### 📬 Connect with me
-[All my social links](https://kiwwij.github.io/kiwwij-social-links/)# 📂 Kiwwij's Project Hub
+[All my social links](https://kiwwij.github.io/kiwwij-social-links/)

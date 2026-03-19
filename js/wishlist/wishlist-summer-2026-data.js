@@ -50,7 +50,7 @@ const gamesData = [
         desc_en: "Head to Aincrad, where every battle could be your last. Create a hero, choose your gear, hone your combat skills alongside a partner, level up, and unlock new abilities.",
         desc_ru: "В поисках лекарства от своего недуга Кена попадает на остров Космора, охваченный загадочной скверной. Чтобы спасти остров, Кене предстоит научиться управлять стихиями с помощью духов-спутников. В этом увлекательном приключении вас ждут динамичные сражения и трогательные истории.",
         playtime: "0",
-        genres: ["JRPG", "Anime", "MMORPG"],
+        genres: ["Fantasy", "Action", "Adventure"],
         steam_link: "https://store.steampowered.com/app/3485810/Kena_Scars_of_Kosmora/",
         price_uah: 0,
         discount_percent: 0,
@@ -60,12 +60,8 @@ const gamesData = [
         progress: 0,
         review_link: ""
     },
-
-    // --- ХХХХХХХХХХ -------------------------------------------------------------------------------------------------------------------------
-    // ----------------------------------------------------------------------------------------------------------------------------------------
-    // ----------------------------------------------------------------------------------------------------------------------------------------
     {
-        category: "cat_multiplayer",
+        category: "cat_anime",
         title: "",
         poster: "",
         desc_en: "",
@@ -77,7 +73,45 @@ const gamesData = [
         discount_percent: 0,
         release_date: "",
         rating: "",
-        play_status: "",
+        play_status: "not_started",
+        progress: 0,
+        review_link: ""
+    },
+
+    // --- Под вопросом -----------------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    {
+        category: "cat_indoubt",
+        title: "Resident Evil Requiem",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3764200/ce5437442768e38eb575f205ab9397d0264017b0/header.jpg?t=1772587704",
+        desc_en: "Get ready for classic survival horror, just like in previous games in the series. Fight enemies, explore the world around you, solve puzzles, and use your resources wisely. You can switch between first-person and third-person views at any time—will you dare to look fear straight in the face?",
+        desc_ru: "Вас ждёт классический survival horror, знакомый по предыдущим играм серии. Сражайтесь с противниками, исследуйте окружающий мир, решайте загадки и используйте ресурсы с умом. Вы сможете в любой момент переключаться между видом от первого и третьего лица — рискнете ли вы взглянуть страху прямо в лицо?",
+        playtime: "10–16",
+        genres: ["Survival Horror", "Action", "Adventure"],
+        steam_link: "https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/",
+        price_uah: 1999,
+        discount_percent: 0,
+        release_date: "2026",
+        rating: "89",
+        play_status: "not_started",
+        progress: 0,
+        review_link: ""
+    },
+    {
+        category: "cat_indoubt",
+        title: "",
+        poster: "",
+        desc_en: "",
+        desc_ru: "",
+        playtime: "",
+        genres: ["", "", ""],
+        steam_link: "",
+        price_uah: 0,
+        discount_percent: 0,
+        release_date: "",
+        rating: "",
+        play_status: "not_started",
         progress: 0,
         review_link: ""
     },
