@@ -141,7 +141,7 @@
     "stack": ["html", "css", "js", "github"]
   },
   "dota2-match-analyzer.html": {
-    "image": "bx bxl-steam",
+    "image": "https://cdn.fastly.steamstatic.com/steam/apps/570/header.jpg",
     "description": "Dota 2 match analyzer with detailed statistics.",
     "stack": ["html", "css", "js", "github"]
   },

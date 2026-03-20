@@ -109,6 +109,7 @@ if (sInput) {
         const val = e.target.value.toLowerCase();
         if (val === 'qa') unlockAchievement('qa_tester');
         if (val === 'vntu') unlockAchievement('survivor');
+        if (val === 'hentaif') unlockAchievement('hacker'); 
     });
 }
 
