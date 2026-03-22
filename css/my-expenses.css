@@ -264,6 +264,8 @@ body.dark-mode .week-btn:hover {
 /* --- ЦВЕТА КАТЕГОРИЙ --- */
 .cat-food { background-color: #2ecc71; }      /* Зеленый */
 .cat-snacks { background-color: #f1c40f; }    /* Желтый */
+.cat-dining { background-color: #e84393; }    /* Розовый */
+.cat-transport { background-color: #00cec9; } /* Бирюзовый */
 .cat-services { background-color: #e67e22; }  /* Оранжевый */
 .cat-games { background-color: #9b59b6; }     /* Фиолетовый */
 .cat-tech { background-color: #34495e; }      /* Темно-синий */
