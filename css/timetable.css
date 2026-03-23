@@ -218,6 +218,7 @@ body {
 .type-LK { border-left-color: var(--lec-color); }
 .type-PZ { border-left-color: var(--prac-color); }
 .type-LR { border-left-color: var(--lab-color); }
+.type-EX { border-left-color: #ef4444; }
 
 .time-box {
     display: flex;

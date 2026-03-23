@@ -27,8 +27,9 @@ themeToggle.addEventListener('click', () => {
 const categoryConfig = {
     food: { label: 'Продукты', color: '#2ecc71' },
     snacks: { label: 'Вкусняшки', color: '#f1c40f' },
-    dining: { label: 'Рестораны', color: '#e84393' },
-    transport: { label: 'Проезд', color: '#00cec9' },
+    dining: { label: 'Рестораны', color: '#e84393' },    
+    transport: { label: 'Проезд', color: '#00cec9' },    
+    barber: { label: 'Барбершоп', color: '#8c7ae6' },
     services: { label: 'Услуги', color: '#e67e22' },
     games: { label: 'Игры', color: '#9b59b6' },
     tech: { label: 'Техника', color: '#34495e' },

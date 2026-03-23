@@ -88,8 +88,9 @@ const globalSavingsEl = document.getElementById('global-savings');
 const categoryConfig = {
     food: { label: 'Продукты', icon: 'bx-baguette', color: 'cat-food' },
     snacks: { label: 'Вкусняшки', icon: 'bx-cookie', color: 'cat-snacks' },
-    dining: { label: 'Рестораны', icon: 'bx-restaurant', color: 'cat-dining' },
-    transport: { label: 'Проезд', icon: 'bx-bus', color: 'cat-transport' },
+    dining: { label: 'Рестораны', icon: 'bx-restaurant', color: 'cat-dining' }, 
+    transport: { label: 'Проезд', icon: 'bx-bus', color: 'cat-transport' },     
+    barber: { label: 'Барбершоп', icon: 'bx-cut', color: 'cat-barber' },
     services: { label: 'Услуги', icon: 'bx-wifi', color: 'cat-services' },
     games: { label: 'Игры', icon: 'bx-joystick', color: 'cat-games' },
     tech: { label: 'Техника', icon: 'bx-chip', color: 'cat-tech' },
