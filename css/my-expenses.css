@@ -266,12 +266,14 @@ body.dark-mode .week-btn:hover {
 .cat-snacks { background-color: #f1c40f; }    
 .cat-dining { background-color: #e84393; }    
 .cat-transport { background-color: #00cec9; } 
-.cat-barber { background-color: #8c7ae6; }
+.cat-rent { background-color: #ff7f50; }
 .cat-services { background-color: #e67e22; }  
-.cat-games { background-color: #9b59b6; }     
-.cat-tech { background-color: #34495e; }      
 .cat-health { background-color: #e74c3c; }    
+.cat-barber { background-color: #8c7ae6; }
 .cat-clothes { background-color: #3498db; }   
+.cat-tech { background-color: #34495e; }      
+.cat-gifts { background-color: #ff9ff3; }
+.cat-games { background-color: #9b59b6; }     
 .cat-saved { background-color: #1abc9c; }     
 .cat-other { background-color: #95a5a6; }
 
