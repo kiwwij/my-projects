@@ -6,7 +6,7 @@
 */
 
 const scheduleData = {
-    // Неділя 1 (Верхня)
+    // Тиждень 1 (Верхній)
     1: {
         1: [ // Понеділок
             { num: 5, start: "11:35", end: "12:10", subj: "Метрол. оцінювання ПЗ", type: "LK", room: "12 Зал", teacher: "Дудатьєв І.А." },
@@ -53,7 +53,7 @@ const scheduleData = {
             { num: 7, start: "13:20", end: "13:55", subj: "Арх. та проект. ПЗ", type: "LR", room: "2110", teacher: "Барчук Н.Є.", subgroup: 1 }
         ]
     },
-    // Неділя 2 (Нижня)
+    // Тиждень 2 (Нижній)
     2: {
         1: [ // Понеділок
             { num: 1, start: "08:15", end: "08:50", subj: "БЗВП", type: "PZ", room: "", teacher: "" },
@@ -112,16 +112,30 @@ const dateOverrides = {
     "2026-03-13": { remove: [2, 3, 4] },
     "2026-03-20": { remove: [2, 3, 4] },
 
-    // Змінено type на "EX" (для червоного кольору)
+    // EX = Відпрацювання (СПЕЦ), KOL = Колоквіум
     "2026-03-25": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
     "2026-03-27": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
-    "2026-03-30": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
-    "2026-04-01": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
-    "2026-04-03": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
-    "2026-04-06": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
-    "2026-04-08": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
-    "2026-04-10": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
-    "2026-04-13": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
+    "2026-03-30": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
+    "2026-04-01": { 
+        remove: [1], 
+        add: [
+            { num: 1, start: "08:15", end: "09:00", subj: "Графічні редактори (Кол.)", type: "KOL", room: "2247A", teacher: "Чехместрук Р.Ю." },
+            { num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }
+        ] 
+    },
+    "2026-04-03": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
+    "2026-04-06": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
+    "2026-04-08": { 
+        remove: [1, 2, 6], 
+        add: [
+            { num: 1, start: "08:15", end: "09:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." },
+            { num: 2, start: "09:15", end: "10:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." },
+            { num: 6, start: "13:15", end: "14:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." },
+            { num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }
+        ] 
+    },
+    "2026-04-10": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
+    "2026-04-13": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
 };
 
 // --- Логіка ---
@@ -176,13 +190,99 @@ function formatDateString(date) {
     return `${y}-${m}-${d}`;
 }
 
+function applyTimeOverrides(lessons, targetDate) {
+    const cutoffDate = new Date('2026-03-30T00:00:00');
+    const compareDate = new Date(targetDate);
+    compareDate.setHours(0,0,0,0);
+    
+    if (compareDate >= cutoffDate) {
+        const newTimes = {
+            1: { start: "08:15", end: "09:00" },
+            2: { start: "09:15", end: "10:00" },
+            3: { start: "10:15", end: "11:00" },
+            4: { start: "11:15", end: "12:00" },
+            5: { start: "12:15", end: "13:00" },
+            6: { start: "13:15", end: "14:00" },
+            7: { start: "14:30", end: "15:15" },
+            8: { start: "15:30", end: "16:15" }
+        };
+        lessons.forEach(l => {
+            if(newTimes[l.num]) {
+                l.start = newTimes[l.num].start;
+                l.end = newTimes[l.num].end;
+            }
+        });
+    }
+}
+
+function injectStyles() {
+    if (!document.getElementById('dynamic-schedule-styles')) {
+        const style = document.createElement('style');
+        style.id = 'dynamic-schedule-styles';
+        // Перевизначаємо кольори з !important, щоб вони 100% перебили CSS-файл
+        style.innerHTML = `
+            .type-EX { border-left-color: #9333ea !important; } /* СПЕЦ - фіолетовий */
+            .type-KOL { border-left-color: #ef4444 !important; } /* КОЛ - червоний */
+        `;
+        document.head.appendChild(style);
+    }
+}
+
 function init() {
+    injectStyles();
+    initSwipeGestures();
     updateDateDisplay();
     renderTabs();
     renderSchedule();
     updateStatus();
     setInterval(updateStatus, 1000);
 }
+
+// --- ЛОГІКА СВАЙПІВ ---
+function initSwipeGestures() {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, {passive: true});
+
+    document.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    }, {passive: true});
+
+    function handleSwipe() {
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
+            if (diffX < 0) {
+                navigateDay(1); // Свайп вліво -> Наступний день
+            } else {
+                navigateDay(-1); // Свайп вправо -> Попередній день
+            }
+        }
+    }
+}
+
+function navigateDay(direction) {
+    let newDay = selectedDay + direction;
+    if (newDay > 5) { 
+        changeWeek(1);
+        selectDay(1);
+    } else if (newDay < 1) { 
+        changeWeek(-1);
+        selectDay(5);
+    } else {
+        selectDay(newDay);
+    }
+}
+// ----------------------
 
 function changeWeek(offset) {
     viewDate.setDate(viewDate.getDate() + (offset * 7));
@@ -259,10 +359,22 @@ function renderSchedule() {
     container.innerHTML = '';
 
     const displayDate = getViewedDate();
+    
+    const month = displayDate.getMonth();
+    if (month >= 6 && month <= 7) {
+        container.innerHTML = `
+            <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
+                <i class="bx bx-sun" style="font-size: 4rem; margin-bottom: 10px;"></i>
+                <br><span style="font-size: 1.2rem; font-weight: bold;">Літні канікули!</span>
+                <br><span style="font-size: 0.9rem; opacity: 0.8;">Час відпочивати</span>
+            </div>`;
+        return;
+    }
+
     const currentWeekType = getWeekType(displayDate);
     const allLessons = scheduleData[currentWeekType][selectedDay];
     
-    let lessons = allLessons ? [...allLessons.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup)] : [];
+    let lessons = allLessons ? allLessons.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l})) : [];
 
     const dateStr = formatDateString(displayDate);
     if (dateOverrides[dateStr]) {
@@ -271,11 +383,13 @@ function renderSchedule() {
             lessons = lessons.filter(l => !override.remove.includes(l.num));
         }
         if (override.add) {
-            const addedLessons = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup);
+            const addedLessons = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
             lessons.push(...addedLessons);
         }
-        lessons.sort((a, b) => a.num - b.num);
     }
+    
+    lessons.sort((a, b) => a.num - b.num);
+    applyTimeOverrides(lessons, displayDate); 
 
     if (!lessons || lessons.length === 0) {
         container.innerHTML = '<div class="empty-day"><i class="bx bx-coffee"></i><br>Пар немає, відпочивай!</div>';
@@ -283,8 +397,8 @@ function renderSchedule() {
     }
 
     const maxLessonNum = Math.max(...lessons.map(l => l.num));
-    // Додано розшифровку для нового типу EX
-    const typeLabels = { 'LK': 'ЛК', 'PZ': 'ПЗ', 'LR': 'ЛР', 'EX': 'СПЕЦ' };
+    
+    const typeLabels = { 'LK': 'ЛК', 'PZ': 'ПЗ', 'LR': 'ЛР', 'EX': 'СПЕЦ', 'KOL': 'КОЛ' }; 
 
     const isToday = isSameDate(viewDate, new Date()) && (selectedDay === (new Date().getDay() || 7));
     const now = new Date();
@@ -335,6 +449,14 @@ function renderSchedule() {
 function updateStatus() {
     const now = new Date();
     
+    const month = now.getMonth();
+    if (month >= 6 && month <= 7) {
+        document.getElementById('status-title').innerText = "Літні канікули!";
+        document.getElementById('main-timer').innerText = "☀️🏖️";
+        document.getElementById('time-left-desc').innerText = "Насолоджуйся відпочинком";
+        return;
+    }
+
     if (!isSameWeek(viewDate, now)) {
         document.getElementById('status-title').innerText = "Перегляд розкладу";
         document.getElementById('main-timer').innerText = "--:--";
@@ -347,7 +469,9 @@ function updateStatus() {
     
     let lessons = [];
     if (scheduleData[currentWeekType][dayOfWeek]) {
-        lessons = [...scheduleData[currentWeekType][dayOfWeek].filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup)];
+        lessons = scheduleData[currentWeekType][dayOfWeek]
+            .filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup)
+            .map(l => ({...l})); 
     }
     
     const dateStr = formatDateString(now);
@@ -357,11 +481,13 @@ function updateStatus() {
             lessons = lessons.filter(l => !override.remove.includes(l.num));
         }
         if (override.add) {
-            const addedLessons = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup);
+            const addedLessons = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
             lessons.push(...addedLessons);
         }
-        lessons.sort((a, b) => a.num - b.num);
     }
+
+    lessons.sort((a, b) => a.num - b.num);
+    applyTimeOverrides(lessons, now); 
 
     const titleEl = document.getElementById('status-title');
     const timerEl = document.getElementById('main-timer');

@@ -1,0 +1,259 @@
+:root {
+    /* Темна тема (стандарт) */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --surface-color: #1e1e24;
+    --accent-color: #7b61ff;
+    --accent-hover: #917cff;
+    --border-color: #2a2a35;
+    --sidebar-bg: #18181c;
+    --transition: 0.3s ease;
+}
+
+.light-theme {
+    /* Світла тема */
+    --bg-color: #f8f9fa;
+    --text-color: #2c2c35;
+    --text-muted: #5a5a66;
+    --surface-color: #ffffff;
+    --accent-color: #5a4fcf;
+    --accent-hover: #483abf;
+    --border-color: #e2e4ea;
+    --sidebar-bg: #f1f2f6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Щоб якір не ховався під шапку */
+}
+
+body {
+    font-family: 'Comfortaa', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color var(--transition), color var(--transition);
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+/* ЗАГЛУШКА ДЛЯ СЛАБОГО ІНТЕРНЕТУ */
+.skeleton-load {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards 0.3s;
+}
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* ШАПКА */
+header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 { font-size: 1.5rem; }
+h1 i, h2 i, h3 i {
+    vertical-align: middle;
+    color: var(--accent-color);
+    margin-right: 8px;
+}
+
+#theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color var(--transition);
+}
+
+#theme-toggle:hover { color: var(--accent-color); }
+
+/* ОСНОВНА СІТКА (Бокове меню + Контент) */
+.layout-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    padding: 2rem;
+    gap: 3rem;
+}
+
+/* БОКОВЕ МЕНЮ (Зміст) */
+.sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 100px; /* Відступ від шапки */
+    background-color: var(--sidebar-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+/* Кастомний скрол для меню */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 4px; }
+
+.toc-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.toc ul { list-style: none; }
+.toc li { margin-bottom: 0.5rem; }
+.toc a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    display: block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.toc a:hover {
+    background-color: rgba(123, 97, 255, 0.1);
+    color: var(--accent-color);
+}
+
+.toc a.active {
+    background-color: var(--accent-color);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ЗОНА ЧИТАННЯ */
+.content-reader {
+    flex-grow: 1;
+    max-width: 800px; /* Оптимальна ширина для читання */
+    background-color: var(--surface-color);
+    padding: 3rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.intro {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px dashed var(--border-color);
+}
+
+.intro h2 { margin-bottom: 0.5rem; }
+.intro p { color: var(--text-muted); }
+
+.topic-section {
+    margin-bottom: 4rem;
+}
+
+.topic-section h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+    color: var(--text-color);
+}
+
+.topic-section p { margin-bottom: 1rem; }
+.topic-section ul, .topic-section ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+.topic-section li { margin-bottom: 0.5rem; }
+
+/* ТАБЛИЦІ */
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+th, td {
+    border: 1px solid var(--border-color);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: rgba(123, 97, 255, 0.1);
+    color: var(--text-color);
+    font-weight: 700;
+}
+
+.qa-item {
+            margin-bottom: 1.5rem; 
+            padding: 1.2rem; 
+            background: rgba(123, 97, 255, 0.05); 
+            border-left: 4px solid var(--accent-color); 
+            border-radius: 0 8px 8px 0;
+            transition: background 0.3s;
+        }
+        .qa-item:hover { background: rgba(123, 97, 255, 0.1); }
+        .qa-question { font-weight: 700; margin-bottom: 0.5rem; color: var(--text-color); }
+        .qa-answer { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.8rem; }
+        .qa-link { color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px; }
+        .qa-link:hover { text-decoration: underline; }
+        
+        .back-to-q {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+        .back-to-q:hover { color: var(--accent-color); border-color: var(--accent-color); }
+
+/* АДАПТИВНІСТЬ (Мобільні пристрої) */
+@media (max-width: 992px) {
+    .layout-container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .sidebar {
+        width: 100%;
+        position: static;
+        max-height: 300px;
+    }
+
+    .content-reader {
+        padding: 1.5rem;
+        width: 100%;
+    }
+}

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <title>Графічні редактори | Конспект 1</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10c1.385 0 2.5-1.115 2.5-2.5 0-.606-.232-1.161-.618-1.579-.279-.304-.457-.699-.457-1.121 0-.911.751-1.65 1.666-1.65h1.745c2.868 0 5.164-2.544 5.164-5.65C22 6.25 17.514 2 12 2zm-4.5 9c-.828 0-1.5-.672-1.5-1.5S6.672 8 7.5 8 9 8.672 9 9.5 8.328 11 7.5 11zm3-3c-.828 0-1.5-.672-1.5-1.5S9.672 5 10.5 5 12 5.672 12 6.5 11.328 8 10.5 8zm3 0c-.828 0-1.5-.672-1.5-1.5S12.672 5 13.5 5 15 5.672 15 6.5 14.328 8 13.5 8zm3 3c-.828 0-1.5-.672-1.5-1.5S15.672 8 16.5 8 18 8.672 18 9.5 17.328 11 16.5 11z' fill='%23888'/></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <link rel="stylesheet" href="../css/graphic-editors.css">
+
+</head>
+<body class="dark-theme">
+
+    <header>
+        <div class="header-container">
+            <h1><i class='bx bx-palette'></i> Графічні редактори конспект за 1-ий модуль</h1>
+            <button id="theme-toggle" aria-label="Змінити тему">
+                <i class='bx bx-sun' id="theme-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="layout-container skeleton-load">
+        <aside class="sidebar">
+            <nav class="toc">
+                <div class="toc-title"><i class='bx bx-list-ul'></i> Зміст</div>
+                <ul id="toc-list">
+                    <li><a href="#topic-1" class="active">1. Графічні редактори</a></li>
+                    <li><a href="#topic-2">2. Види зображень</a></li>
+                    <li><a href="#topic-3">3. Глибина та роздільна здатність</a></li>
+                    <li><a href="#topic-4">4. Растр vs Вектор</a></li>
+                    <li><a href="#topic-5">5. Формати растру</a></li>
+                    <li><a href="#topic-6">6. Поняття вектора</a></li>
+                    <li><a href="#topic-7">7. Формати вектора</a></li>
+                    <li><a href="#topic-8">8. Адитивна / Субтрактивна</a></li>
+                    <li><a href="#topic-9">9. Модель RGB</a></li>
+                    <li><a href="#topic-10">10. Модель CMYK</a></li>
+                    <li><a href="#topic-11">11. Модель LAB</a></li>
+                    <li><a href="#topic-12">12. Модель HSB</a></li>
+                    <li><a href="#topic-13">13. Модель XYZ</a></li>
+                    <li><a href="#topic-14">14. Колірне охоплення</a></li>
+                    <li><a href="#topic-15">15. Робота в редакторі</a></li>
+                    <li><a href="#topic-16">16. Теорія кольору</a></li>
+                    <li><a href="#topic-17">17. Інструменти виділення</a></li>
+                    <li><a href="#topic-18">18. Шари та їх типи</a></li>
+                    <li><a href="#topic-19">19. Трансформація об'єктів</a></li>
+                    <li><a href="#topic-20">20. Інтерфейс (Photoshop)</a></li>
+                    <li><a href="#topic-21">21. Робота з каналами</a></li>
+                    <li><a href="#topic-22">22. Математика операцій</a></li>
+                    <li><a href="#topic-23">23. Корекція та шум</a></li>
+                    
+                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 15px 0;">
+                    <li><a href="#questions" style="color: white; font-weight: 700;"><i class='bx bx-message-square-dots'></i> Питання до колоквіуму</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content-reader">
+            <div class="intro">
+                <h2>Повний конспект з дисципліни «Графічні редактори»</h2>
+                <p>Детальні матеріали для підготовки до занять та іспитів.</p>
+            </div>
+
+            <section id="topic-1" class="topic-section">
+                <h3><i class='bx bx-edit'></i> 1. Графічні редактори та основні сфери застосування</h3>
+                <p><strong>Графічний редактор</strong> — це програмне забезпечення для створення, редагування та обробки візуальних зображень на комп'ютері.</p>
+                <p><strong>Основні сфери застосування:</strong></p>
+                <ul>
+                    <li><strong>Вебдизайн та UI/UX:</strong> створення інтерфейсів сайтів та застосунків (Figma, Adobe XD).</li>
+                    <li><strong>Поліграфія та типографіка:</strong> підготовка макетів для друку, журналів, банерів (Adobe InDesign, Illustrator).</li>
+                    <li><strong>Фотографія:</strong> ретуш, кольорокорекція, відновлення старих знімків (Adobe Photoshop, Lightroom).</li>
+                    <li><strong>Ілюстрація та концепт-арт:</strong> створення цифрових малюнків, персонажів (CorelDRAW, Procreate).</li>
+                    <li><strong>3D-моделювання та анімація:</strong> створення текстур для тривимірних об'єктів (Blender, Maya).</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-2" class="topic-section">
+                <h3><i class='bx bx-image'></i> 2. Види цифрового зображення, як вони працюють</h3>
+                <p>Цифрові зображення принципово поділяються на два основні види (у 2D-редакторах):</p>
+                <ul>
+                    <li><strong>Растрова графіка:</strong> Зображення будується з сітки дрібних квадратів — <strong>пікселів</strong>. Кожен піксель має свій конкретний колір і координати. Приклади: фотографії, скановані документи.</li>
+                    <li><strong>Векторна графіка:</strong> Зображення будується за допомогою математичних формул (точок, ліній, кривих, багатокутників). Комп'ютер щоразу «перераховує» малюнок під час його відкриття чи масштабування. Приклади: логотипи, шрифти, іконки.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-3" class="topic-section">
+                <h3><i class='bx bx-printer'></i> 3. Глибина кольору, роздільна здатність, здатність друку</h3>
+                <ul>
+                    <li><strong>Глибина кольору (Color Depth):</strong> Вимірюється в бітах на піксель (bpp) і визначає максимальну кількість кольорів. <em>8-біт:</em> 256 кольорів. <em>24-біт:</em> понад 16,7 млн кольорів (True Color).</li>
+                    <li><strong>Роздільна здатність (Resolution):</strong> Кількість пікселів на одиницю площі. Для екранів вимірюється в <strong>PPI</strong> (Pixels Per Inch). Стандарт для вебзображень історично 72–96 PPI.</li>
+                    <li><strong>Здатність друку:</strong> Вимірюється в <strong>DPI</strong> (Dots Per Inch). Визначає щільність крапель фарби, яку принтер наносить на папір. Стандарт для якісного поліграфічного друку — <strong>300 DPI</strong>.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-4" class="topic-section">
+                <h3><i class='bx bx-git-compare'></i> 4. Порівняння растрової та векторної графіки</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Характеристика</th>
+                                <th>Растрова</th>
+                                <th>Векторна</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Базовий елемент</td>
+                                <td>Піксель</td>
+                                <td>Математичний об'єкт</td>
+                            </tr>
+                            <tr>
+                                <td>Масштабування</td>
+                                <td>Втрачає якість</td>
+                                <td>Без втрати якості</td>
+                            </tr>
+                            <tr>
+                                <td>Розмір файлу</td>
+                                <td>Залежить від пікселів (великий)</td>
+                                <td>Залежить від формул (малий)</td>
+                            </tr>
+                            <tr>
+                                <td>Фотореалізм</td>
+                                <td>Ідеально підходить</td>
+                                <td>Не підходить</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-5" class="topic-section">
+                <h3><i class='bx bx-file'></i> 5. Основні формати файлів растрової графіки</h3>
+                <ul>
+                    <li><strong>JPEG (JPG):</strong> Найпопулярніший для фото. Стиснення з втратою якості. Без прозорості.</li>
+                    <li><strong>PNG:</strong> Стиснення без втрати якості. Підтримує альфа-канал (прозорість). Ідеально для вебу.</li>
+                    <li><strong>GIF:</strong> Підтримує просту анімацію та прозорість, обмежений палітрою у 256 кольорів.</li>
+                    <li><strong>TIFF:</strong> Формат найвищої якості для професійної поліграфії.</li>
+                    <li><strong>WebP:</strong> Сучасний вебформат від Google (висока якість, малий розмір).</li>
+                    <li><strong>PSD:</strong> Внутрішній формат Adobe Photoshop (зберігає шари).</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-6" class="topic-section">
+                <h3><i class='bx bx-vector'></i> 6. Основні поняття векторної графіки</h3>
+                <ul>
+                    <li><strong>Примітиви:</strong> Базові фігури (лінії, кола, прямокутники).</li>
+                    <li><strong>Вузол (Опорна точка):</strong> Точка, що визначає координати.</li>
+                    <li><strong>Контур (Шлях / Path):</strong> Лінія, що з'єднує опорні точки.</li>
+                    <li><strong>Криві Безьє:</strong> Математично описані криві лінії, форму яких можна змінювати за допомогою напрямних.</li>
+                    <li><strong>Заливка та Обводка:</strong> Внутрішній колір закритого контуру та колір/товщина самої лінії.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-7" class="topic-section">
+                <h3><i class='bx bx-file-blank'></i> 7. Основні формати файлів векторної графіки</h3>
+                <ul>
+                    <li><strong>SVG:</strong> Стандарт для вебу. Код можна редагувати в блокноті.</li>
+                    <li><strong>EPS:</strong> Універсальний формат для друкарні.</li>
+                    <li><strong>AI:</strong> Формат Adobe Illustrator.</li>
+                    <li><strong>CDR:</strong> Формат CorelDRAW.</li>
+                    <li><strong>PDF:</strong> Універсальний формат документів, що підтримує вектор та шрифти.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-8" class="topic-section">
+                <h3><i class='bx bx-adjust'></i> 8. Адитивна та субтрактивна модель</h3>
+                <p>Усі колірні простори базуються на фізиці світла:</p>
+                <ul>
+                    <li><strong>Адитивна модель (випромінювання світла):</strong> Кольори створюються шляхом <strong>додавання</strong> світлових променів у темряві (екрани). Базовий стан — чорний. Всі кольори на максимум = білий.</li>
+                    <li><strong>Субтрактивна модель (відбиття світла):</strong> Кольори створюються шляхом <strong>віднімання</strong> (поглинання) світла фізичними пігментами (друк, фарби). Базовий стан — білий (папір). Всі кольори змішати = брудно-чорний.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-9" class="topic-section">
+                <h3><i class='bx bx-tv'></i> 9. Колірна модель RGB</h3>
+                <p><strong>R</strong>ed (Червоний), <strong>G</strong>reen (Зелений), <strong>B</strong>lue (Синій).</p>
+                <p>Тип: Адитивна модель. Використовується для моніторів, смартфонів, вебдизайну.</p>
+                <p>Кожен канал має значення від 0 (немає світла) до 255 (максимум світла). Комбінація R:255, G:255, B:255 дає чистий білий колір.</p>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-10" class="topic-section">
+                <h3><i class='bx bx-water'></i> 10. Колірна модель CMYK</h3>
+                <p><strong>C</strong>yan (Блакитний), <strong>M</strong>agenta (Пурпуровий), <strong>Y</strong>ellow (Жовтий), <strong>K</strong>ey color (Чорний).</p>
+                <p>Тип: Субтрактивна модель. Використовується для поліграфії та кольорового друку.</p>
+                <p>Значення вимірюються у відсотках (від 0% до 100%). Чорна фарба (K) додана для створення глибоких тіней і чіткого чорного тексту, оскільки суміш C, M, Y дає брудний колір.</p>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-11" class="topic-section">
+                <h3><i class='bx bx-test-tube'></i> 11. Колірна модель LAB</h3>
+                <p>Незалежна від пристрою колірна модель, яка імітує сприйняття кольору людським оком.</p>
+                <ul>
+                    <li><strong>L (Lightness):</strong> Яскравість (від 0 до 100).</li>
+                    <li><strong>a:</strong> Осі від зеленого до червоного.</li>
+                    <li><strong>b:</strong> Осі від синього до жовтого.</li>
+                </ul>
+                <p>Використовується для професійної кольорокорекції без впливу на відтінок.</p>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-12" class="topic-section">
+                <h3><i class='bx bx-color-fill'></i> 12. Колірна модель HSB</h3>
+                <p>Створена для зручності людей, мислить категоріями художника.</p>
+                <ul>
+                    <li><strong>H (Hue) — Відтінок:</strong> Розташування на колірному крузі (0–360°).</li>
+                    <li><strong>S (Saturation) — Насиченість:</strong> Від 0% (сірий) до 100% (чистий колір).</li>
+                    <li><strong>B (Brightness) — Яскравість:</strong> Від 0% (чорний) до 100% (світлий).</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-13" class="topic-section">
+                <h3><i class='bx bx-cube-alt'></i> 13. Колірна модель XYZ</h3>
+                <p>Базова (еталонна) математична модель CIE 1931. Вона описує <strong>всі</strong> кольори, які може побачити людина. Координата <strong>Y</strong> відповідає за яскравість, а <strong>X</strong> і <strong>Z</strong> — за колірність. На її основі будуються всі інші профілі.</p>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-14" class="topic-section">
+                <h3><i class='bx bx-pie-chart-alt-2'></i> 14. Охвати колірного діапазону моделей</h3>
+                <p><strong>Колірне охоплення (Gamut):</strong> Це діапазон кольорів, який здатний відтворити пристрій.</p>
+                <p>Від найбільшого до найменшого:</p>
+                <ol>
+                    <li>Видимий спектр (Людське око).</li>
+                    <li>ProPhoto RGB (для фотокамер).</li>
+                    <li>Adobe RGB (для професійних моніторів).</li>
+                    <li>sRGB (стандартний для інтернету).</li>
+                    <li>CMYK (найменше охоплення, кольори тьмяніють при друці).</li>
+                </ol>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-15" class="topic-section">
+                <h3><i class='bx bx-slider-alt'></i> 15. Принцип роботи з кольором у редакторі</h3>
+                <ul>
+                    <li><strong>Палітри (Color Picker):</strong> Візуальний вибір кольору (часто на базі HSB або RGB).</li>
+                    <li><strong>Канали (Channels):</strong> Зображення розбивається на монохромні канали (напр., R, G, B).</li>
+                    <li><strong>Колірні профілі (ICC):</strong> Вказують програмі, як інтерпретувати кольори на конкретному моніторі/принтері.</li>
+                    <li><strong>Інструменти корекції:</strong> Криві, Рівні, Баланс кольору.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-16" class="topic-section">
+                <h3><i class='bx bx-book-heart'></i> 16. Основні принципи роботи з кольором (Теорія)</h3>
+                <ul>
+                    <li><strong>Колірне коло Іттена:</strong> Інструмент для підбору гармонійних кольорів.</li>
+                    <li><strong>Гармонії:</strong> Монохромна, Комплементарна (максимальний контраст), Аналогова.</li>
+                    <li><strong>Правило 60-30-10:</strong> 60% — домінуючий колір, 30% — вторинний, 10% — акцентний.</li>
+                    <li><strong>Психологія кольору:</strong> Використання асоціацій (червоний — енергія, синій — довіра).</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-17" class="topic-section">
+                <h3><i class='bx bx-select-multiple'></i> 17. Інструменти виділення</h3>
+                <p><strong>Виділення</strong> — фундаментальний елемент, який дозволяє ізолювати певні області для подальшого редагування, копіювання, видалення або створення масок.</p>
+                <p><strong>Основні типи інструментів та їх режими:</strong></p>
+                <ul>
+                    <li><strong>Прямокутне та еліптичне виділення.</strong> Мають режими: нове виділення, додати (Shift), відняти (Alt/Option), перетин.</li>
+                    <li><strong>Ласо:</strong> Звичайне, Прямолінійне (прямі лінії/кути), Магнітне (автоматично прилипає до контрастних країв об'єкта).</li>
+                    <li><strong>Швидке виділення та Чарівна паличка:</strong> Працюють на основі кольору та текстури. Паличка виділяє суміжні пікселі схожого кольору (налаштовується параметром «Допуск» / Tolerance).</li>
+                    <li><strong>Виділення об'єктів:</strong> Автоматично виявляє об'єкт у вибраній прямокутній області за допомогою ШІ.</li>
+                    <li><strong>Перо (Pen Tool):</strong> Створює точні векторні контури (криволінійні та прямолінійні), які можна перетворити на виділення.</li>
+                </ul>
+                <p><strong>Загальні параметри:</strong></p>
+                <ul>
+                    <li><strong>Розтушовування (Feather):</strong> Створює плавний, розмитий перехід між виділеною та невиділеною областями (у пікселях).</li>
+                    <li><strong>Згладжування (Anti-aliasing):</strong> Згладжує зубчасті (піксельні) краї виділення.</li>
+                    <li><strong>Вибір з усіх шарів (Sample All Layers):</strong> Дозволяє враховувати кольори з усіх видимих шарів, а не лише з активного.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-18" class="topic-section">
+                <h3><i class='bx bx-layer'></i> 18. Робота з шарами та їх типи</h3>
+                <p><strong>Шари</strong> дозволяють організовувати зображення, компонувати та застосовувати ефекти без руйнування вихідного зображення (неруйнівне редагування).</p>
+                <p><strong>Основні типи шарів:</strong></p>
+                <ul>
+                    <li><strong>Звичайний (Pixel Layer):</strong> Базовий шар, на якому можна малювати та стирати пікселі.</li>
+                    <li><strong>Коригувальний шар (Adjustment Layer):</strong> Змінює колір, яскравість чи контраст (напр., Рівні, Криві) нижніх шарів без фізичної зміни їхніх пікселів.</li>
+                    <li><strong>Текстовий шар:</strong> Містить векторний текст, що зберігає якість при редагуванні.</li>
+                    <li><strong>Смарт-об'єкт (Smart Object):</strong> Контейнер, який захищає вміст шару, дозволяючи багаторазово масштабувати та застосовувати фільтри без втрати початкової якості.</li>
+                    <li><strong>Шар-фігура (Shape Layer):</strong> Векторний шар для геометричних фігур.</li>
+                </ul>
+                <p><strong>Параметри шарів:</strong></p>
+                <ul>
+                    <li><strong>Непрозорість (Opacity) та Заливка (Fill):</strong> Від 0 до 100%. Заливка впливає лише на вміст, але залишає видимими стилі шару.</li>
+                    <li><strong>Режими накладання (Blending Modes):</strong> Визначають, як шар взаємодіє з нижніми (Normal, Multiply, Overlay).</li>
+                    <li><strong>Маски шару:</strong> Приховують або показують частини шару. Білий колір маски — видно, чорний — приховано, сірий — напівпрозоро. Ідеально для заміни фону або ретуші.</li>
+                    <li><strong>Групи та Стилі:</strong> Групи (папки) структурують великі проєкти. Стилі додають тіні, світіння, обведення.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-19" class="topic-section">
+                <h3><i class='bx bx-shape-polygon'></i> 19. Основні види трансформації об'єктів</h3>
+                <ul>
+                    <li><strong>Масштабування (Scale):</strong> Зміна розміру об'єкта (пропорційна або непропорційна).</li>
+                    <li><strong>Обертання (Rotate):</strong> Поворот об'єкта навколо заданої точки на певний кут.</li>
+                    <li><strong>Нахил (Skew):</strong> Перекошування об'єкта вздовж вертикальної або горизонтальної осі.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-20" class="topic-section">
+                <h3><i class='bx bx-window-alt'></i> 20. Інтерфейс програми (на прикладі Photoshop)</h3>
+                <ul>
+                    <li><strong>Верхнє меню:</strong> Файл, Редагування, Зображення, Шари, Фільтри, Перегляд тощо.</li>
+                    <li><strong>Панель інструментів (зліва):</strong> Містить інструменти для переміщення, виділення, обрізки, малювання, тексту.</li>
+                    <li><strong>Панель параметрів:</strong> Знаходиться під меню, динамічно змінює налаштування для обраного інструмента.</li>
+                    <li><strong>Робоча область (Полотно):</strong> Місце, де відкривається та редагується зображення.</li>
+                    <li><strong>Бічні панелі (справа):</strong> Шари, Канали, Історія, Властивості, Колір.</li>
+                    <li><strong>Робочі простори:</strong> Готові налаштування інтерфейсу під конкретні задачі (Фотографія, Графічний дизайн, 3D).</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-21" class="topic-section">
+                <h3><i class='bx bx-grid-alt'></i> 21. Робота з каналами (Channels)</h3>
+                <p><strong>Канал</strong> — це чорно-біле зображення, що зберігає інформацію про яскравість одного базового кольору (наприклад, Red, Green або Blue у моделі RGB). Білий колір на каналі означає 100% інтенсивності цього кольору, чорний — 0%.</p>
+                <p><strong>Альфа-канал:</strong> Використовується для збереження складних виділень (наприклад, волосся або хутра). Редактор дозволяє створювати виділення безпосередньо з каналу і навпаки.</p>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-22" class="topic-section">
+                <h3><i class='bx bx-math'></i> 22. Математичний та фізичний зміст операцій</h3>
+                <ul>
+                    <li><strong>Розмиття (Blur):</strong> В основі лежить математична операція <strong>згортки (convolution)</strong> з ядром (невеликою матрицею коефіцієнтів). Матриця ковзає по зображенню, обчислюючи нове значення кожного пікселя як середнє від його сусідів. Гаусове розмиття використовує нормальний розподіл (ваги зменшуються від центру).</li>
+                    <li><strong>Підвищення різкості (Sharpening):</strong> Протилежна розмиттю операція. Алгоритм (Unsharp Mask) віднімає розмиту версію від оригіналу, отримуючи маску країв, і додає цю маску назад. Математично це еквівалентно додаванню <em>другої похідної</em>. Фізично це посилення контрасту на межах об'єктів.</li>
+                    <li><strong>Криві (Curves):</strong> Довільна функція відображення яскравості. Якщо крива <em>опукла вгору</em> — середні тони стають світлішими, але контраст у тінях і світлі падає. Якщо крива S-подібна — загальний контраст підвищується.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-23" class="topic-section">
+                <h3><i class='bx bx-bulb'></i> 23. Корекція кольору, яскравості та цифровий шум</h3>
+                <p>Колір зберігається у тривимірному просторі (RGB-вектор). Корекція кольору — це перетворення цього вектора. <strong>Баланс білого</strong> масштабує канали так, щоб нейтральний об'єкт мав рівні значення R, G та B.</p>
+                <ul>
+                    <li><strong>Яскравість:</strong> Математично — це додавання константи до значення пікселя (паралельний зсув діапазону). Фізично — це збільшення кількості відбитого світла. Ризик: світлі ділянки можуть «впертися» в стелю (значення 255) і втратити деталі.</li>
+                    <li><strong>Контраст:</strong> Множення на коефіцієнт відносно середньої сірої точки. Формула: Новий піксель = K * (Старий піксель - 128) + 128. Якщо K > 1, діапазон розтягується (світлі світлішають, темні темнішають). Контраст — основа сприйняття глибини.</li>
+                    <li><strong>Насиченість:</strong> Масштабування відстані від центральної осі сірого кольору. Фізично відповідає тому, наскільки світло є монохроматичним (чистим) чи змішаним із білим.</li>
+                    <li><strong>Експозиція:</strong> Множення пікселя на ступені двійки (стопи). Один "стоп" подвоює або зменшує кількість світла вдвічі.</li>
+                    <li><strong>Цифровий шум:</strong> Випадкові коливання значень пікселів, спричинені тепловими (нагрівання матриці) або квантовими (брак фотонів) ефектами сенсора камери.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="questions" class="topic-section" style="margin-top: 5rem; border-top: 2px dashed var(--border-color); padding-top: 3rem;">
+                <h2><i class='bx bx-message-square-dots'></i> Питання до колоквіуму</h2>
+                <p style="margin-bottom: 2rem;">Перевір свої знання. У кожному питанні є коротка відповідь та кнопка для переходу до повної теми.</p>
+
+                <div class="qa-item">
+                    <div class="qa-question">1. Що таке графічний редактор і в яких сферах він застосовується?</div>
+                    <div class="qa-answer">Це програмне забезпечення для створення та обробки зображень. Застосовується у вебдизайні, поліграфії, фотографії, ілюстрації та 3D-моделюванні.</div>
+                    <a href="#topic-1" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 1</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">2. У чому принципова різниця між растровою та векторною графікою?</div>
+                    <div class="qa-answer">Растр складається з пікселів, втрачає якість при масштабуванні і ідеальний для фото. Вектор базується на математичних формулах, не втрачає якість, але не підходить для фотореалізму.</div>
+                    <a href="#topic-4" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 4</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">3. Що таке глибина кольору (bpp), PPI та DPI?</div>
+                    <div class="qa-answer">Глибина кольору — макс. кількість кольорів (напр. 24-біт). PPI — пікселі на дюйм (для екранів). DPI — точки фарби на дюйм (стандарт поліграфії 300 DPI).</div>
+                    <a href="#topic-3" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 3</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">4. Назвіть основні формати растрової та векторної графіки.</div>
+                    <div class="qa-answer">Растр: JPEG (з втратами), PNG (веб), TIFF (друк). Вектор: SVG (веб-стандарт), EPS (для друкарні).</div>
+                    <a href="#topic-5" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 5</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">5. Поясніть принцип роботи адитивної (RGB) та субтрактивної (CMYK) колірних моделей.</div>
+                    <div class="qa-answer">Адитивна (RGB) створює кольори додаванням світла на екранах (максимум = білий). Субтрактивна (CMYK) — відніманням світла пігментом при друці (максимум = чорний).</div>
+                    <a href="#topic-8" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 8</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">6. У чому полягає особливість колірних моделей LAB, HSB та XYZ?</div>
+                    <div class="qa-answer">LAB імітує людський зір (для профі). HSB оперує відтінком, насиченістю та яскравістю (зручно для художників). XYZ — базова математична модель всіх видимих кольорів.</div>
+                    <a href="#topic-11" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 11</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">7. Що таке колірне охоплення (Gamut) і чому кольори тьмяніють при друці?</div>
+                    <div class="qa-answer">Це діапазон кольорів, що відтворює пристрій. RGB має більше охоплення, ніж CMYK. Тому яскраві кольори з екрана неможливо відтворити фізичною фарбою.</div>
+                    <a href="#topic-14" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 14</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">8. Назвіть інструменти виділення та поясніть «розтушовування» (feather).</div>
+                    <div class="qa-answer">Інструменти: Ласо, Прямокутне, Паличка, Перо. Розтушовування робить краї виділення плавними (розмитими) для безшовного колажування.</div>
+                    <a href="#topic-17" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 17</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">9. Що таке шари? Які бувають типи шарів?</div>
+                    <div class="qa-answer">Шари — це рівні зображення. Типи: Звичайний (пікселі), Коригувальний (зміна кольору без руйнування), Смарт-об'єкт (захищений контейнер), Шар-фігура (вектор).</div>
+                    <a href="#topic-18" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 18</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">10. Як працює маска шару?</div>
+                    <div class="qa-answer">Приховує або показує частини шару без їх видалення. Білий колір на масці — область видно, чорний — приховано, сірий — напівпрозоро.</div>
+                    <a href="#topic-18" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 18</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">11. Що таке канали та альфа-канал?</div>
+                    <div class="qa-answer">Канал — чорно-біле зображення, що зберігає інтенсивність одного базового кольору (R, G або B). Альфа-канал потрібен для збереження складних виділень (напр. волосся).</div>
+                    <a href="#topic-21" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 21</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">12. Поясніть математику операцій «Розмиття» та «Підвищення різкості».</div>
+                    <div class="qa-answer">Розмиття — це операція згортки з ядром (усереднення пікселів). Різкість — це посилення контрасту на межах шляхом додавання другої похідної.</div>
+                    <a href="#topic-22" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 22</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">13. Як працює інструмент «Криві» (S-подібна форма)?</div>
+                    <div class="qa-answer">Криві задають функцію відображення яскравості. Якщо зробити криву S-подібною, світлі тони стануть світлішими, темні — темнішими, що підвищить загальний контраст.</div>
+                    <a href="#topic-22" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 22</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">14. Який фізичний/математичний зміст Яскравості та Контрасту?</div>
+                    <div class="qa-answer">Яскравість — додавання константи до пікселів (фізично: більше світла). Контраст — множення на коефіцієнт відносно сірої точки (розтягування діапазону).</div>
+                    <a href="#topic-23" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 23</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">15. Що таке експозиція та цифровий шум?</div>
+                    <div class="qa-answer">Експозиція — множення світла на ступені двійки (стопи). Цифровий шум — випадкові значення пікселів через теплові та квантові ефекти сенсора камери.</div>
+                    <a href="#topic-23" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 23</a>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/graphic-editors.js"></script>
+</body>
+</html>

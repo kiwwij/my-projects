@@ -297,6 +297,13 @@
     "url": "",
     "date": "2026-16-31"
   },
+  "graphic-editors.html": {
+    "image": "bx bx-palette",
+    "description": "A modern, responsive educational platform dedicated to computer graphics, featuring comprehensive lecture notes and interactive training quizzes.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-03-25"
+  },
   ".html": {
     "image": "",
     "description": "",
