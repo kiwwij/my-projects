@@ -1,413 +1,177 @@
-const translations = {
-    en: {
-        steamProfile: "Steam Profile",
-        wishlist: "Wishlist",
-        cat_priority: "Top Priority",
-        cat_anime: "Animelike",
-        cat_indoubt: "In doubt",
-        cat_long: "cat 2",
-        playtime: "h",
-        tba: "tbd",
-        sale: "Possible discount:",
-        possible: "Possible:",
-        footer_text: "Games on kiwwij's wish list from summer 2026.",
-        footer_text2: "The approximate time indicated is for completing the story only, not the entire game.",
-        metacritic: "Metacritic",
-        btn_show_status: "Show Progress",
-        btn_hide_status: "Hide Progress",
-        status_playing: "Playing",
-        status_dropped: "Dropped",
-        status_paused: "Paused",
-        status_completed: "Completed",
-        status_not_started: "Not Started",
-        status_changed_mind: "Changed Mind",
-        read_review: "Review",
-        stat_total_games: "Total Games",
-        stat_remaining: "Remaining to play",
-        stat_completed: "Completed",
-        stat_dropped: "Dropped",
-        stat_changed_mind: "Changed Mind",
-        stat_total_value: "Total Value (No Discounts)",
-        filter_all: "All Games",
-        filter_completed: "Completed Only",
-        filter_dropped: "Dropped Only",
-        filter_changed_mind: "Changed Mind Only",
-        empty_list: "Nothing here yet",
-    },
-    ru: {
-        steamProfile: "Профиль Steam",
-        wishlist: "Вишлист",
-        cat_priority: "Главный приоритет",
-        cat_anime: "Анимешные",
-        cat_indoubt: "Под вопросом",
-        cat_long: "Доп. кат. 2",
-        playtime: "ч",
-        tba: "Скоро",
-        sale: "Возможная скидка:",
-        possible: "Возможно:",
-        footer_text: "Игры в списке желаемого kiwwij с лета 2026.",
-        footer_text2: "Указано примерное время прохождения только сюжета, а не всей игры.",
-        metacritic: "Metacritic",
-        btn_show_status: "Показать прогресс",
-        btn_hide_status: "Скрыть прогресс",
-        status_playing: "В процессе",
-        status_dropped: "Забросил",
-        status_paused: "Отложил",
-        status_completed: "Пройдено",
-        status_not_started: "Не начал",
-        status_changed_mind: "Передумал",
-        read_review: "Обзор",
-        stat_total_games: "Всего игр",
-        stat_remaining: "Осталось пройти",
-        stat_completed: "Пройдено",
-        stat_dropped: "Забросил",
-        stat_changed_mind: "Передумал",
-        stat_total_value: "Общая стоимость без скидок",
-        filter_all: "Все игры",
-        filter_completed: "Только пройденные",
-        filter_dropped: "Только заброшенные",
-        filter_changed_mind: "Только передуманные",
-        empty_list: "Тут пока пусто",
-    }
-};
-
-let currentLang = 'en';
-let isStatusVisible = false;
-let currentFilter = 'all';
-
-function changeFilter(value) {
-    currentFilter = value;
-    render();
-}
-
-// Новые нормальные категории
-const categoryOrder = [
-    "cat_priority",
-    "cat_anime",
-    "cat_indoubt",
-    "cat_long"
+const kanbanColumns = [
+    { id: 'planned', title: "<i class='bx bx-list-ul'></i> В планах", statuses: ['planned'] },
+    { id: 'playing', title: "<i class='bx bx-joystick'></i> Играю", statuses: ['playing'] },
+    { id: 'completed', title: "<i class='bx bx-check-double'></i> Пройдено", statuses: ['completed'] },
+    { id: 'dropped', title: "<i class='bx bx-trash'></i> Заброшено", statuses: ['dropped'] }
 ];
 
-function detectLanguage() {
-    const saved = localStorage.getItem('lang');
-    if (saved) return saved;
-    const navLang = navigator.language || navigator.userLanguage;
-    return navLang.startsWith('ru') ? 'ru' : 'en';
-}
-
-function setLanguage(lang) {
-    currentLang = lang;
-    localStorage.setItem('lang', lang);
-    render();
-}
-
-function toggleStatusMode() {
-    isStatusVisible = !isStatusVisible;
-    render();
-}
-
 async function updateSteamAvatar() {
-    const avatarContainer = document.querySelector('.profile-avatar');
-    if (!avatarContainer) return;
-
+    const avatarContainer = document.getElementById('avatar-container');
     const dataUrl = 'https://kiwwij.github.io/kiwwij-anime-tier-list/data/steam-profile-data.js';
-
     try {
         const response = await fetch(dataUrl);
         if (response.ok) {
             const scriptContent = await response.text();
             const match = scriptContent.match(/["']avatar["']\s*:\s*["']([^"']+)["']/);
-            
             if (match && match[1]) {
-                const newAvatarUrl = match[1];
-                avatarContainer.innerHTML = `<img src="${newAvatarUrl}" alt="Kiwwij Avatar">`;
+                avatarContainer.innerHTML = `<img src="${match[1]}" alt="Avatar">`;
             }
         }
-    } catch (err) {
-        console.warn(err);
+    } catch (err) {}
+}
+
+function handleImageLoad(imgElement) {
+    const coverDiv = imgElement.previousElementSibling;
+    if (coverDiv && coverDiv.classList.contains('card-cover')) {
+        coverDiv.classList.add('loaded'); 
     }
 }
 
-function getRatingClass(rating) {
-    const score = parseInt(rating);
-    if (isNaN(score)) return "";
-    if (score >= 75) return "score-green";
-    if (score >= 50) return "score-yellow";
-    return "score-red";
+function handleImageError(imgElement) {
+    const coverDiv = imgElement.previousElementSibling;
+    if (coverDiv && coverDiv.classList.contains('card-cover')) {
+        coverDiv.classList.add('loaded');
+        coverDiv.style.backgroundColor = '#1e293b';
+        coverDiv.style.backgroundImage = 'none';
+        coverDiv.innerHTML = "<div style='display:flex; height:100%; align-items:center; justify-content:center; color:#475569; font-size:2rem;'><i class='bx bx-image-alt'></i></div>";
+    }
 }
 
-function calculateAndRenderStats() {
-    const statsPanel = document.getElementById('stats-panel');
-    if (!statsPanel) return;
+function renderBoard() {
+    if (typeof gamesData === 'undefined') return;
+
+    const board = document.getElementById('kanban-board');
+    const statsContainer = document.getElementById('quick-stats');
+    board.innerHTML = '';
 
     let totalGames = gamesData.length;
-    let completedCount = 0;
-    let droppedCount = 0;
-    let changedMindCount = 0;
+    let playingCount = gamesData.filter(g => g.play_status === 'playing').length;
     let totalValue = 0;
 
+    let pausedGames = gamesData.filter(g => g.play_status === 'paused');
+    let changedMindGames = gamesData.filter(g => g.play_status === 'changed_mind');
+
     gamesData.forEach(game => {
-        let actualStatus = (game.progress === 100) ? "completed" : game.play_status;
-
-        if (actualStatus === "completed") {
-            completedCount++;
-        } else if (actualStatus === "dropped") {
-            droppedCount++;
-        } else if (actualStatus === "changed_mind") {
-            changedMindCount++;
-        }
-
-        if (game.price_uah) {
-            totalValue += game.price_uah;
-        }
+        if (game.price_uah > 0) totalValue += game.price_uah;
     });
 
-    const t = translations[currentLang];
+    let pausedListHtml = pausedGames.map(g => `<div class="hover-item">${g.title}</div>`).join('');
+    let changedMindListHtml = changedMindGames.map(g => `<div class="hover-item">${g.title}</div>`).join('');
 
-    let displayTotal = totalGames;
-    let displayLabel = t.stat_total_games;
+    let pausedHtml = pausedGames.length > 0 ? `
+        <div class="stat-hover-group">
+            <span style="color: #f59e0b;"><i class='bx bx-pause-circle'></i> На паузе: ${pausedGames.length}</span>
+            <div class="stat-hover-list">${pausedListHtml}</div>
+        </div>
+    ` : '';
 
-    if (isStatusVisible) {
-        displayTotal = totalGames - completedCount - droppedCount - changedMindCount;
-        displayLabel = t.stat_remaining;
+    let changedMindHtml = changedMindGames.length > 0 ? `
+        <div class="stat-hover-group">
+            <span style="color: #64748b;"><i class='bx bx-refresh'></i> Передумал: ${changedMindGames.length}</span>
+            <div class="stat-hover-list">${changedMindListHtml}</div>
+        </div>
+    ` : '';
+
+    statsContainer.innerHTML = `
+        <span title="Общее количество игр"><i class='bx bx-layer'></i> Всего игр: ${totalGames}</span>
+        ${pausedHtml}
+        ${changedMindHtml}
+        <span style="color: #06b6d4;" title="Суммарная стоимость всех игр без учёта скидок"><i class='bx bx-wallet'></i> Общая стоимость: ${Math.round(totalValue).toLocaleString()} ₴</span>
+    `;
+
+    kanbanColumns.forEach(col => {
+        const columnEl = document.createElement('div');
+        columnEl.className = 'kanban-column';
+        
+        const columnGames = gamesData.filter(game => col.statuses.includes(game.play_status));
+        let cardsHtml = columnGames.map(game => createCardHtml(game)).join('');
+
+        columnEl.innerHTML = `
+            <div class="column-header">
+                <h2>${col.title} <span class="game-count">${columnGames.length}</span></h2>
+            </div>
+            <div class="column-content">
+                ${cardsHtml || '<div class="empty-column"><i class="bx bx-ghost"></i> Пусто</div>'}
+            </div>
+        `;
+        board.appendChild(columnEl);
+    });
+}
+
+function createCardHtml(game) {
+    let priceDisplay = '';
+    let badgeSale = '';
+    
+    if (game.price_uah === undefined || game.price_uah === null || game.price_uah === "") {
+        priceDisplay = `<span style="opacity: 0.5;">tbd</span>`;
+    } else if (game.price_uah > 0) {
+        priceDisplay = `<span>${game.price_uah}₴</span>`;
+        if (game.discount_percent > 0) {
+            badgeSale = `<div class="card-badge badge-sale">-${game.discount_percent}%</div>`;
+        }
+    } else {
+        priceDisplay = `<span style="color: var(--accent-green);">Бесплатно</span>`;
     }
 
-    statsPanel.innerHTML = `
-        <div class="stat-item">
-            <span class="stat-label">${displayLabel}</span>
-            <span class="stat-value total-games">${displayTotal}</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">${t.stat_completed}</span>
-            <span class="stat-value completed">${completedCount}</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">${t.stat_dropped}</span>
-            <span class="stat-value dropped">${droppedCount}</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">${t.stat_changed_mind}</span>
-            <span class="stat-value changed-mind" style="color: #9c27b0;">${changedMindCount}</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">${t.stat_total_value}</span>
-            <span class="stat-value total-value">${Math.round(totalValue).toLocaleString()} ₴</span>
+    let playtimeHtml = game.playtime 
+        ? `<div class="meta-row" title="Примерное время прохождения сюжета"><i class='bx bx-time-five'></i> <span>Сюжет: ~${game.playtime}ч</span></div>` 
+        : `<div class="meta-row" title="Время прохождения неизвестно"><i class='bx bx-time-five'></i> <span style="opacity: 0.5;">Время: tbd</span></div>`;
+    
+    let releaseHtml = game.release_date 
+        ? `<div class="meta-row" title="Дата выхода игры"><i class='bx bx-calendar'></i> <span>${game.release_date}</span></div>` 
+        : `<div class="meta-row" title="Точная дата выхода неизвестна"><i class='bx bx-calendar'></i> <span style="opacity: 0.5;">Дата: tbd</span></div>`;
+    
+    let priceHtml = `<div class="meta-row" title="Базовая стоимость игры в Steam"><i class='bx bx-purchase-tag'></i> ${priceDisplay}</div>`;
+    
+    let mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
+    
+    let ratingColor = "#94a3b8"; 
+    if (game.rating >= 75) ratingColor = "#10b981"; 
+    else if (game.rating >= 50) ratingColor = "#f59e0b"; 
+    else if (game.rating > 0) ratingColor = "#ef4444"; 
+
+    let ratingHtml = (game.rating && game.rating !== "") 
+        ? `<div class="meta-row" title="Рейтинг игры на сайте Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1);"> <span style="color: ${ratingColor}; font-weight: 600;">${game.rating}/100</span></div>` 
+        : `<div class="meta-row" title="У игры пока нет рейтинга на Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1) opacity(0.5);"> <span style="opacity: 0.5;">Рейтинг: tbd</span></div>`;
+
+    let reviewHtml = game.review_link ? `<a href="${game.review_link}" target="_blank" class="action-btn" title="Открыть обзор на игру"><i class='bx bxs-message-square-detail'></i></a>` : '';
+    let steamHtml = game.steam_link ? `<a href="${game.steam_link}" target="_blank" class="action-btn steam-color" title="Открыть страницу игры в Steam"><i class='bx bxl-steam'></i></a>` : '';
+
+    let currentProgress = game.progress || 0;
+    let progressColor = currentProgress === 100 ? '#10b981' : '#06b6d4';
+
+    return `
+        <div class="kanban-card">
+            <div class="card-cover-wrapper">
+                <div class="card-cover" style="background-image: url('${game.poster}');"></div>
+                <img src="${game.poster}" style="position: absolute; width: 1px; height: 1px; opacity: 0;" onload="handleImageLoad(this)" onerror="handleImageError(this)">
+                ${badgeSale}
+            </div>
+            
+            <div class="card-body">
+                <h3 class="card-title">${game.title}</h3>
+                <div class="card-info-grid">
+                    ${ratingHtml}
+                    ${playtimeHtml}
+                    ${releaseHtml}
+                    ${priceHtml}
+                </div>
+                
+                <div class="card-bottom">
+                    <div class="progress-container" title="Текущий прогресс прохождения: ${currentProgress}%">
+                        <div class="progress-bar" style="width: ${currentProgress}%; background: ${progressColor};"></div>
+                    </div>
+                    <div class="card-actions">
+                        ${reviewHtml}
+                        ${steamHtml}
+                    </div>
+                </div>
+            </div>
         </div>
     `;
 }
 
-function render() {
-    const t = translations[currentLang];
-
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) {
-            el.textContent = t[key];
-        }
-    });
-
-    const toggleBtn = document.getElementById('toggle-status-btn');
-    if (toggleBtn) {
-        toggleBtn.innerHTML = isStatusVisible 
-            ? `<i class='bx bx-hide'></i> ${t.btn_hide_status}`
-            : `<i class='bx bx-show'></i> ${t.btn_show_status}`;
-        
-        if(isStatusVisible) toggleBtn.classList.add('active');
-        else toggleBtn.classList.remove('active');
-    }
-
-    const container = document.getElementById('game-container');
-    container.innerHTML = '';
-
-    if (typeof gamesData === 'undefined') {
-        container.innerHTML = '<p style="color:red; text-align:center;">Error.</p>';
-        return;
-    }
-
-    calculateAndRenderStats();
-
-    if (currentFilter !== 'all') {
-        let filteredGames = gamesData.filter(game => {
-            let actualStatus = (game.progress === 100) ? 'completed' : game.play_status;
-            return actualStatus === currentFilter;
-        });
-        
-        filteredGames.sort((a, b) => {
-            if (!a.completion_date) return 1;  
-            if (!b.completion_date) return -1;
-            return new Date(b.completion_date) - new Date(a.completion_date); 
-        });
-
-        if (filteredGames.length > 0) {
-            let titleKey = `filter_${currentFilter}`;
-            createGamesSection(t[titleKey] || t[`status_${currentFilter}`], filteredGames, container, t);
-        } else {
-            container.innerHTML = `<h3 style="text-align:center; color:var(--text-muted); margin-top:50px;">${t.empty_list}</h3>`;
-        }
-    } else {
-        categoryOrder.forEach(catKey => {
-            const catGames = gamesData.filter(g => g.category === catKey);
-            if (catGames.length === 0) return;
-            createGamesSection(t[catKey], catGames, container, t);
-        });
-    }
-}
-
-function createGamesSection(sectionTitle, gamesList, container, t) {
-    const section = document.createElement('section');
-    section.className = 'category-section';
-
-    const title = document.createElement('h2');
-    title.className = 'category-title';
-    title.innerHTML = `<i class='bx bxs-folder'></i> &nbsp; ${sectionTitle}`;
-    section.appendChild(title);
-
-    const grid = document.createElement('div');
-    grid.className = 'games-grid';
-
-    gamesList.forEach(game => {
-        const card = document.createElement('div');
-        
-        let currentStatus = game.play_status || "not_started";
-        if (game.progress === 100) {
-            currentStatus = "completed";
-        }
-        
-        let statusOverlay = '';
-        let extraCardClass = '';
-        let progressHtml = '';
-        
-        if (isStatusVisible || currentFilter !== 'all') { 
-            let statusTextKey = `status_${currentStatus}`;
-            let statusColorClass = `status-badge-${currentStatus}`;
-            
-            statusOverlay = `<div class="status-overlay ${statusColorClass}">${t[statusTextKey] || currentStatus}</div>`;
-
-            if (currentStatus === 'dropped') extraCardClass = 'game-card-dropped';
-            else if (currentStatus === 'completed') extraCardClass = 'game-card-completed'; 
-            else if (currentStatus === 'paused') extraCardClass = 'game-card-paused';
-            else if (currentStatus === 'changed_mind') extraCardClass = 'game-card-changed_mind';
-
-            if (game.progress !== undefined) {
-                progressHtml = `
-                    <div class="progress-wrapper">
-                        <span class="progress-text">${game.progress}%</span>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${game.progress}%;"></div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        card.className = `game-card ${extraCardClass}`;
-
-        let reviewHtml = '';
-        if (game.review_link) {
-            reviewHtml = `
-                <a href="${game.review_link}" target="_blank" class="action-icon review-icon" title="${t.read_review}">
-                    <i class='bx bxs-message-square-detail'></i>
-                </a>
-            `;
-        }
-
-        let playtimeHtml = game.playtime ? `<div class="meta-item" title="Playtime"><i class='bx bx-time-five'></i> ${game.playtime} ${t.playtime}</div>` : '';
-        let dateHtml = game.release_date ? `<div class="meta-item" title="Release Date"><i class='bx bx-calendar'></i> ${game.release_date}</div>` : '';
-        
-        if (currentFilter === 'completed' && game.completion_date) {
-             dateHtml = `<div class="meta-item" style="color: var(--accent);" title="Completion Date"><i class='bx bx-check-double'></i> Пройдено: ${game.completion_date}</div>`;
-        }
-
-        let priceHtml = '';
-        
-        if ((isStatusVisible || currentFilter !== 'all') && (currentStatus === 'completed' || currentStatus === 'dropped' || currentStatus === 'changed_mind')) {
-            priceHtml = '';
-        } else {
-            if (game.price_uah === 0 || !game.price_uah) {
-                priceHtml = `<span class="price-main">${t.tba}</span>`;
-            } else {
-                if (game.discount_percent > 0) {
-                    let discountedPrice = Math.round(game.price_uah * (1 - game.discount_percent / 100));
-                    priceHtml = `
-                        <div class="price-row">
-                            <span class="price-original">${game.price_uah} ₴</span>
-                            <span class="price-main">${discountedPrice} ₴</span>
-                        </div>
-                        <span class="price-sub">${t.sale} -${game.discount_percent}%</span>
-                    `;
-                } else {
-                    priceHtml = `<span class="price-main">${game.price_uah} ₴</span>`;
-                }
-            }
-        }
-
-        let ratingHtml = '';
-        if (!((isStatusVisible || currentFilter !== 'all') && (currentStatus === 'dropped' || currentStatus === 'changed_mind'))) {
-            if (game.rating && game.rating !== "TBA" && game.rating !== "-") {
-                let rClass = getRatingClass(game.rating);
-                ratingHtml = `<div class="meta-score ${rClass}" title="${t.metacritic}">${game.rating}</div>`;
-            }
-        }
-
-        let steamLinkHtml = '';
-        const linkAttr = game.steam_link === '#' ? 'style="pointer-events:none; opacity:0.5;"' : 'target="_blank"';
-        if (!((isStatusVisible || currentFilter !== 'all') && (currentStatus === 'dropped' || currentStatus === 'changed_mind'))) {
-            steamLinkHtml = `
-                <a href="${game.steam_link}" ${linkAttr} class="action-icon steam-link-icon" title="${t.steamProfile}">
-                    <i class='bx bxl-steam'></i>
-                </a>
-            `;
-        }
-
-        const description = currentLang === 'ru' ? game.desc_ru : game.desc_en;
-
-        card.innerHTML = `
-            <div class="card-inner">
-                <div class="poster-container">
-                    <img src="${game.poster}" alt="${game.title}" class="card-poster" onerror="this.onerror=null; this.src='https://placehold.co/600x280/1e1e1e/10b981?text=No+Image';">
-                    ${statusOverlay}
-                </div>
-                
-                <div class="card-body">
-                    <h3 class="game-title">${game.title}</h3>
-                    
-                    <div class="game-meta">
-                        <div class="meta-item" title="Genre">
-                            <i class='bx bxs-joystick'></i> ${game.genres[0] || 'Game'} 
-                        </div>
-                        ${playtimeHtml}
-                        ${dateHtml}
-                    </div>
-
-                    ${progressHtml}
-
-                    <p class="game-desc">${description}</p>
-
-                    <div class="game-footer">
-                        <div class="price-block">
-                           ${priceHtml}
-                        </div>
-                        
-                        <div class="footer-right">
-                            ${ratingHtml}
-                            <div class="footer-icons">
-                                ${reviewHtml}
-                                ${steamLinkHtml}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        grid.appendChild(card);
-    });
-
-    section.appendChild(grid);
-    container.appendChild(section);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    currentLang = detectLanguage();
-    render();
     updateSteamAvatar();
+    renderBoard();
 });

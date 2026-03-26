@@ -256,7 +256,7 @@ h2 {
 /* .project-card[data-name=""], */
 /* .project-card[data-name=""], */
 /* .project-card[data-name=""], */
-.project-card[data-name="graphic-editors"],
+.project-card[data-name="graphic-editors.html"],
 .project-card[data-name="qa-site-test1.html"],
 .project-card[data-name="homeowners association"],
 .project-card[data-name="newpc"],
@@ -276,7 +276,7 @@ h2 {
 /* .project-card[data-name=""]:hover, */
 /* .project-card[data-name=""]:hover, */
 /* .project-card[data-name=""]:hover, */
-.project-card[data-name="graphic-editors"]:hover,
+.project-card[data-name="graphic-editors.html"]:hover,
 .project-card[data-name="qa-site-test1.html"]:hover,
 .project-card[data-name="homeowners association"]:hover,
 .project-card[data-name="newpc"]:hover,
@@ -751,6 +751,23 @@ footer a:hover { color: var(--accent); }
 
 .icon-btn:hover i.bx-dice-5 {
     animation: rollDice 0.5s ease-in-out;
+}
+
+.icon-btn.active {
+    color: white;
+    background-color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3);
+}
+
+[data-theme="dark"] .icon-btn.active {
+    box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+}
+
+.icon-btn.active:hover {
+    color: white;
+    transform: translateY(-2px);
+    filter: brightness(1.1);
 }
 
 @keyframes rollDice {

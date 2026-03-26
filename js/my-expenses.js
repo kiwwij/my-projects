@@ -321,11 +321,21 @@ weekBtns.forEach(btn => {
 prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); init(); });
 nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); init(); });
 
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeToggle.innerHTML = "<i class='bx bx-sun'></i>";
+} else {
+    document.body.classList.remove('dark-mode');
+    themeToggle.innerHTML = "<i class='bx bx-moon'></i>";
+}
+
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
-    const icon = themeToggle.querySelector('i');
-    icon.classList.toggle('bx-moon');
-    icon.classList.toggle('bx-sun');
+    const isDark = document.body.classList.contains('dark-mode');
+    
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    
+    themeToggle.innerHTML = isDark ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
 });
 
 init();

@@ -1,9 +1,9 @@
 const username = 'kiwwij';
 const repo = 'my-projects';
 const folder = 'html';
-const configUrl = 'projects.json'; 
+const configUrl = 'projects.json';
 
-const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', ''];
+const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', /* '' */];
 const SECRET_CODE = 'hentaif';
 let inputBuffer = '';
 
@@ -12,6 +12,16 @@ const searchInput = document.getElementById('search-input');
 const clearSearchBtn = document.getElementById('clear-search');
 
 let allProjects = [];
+let inputTimeout;
+let currentFilter = null;
+let showNewOnly = false;
+
+const techColors = {
+    'html': '#e34c26', 'css': '#563d7c', 'js': '#f1e05a', 'javascript': '#f1e05a', 'python': '#3572A5',
+    'php': '#4F5D95', 'java': '#b07219', 'c++': '#f34b7d', 'cpp': '#f34b7d', 'c#': '#178600',
+    'typescript': '#2b7489', 'ts': '#2b7489', 'vue': '#41b883', 'react': '#61dafb', 'github': '#181717',
+    'git': '#F05032', 'mysql': '#4479a1', 'sql': '#4479a1'
+};
 
 function isProjectNew(dateString) {
     if (!dateString) return false;
@@ -19,7 +29,7 @@ function isProjectNew(dateString) {
     const currentDate = new Date();
     const diffTime = currentDate - projectDate;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 && diffDays <= 14; 
+    return diffDays > 0 && diffDays <= 14;
 }
 
 async function loadProjects() {
@@ -28,7 +38,7 @@ async function loadProjects() {
     try {
         const response = await fetch(configUrl);
         if (!response.ok) throw new Error();
-        
+
         const projectsConfig = await response.json();
         let htmlFiles = [];
 
@@ -48,8 +58,8 @@ async function loadProjects() {
 
         renderTechStats(htmlFiles, projectsConfig);
 
-        container.innerHTML = ''; 
-        allProjects = []; 
+        container.innerHTML = '';
+        allProjects = [];
 
         if (htmlFiles.length === 0) {
             container.innerHTML = '<p>There are no projects yet.</p>';
@@ -93,14 +103,14 @@ async function loadProjects() {
                 imageHTML = `<div class="card-image placeholder" style="background-color: ${color};"><span style="font-size: 4rem; color: white; font-weight: bold;">${displayName.charAt(0).toUpperCase()}</span></div>`;
             }
 
-            const MAX_ICONS = 6; 
+            const MAX_ICONS = 6;
             let stackHTML = '';
             const createIconHtml = (tech) => `<i class='${getTechIcon(tech)} tech-icon' title='Filter by ${tech.toUpperCase()}' onclick="event.preventDefault(); event.stopPropagation(); filterByTech('${tech}')"></i>`;
 
             if (stack.length <= MAX_ICONS) {
                 stackHTML = stack.map(tech => createIconHtml(tech)).join('');
             } else {
-                const visibleCount = MAX_ICONS - 1; 
+                const visibleCount = MAX_ICONS - 1;
                 const visibleTechs = stack.slice(0, visibleCount).map(tech => createIconHtml(tech)).join('');
                 const hiddenTechsString = stack.slice(visibleCount).join(', ').toUpperCase();
                 stackHTML = `${visibleTechs}<span class="tech-more" title="More: ${hiddenTechsString}">+${stack.length - visibleCount}</span>`;
@@ -113,8 +123,9 @@ async function loadProjects() {
             card.setAttribute('data-name', displayName.toLowerCase());
             card.setAttribute('data-desc', description.toLowerCase());
             card.setAttribute('data-stack', stack.join(',').toLowerCase());
-            card.setAttribute('data-id', project.name); 
-            
+            card.setAttribute('data-id', project.name);
+            card.setAttribute('data-is-new', (project.date && isProjectNew(project.date)) ? 'true' : 'false');
+
             card.innerHTML = `
                 ${badgeHTML}
                 <div class="pin-btn" title="Pin project" onclick="togglePin(event, '${project.name}')">
@@ -144,11 +155,11 @@ async function loadProjects() {
 }
 
 function showToast(message, duration = 2500) {
-    const container = document.getElementById('toast-container');
+    const toastContainer = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.innerHTML = message;
-    container.appendChild(toast);
+    toastContainer.appendChild(toast);
 
     setTimeout(() => {
         toast.classList.add('fade-out');
@@ -156,28 +167,20 @@ function showToast(message, duration = 2500) {
     }, duration);
 }
 
-let inputTimeout; // Таймер для сброса ввода
-
 document.addEventListener('keydown', (e) => {
-    // Игнорируем нажатия, если фокус находится в инпуте
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    // Сбрасываем старый таймер при каждом новом нажатии
     clearTimeout(inputTimeout);
 
-    // Сначала добавляем символ в буфер
     inputBuffer += e.key.toLowerCase();
     if (inputBuffer.length > SECRET_CODE.length) {
         inputBuffer = inputBuffer.substring(inputBuffer.length - SECRET_CODE.length);
     }
 
-    // Если ничего не нажимать 1.5 секунды — буфер сбрасывается.
-    // Это нужно, чтобы случайные буквы не мешали хоткеям в будущем
     inputTimeout = setTimeout(() => {
         inputBuffer = '';
     }, 1500);
 
-    // Проверяем, введен ли пароль целиком
     if (inputBuffer === SECRET_CODE) {
         const isCurrentlyUnlocked = localStorage.getItem('unlock_hidden') === 'true';
         if (!isCurrentlyUnlocked) {
@@ -187,12 +190,11 @@ document.addEventListener('keydown', (e) => {
             localStorage.removeItem('unlock_hidden');
             showToast('<i class="bx bx-lock-alt"></i> Secret mode deactivated.');
         }
-        inputBuffer = ''; // Сбрасываем буфер после успешного ввода
+        inputBuffer = '';
         setTimeout(() => location.reload(), 1200);
-        return; // Выходим, чтобы хоткеи не сработали
+        return;
     }
 
-    // Хоткеи (используем e.code для независимости от раскладки)
     if (e.code === 'Slash' || e.key === '/') {
         e.preventDefault();
         document.getElementById('search-input').focus();
@@ -200,7 +202,6 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         openRandomProject();
     } else if (e.code === 'KeyT') {
-        // Переключаем тему ТОЛЬКО если прямо сейчас не вводится пароль ("hent...")
         if (!inputBuffer.endsWith('hent')) {
             e.preventDefault();
             document.getElementById('color_mode').click();
@@ -218,7 +219,7 @@ function getTechIcon(tech) {
         'java': 'bx bxl-java', 'c++': 'bx bxl-c-plus-plus', 'cpp': 'bx bxl-c-plus-plus', 'go': 'bx bxl-go-lang',
         'ruby': 'bx bxl-ruby', 'git': 'bx bxl-git', 'github': 'bx bxl-github', 'docker': 'bx bxl-docker',
         'figma': 'bx bxl-figma', 'unity': 'bx bxl-unity', 'blender': 'bx bxl-blender', 'android': 'bx bxl-android',
-        'apple': 'bx bxl-apple', 'windows': 'bx bxl-windows', 'database': 'bx bxs-data', 'sql': 'bx bxs-data',      
+        'apple': 'bx bxl-apple', 'windows': 'bx bxl-windows', 'database': 'bx bxs-data', 'sql': 'bx bxs-data',
         'mysql': 'bx bxs-data', 'postgresql': 'bx bxl-postgresql', 'mongodb': 'bx bxl-mongodb',
     };
     return map[lowerTech] || 'bx bx-code-alt';
@@ -265,9 +266,40 @@ function initTheme() {
     });
 }
 
+function applyAllFilters() {
+    const val = searchInput.value.toLowerCase();
+
+    allProjects.forEach(card => {
+        const name = card.getAttribute('data-name') || '';
+        const desc = card.getAttribute('data-desc') || '';
+        const stackString = card.getAttribute('data-stack') || '';
+        const stackArray = stackString ? stackString.split(',') : [];
+        const isNew = card.getAttribute('data-is-new') === 'true';
+
+        let matchesSearch = val === '' || name.includes(val) || desc.includes(val) || stackString.includes(val);
+        let matchesTech = currentFilter === null || stackArray.includes(currentFilter);
+        let matchesNew = !showNewOnly || isNew;
+
+        if (matchesSearch && matchesTech && matchesNew) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    updateProjectCount();
+}
+
+const filterNewBtn = document.getElementById('filter-new-btn');
+if (filterNewBtn) {
+    filterNewBtn.addEventListener('click', () => {
+        showNewOnly = !showNewOnly;
+        filterNewBtn.classList.toggle('active', showNewOnly);
+        applyAllFilters();
+    });
+}
+
 searchInput.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
-    
     clearSearchBtn.style.display = val.length > 0 ? 'block' : 'none';
 
     if (val === SECRET_CODE) {
@@ -279,29 +311,18 @@ searchInput.addEventListener('input', (e) => {
             localStorage.removeItem('unlock_hidden');
             showToast('<i class="bx bx-lock-alt"></i> Secret mode deactivated.');
         }
-        searchInput.value = ''; 
+        searchInput.value = '';
         setTimeout(() => location.reload(), 1200);
         return;
     }
 
-    allProjects.forEach(card => {
-        const name = card.getAttribute('data-name') || '';
-        const desc = card.getAttribute('data-desc') || '';
-        const stack = card.getAttribute('data-stack') || '';
-
-        if (name.includes(val) || desc.includes(val) || stack.includes(val)) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-    updateProjectCount();
+    applyAllFilters();
 });
 
 clearSearchBtn.addEventListener('click', () => {
     searchInput.value = '';
     clearSearchBtn.style.display = 'none';
-    searchInput.dispatchEvent(new Event('input'));
+    applyAllFilters();
     searchInput.focus();
 });
 
@@ -321,18 +342,9 @@ document.getElementById('random-btn').addEventListener('click', openRandomProjec
 document.getElementById('current-year').textContent = new Date().getFullYear();
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
-    updateSteamAvatar(); 
+    updateSteamAvatar();
     initTheme();
 });
-
-const techColors = {
-    'html': '#e34c26', 'css': '#563d7c', 'js': '#f1e05a', 'javascript': '#f1e05a', 'python': '#3572A5',
-    'php': '#4F5D95', 'java': '#b07219', 'c++': '#f34b7d', 'cpp': '#f34b7d', 'c#': '#178600',
-    'typescript': '#2b7489', 'ts': '#2b7489', 'vue': '#41b883', 'react': '#61dafb', 'github': '#181717',
-    'git': '#F05032', 'mysql': '#4479a1', 'sql': '#4479a1'
-};
-
-let currentFilter = null;
 
 function renderTechStats(files, projectsConfig) {
     const statsContainer = document.getElementById('tech-stats');
@@ -369,7 +381,7 @@ function renderTechStats(files, projectsConfig) {
     }
 
     const sortedStats = Object.entries(totalStats).sort(([, a], [, b]) => b - a);
-    
+
     const top5 = sortedStats.slice(0, 5);
     const top5Count = top5.reduce((sum, item) => sum + item[1], 0);
     const others = sortedStats.slice(5);
@@ -394,38 +406,29 @@ function renderTechStats(files, projectsConfig) {
 function filterByTech(tech) {
     const statsContainer = document.getElementById('tech-stats');
     const cloudContainer = document.getElementById('tech-cloud');
-    
+
     if (currentFilter === tech) {
         currentFilter = null;
         if(statsContainer) statsContainer.classList.remove('has-active-filter');
         if(cloudContainer) cloudContainer.classList.remove('has-active-filter');
         document.querySelectorAll('.stat-bar').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tech-tag').forEach(el => el.classList.remove('active'));
-        allProjects.forEach(card => card.style.display = 'flex');
-        updateProjectCount(); 
-        return;
+    } else {
+        currentFilter = tech;
+        if(statsContainer) statsContainer.classList.add('has-active-filter');
+        if(cloudContainer) cloudContainer.classList.add('has-active-filter');
+
+        document.querySelectorAll('.stat-bar').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tech-tag').forEach(el => el.classList.remove('active'));
+
+        const activeBar = document.getElementById(`filter-${tech}`);
+        if (activeBar) activeBar.classList.add('active');
+
+        const activeTag = document.getElementById(`tag-${tech}`);
+        if (activeTag) activeTag.classList.add('active');
     }
 
-    currentFilter = tech;
-    searchInput.value = ''; 
-    if(statsContainer) statsContainer.classList.add('has-active-filter');
-    if(cloudContainer) cloudContainer.classList.add('has-active-filter');
-    
-    document.querySelectorAll('.stat-bar').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tech-tag').forEach(el => el.classList.remove('active'));
-    
-    const activeBar = document.getElementById(`filter-${tech}`);
-    if (activeBar) activeBar.classList.add('active');
-    
-    const activeTag = document.getElementById(`tag-${tech}`);
-    if (activeTag) activeTag.classList.add('active');
-
-    allProjects.forEach(card => {
-        const stackString = card.getAttribute('data-stack');
-        const stackArray = stackString ? stackString.split(',') : [];
-        card.style.display = stackArray.includes(tech) ? 'flex' : 'none';
-    });
-    updateProjectCount();
+    applyAllFilters();
 }
 
 function updateProjectCount() {
@@ -456,14 +459,14 @@ function updatePinnedOrder() {
         const id = card.getAttribute('data-id');
         const pinIndex = pinned.indexOf(id);
         const icon = card.querySelector('.pin-btn i');
-        
+
         if (pinIndex > -1) {
             card.classList.add('is-pinned');
-            card.style.order = pinIndex - 10; 
+            card.style.order = pinIndex - 10;
             if(icon) icon.className = 'bx bxs-pin';
         } else {
             card.classList.remove('is-pinned');
-            card.style.order = 0; 
+            card.style.order = 0;
             if(icon) icon.className = 'bx bx-pin';
         }
     });
@@ -481,7 +484,7 @@ function togglePin(event, fileId) {
     } else {
         if (pinned.length >= 4) {
             showToast('<i class="bx bx-error-circle"></i> You can only pin up to 4 projects!', 3000);
-            return; 
+            return;
         }
         pinned.push(fileId);
         showToast('<i class="bx bxs-pin"></i> Project pinned to top!');

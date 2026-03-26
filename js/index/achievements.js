@@ -101,6 +101,7 @@ document.addEventListener('keydown', (e) => {
     secretBuffer += e.key.toLowerCase();
     if (secretBuffer.length > 7) secretBuffer = secretBuffer.slice(-7);
     if (secretBuffer === 'hentaif') unlockAchievement('hacker');
+    if (val === 'hentaif') unlockAchievement('hacker');
 });
 
 const sInput = document.getElementById('search-input');
