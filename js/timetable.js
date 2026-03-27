@@ -167,7 +167,7 @@ function getWeekType(date) {
     target.setHours(0,0,0,0);
     
     const diffTime = target.getTime() - startSemester.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
+    const diffDays = Math.round(diffTime / (1000 * 3600 * 24));
     
     if (diffDays < 0) return 1;
     
