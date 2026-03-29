@@ -39,6 +39,8 @@ function handleImageError(imgElement) {
 
 function renderBoard() {
     if (typeof gamesData === 'undefined') return;
+1
+    gamesData.sort((a, b) => a.title.localeCompare(b.title));
 
     const board = document.getElementById('kanban-board');
     const statsContainer = document.getElementById('quick-stats');
@@ -55,8 +57,8 @@ function renderBoard() {
         if (game.price_uah > 0) totalValue += game.price_uah;
     });
 
-    let pausedListHtml = pausedGames.map(g => `<div class="hover-item">${g.title}</div>`).join('');
-    let changedMindListHtml = changedMindGames.map(g => `<div class="hover-item">${g.title}</div>`).join('');
+    let pausedListHtml = pausedGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
+    let changedMindListHtml = changedMindGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
 
     let pausedHtml = pausedGames.length > 0 ? `
         <div class="stat-hover-group">
@@ -121,7 +123,7 @@ function createCardHtml(game) {
         ? `<div class="meta-row" title="Дата выхода игры"><i class='bx bx-calendar'></i> <span>${game.release_date}</span></div>` 
         : `<div class="meta-row" title="Точная дата выхода неизвестна"><i class='bx bx-calendar'></i> <span style="opacity: 0.5;">Дата: tbd</span></div>`;
     
-    let priceHtml = `<div class="meta-row" title="Базовая стоимость игры в Steam"><i class='bx bx-purchase-tag'></i> ${priceDisplay}</div>`;
+    let priceHtml = `<div class="meta-row" title="Базовая стоимость игры в Steam"><i class='bx bx-purchase-tag'></i> <span>${priceDisplay}</span></div>`;
     
     let mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
     
@@ -131,17 +133,30 @@ function createCardHtml(game) {
     else if (game.rating > 0) ratingColor = "#ef4444"; 
 
     let ratingHtml = (game.rating && game.rating !== "") 
-        ? `<div class="meta-row" title="Рейтинг игры на сайте Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1);"> <span style="color: ${ratingColor}; font-weight: 600;">${game.rating}/100</span></div>` 
-        : `<div class="meta-row" title="У игры пока нет рейтинга на Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1) opacity(0.5);"> <span style="opacity: 0.5;">Рейтинг: tbd</span></div>`;
+        ? `<div class="meta-row" title="Рейтинг игры на сайте Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1); margin: 0;"> <span style="color: ${ratingColor}; font-weight: 600;">${game.rating}/100</span></div>` 
+        : `<div class="meta-row" title="У игры пока нет рейтинга на Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1) opacity(0.5); margin: 0;"> <span style="opacity: 0.5;">Рейтинг: tbd</span></div>`;
 
     let reviewHtml = game.review_link ? `<a href="${game.review_link}" target="_blank" class="action-btn" title="Открыть обзор на игру"><i class='bx bxs-message-square-detail'></i></a>` : '';
     let steamHtml = game.steam_link ? `<a href="${game.steam_link}" target="_blank" class="action-btn steam-color" title="Открыть страницу игры в Steam"><i class='bx bxl-steam'></i></a>` : '';
 
     let currentProgress = game.progress || 0;
-    let progressColor = currentProgress === 100 ? '#10b981' : '#06b6d4';
+    
+    let progressColor;
+    switch(game.play_status) {
+        case 'completed': progressColor = '#10b981'; break; // Зеленый
+        case 'playing': progressColor = '#06b6d4'; break;   // Твой фирменный бирюзовый
+        case 'planned': progressColor = '#f59e0b'; break;   // Оранжевый
+        case 'dropped': progressColor = '#ef4444'; break;   // Красный
+        default: progressColor = '#94a3b8';                 // Серый по умолчанию
+    }
+
+    let cardClasses = 'kanban-card';
+    if (game.play_status === 'dropped') {
+        cardClasses += ' opacity-70';
+    }
 
     return `
-        <div class="kanban-card">
+        <div class="${cardClasses}">
             <div class="card-cover-wrapper">
                 <div class="card-cover" style="background-image: url('${game.poster}');"></div>
                 <img src="${game.poster}" style="position: absolute; width: 1px; height: 1px; opacity: 0;" onload="handleImageLoad(this)" onerror="handleImageError(this)">

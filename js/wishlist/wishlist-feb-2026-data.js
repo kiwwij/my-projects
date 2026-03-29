@@ -310,7 +310,7 @@ const gamesData = [
         discount_percent: 70,
         release_date: "2016",
         rating: "83",
-        play_status: "not_started",
+        play_status: "changed_mind",
         progress: 0,
         review_link: ""
     },
@@ -498,6 +498,24 @@ const gamesData = [
         is_purchased: false,
         review_link: ""
     },
+    {
+        category: "cat_undecided",
+        title: "Mistbound",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4002920/c57d7cd2ce0957ec979065b388ea2a97c2aea988/header.jpg?t=1774169969",
+        desc_en: "«Fog» is a surreal narrative adventure about overcoming trauma, where the line between reality and dreams blurs. Loneliness can be too loud. And salvation too quiet!",
+        desc_ru: "«Тумань» — сюрреалистическая нарративная адвенчура о преодолении травмы, где грань между реальностью и сном стирается. Одиночество бывает слишком громким. А спасение — слишком тихим!",
+        playtime: "2",
+        genres: ["Early Access", "Visual Novel", "Drama"],
+        steam_link: "https://store.steampowered.com/app/4002920/Mistbound/",
+        price_uah: 124,
+        discount_percent: 0,
+        release_date: "2026",
+        rating: "",
+        play_status: "not_started",
+        progress: 0,
+        is_purchased: false,
+        review_link: ""
+    },
 
     // --- UPCOMING (Еще не вышли) ---
     {
@@ -566,24 +584,6 @@ const gamesData = [
         price_uah: 0,
         discount_percent: 0,
         release_date: "2026",
-        rating: "",
-        play_status: "not_started",
-        progress: 0,
-        is_purchased: false,
-        review_link: ""
-    },
-    {
-        category: "cat_upcoming",
-        title: "Mistbound",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4002920/cf44670ed68ecb25dd9ad7f096a360cf0ddd8e71/header.jpg?t=1769023128",
-        desc_en: "A strategic RPG set in a world consumed by fog. Lead your caravan, manage resources, and fight off creatures lurking in the mist.",
-        desc_ru: "Стратегическая RPG в мире, поглощенном туманом. Управляйте караваном, ресурсами и отбивайтесь от существ, скрывающихся во мгле.",
-        playtime: "",
-        genres: ["Strategy", "RPG", "Survival"],
-        steam_link: "https://store.steampowered.com/app/4002920/Mistbound/",
-        price_uah: 0,
-        discount_percent: 0,
-        release_date: "",
         rating: "",
         play_status: "not_started",
         progress: 0,

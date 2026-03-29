@@ -33,7 +33,7 @@ const gamesData = [
         steam_link: "https://store.steampowered.com/app/3485810/Kena_Scars_of_Kosmora/",
         review_link: "",
         playtime: "",
-        price_uah: "", // потом поставить 0, без ""
+        price_uah: "", // потом поставить цену, без ""
         discount_percent: 0,
         release_date: "2026",
         play_status: "planned",
@@ -51,6 +51,19 @@ const gamesData = [
         release_date: "2026",
         play_status: "planned",
         rating: "89",
+        progress: 0
+    },
+    {
+        title: "",
+        poster: "",
+        steam_link: "",
+        review_link: "",
+        playtime: "",
+        price_uah: "",
+        discount_percent: 0,
+        release_date: "",
+        play_status: "",
+        rating: "",
         progress: 0
     },
 ];

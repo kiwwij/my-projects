@@ -154,6 +154,7 @@ function calculateAndRenderStats() {
     let completedCount = 0;
     let droppedCount = 0;
     let changedMindCount = 0;
+    let upcomingCount = 0;
     let totalValue = 0;
 
     gamesData.forEach(game => {
@@ -167,6 +168,10 @@ function calculateAndRenderStats() {
             changedMindCount++;
         }
 
+        if (game.category === "cat_upcoming") {
+            upcomingCount++;
+        }
+
         if (game.price_uah) {
             totalValue += game.price_uah;
         }
@@ -174,12 +179,11 @@ function calculateAndRenderStats() {
 
     const t = translations[currentLang];
 
-    // Динамическая логика для главного счетчика
     let displayTotal = totalGames;
     let displayLabel = t.stat_total_games;
 
     if (isStatusVisible) {
-        displayTotal = totalGames - completedCount - droppedCount - changedMindCount;
+        displayTotal = totalGames - completedCount - droppedCount - changedMindCount - upcomingCount;
         displayLabel = t.stat_remaining;
     }
 

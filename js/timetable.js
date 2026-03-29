@@ -138,7 +138,6 @@ const dateOverrides = {
     "2026-04-13": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
 };
 
-// --- Логіка ---
 let viewDate = new Date(); 
 let selectedDay = new Date().getDay();
 if (selectedDay === 0 || selectedDay === 6) selectedDay = 1;
@@ -204,7 +203,13 @@ function applyTimeOverrides(lessons, targetDate) {
             5: { start: "12:15", end: "13:00" },
             6: { start: "13:15", end: "14:00" },
             7: { start: "14:30", end: "15:15" },
-            8: { start: "15:30", end: "16:15" }
+            8: { start: "15:25", end: "16:10" },
+            9: { start: "16:20", end: "17:05" },
+            10: { start: "17:15", end: "18:00" },
+            11: { start: "18:10", end: "18:55" },
+            12: { start: "19:05", end: "19:50" },
+            13: { start: "20:00", end: "20:45" },
+            14: { start: "20:55", end: "21:40" }
         };
         lessons.forEach(l => {
             if(newTimes[l.num]) {
@@ -219,7 +224,6 @@ function injectStyles() {
     if (!document.getElementById('dynamic-schedule-styles')) {
         const style = document.createElement('style');
         style.id = 'dynamic-schedule-styles';
-        // Перевизначаємо кольори з !important, щоб вони 100% перебили CSS-файл
         style.innerHTML = `
             .type-EX { border-left-color: #9333ea !important; } /* СПЕЦ - фіолетовий */
             .type-KOL { border-left-color: #ef4444 !important; } /* КОЛ - червоний */
@@ -238,7 +242,6 @@ function init() {
     setInterval(updateStatus, 1000);
 }
 
-// --- ЛОГІКА СВАЙПІВ ---
 function initSwipeGestures() {
     let touchStartX = 0;
     let touchStartY = 0;
@@ -262,34 +265,86 @@ function initSwipeGestures() {
         
         if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
             if (diffX < 0) {
-                navigateDay(1); // Свайп вліво -> Наступний день
+                navigateDay(1);
             } else {
-                navigateDay(-1); // Свайп вправо -> Попередній день
+                navigateDay(-1);
             }
         }
     }
 }
 
+function animateScheduleChange(updateStateCallback, direction) {
+    const container = document.getElementById('schedule-container');
+    
+    if (!container) {
+        updateStateCallback();
+        return;
+    }
+
+    const outClass = direction === 1 ? 'slide-out-left' : 'slide-out-right';
+    const inClass = direction === 1 ? 'slide-in-right' : 'slide-in-left';
+
+    container.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
+    container.classList.add(outClass);
+
+    setTimeout(() => {
+        updateStateCallback(); 
+        
+        container.classList.remove(outClass);
+        container.classList.add(inClass);
+        
+        setTimeout(() => container.classList.remove(inClass), 250);
+    }, 250);
+}
+
 function navigateDay(direction) {
     let newDay = selectedDay + direction;
+    let weekOffset = 0;
+    
     if (newDay > 5) { 
-        changeWeek(1);
-        selectDay(1);
+        weekOffset = 1;
+        newDay = 1;
     } else if (newDay < 1) { 
-        changeWeek(-1);
-        selectDay(5);
-    } else {
-        selectDay(newDay);
+        weekOffset = -1;
+        newDay = 5;
     }
+
+    animateScheduleChange(() => {
+        if (weekOffset !== 0) {
+            viewDate.setDate(viewDate.getDate() + (weekOffset * 7));
+            checkIfTodayView();
+        }
+        selectedDay = newDay;
+        renderTabs();
+        updateDateDisplay();
+        renderSchedule();
+        updateStatus();
+    }, direction);
 }
-// ----------------------
+
+function selectDay(dayIndex) {
+    if (dayIndex === selectedDay) return;
+    const direction = dayIndex > selectedDay ? 1 : -1;
+    
+    animateScheduleChange(() => {
+        selectedDay = dayIndex;
+        renderTabs();
+        updateDateDisplay(); 
+        renderSchedule();
+        updateStatus();
+    }, direction);
+}
 
 function changeWeek(offset) {
-    viewDate.setDate(viewDate.getDate() + (offset * 7));
-    checkIfTodayView();
-    updateDateDisplay();
-    renderSchedule();
-    updateStatus(); 
+    const direction = offset > 0 ? 1 : -1;
+    
+    animateScheduleChange(() => {
+        viewDate.setDate(viewDate.getDate() + (offset * 7));
+        checkIfTodayView();
+        updateDateDisplay();
+        renderSchedule();
+        updateStatus(); 
+    }, direction);
 }
 
 function resetToToday() {
@@ -337,13 +392,6 @@ function updateDateDisplay() {
     const badge = document.getElementById('week-badge');
     badge.innerText = weekType === 1 ? "Тиждень 1" : "Тиждень 2";
     badge.className = `week-badge week-${weekType}`;
-}
-
-function selectDay(dayIndex) {
-    selectedDay = dayIndex;
-    renderTabs();
-    updateDateDisplay(); 
-    renderSchedule();
 }
 
 function renderTabs() {
