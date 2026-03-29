@@ -347,10 +347,10 @@ const gamesData = [
         discount_percent: 60,
         release_date: "2014",
         rating: "83",
-        play_status: "playing",
-        progress: 12,
+        play_status: "dropped",
+        progress: 19,
         is_purchased: true,
-        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp"
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/292120/"
     },
     {
         category: "cat_skeptical",
@@ -365,7 +365,7 @@ const gamesData = [
         discount_percent: 60,
         release_date: "2014",
         rating: "79",
-        play_status: "not_started",
+        play_status: "changed_mind",
         progress: 0,
         is_purchased: false,
         review_link: ""
@@ -383,7 +383,7 @@ const gamesData = [
         discount_percent: 60,
         release_date: "2015",
         rating: "66",
-        play_status: "not_started",
+        play_status: "changed_mind",
         progress: 0,
         is_purchased: false,
         review_link: ""

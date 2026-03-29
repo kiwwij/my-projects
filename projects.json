@@ -304,6 +304,13 @@
     "url": "",
     "date": "2026-03-25"
   },
+  "top-10-strongest-characters-in-mushoku-tensei.html": {
+    "image": "bx bxs-magic-wand",
+    "description": "A ranking of the strongest characters from the “Mushoku Tensei” universe. Based on the later parts of the light novel.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-03-29"
+  },
   ".html": {
     "image": "",
     "description": "",
