@@ -28,6 +28,8 @@
                 </div>
             </div>
             <div class="header-actions">
+                <a href="#" id="open-stats-btn" class="icon-link" title="Подробная статистика"><i class='bx bx-bar-chart-alt-2'></i></a>
+                
                 <a href="https://store.steampowered.com/wishlist/id/serhiosergey/" target="_blank" class="icon-link" title="Мой Wishlist в Steam"><i class='bx bxl-steam'></i></a>
                 <a href="https://kiwwij.github.io/kiwwij-social-links/" target="_blank" class="icon-link" title="Мои соцсети"><i class='bx bx-link-alt'></i></a>
             </div>
@@ -36,6 +38,17 @@
 
     <main class="kanban-board" id="kanban-board">
         </main>
+
+    <div id="stats-modal-overlay" class="stats-modal-overlay">
+        <div class="stats-modal">
+            <div class="stats-modal-header">
+                <h2><i class='bx bx-pie-chart-alt-2'></i> Статистика игр</h2>
+                <button id="close-stats-btn" class="close-stats-btn"><i class='bx bx-x'></i></button>
+            </div>
+            <div class="stats-modal-body" id="stats-modal-body">
+                </div>
+        </div>
+    </div>
 
     <script src="../js/wishlist/wishlist-summer-2026-data.js"></script>
     <script src="../js/wishlist-summer-2026.js"></script>

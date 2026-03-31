@@ -1,10 +1,4 @@
 // --- Налаштування даних ---
-/*
-  subgroup: 0 (або відсутнє) = для всіх
-  subgroup: 1 = тільки для 1 підгрупи
-  subgroup: 2 = тільки для 2 підгрупи
-*/
-
 const scheduleData = {
     // Тиждень 1 (Верхній)
     1: {
@@ -136,11 +130,28 @@ const dateOverrides = {
     },
     "2026-04-10": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
     "2026-04-13": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
+
+    // --- РОЗКЛАД СЕСІЇ (08.06 - 19.06) ---
+    "2026-06-08": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Архітектура та проект. ПЗ", type: "CONS", room: "Уточнюється", teacher: "Бабюк Н.П." }] },
+    "2026-06-09": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Архітектура та проект. ПЗ", type: "EXAM", room: "Уточнюється", teacher: "Бабюк Н.П." }] },
+    "2026-06-10": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Основи прогр. інженерії", type: "CONS", room: "Уточнюється", teacher: "Коваленко О.О." }] },
+    "2026-06-11": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Основи прогр. інженерії", type: "EXAM", room: "Уточнюється", teacher: "Коваленко О.О." }] },
+    "2026-06-12": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Навчальна практика", type: "ZALIK", room: "Уточнюється", teacher: "Романюк О.В." }] },
+    "2026-06-13": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Теор. ймов. та мат. стат.", type: "CONS", room: "Уточнюється", teacher: "Ракитянська Г.Б." }] },
+    "2026-06-14": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Теор. ймов. та мат. стат.", type: "CONS", room: "Уточнюється", teacher: "Ракитянська Г.Б." }] },
+    "2026-06-15": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Метрол. оцінювання ПЗ", type: "CONS", room: "Уточнюється", teacher: "Дудатьєв І.А." }] },
+    "2026-06-16": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Метрол. оцінювання ПЗ", type: "EXAM", room: "Уточнюється", teacher: "Дудатьєв І.А." }] },
+    "2026-06-17": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Основи WEB-дизайну", type: "ZALIK", room: "Уточнюється", teacher: "Чехместрук Р.Ю." }] },
+    "2026-06-18": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Політ. історія України ХХ ст.", type: "ZALIK", room: "Уточнюється", teacher: "Пономаренко А.Б." }] },
+    "2026-06-19": { add: [
+        { num: 3, start: "10:00", end: "11:20", subj: "Іноземна мова", type: "ZALIK", room: "Уточнюється", teacher: "Кухарчук Г.В.", subgroup: 1 },
+        { num: 3, start: "10:00", end: "11:20", subj: "Іноземна мова", type: "ZALIK", room: "Уточнюється", teacher: "Чопляк В.В.", subgroup: 2 }
+    ] },
 };
 
 let viewDate = new Date(); 
 let selectedDay = new Date().getDay();
-if (selectedDay === 0 || selectedDay === 6) selectedDay = 1;
+if (selectedDay === 0) selectedDay = 7; // Змінили логіку: Неділя тепер 7 день, а не 0
 
 let currentSettings = {
     group: '5pi-24b',
@@ -212,7 +223,8 @@ function applyTimeOverrides(lessons, targetDate) {
             14: { start: "20:55", end: "21:40" }
         };
         lessons.forEach(l => {
-            if(newTimes[l.num]) {
+            // Не застосовуємо нові часи до екзаменів/консультацій, якщо там вже встановлено фіксований час
+            if(newTimes[l.num] && !['EXAM', 'CONS', 'ZALIK'].includes(l.type)) {
                 l.start = newTimes[l.num].start;
                 l.end = newTimes[l.num].end;
             }
@@ -227,6 +239,9 @@ function injectStyles() {
         style.innerHTML = `
             .type-EX { border-left-color: #9333ea !important; } /* СПЕЦ - фіолетовий */
             .type-KOL { border-left-color: #ef4444 !important; } /* КОЛ - червоний */
+            .type-EXAM { border-left-color: #e11d48 !important; } /* Іспит - Яскраво червоний */
+            .type-CONS { border-left-color: #f59e0b !important; } /* Консультація - Жовтий */
+            .type-ZALIK { border-left-color: #10b981 !important; } /* Залік/ДЗ - Зелений */
         `;
         document.head.appendChild(style);
     }
@@ -264,23 +279,18 @@ function initSwipeGestures() {
         const diffY = touchEndY - touchStartY;
         
         if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
-            if (diffX < 0) {
-                navigateDay(1);
-            } else {
-                navigateDay(-1);
-            }
+            if (diffX < 0) navigateDay(1);
+            else navigateDay(-1);
         }
     }
 }
 
 function animateScheduleChange(updateStateCallback, direction) {
     const container = document.getElementById('schedule-container');
-    
     if (!container) {
         updateStateCallback();
         return;
     }
-
     const outClass = direction === 1 ? 'slide-out-left' : 'slide-out-right';
     const inClass = direction === 1 ? 'slide-in-right' : 'slide-in-left';
 
@@ -289,10 +299,8 @@ function animateScheduleChange(updateStateCallback, direction) {
 
     setTimeout(() => {
         updateStateCallback(); 
-        
         container.classList.remove(outClass);
         container.classList.add(inClass);
-        
         setTimeout(() => container.classList.remove(inClass), 250);
     }, 250);
 }
@@ -301,12 +309,12 @@ function navigateDay(direction) {
     let newDay = selectedDay + direction;
     let weekOffset = 0;
     
-    if (newDay > 5) { 
+    if (newDay > 7) { 
         weekOffset = 1;
         newDay = 1;
     } else if (newDay < 1) { 
         weekOffset = -1;
-        newDay = 5;
+        newDay = 7;
     }
 
     animateScheduleChange(() => {
@@ -337,7 +345,6 @@ function selectDay(dayIndex) {
 
 function changeWeek(offset) {
     const direction = offset > 0 ? 1 : -1;
-    
     animateScheduleChange(() => {
         viewDate.setDate(viewDate.getDate() + (offset * 7));
         checkIfTodayView();
@@ -350,7 +357,7 @@ function changeWeek(offset) {
 function resetToToday() {
     viewDate = new Date();
     selectedDay = new Date().getDay();
-    if (selectedDay === 0 || selectedDay === 6) selectedDay = 1;
+    if (selectedDay === 0) selectedDay = 7;
     
     renderTabs();
     checkIfTodayView();
@@ -363,12 +370,7 @@ function checkIfTodayView() {
     const today = new Date();
     const sameWeek = isSameWeek(viewDate, today);
     const btn = document.getElementById('reset-view-btn');
-    
-    if (sameWeek) {
-        btn.style.display = 'none';
-    } else {
-        btn.style.display = 'block';
-    }
+    btn.style.display = sameWeek ? 'none' : 'block';
 }
 
 function isSameWeek(d1, d2) {
@@ -431,6 +433,7 @@ function renderSchedule() {
         return;
     }
 
+    // Канікули тепер з 20 червня
     if ((month === 5 && date > 19) || month === 6 || month === 7) {
         container.innerHTML = `
             <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
@@ -442,9 +445,16 @@ function renderSchedule() {
     }
 
     const currentWeekType = getWeekType(displayDate);
-    const allLessons = scheduleData[currentWeekType][selectedDay];
+    let allLessons = scheduleData[currentWeekType][selectedDay] || [];
     
-    let lessons = allLessons ? allLessons.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l})) : [];
+    // Перевірка на період сесії (з 08.06 по 19.06)
+    const isSessionPeriod = displayDate >= new Date('2026-06-08T00:00:00') && displayDate <= new Date('2026-06-19T23:59:59');
+    
+    let lessons = [];
+    if (!isSessionPeriod) {
+        // Якщо не сесія - завантажуємо звичайні пари
+        lessons = allLessons.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
+    }
 
     const dateStr = formatDateString(displayDate);
     if (dateOverrides[dateStr]) {
@@ -468,53 +478,66 @@ function renderSchedule() {
 
     const maxLessonNum = Math.max(...lessons.map(l => l.num));
     
-    const typeLabels = { 'LK': 'ЛК', 'PZ': 'ПЗ', 'LR': 'ЛР', 'EX': 'СПЕЦ', 'KOL': 'КОЛ' }; 
+    const typeLabels = { 'LK': 'ЛК', 'PZ': 'ПЗ', 'LR': 'ЛР', 'EX': 'СПЕЦ', 'KOL': 'КОЛ', 'EXAM': 'Іспит', 'CONS': 'Конс.', 'ZALIK': 'Залік / ДЗ' }; 
 
     const isToday = isSameDate(viewDate, new Date()) && (selectedDay === (new Date().getDay() || 7));
     const now = new Date();
 
-    for (let i = 1; i <= maxLessonNum; i++) {
-        const lesson = lessons.find(l => l.num === i);
-        const card = document.createElement('div');
-
-        if (lesson) {
-            card.className = `lesson-card type-${lesson.type}`;
-            card.id = `lesson-${lesson.num}`;
-            
-            if (isToday) {
-                const [endH, endM] = lesson.end.split(':').map(Number);
-                const lessonEnd = new Date();
-                lessonEnd.setHours(endH, endM, 0);
-                if (now > lessonEnd) card.classList.add('past');
-            }
-
-            card.innerHTML = `
-                <div class="time-box">
-                    <div class="lesson-num">${lesson.num}</div>
-                    <div>${lesson.start}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.7">${lesson.end}</div>
-                </div>
-                <div class="info-box">
-                    <div class="subject-name">${lesson.subj}</div>
-                    <div class="lesson-details">
-                        <div class="detail-item"><i class='bx bx-user'></i> <span class="teacher-name">${lesson.teacher}</span></div>
-                        <div class="detail-item"><i class='bx bx-building'></i> <span>${lesson.room}</span></div>
-                        <div class="detail-item"><i class='bx bx-purchase-tag-alt'></i> <span>${typeLabels[lesson.type] || lesson.type}</span></div>
+    // Якщо це сесія, ми не хочемо виводити пусті пари 1 і 2, показуємо тільки те що є
+    if (isSessionPeriod) {
+        lessons.forEach(lesson => {
+            const card = createLessonCard(lesson, typeLabels, isToday, now);
+            container.appendChild(card);
+        });
+    } else {
+        // Звичайний режим з пустими парами між вікнами
+        for (let i = 1; i <= maxLessonNum; i++) {
+            const lesson = lessons.find(l => l.num === i);
+            if (lesson) {
+                container.appendChild(createLessonCard(lesson, typeLabels, isToday, now));
+            } else {
+                const card = document.createElement('div');
+                card.className = 'lesson-card empty-lesson';
+                card.innerHTML = `
+                    <div class="time-box">
+                        <div class="lesson-num">${i}</div>
                     </div>
-                </div>`;
-            container.appendChild(card);
-        } else {
-            card.className = 'lesson-card empty-lesson';
-            card.innerHTML = `
-                <div class="time-box">
-                    <div class="lesson-num">${i}</div>
-                </div>
-                <div class="info-box">
-                    <div class="subject-name" style="color: var(--text-muted); font-weight: 400;">Пари немає</div>
-                </div>`;
-            container.appendChild(card);
+                    <div class="info-box">
+                        <div class="subject-name" style="color: var(--text-muted); font-weight: 400;">Пари немає</div>
+                    </div>`;
+                container.appendChild(card);
+            }
         }
     }
+}
+
+function createLessonCard(lesson, typeLabels, isToday, now) {
+    const card = document.createElement('div');
+    card.className = `lesson-card type-${lesson.type}`;
+    card.id = `lesson-${lesson.num}`;
+    
+    if (isToday) {
+        const [endH, endM] = lesson.end.split(':').map(Number);
+        const lessonEnd = new Date();
+        lessonEnd.setHours(endH, endM, 0);
+        if (now > lessonEnd) card.classList.add('past');
+    }
+
+    card.innerHTML = `
+        <div class="time-box">
+            <div class="lesson-num">${lesson.num}</div>
+            <div>${lesson.start}</div>
+            <div style="font-size: 0.75rem; opacity: 0.7">${lesson.end}</div>
+        </div>
+        <div class="info-box">
+            <div class="subject-name">${lesson.subj}</div>
+            <div class="lesson-details">
+                <div class="detail-item"><i class='bx bx-user'></i> <span class="teacher-name">${lesson.teacher}</span></div>
+                <div class="detail-item"><i class='bx bx-building'></i> <span>${lesson.room}</span></div>
+                <div class="detail-item"><i class='bx bx-purchase-tag-alt'></i> <span>${typeLabels[lesson.type] || lesson.type}</span></div>
+            </div>
+        </div>`;
+    return card;
 }
 
 function updateStatus() {
@@ -537,6 +560,7 @@ function updateStatus() {
         return;
     }
     
+    // Канікули з 20 червня
     if ((month === 5 && date > 19) || month === 6 || month === 7) {
         document.getElementById('status-title').innerText = "Літні канікули!";
         document.getElementById('main-timer').innerText = "☀️🏖️";
@@ -553,9 +577,10 @@ function updateStatus() {
 
     const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
     const currentWeekType = getWeekType(now);
+    const isSessionPeriod = now >= new Date('2026-06-08T00:00:00') && now <= new Date('2026-06-19T23:59:59');
     
     let lessons = [];
-    if (scheduleData[currentWeekType][dayOfWeek]) {
+    if (!isSessionPeriod && scheduleData[currentWeekType][dayOfWeek]) {
         lessons = scheduleData[currentWeekType][dayOfWeek]
             .filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup)
             .map(l => ({...l})); 
@@ -617,7 +642,7 @@ function updateStatus() {
         const diff = endDate - now;
         
         timerEl.innerText = formatTime(diff);
-        subtitleEl.innerHTML = "<i class='bx bx-timer'></i> до перерви";
+        subtitleEl.innerHTML = "<i class='bx bx-timer'></i> до завершення";
         
         if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
             const activeCard = document.getElementById(`lesson-${activeLesson.num}`);
@@ -631,117 +656,10 @@ function updateStatus() {
 
         titleEl.innerText = `Наступна: ${nextLesson.subj}`;
         timerEl.innerText = formatTime(diff);
-        subtitleEl.innerHTML = "<i class='bx bx-coffee'></i> до початку пари";
+        subtitleEl.innerHTML = "<i class='bx bx-coffee'></i> до початку";
 
     } else {
-        titleEl.innerText = "Пари на сьогодні все!";
-        timerEl.innerText = "Додому";
-        subtitleEl.innerText = "Гарного відпочинку";
-    }
-}
-
-function updateStatus() {
-    const now = new Date();
-    
-    const month = now.getMonth();
-    if (month >= 6 && month <= 7) {
-        document.getElementById('status-title').innerText = "Літні канікули!";
-        document.getElementById('main-timer').innerText = "☀️🏖️";
-        document.getElementById('time-left-desc').innerText = "Насолоджуйся відпочинком";
-        return;
-    }
-
-    if (!isSameWeek(viewDate, now)) {
-        document.getElementById('status-title').innerText = "Перегляд розкладу";
-        document.getElementById('main-timer').innerText = "--:--";
-        document.getElementById('time-left-desc').innerText = "Інший тиждень";
-        return;
-    }
-
-    const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
-    const currentWeekType = getWeekType(now);
-    
-    let lessons = [];
-    if (scheduleData[currentWeekType][dayOfWeek]) {
-        lessons = scheduleData[currentWeekType][dayOfWeek]
-            .filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup)
-            .map(l => ({...l})); 
-    }
-    
-    const dateStr = formatDateString(now);
-    if (dateOverrides[dateStr]) {
-        const override = dateOverrides[dateStr];
-        if (override.remove) {
-            lessons = lessons.filter(l => !override.remove.includes(l.num));
-        }
-        if (override.add) {
-            const addedLessons = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
-            lessons.push(...addedLessons);
-        }
-    }
-
-    lessons.sort((a, b) => a.num - b.num);
-    applyTimeOverrides(lessons, now); 
-
-    const titleEl = document.getElementById('status-title');
-    const timerEl = document.getElementById('main-timer');
-    const subtitleEl = document.getElementById('time-left-desc');
-
-    if (!lessons || lessons.length === 0) {
-        titleEl.innerText = "Сьогодні вихідний";
-        timerEl.innerText = "Відпочивай";
-        subtitleEl.innerText = "Пар немає";
-        return;
-    }
-
-    let activeLesson = null;
-    let nextLesson = null;
-
-    for (let i = 0; i < lessons.length; i++) {
-        const lesson = lessons[i];
-        const [startH, startM] = lesson.start.split(':').map(Number);
-        const [endH, endM] = lesson.end.split(':').map(Number);
-        
-        const startDate = new Date(); startDate.setHours(startH, startM, 0);
-        const endDate = new Date(); endDate.setHours(endH, endM, 0);
-
-        if (now >= startDate && now < endDate) {
-            activeLesson = lesson;
-            break;
-        }
-        if (now < startDate) {
-            nextLesson = lesson;
-            break;
-        }
-    }
-
-    document.querySelectorAll('.lesson-card').forEach(c => c.classList.remove('active'));
-
-    if (activeLesson) {
-        titleEl.innerText = `Зараз: ${activeLesson.subj} (${activeLesson.room})`;
-        const [endH, endM] = activeLesson.end.split(':').map(Number);
-        const endDate = new Date(); endDate.setHours(endH, endM, 0);
-        const diff = endDate - now;
-        
-        timerEl.innerText = formatTime(diff);
-        subtitleEl.innerHTML = "<i class='bx bx-timer'></i> до перерви";
-        
-        if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
-            const activeCard = document.getElementById(`lesson-${activeLesson.num}`);
-            if (activeCard) activeCard.classList.add('active');
-        }
-
-    } else if (nextLesson) {
-        const [startH, startM] = nextLesson.start.split(':').map(Number);
-        const startDate = new Date(); startDate.setHours(startH, startM, 0);
-        const diff = startDate - now;
-
-        titleEl.innerText = `Наступна: ${nextLesson.subj}`;
-        timerEl.innerText = formatTime(diff);
-        subtitleEl.innerHTML = "<i class='bx bx-coffee'></i> до початку пари";
-
-    } else {
-        titleEl.innerText = "Пари на сьогодні все!";
+        titleEl.innerText = isSessionPeriod ? "На сьогодні іспити завершено!" : "Пари на сьогодні все!";
         timerEl.innerText = "Додому";
         subtitleEl.innerText = "Гарного відпочинку";
     }
@@ -760,9 +678,7 @@ function formatTime(ms) {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
-    if (hours > 0) {
-        return `${hours}:${pad(minutes)}:${pad(seconds)}`;
-    }
+    if (hours > 0) return `${hours}:${pad(minutes)}:${pad(seconds)}`;
     return `${pad(minutes)}:${pad(seconds)}`;
 }
 
