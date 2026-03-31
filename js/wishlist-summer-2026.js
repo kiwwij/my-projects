@@ -39,7 +39,7 @@ function handleImageError(imgElement) {
 
 function renderBoard() {
     if (typeof gamesData === 'undefined') return;
-1
+
     gamesData.sort((a, b) => a.title.localeCompare(b.title));
 
     const board = document.getElementById('kanban-board');
@@ -54,7 +54,9 @@ function renderBoard() {
     let changedMindGames = gamesData.filter(g => g.play_status === 'changed_mind');
 
     gamesData.forEach(game => {
-        if (game.price_uah > 0) totalValue += game.price_uah;
+        if (game.price_uah > 0 && game.play_status !== 'changed_mind') {
+            totalValue += game.price_uah;
+        }
     });
 
     let pausedListHtml = pausedGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
@@ -143,17 +145,20 @@ function createCardHtml(game) {
     
     let progressColor;
     switch(game.play_status) {
-        case 'completed': progressColor = '#10b981'; break; // Зеленый
-        case 'playing': progressColor = '#06b6d4'; break;   // Твой фирменный бирюзовый
-        case 'planned': progressColor = '#f59e0b'; break;   // Оранжевый
-        case 'dropped': progressColor = '#ef4444'; break;   // Красный
-        default: progressColor = '#94a3b8';                 // Серый по умолчанию
+        case 'completed': progressColor = '#10b981'; break; 
+        case 'playing': progressColor = '#06b6d4'; break;   
+        case 'planned': progressColor = '#f59e0b'; break;   
+        case 'dropped': progressColor = '#ef4444'; break;   
+        default: progressColor = '#94a3b8';                 
     }
 
     let cardClasses = 'kanban-card';
     if (game.play_status === 'dropped') {
         cardClasses += ' opacity-70';
     }
+
+    // Экранируем кавычки для HTML атрибутов, чтобы скрипт не сломался, если в названии игры есть кавычка
+    const escapedTitle = game.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
     return `
         <div class="${cardClasses}">
@@ -164,7 +169,12 @@ function createCardHtml(game) {
             </div>
             
             <div class="card-body">
-                <h3 class="card-title">${game.title}</h3>
+                <h3 class="card-title" 
+                    title="${escapedTitle}" 
+                    data-title="${escapedTitle}"
+                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;"
+                    onclick="copyTitleToClipboard(this.dataset.title)"
+                >${game.title}</h3>
                 <div class="card-info-grid">
                     ${ratingHtml}
                     ${playtimeHtml}
@@ -190,3 +200,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSteamAvatar();
     renderBoard();
 });
+
+function copyTitleToClipboard(title) {
+    navigator.clipboard.writeText(title).then(() => {
+        let toast = document.getElementById('copy-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'copy-toast';
+            document.body.appendChild(toast);
+        }
+        
+        toast.innerHTML = `<i class='bx bx-check-circle'></i> Название скопировано`;
+        toast.classList.add('show');
+        
+        if (toast.timeoutId) clearTimeout(toast.timeoutId);
+        
+        toast.timeoutId = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    });
+}

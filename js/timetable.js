@@ -407,9 +407,31 @@ function renderSchedule() {
     container.innerHTML = '';
 
     const displayDate = getViewedDate();
-    
+    const year = displayDate.getFullYear();
     const month = displayDate.getMonth();
-    if (month >= 6 && month <= 7) {
+    const date = displayDate.getDate();
+
+    if (year < 2026 || (year === 2026 && month === 0 && date < 26)) {
+        container.innerHTML = `
+            <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
+                <i class="bx bx-history" style="font-size: 4rem; margin-bottom: 10px;"></i>
+                <br><span style="font-size: 1.2rem; font-weight: bold;">Попередній семестр</span>
+                <br><span style="font-size: 0.9rem; opacity: 0.8;">Для цього періоду розклад відсутній</span>
+            </div>`;
+        return;
+    }
+
+    if (year > 2026 || (year === 2026 && month >= 8)) {
+        container.innerHTML = `
+            <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
+                <i class="bx bx-calendar-x" style="font-size: 4rem; margin-bottom: 10px;"></i>
+                <br><span style="font-size: 1.2rem; font-weight: bold;">На даний момент розкладу немає</span>
+                <br><span style="font-size: 0.9rem; opacity: 0.8;">Очікуйте оновлення на новий семестр</span>
+            </div>`;
+        return;
+    }
+
+    if ((month === 5 && date > 19) || month === 6 || month === 7) {
         container.innerHTML = `
             <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
                 <i class="bx bx-sun" style="font-size: 4rem; margin-bottom: 10px;"></i>
@@ -480,6 +502,7 @@ function renderSchedule() {
                         <div class="detail-item"><i class='bx bx-purchase-tag-alt'></i> <span>${typeLabels[lesson.type] || lesson.type}</span></div>
                     </div>
                 </div>`;
+            container.appendChild(card);
         } else {
             card.className = 'lesson-card empty-lesson';
             card.innerHTML = `
@@ -489,8 +512,131 @@ function renderSchedule() {
                 <div class="info-box">
                     <div class="subject-name" style="color: var(--text-muted); font-weight: 400;">Пари немає</div>
                 </div>`;
+            container.appendChild(card);
         }
-        container.appendChild(card);
+    }
+}
+
+function updateStatus() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const date = now.getDate();
+
+    if (year < 2026 || (year === 2026 && month === 0 && date < 26)) {
+        document.getElementById('status-title').innerText = "Попередній семестр";
+        document.getElementById('main-timer').innerText = "🕰️";
+        document.getElementById('time-left-desc').innerText = "Розклад відсутній";
+        return;
+    }
+
+    if (year > 2026 || (year === 2026 && month >= 8)) {
+        document.getElementById('status-title').innerText = "Розклад відсутній";
+        document.getElementById('main-timer').innerText = "🗓️";
+        document.getElementById('time-left-desc').innerText = "Очікуємо розклад на осінь";
+        return;
+    }
+    
+    if ((month === 5 && date > 19) || month === 6 || month === 7) {
+        document.getElementById('status-title').innerText = "Літні канікули!";
+        document.getElementById('main-timer').innerText = "☀️🏖️";
+        document.getElementById('time-left-desc').innerText = "Насолоджуйся відпочинком";
+        return;
+    }
+
+    if (!isSameWeek(viewDate, now)) {
+        document.getElementById('status-title').innerText = "Перегляд розкладу";
+        document.getElementById('main-timer').innerText = "--:--";
+        document.getElementById('time-left-desc').innerText = "Інший тиждень";
+        return;
+    }
+
+    const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
+    const currentWeekType = getWeekType(now);
+    
+    let lessons = [];
+    if (scheduleData[currentWeekType][dayOfWeek]) {
+        lessons = scheduleData[currentWeekType][dayOfWeek]
+            .filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup)
+            .map(l => ({...l})); 
+    }
+    
+    const dateStr = formatDateString(now);
+    if (dateOverrides[dateStr]) {
+        const override = dateOverrides[dateStr];
+        if (override.remove) {
+            lessons = lessons.filter(l => !override.remove.includes(l.num));
+        }
+        if (override.add) {
+            const addedLessons = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
+            lessons.push(...addedLessons);
+        }
+    }
+
+    lessons.sort((a, b) => a.num - b.num);
+    applyTimeOverrides(lessons, now); 
+
+    const titleEl = document.getElementById('status-title');
+    const timerEl = document.getElementById('main-timer');
+    const subtitleEl = document.getElementById('time-left-desc');
+
+    if (!lessons || lessons.length === 0) {
+        titleEl.innerText = "Сьогодні вихідний";
+        timerEl.innerText = "Відпочивай";
+        subtitleEl.innerText = "Пар немає";
+        return;
+    }
+
+    let activeLesson = null;
+    let nextLesson = null;
+
+    for (let i = 0; i < lessons.length; i++) {
+        const lesson = lessons[i];
+        const [startH, startM] = lesson.start.split(':').map(Number);
+        const [endH, endM] = lesson.end.split(':').map(Number);
+        
+        const startDate = new Date(); startDate.setHours(startH, startM, 0);
+        const endDate = new Date(); endDate.setHours(endH, endM, 0);
+
+        if (now >= startDate && now < endDate) {
+            activeLesson = lesson;
+            break;
+        }
+        if (now < startDate) {
+            nextLesson = lesson;
+            break;
+        }
+    }
+
+    document.querySelectorAll('.lesson-card').forEach(c => c.classList.remove('active'));
+
+    if (activeLesson) {
+        titleEl.innerText = `Зараз: ${activeLesson.subj} (${activeLesson.room})`;
+        const [endH, endM] = activeLesson.end.split(':').map(Number);
+        const endDate = new Date(); endDate.setHours(endH, endM, 0);
+        const diff = endDate - now;
+        
+        timerEl.innerText = formatTime(diff);
+        subtitleEl.innerHTML = "<i class='bx bx-timer'></i> до перерви";
+        
+        if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
+            const activeCard = document.getElementById(`lesson-${activeLesson.num}`);
+            if (activeCard) activeCard.classList.add('active');
+        }
+
+    } else if (nextLesson) {
+        const [startH, startM] = nextLesson.start.split(':').map(Number);
+        const startDate = new Date(); startDate.setHours(startH, startM, 0);
+        const diff = startDate - now;
+
+        titleEl.innerText = `Наступна: ${nextLesson.subj}`;
+        timerEl.innerText = formatTime(diff);
+        subtitleEl.innerHTML = "<i class='bx bx-coffee'></i> до початку пари";
+
+    } else {
+        titleEl.innerText = "Пари на сьогодні все!";
+        timerEl.innerText = "Додому";
+        subtitleEl.innerText = "Гарного відпочинку";
     }
 }
 
