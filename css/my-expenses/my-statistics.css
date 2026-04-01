@@ -124,3 +124,87 @@
 
     .tall-chart { height: 400px; }
 }
+
+.chart-header-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.year-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-color, rgba(0,0,0,0.05));
+    padding: 5px 10px;
+    border-radius: 8px;
+    align-self: flex-start;
+}
+
+.dark-mode .year-controls {
+    background: rgba(255,255,255,0.05);
+}
+
+.year-controls span {
+    font-weight: 600;
+    font-size: 1rem;
+    min-width: 85px;
+    text-align: center;
+}
+
+.year-controls .icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.year-controls .icon-btn:hover:not(:disabled) {
+    background: rgba(150, 150, 150, 0.2);
+}
+
+.year-controls .icon-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.2s;
+    margin-left: 5px;
+}
+
+.btn-outline:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+.btn-outline.active {
+    background: #4e54c8;
+    border-color: #4e54c8;
+    color: #fff;
+}
+
+@media (min-width: 576px) {
+    .chart-header-controls {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .year-controls {
+        align-self: center;
+    }
+}

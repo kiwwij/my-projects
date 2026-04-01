@@ -157,7 +157,6 @@ function createCardHtml(game) {
         cardClasses += ' opacity-70';
     }
 
-    // Экранируем кавычки для HTML атрибутов, чтобы скрипт не сломался, если в названии игры есть кавычка
     const escapedTitle = game.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
     return `
@@ -257,7 +256,7 @@ function populateStats() {
     let completedCount = 0;
     let playingCount = 0;
     let plannedCount = 0;
-    let frozenCount = 0; // НОВАЯ ПЕРЕМЕННАЯ: для игр на паузе и заброшенных
+    let frozenCount = 0;
     
     let totalRating = 0;
     let gamesWithRating = 0;
@@ -269,7 +268,6 @@ function populateStats() {
         if (game.play_status === 'playing') playingCount++;
         if (game.play_status === 'planned') plannedCount++;
         
-        // Считаем замороженные игры
         if (game.play_status === 'paused' || game.play_status === 'dropped') frozenCount++;
 
         if (game.playtime && !isNaN(parseFloat(game.playtime))) {

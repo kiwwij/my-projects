@@ -310,11 +310,10 @@ a.hover-item:hover::before {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;
 }
 
-/* --- СТИЛИ МОДАЛЬНОГО ОКНА И ДАШБОРДА --- */
 .stats-modal-body {
     padding: 0;
     overflow-y: auto;
-    display: block; /* Важно: убираем старый display: grid, который ломал дизайн */
+    display: block;
 }
 
 .stats-dashboard {
@@ -322,7 +321,6 @@ a.hover-item:hover::before {
     flex-direction: column;
 }
 
-/* Верхний блок (Hero) */
 .stats-hero {
     display: flex;
     align-items: center;
@@ -332,7 +330,6 @@ a.hover-item:hover::before {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Круговой график */
 .hero-progress {
     display: flex;
     flex-direction: column;
@@ -384,7 +381,6 @@ a.hover-item:hover::before {
     0% { stroke-dasharray: 0, 100; }
 }
 
-/* Главные статы возле графика */
 .hero-main-stats {
     display: flex;
     flex-direction: column;
@@ -419,7 +415,6 @@ a.hover-item:hover::before {
 .stat-text .val { font-size: 1.3rem; font-weight: 700; color: var(--text-main); line-height: 1.1; }
 .stat-text .lbl { font-size: 0.8rem; color: var(--text-muted); }
 
-/* Сетка с остальными данными */
 .stats-grid-new {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

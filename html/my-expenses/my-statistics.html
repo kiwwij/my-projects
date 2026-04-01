@@ -65,8 +65,18 @@
 
         <div class="charts-layout">
             <div class="card full-width-chart">
-                <h3 class="chart-title">Доходы & Расходы</h3>
-                <p class="chart-subtitle">Сравнение денежных доходов и расходов по месяцам</p>
+                <div class="chart-header-controls">
+                    <div>
+                        <h3 class="chart-title">Доходы & Расходы</h3>
+                        <p class="chart-subtitle">Сравнение денежных доходов и расходов по годам</p>
+                    </div>
+                    <div class="year-controls">
+                        <button id="prev-year-btn" class="icon-btn" title="Предыдущий год"><i class='bx bx-chevron-left'></i></button>
+                        <span id="current-year-display">2026</span>
+                        <button id="next-year-btn" class="icon-btn" title="Следующий год"><i class='bx bx-chevron-right'></i></button>
+                        <button id="all-time-btn" class="btn-outline">За всё время</button>
+                    </div>
+                </div>
                 <div class="chart-container">
                     <canvas id="barChart"></canvas>
                 </div>

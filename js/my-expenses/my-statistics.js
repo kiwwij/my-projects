@@ -1,13 +1,11 @@
 const wrapper = document.getElementById('stats-wrapper');
 
-// Проверка доступа
 if (sessionStorage.getItem('finance_unlocked') !== 'true') {
     window.location.href = '../my-expenses.html'; 
 } else {
     wrapper.style.display = 'block';
 }
 
-// Тема
 const themeToggle = document.getElementById('theme-toggle');
 if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark-mode');
@@ -49,6 +47,14 @@ const monthNames = {
 
 let mainBarChart, hBarChart, trendChart;
 
+let yearlyChartData = {};
+let allTimeChartData = { 
+    labels: [], income: [], expense: [], 
+    cumulativeData: [], categoryTotals: {} 
+};
+let availableYears = [];
+let currentDisplayYear;
+
 function initStatistics() {
     let globalIncome = 0;
     let globalExpense = 0;
@@ -57,12 +63,6 @@ function initStatistics() {
     let maxExpenseMonthVal = 0;
     let maxExpenseMonthName = "—";
 
-    const monthsLabels = [];
-    const incomeData = [];
-    const expenseData = [];
-    const cumulativeSavingsData = [];
-    const categoryTotals = {};
-    
     let currentCumulative = 0;
 
     const now = new Date();
@@ -74,57 +74,69 @@ function initStatistics() {
         const year = parseInt(yearStr);
         const month = parseInt(monthStr);
 
-        // Игнорируем будущее и года до 2026
         if (year > currentYear || (year === currentYear && month > currentMonth)) continue;
         if (year < 2026) continue;
 
         monthsCount++;
         const monthData = database[key];
-        const label = `${monthNames[monthStr]} ${yearStr.slice(-2)}`;
-        monthsLabels.push(label);
+        const labelFull = `${monthNames[monthStr]} ${yearStr.slice(-2)}`;
 
         const mIncome = (monthData.income.fix || 0) + (monthData.income.extra || 0);
         let mExpense = 0;
+
+        if (!yearlyChartData[year]) {
+            yearlyChartData[year] = { 
+                labels: [], income: [], expense: [], 
+                cumulativeData: [], categoryTotals: {} 
+            };
+            if (!availableYears.includes(year)) availableYears.push(year);
+        }
 
         if (monthData.weeks) {
             Object.values(monthData.weeks).forEach(week => {
                 Object.entries(week).forEach(([cat, amount]) => {
                     if (amount > 0) {
                         mExpense += amount;
-                        if (!categoryTotals[cat]) categoryTotals[cat] = 0;
-                        categoryTotals[cat] += amount;
+                        
+                        if (!allTimeChartData.categoryTotals[cat]) allTimeChartData.categoryTotals[cat] = 0;
+                        allTimeChartData.categoryTotals[cat] += amount;
+
+                        if (!yearlyChartData[year].categoryTotals[cat]) yearlyChartData[year].categoryTotals[cat] = 0;
+                        yearlyChartData[year].categoryTotals[cat] += amount;
                     }
                 });
             });
         }
 
-        // Поиск самого затратного месяца
         if (mExpense > maxExpenseMonthVal) {
             maxExpenseMonthVal = mExpense;
-            maxExpenseMonthName = label;
+            maxExpenseMonthName = labelFull;
         }
 
-        incomeData.push(mIncome);
-        expenseData.push(mExpense);
-        
         currentCumulative += (mIncome - mExpense);
-        cumulativeSavingsData.push(currentCumulative);
-
         globalIncome += mIncome;
         globalExpense += mExpense;
+
+        allTimeChartData.labels.push(labelFull);
+        allTimeChartData.income.push(mIncome);
+        allTimeChartData.expense.push(mExpense);
+        allTimeChartData.cumulativeData.push(currentCumulative);
+
+        yearlyChartData[year].labels.push(monthNames[monthStr]);
+        yearlyChartData[year].income.push(mIncome);
+        yearlyChartData[year].expense.push(mExpense);
+        yearlyChartData[year].cumulativeData.push(currentCumulative);
     }
 
-    // --- РАСЧЁТ МЕТРИК ДЛЯ КАРТОЧЕК ---
     const avgIncome = monthsCount > 0 ? (globalIncome / monthsCount) : 0;
     const avgExpense = monthsCount > 0 ? (globalExpense / monthsCount) : 0;
     const totalSaved = globalIncome - globalExpense;
     const saveRate = globalIncome > 0 ? ((totalSaved / globalIncome) * 100) : 0;
 
-    // Поиск топ категории
     let topCatName = "—";
     let topCatVal = 0;
     let topCatColor = "var(--text-color)";
-    for (const [cat, val] of Object.entries(categoryTotals)) {
+    for (const [cat, val] of Object.entries(allTimeChartData.categoryTotals)) {
         if (val > topCatVal) {
             topCatVal = val;
             topCatName = categoryConfig[cat]?.label || 'Другое';
@@ -133,10 +145,8 @@ function initStatistics() {
     }
     const topCatPct = globalExpense > 0 ? ((topCatVal / globalExpense) * 100) : 0;
 
-    // --- ЗАПОЛНЕНИЕ DOM ---
     document.getElementById('m-total-income').innerText = `+${globalIncome.toFixed(0)} ₴`;
     document.getElementById('m-avg-income').innerText = `В среднем: ${avgIncome.toFixed(0)} ₴/мес`;
-    
     document.getElementById('m-total-expense').innerText = `-${globalExpense.toFixed(0)} ₴`;
     document.getElementById('m-avg-expense').innerText = `В среднем: ${avgExpense.toFixed(0)} ₴/мес`;
     
@@ -154,108 +164,78 @@ function initStatistics() {
     document.getElementById('m-top-category-val').innerText = `-${topCatVal.toFixed(0)} ₴`;
     document.getElementById('m-top-category-pct').innerText = `${topCatPct.toFixed(1)}% от всех трат`;
 
-    // Отрисовка графиков
-    drawCharts(monthsLabels, incomeData, expenseData, cumulativeSavingsData, categoryTotals);
+    availableYears.sort((a, b) => a - b);
+    currentDisplayYear = availableYears.length > 0 ? availableYears[availableYears.length - 1] : now.getFullYear();
+    
+    if(availableYears.length === 0) {
+        availableYears.push(currentDisplayYear);
+        yearlyChartData[currentDisplayYear] = { 
+            labels: [], income: [], expense: [], 
+            cumulativeData: [], categoryTotals: {} 
+        };
+    }
+
+    drawCharts(allTimeChartData);
+    setupChartControls();
+    updateDashboard(currentDisplayYear);
 }
 
-function drawCharts(months, incomeData, expenseData, cumulativeData, categories) {
+function drawCharts(data) {
     const textColor = document.body.classList.contains('dark-mode') ? '#e4e6eb' : '#333333';
     const gridColor = document.body.classList.contains('dark-mode') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
 
     Chart.defaults.color = textColor;
     Chart.defaults.font.family = "'Inter', sans-serif";
 
-    // 1. ГРАФИК ДОХОД VS РАСХОД (Сгруппированные столбцы)
     const ctxBar = document.getElementById('barChart').getContext('2d');
     mainBarChart = new Chart(ctxBar, {
         type: 'bar',
         data: {
-            labels: months,
+            labels: data.labels,
             datasets: [
-                {
-                    label: 'Доход',
-                    data: incomeData,
-                    backgroundColor: '#2ecc71',
-                    borderRadius: 4
-                },
-                {
-                    label: 'Расход',
-                    data: expenseData,
-                    backgroundColor: '#e74c3c',
-                    borderRadius: 4
-                }
+                { label: 'Доход', data: data.income, backgroundColor: '#2ecc71', borderRadius: 4 },
+                { label: 'Расход', data: data.expense, backgroundColor: '#e74c3c', borderRadius: 4 }
             ]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            scales: {
-                x: { grid: { display: false } },
-                y: { grid: { color: gridColor }, beginAtZero: true }
-            },
+            scales: { x: { grid: { display: false } }, y: { grid: { color: gridColor }, beginAtZero: true } },
             plugins: { tooltip: { mode: 'index', intersect: false } }
         }
-    });
-
-    // 2. ГОРИЗОНТАЛЬНЫЙ ГРАФИК ТОП КАТЕГОРИЙ
-    const sortedCats = Object.keys(categories).sort((a, b) => categories[b] - categories[a]);
-    const catLabels = [];
-    const catData = [];
-    const catColors = [];
-
-    sortedCats.forEach(cat => {
-        catLabels.push(categoryConfig[cat]?.label || 'Другое');
-        catData.push(categories[cat].toFixed(2));
-        catColors.push(categoryConfig[cat]?.color || '#95a5a6');
     });
 
     const ctxHBar = document.getElementById('hBarChart').getContext('2d');
     hBarChart = new Chart(ctxHBar, {
         type: 'bar',
         data: {
-            labels: catLabels,
-            datasets: [{
-                label: 'Потрачено',
-                data: catData,
-                backgroundColor: catColors,
-                borderRadius: 4
-            }]
+            labels: [],
+            datasets: [{ label: 'Потрачено', data: [], backgroundColor: [], borderRadius: 4 }]
         },
         options: {
-            indexAxis: 'y', // Делает график горизонтальным
+            indexAxis: 'y',
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            scales: {
-                x: { grid: { color: gridColor }, beginAtZero: true },
-                y: { grid: { display: false } }
-            }
+            scales: { x: { grid: { color: gridColor }, beginAtZero: true }, y: { grid: { display: false } } }
         }
     });
 
-    // 3. ГРАФИК ДИНАМИКИ КОПИЛКИ (Area chart)
     const ctxTrend = document.getElementById('trendChart').getContext('2d');
     trendChart = new Chart(ctxTrend, {
         type: 'line',
         data: {
-            labels: months,
+            labels: data.labels,
             datasets: [{
                 label: 'Баланс копилки',
-                data: cumulativeData,
-                borderColor: '#4e54c8',
-                backgroundColor: 'rgba(78, 84, 200, 0.15)',
-                borderWidth: 3,
-                tension: 0.4, // Плавная линия
-                fill: true,
-                pointBackgroundColor: '#4e54c8',
-                pointRadius: 4
+                data: data.cumulativeData,
+                borderColor: '#4e54c8', backgroundColor: 'rgba(78, 84, 200, 0.15)',
+                borderWidth: 3, tension: 0.4, fill: true,
+                pointBackgroundColor: '#4e54c8', pointRadius: 4
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            scales: {
-                x: { grid: { display: false } },
-                y: { grid: { color: gridColor } }
-            }
+            scales: { x: { grid: { display: false } }, y: { grid: { color: gridColor } } }
         }
     });
 }
@@ -263,16 +243,88 @@ function drawCharts(months, incomeData, expenseData, cumulativeData, categories)
 function updateChartsColors() {
     if (!mainBarChart || !hBarChart || !trendChart) return;
     
-    const textColor = document.body.classList.contains('dark-mode') ? '#e4e6eb' : '#333333';
     const gridColor = document.body.classList.contains('dark-mode') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
-
-    Chart.defaults.color = textColor;
+    Chart.defaults.color = document.body.classList.contains('dark-mode') ? '#e4e6eb' : '#333333';
     
-    // Обновляем сетку
     mainBarChart.options.scales.y.grid.color = gridColor;
     hBarChart.options.scales.x.grid.color = gridColor;
     trendChart.options.scales.y.grid.color = gridColor;
     
+    mainBarChart.update(); hBarChart.update(); trendChart.update();
+}
+
+function setupChartControls() {
+    document.getElementById('prev-year-btn').addEventListener('click', () => {
+        if (currentDisplayYear === 'all') currentDisplayYear = availableYears[availableYears.length - 1];
+        let idx = availableYears.indexOf(currentDisplayYear);
+        if (idx > 0) {
+            currentDisplayYear = availableYears[idx - 1];
+            updateDashboard(currentDisplayYear);
+        }
+    });
+
+    document.getElementById('next-year-btn').addEventListener('click', () => {
+        if (currentDisplayYear === 'all') return;
+        let idx = availableYears.indexOf(currentDisplayYear);
+        if (idx !== -1 && idx < availableYears.length - 1) {
+            currentDisplayYear = availableYears[idx + 1];
+            updateDashboard(currentDisplayYear);
+        }
+    });
+
+    document.getElementById('all-time-btn').addEventListener('click', () => {
+        currentDisplayYear = 'all';
+        updateDashboard('all');
+    });
+}
+
+function updateDashboard(year) {
+    if (!mainBarChart || !hBarChart || !trendChart) return;
+
+    const prevBtn = document.getElementById('prev-year-btn');
+    const nextBtn = document.getElementById('next-year-btn');
+    const displayYear = document.getElementById('current-year-display');
+    const allTimeBtn = document.getElementById('all-time-btn');
+
+    let targetData = year === 'all' ? allTimeChartData : yearlyChartData[year];
+    if (!targetData) return;
+
+    mainBarChart.data.labels = targetData.labels;
+    mainBarChart.data.datasets[0].data = targetData.income;
+    mainBarChart.data.datasets[1].data = targetData.expense;
+
+    trendChart.data.labels = targetData.labels;
+    trendChart.data.datasets[0].data = targetData.cumulativeData;
+
+    const cats = targetData.categoryTotals;
+    const sortedCats = Object.keys(cats).sort((a, b) => cats[b] - cats[a]);
+    const catLabels = [];
+    const catData = [];
+    const catColors = [];
+
+    sortedCats.forEach(cat => {
+        catLabels.push(categoryConfig[cat]?.label || 'Другое');
+        catData.push(cats[cat].toFixed(2));
+        catColors.push(categoryConfig[cat]?.color || '#95a5a6');
+    });
+
+    hBarChart.data.labels = catLabels;
+    hBarChart.data.datasets[0].data = catData;
+    hBarChart.data.datasets[0].backgroundColor = catColors;
+
+    if (year === 'all') {
+        displayYear.innerText = 'Все время';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        allTimeBtn.classList.add('active');
+    } else {
+        displayYear.innerText = year;
+        const currentIndex = availableYears.indexOf(year);
+        prevBtn.disabled = currentIndex <= 0;
+        nextBtn.disabled = currentIndex >= availableYears.length - 1;
+        allTimeBtn.classList.remove('active');
+    }
+
     mainBarChart.update();
     hBarChart.update();
     trendChart.update();

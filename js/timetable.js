@@ -1,4 +1,3 @@
-// --- Налаштування даних ---
 const scheduleData = {
     // Тиждень 1 (Верхній)
     1: {
@@ -106,6 +105,9 @@ const dateOverrides = {
     "2026-03-13": { remove: [2, 3, 4] },
     "2026-03-20": { remove: [2, 3, 4] },
 
+    // Скасування пар через хворобу Денисюк А.В.
+    "2026-04-02": { remove: [7, 8] },
+
     // EX = Відпрацювання (СПЕЦ), KOL = Колоквіум
     "2026-03-25": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
     "2026-03-27": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
@@ -130,6 +132,13 @@ const dateOverrides = {
     },
     "2026-04-10": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
     "2026-04-13": { add: [{ num: 8, start: "15:30", end: "16:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
+    "2026-04-27": {
+        remove: [7],
+        add: [
+            { num: 7, start: "14:30", end: "15:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2108", teacher: "Денисюк А.В." },
+            { num: 8, start: "15:25", end: "16:10", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2108", teacher: "Денисюк А.В." }
+        ] 
+    },
 
     // --- РОЗКЛАД СЕСІЇ (08.06 - 19.06) ---
     "2026-06-08": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Архітектура та проект. ПЗ", type: "CONS", room: "Уточнюється", teacher: "Бабюк Н.П." }] },
@@ -138,10 +147,10 @@ const dateOverrides = {
     "2026-06-11": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Основи прогр. інженерії", type: "EXAM", room: "Уточнюється", teacher: "Коваленко О.О." }] },
     "2026-06-12": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Навчальна практика", type: "ZALIK", room: "Уточнюється", teacher: "Романюк О.В." }] },
     "2026-06-13": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Теор. ймов. та мат. стат.", type: "CONS", room: "Уточнюється", teacher: "Ракитянська Г.Б." }] },
-    "2026-06-14": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Теор. ймов. та мат. стат.", type: "CONS", room: "Уточнюється", teacher: "Ракитянська Г.Б." }] },
+    "2026-06-14": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Теор. ймов. та мат. стат.", type: "EXAM", room: "Уточнюється", teacher: "Ракитянська Г.Б." }] },
     "2026-06-15": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Метрол. оцінювання ПЗ", type: "CONS", room: "Уточнюється", teacher: "Дудатьєв І.А." }] },
     "2026-06-16": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Метрол. оцінювання ПЗ", type: "EXAM", room: "Уточнюється", teacher: "Дудатьєв І.А." }] },
-    "2026-06-17": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Основи WEB-дизайну", type: "ZALIK", room: "Уточнюється", teacher: "Чехместрук Р.Ю." }] },
+    "2026-06-17": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Графічні редактори", type: "ZALIK", room: "Уточнюється", teacher: "Чехместрук Р.Ю." }] },
     "2026-06-18": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Політ. історія України ХХ ст.", type: "ZALIK", room: "Уточнюється", teacher: "Пономаренко А.Б." }] },
     "2026-06-19": { add: [
         { num: 3, start: "10:00", end: "11:20", subj: "Іноземна мова", type: "ZALIK", room: "Уточнюється", teacher: "Кухарчук Г.В.", subgroup: 1 },
@@ -151,7 +160,7 @@ const dateOverrides = {
 
 let viewDate = new Date(); 
 let selectedDay = new Date().getDay();
-if (selectedDay === 0) selectedDay = 7; // Змінили логіку: Неділя тепер 7 день, а не 0
+if (selectedDay === 0) selectedDay = 7;
 
 let currentSettings = {
     group: '5pi-24b',
@@ -223,7 +232,6 @@ function applyTimeOverrides(lessons, targetDate) {
             14: { start: "20:55", end: "21:40" }
         };
         lessons.forEach(l => {
-            // Не застосовуємо нові часи до екзаменів/консультацій, якщо там вже встановлено фіксований час
             if(newTimes[l.num] && !['EXAM', 'CONS', 'ZALIK'].includes(l.type)) {
                 l.start = newTimes[l.num].start;
                 l.end = newTimes[l.num].end;
@@ -433,7 +441,6 @@ function renderSchedule() {
         return;
     }
 
-    // Канікули тепер з 20 червня
     if ((month === 5 && date > 19) || month === 6 || month === 7) {
         container.innerHTML = `
             <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
@@ -447,12 +454,10 @@ function renderSchedule() {
     const currentWeekType = getWeekType(displayDate);
     let allLessons = scheduleData[currentWeekType][selectedDay] || [];
     
-    // Перевірка на період сесії (з 08.06 по 19.06)
     const isSessionPeriod = displayDate >= new Date('2026-06-08T00:00:00') && displayDate <= new Date('2026-06-19T23:59:59');
     
     let lessons = [];
     if (!isSessionPeriod) {
-        // Якщо не сесія - завантажуємо звичайні пари
         lessons = allLessons.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
     }
 
@@ -483,14 +488,12 @@ function renderSchedule() {
     const isToday = isSameDate(viewDate, new Date()) && (selectedDay === (new Date().getDay() || 7));
     const now = new Date();
 
-    // Якщо це сесія, ми не хочемо виводити пусті пари 1 і 2, показуємо тільки те що є
     if (isSessionPeriod) {
         lessons.forEach(lesson => {
             const card = createLessonCard(lesson, typeLabels, isToday, now);
             container.appendChild(card);
         });
     } else {
-        // Звичайний режим з пустими парами між вікнами
         for (let i = 1; i <= maxLessonNum; i++) {
             const lesson = lessons.find(l => l.num === i);
             if (lesson) {
