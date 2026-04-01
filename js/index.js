@@ -440,17 +440,49 @@ function updateProjectCount() {
     }
 }
 
-const mybutton = document.getElementById("scrollTopBtn");
-window.onscroll = function() { scrollFunction() };
-function scrollFunction() {
-    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-        mybutton.classList.add("show");
+const scrollTopBtn = document.getElementById("scrollTopBtn");
+const scrollBottomBtn = document.getElementById("scrollBottomBtn");
+let scrollTimeout;
+let lastScrollTop = 0;
+
+window.addEventListener("scroll", () => {
+    let st = window.pageYOffset || document.documentElement.scrollTop;
+    let isMobile = window.innerWidth <= 768;
+
+    clearTimeout(scrollTimeout);
+
+    if (st > 300) {
+        scrollTopBtn.classList.add("show");
     } else {
-        mybutton.classList.remove("show");
+        scrollTopBtn.classList.remove("show");
     }
-}
+
+    if (isMobile && scrollBottomBtn) {
+        let documentHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        let windowHeight = window.innerHeight;
+
+        if (st > lastScrollTop && st < documentHeight - windowHeight - 100) {
+            scrollBottomBtn.classList.add("show");
+            scrollTopBtn.classList.remove("show");
+        } else {
+            scrollBottomBtn.classList.remove("show");
+        }
+    }
+
+    lastScrollTop = st <= 0 ? 0 : st;
+
+    scrollTimeout = setTimeout(() => {
+        if (scrollTopBtn) scrollTopBtn.classList.remove("show");
+        if (scrollBottomBtn) scrollBottomBtn.classList.remove("show");
+    }, 5000);
+});
+
 function topFunction() {
     window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function bottomFunction() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 }
 
 function updatePinnedOrder() {

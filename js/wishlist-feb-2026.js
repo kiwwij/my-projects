@@ -4,6 +4,7 @@ const translations = {
         wishlist: "Wishlist",
         cat_owned: "Owned. I'll get through it sooner or later",
         cat_high_wish: "A strong desire to complete",
+        cat_gift: "Will play if gifted (won't buy myself)",
         cat_closure: "Series Closure",
         cat_curiosity: "Curiosity",
         cat_skeptical: "Skeptical Interest",
@@ -43,6 +44,7 @@ const translations = {
         wishlist: "Вишлист",
         cat_owned: "Куплено. Рано или поздно пройду",
         cat_high_wish: "Большое желание пройти",
+        cat_gift: "Пройду, если подарят (за свои не куплю)",
         cat_closure: "Закрыть гештальт",
         cat_curiosity: "Интересно ознакомиться",
         cat_skeptical: "Скептический интерес",
@@ -91,6 +93,7 @@ function changeFilter(value) {
 const categoryOrder = [
     "cat_owned",
     "cat_high_wish",
+    "cat_gift",
     "cat_closure",
     "cat_curiosity",
     "cat_skeptical",
