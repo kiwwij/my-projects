@@ -45,14 +45,14 @@ const gamesData = [
         title: "Resident Evil Requiem",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3764200/ce5437442768e38eb575f205ab9397d0264017b0/header.jpg?t=1772587704",
         steam_link: "https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/",
-        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
+        review_link: "https://telegra.ph/Resident-Evil-Requiem-review-04-01",
         playtime: "13",
         price_uah: 1999,
         discount_percent: 0,
         release_date: "27 фев. 2026 г.",
         play_status: "playing",
         rating: "89",
-        progress: 7
+        progress: 20
     },
     // {
     //     title: "",
