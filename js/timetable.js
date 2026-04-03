@@ -690,3 +690,39 @@ function pad(n) {
 }
 
 init();
+
+// для доступу до API необхідно використовувати персональний API токен. тому на сайті не буде працювати це, на жаль
+async function checkAirRaidAlert() {
+    const alertBanner = document.getElementById('air-raid-alert');
+    if (!alertBanner) return; 
+
+    try {
+        const targetUrl = 'https://ubilling.net.ua/aerialalerts/';
+        const response = await fetch(`https://api.codetabs.com/v1/proxy?quest=${targetUrl}`);
+        
+        if (!response.ok) throw new Error(`Помилка мережі: ${response.status}`);
+        
+        const data = await response.json();
+        
+        let isAlert = data.states['Вінниця'] || 
+                      data.states['м. Вінниця'] || 
+                      data.states['Вінницька територіальна громада'] ||
+                      data.states['Вінницька міська територіальна громада']; 
+        
+        // для тесту дизайну розкопентувати:
+        // isAlert = true; 
+
+        if (isAlert) {
+            alertBanner.style.display = 'flex';
+            document.body.classList.add('alert-mode');
+        } else {
+            alertBanner.style.display = 'none';
+            document.body.classList.remove('alert-mode');
+        }
+    } catch (error) {
+        console.error("Не вдалося перевірити статус тривоги. CORS або сервер недоступний:", error);
+    }
+}
+
+checkAirRaidAlert();
+setInterval(checkAirRaidAlert, 30000);

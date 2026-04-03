@@ -298,3 +298,50 @@ body {
     padding: 40px;
     color: var(--text-muted);
 }
+
+.alert-banner {
+    background: #dc2626; 
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 25px rgba(220, 38, 38, 0.5);
+    animation: pulse-alert 1.5s infinite;
+    border: 2px solid #f87171;
+}
+
+@keyframes pulse-alert {
+    0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+
+body.alert-mode .status-card {
+    background: linear-gradient(135deg, #991b1b, #7f1d1d);
+    box-shadow: 0 4px 20px rgba(153, 27, 27, 0.5);
+}
+
+body.alert-mode .lesson-card {
+    opacity: 0.4;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
+body.alert-mode .lesson-card.active {
+    border-color: #ef4444; 
+    opacity: 0.6;
+}
+
+@keyframes pulse-alert {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}

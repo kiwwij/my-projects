@@ -133,7 +133,7 @@ function initStatistics() {
     const totalSaved = globalIncome - globalExpense;
     const saveRate = globalIncome > 0 ? ((totalSaved / globalIncome) * 100) : 0;
 
-    const absoluteTotal = 50000 + 21000 + totalSaved;
+    const absoluteTotal = 48000 + 21000 + totalSaved;
     const absSavedEl = document.getElementById('absolute-total-saved');
     if (absSavedEl) {
         absSavedEl.innerText = `Общий капитал: ~${absoluteTotal.toFixed(0)} ₴`;

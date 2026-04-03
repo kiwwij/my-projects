@@ -318,6 +318,13 @@
     "url": "",
     "date": "2026-04-02"
   },
+  "web-design-module-1.html": {
+    "image": "bx bx-code-block",
+    "description": "Web Design & Front-End Development Fundamentals (vntu module 1).",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-03"
+  },
   ".html": {
     "image": "",
     "description": "",

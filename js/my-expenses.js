@@ -84,7 +84,6 @@ const themeToggle = document.getElementById('theme-toggle');
 const incomeLabel = incomeEl.previousElementSibling;
 const globalSavingsEl = document.getElementById('global-savings');
 
-// Настройки
 const categoryConfig = {
     food: { label: 'Продукты', icon: 'bx-baguette', color: 'cat-food' },
     snacks: { label: 'Вкусняшки', icon: 'bx-cookie', color: 'cat-snacks' },
@@ -108,7 +107,6 @@ let currentWeek = 'all';
 function init() {
     updateMonthLabel();
     render();
-    // НОВОЕ: Вызываем подсчет общей копилки при запуске
     renderGlobalSavings();
 }
 
@@ -134,16 +132,13 @@ function render() {
         return;
     }
 
-    // 1. Изначальный доход за месяц
     const totalMonthIncome = (monthData.income.fix || 0) + (monthData.income.extra || 0);
 
-    // 2. Логика расчета "Водопадом"
-    let startBalanceForView = totalMonthIncome; // С какой суммы начинаем считать
-    let expensesForView = 0; // Сколько потратили в выбранном периоде
-    let categoriesForView = {}; // Категории для графика
+    let startBalanceForView = totalMonthIncome;
+    let expensesForView = 0; 
+    let categoriesForView = {};
 
     if (currentWeek === 'all') {
-        // Если "Весь месяц": Доход = ЗП, Траты = Сумма всех недель
         incomeLabel.innerText = "Доход";
         startBalanceForView = totalMonthIncome;
         
@@ -154,75 +149,49 @@ function render() {
         });
 
     } else {
-        // Если выбрана конкретная неделя (например, 2)
-        // Нам нужно вычесть траты ВСЕХ предыдущих недель из Дохода
         
         const weekNum = parseInt(currentWeek);
         let previousExpenses = 0;
 
-        // Считаем траты за прошлые недели
         for (let i = 1; i < weekNum; i++) {
             const weekStats = getWeekStats(monthData, i.toString());
             previousExpenses += weekStats.total;
         }
 
-        // "Доход" для этой недели — это то, что осталось от ЗП
         startBalanceForView = totalMonthIncome - previousExpenses;
         
-        // Меняем подпись, чтобы было понятно
         incomeLabel.innerText = weekNum === 1 ? "Доход" : "На начало недели";
 
-        // Траты считаем ТОЛЬКО за текущую неделю
         const currentWeekStats = getWeekStats(monthData, currentWeek);
         expensesForView = currentWeekStats.total;
         categoriesForView = currentWeekStats.categories;
     }
 
-    // 3. Вывод
     setValues(startBalanceForView, expensesForView);
     renderStats(categoriesForView, expensesForView);
 }
 
-// НОВОЕ: Функция подсчета всех сэкономленных денег
 function renderGlobalSavings() {
-    if (!globalSavingsEl) return; // Если элемента нет в HTML, выходим
+    if (!globalSavingsEl) return;
 
     let totalSaved = 0;
     
-    // Получаем текущую реальную дату
     const now = new Date();
     const currentRealYear = now.getFullYear();
-    const currentRealMonth = now.getMonth() + 1; // Месяцы в JS 0-11, делаем 1-12
+    const currentRealMonth = now.getMonth() + 1;
 
-    // Проходимся по всей базе данных
     for (const key in database) {
-        // key формата "2026-02"
         const [yearStr, monthStr] = key.split('-');
         const year = parseInt(yearStr);
         const month = parseInt(monthStr);
 
-        // --- ФИЛЬТРЫ ---
-        
-        // 1. Игнорируем все года до 2026
         if (year < 2026) continue;
-
-        // 2. В 2026 году игнорируем Январь (month < 2)
-        // if (year === 2026 && month < 2) continue;
-
-        // 3. Игнорируем будущее (то, что написано заранее)
-        // Если год записи больше текущего реального года -> пропускаем
         if (year > currentRealYear) continue;
-        // Если год тот же, но месяц записи больше текущего реального -> пропускаем
         if (year === currentRealYear && month > currentRealMonth) continue;
 
-
-        // --- РАСЧЕТ ---
         const monthData = database[key];
-        
-        // Считаем доход за месяц
         const income = (monthData.income.fix || 0) + (monthData.income.extra || 0);
         
-        // Считаем расход за месяц (сумма всех недель)
         let expense = 0;
         if (monthData.weeks) {
             Object.values(monthData.weeks).forEach(week => {
@@ -232,14 +201,10 @@ function renderGlobalSavings() {
             });
         }
 
-        // Прибавляем остаток (Доход - Расход) к общей сумме
         totalSaved += (income - expense);
     }
 
-    // Вывод в HTML
     globalSavingsEl.innerText = `${totalSaved.toFixed(0)} ₴`;
-    
-    // Красим в зеленый, если мы в плюсе, в красный, если в минусе
     if (totalSaved >= 0) {
         globalSavingsEl.style.color = 'var(--success)';
     } else {
@@ -247,7 +212,6 @@ function renderGlobalSavings() {
     }
 }
 
-// Вспомогательная функция: считает сумму и категории одной недели
 function getWeekStats(monthData, weekKey) {
     let total = 0;
     let cats = {};
@@ -264,7 +228,6 @@ function getWeekStats(monthData, weekKey) {
     return { total: total, categories: cats };
 }
 
-// Вспомогательная функция: объединяет категории (для режима "Весь месяц")
 function mergeCategories(target, source) {
     for (const [cat, amount] of Object.entries(source)) {
         if (!target[cat]) target[cat] = 0;

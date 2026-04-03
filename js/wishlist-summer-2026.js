@@ -47,11 +47,11 @@ function renderBoard() {
     board.innerHTML = '';
 
     let totalGames = gamesData.length;
-    let playingCount = gamesData.filter(g => g.play_status === 'playing').length;
     let totalValue = 0;
 
     let pausedGames = gamesData.filter(g => g.play_status === 'paused');
     let changedMindGames = gamesData.filter(g => g.play_status === 'changed_mind');
+    let unplannedGames = gamesData.filter(g => g.play_status === 'unplanned_completed');
 
     gamesData.forEach(game => {
         if (game.price_uah > 0 && game.play_status !== 'changed_mind') {
@@ -61,6 +61,7 @@ function renderBoard() {
 
     let pausedListHtml = pausedGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
     let changedMindListHtml = changedMindGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
+    let unplannedListHtml = unplannedGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
 
     let pausedHtml = pausedGames.length > 0 ? `
         <div class="stat-hover-group">
@@ -76,10 +77,18 @@ function renderBoard() {
         </div>
     ` : '';
 
+    let unplannedHtml = unplannedGames.length > 0 ? `
+        <div class="stat-hover-group">
+            <span style="color: #a855f7;"><i class='bx bx-trophy'></i> Вне плана: ${unplannedGames.length}</span>
+            <div class="stat-hover-list">${unplannedListHtml}</div>
+        </div>
+    ` : '';
+
     statsContainer.innerHTML = `
         <span title="Общее количество игр"><i class='bx bx-layer'></i> Всего игр: ${totalGames}</span>
         ${pausedHtml}
         ${changedMindHtml}
+        ${unplannedHtml}
         <span style="color: #06b6d4;" title="Суммарная стоимость всех игр без учёта скидок"><i class='bx bx-wallet'></i> Общая стоимость: ${Math.round(totalValue).toLocaleString()} ₴</span>
     `;
 
@@ -129,14 +138,13 @@ function createCardHtml(game) {
     
     let mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
     
-    let ratingColor = "#94a3b8"; 
-    if (game.rating >= 75) ratingColor = "#10b981"; 
-    else if (game.rating >= 50) ratingColor = "#f59e0b"; 
-    else if (game.rating > 0) ratingColor = "#ef4444"; 
+    const escapedTitle = game.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-    let ratingHtml = (game.rating && game.rating !== "") 
-        ? `<div class="meta-row" title="Рейтинг игры на сайте Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1); margin: 0;"> <span style="color: ${ratingColor}; font-weight: 600;">${game.rating}/100</span></div>` 
-        : `<div class="meta-row" title="У игры пока нет рейтинга на Metacritic"><img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(46%) sepia(14%) saturate(996%) hue-rotate(176deg) brightness(94%) contrast(88%); margin: 0;"> <span style="opacity: 0.5;">Рейтинг: tbd</span></div>`;
+    let ratingHtml = `
+        <div class="meta-row auto-rating-container" data-game-title="${escapedTitle}" data-fallback-rating="${game.rating || ''}" title="Загрузка рейтинга...">
+            <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(46%) sepia(14%) saturate(996%) hue-rotate(176deg) brightness(94%) contrast(88%); margin: 0;"> 
+            <span style="opacity: 0.5;"><i class='bx bx-loader-alt bx-spin'></i></span>
+        </div>`;
 
     let reviewHtml = game.review_link ? `<a href="${game.review_link}" target="_blank" class="action-btn" title="Открыть обзор на игру"><i class='bx bxs-message-square-detail'></i></a>` : '';
     let steamHtml = game.steam_link ? `<a href="${game.steam_link}" target="_blank" class="action-btn steam-color" title="Открыть страницу игры в Steam"><i class='bx bxl-steam'></i></a>` : '';
@@ -157,8 +165,6 @@ function createCardHtml(game) {
         cardClasses += ' opacity-70';
     }
 
-    const escapedTitle = game.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-
     return `
         <div class="${cardClasses}">
             <div class="card-cover-wrapper">
@@ -168,26 +174,36 @@ function createCardHtml(game) {
             </div>
             
             <div class="card-body">
-                <h3 class="card-title" 
-                    title="${escapedTitle}" 
-                    data-title="${escapedTitle}"
-                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;"
-                    onclick="copyTitleToClipboard(this.dataset.title)"
-                >${game.title}</h3>
-                <div class="card-info-grid">
-                    ${ratingHtml}
-                    ${playtimeHtml}
-                    ${releaseHtml}
-                    ${priceHtml}
+                <div class="card-header-row" style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                    <h3 class="card-title" 
+                        title="${escapedTitle}" 
+                        data-title="${escapedTitle}"
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; flex-grow: 1; margin: 0; transition: color 0.2s;"
+                        onclick="handleTitleClick(event, this)"
+                    >${game.title}</h3>
+                    <button class="toggle-btn" onclick="toggleCard(this)" title="Свернуть/Развернуть" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; padding: 2px; border-radius: 4px; transition: 0.2s; flex-shrink: 0;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">
+                        <i class='bx bx-chevron-up' style="font-size: 1.4rem;"></i>
+                    </button>
                 </div>
                 
-                <div class="card-bottom">
-                    <div class="progress-container" title="Текущий прогресс прохождения: ${currentProgress}%">
-                        <div class="progress-bar" style="width: ${currentProgress}%; background: ${progressColor};"></div>
-                    </div>
-                    <div class="card-actions">
-                        ${reviewHtml}
-                        ${steamHtml}
+                <div class="collapsible-wrapper">
+                    <div class="collapsible-inner">
+                        <div class="card-info-grid">
+                            ${ratingHtml}
+                            ${playtimeHtml}
+                            ${releaseHtml}
+                            ${priceHtml}
+                        </div>
+                        
+                        <div class="card-bottom">
+                            <div class="progress-container" title="Текущий прогресс прохождения: ${currentProgress}%">
+                                <div class="progress-bar" style="width: ${currentProgress}%; background: ${progressColor};"></div>
+                            </div>
+                            <div class="card-actions">
+                                ${reviewHtml}
+                                ${steamHtml}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -195,10 +211,79 @@ function createCardHtml(game) {
     `;
 }
 
+function handleTitleClick(event, el) {
+    const card = el.closest('.kanban-card');
+    
+    if (card.classList.contains('collapsed')) {
+        const btn = card.querySelector('.toggle-btn');
+        if (btn) toggleCard(btn);
+    } else {
+        copyTitleToClipboard(el.dataset.title);
+    }
+}
+
+function toggleCard(btn) {
+    const card = btn.closest('.kanban-card');
+    const icon = btn.querySelector('i');
+    
+    card.classList.toggle('collapsed');
+    
+    if (card.classList.contains('collapsed')) {
+        icon.classList.replace('bx-chevron-up', 'bx-chevron-down');
+    } else {
+        icon.classList.replace('bx-chevron-down', 'bx-chevron-up');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    const animationStyles = document.createElement('style');
+    animationStyles.innerHTML = `
+        .card-cover-wrapper {
+            transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+        }
+        .kanban-card.collapsed .card-cover-wrapper {
+            height: 0 !important;
+            opacity: 0;
+            border-bottom: 0px solid transparent;
+        }
+        
+        .card-body {
+            transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), gap 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .kanban-card.collapsed .card-body {
+            padding: 10px 15px !important;
+            gap: 0 !important;
+        }
+        
+        .collapsible-wrapper {
+            display: grid;
+            grid-template-rows: 1fr;
+            transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .kanban-card.collapsed .collapsible-wrapper {
+            grid-template-rows: 0fr;
+        }
+        
+        .collapsible-inner {
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+    `;
+    document.head.appendChild(animationStyles);
+
+    const profileLink = document.querySelector('.profile-area a');
+    if (profileLink) {
+        profileLink.title = "Перейти в мой профиль Steam";
+    }
+
     updateSteamAvatar();
     renderBoard();
     setupStatsModal();
+    fetchMetacriticRatings(); 
 });
 
 function copyTitleToClipboard(title) {
@@ -264,7 +349,7 @@ function populateStats() {
     let totalProgressSum = 0;
 
     gamesData.forEach(game => {
-        if (game.play_status === 'completed') completedCount++;
+        if (game.play_status === 'completed' || game.play_status === 'unplanned_completed') completedCount++;
         if (game.play_status === 'playing') playingCount++;
         if (game.play_status === 'planned') plannedCount++;
         
@@ -354,4 +439,97 @@ function populateStats() {
             </div>
         </div>
     `;
+}
+
+async function fetchMetacriticRatings() {
+    const rawgApiKey = 'eff5af7536f94b1b862edf995f4ee1f9'; 
+    const containers = document.querySelectorAll('.auto-rating-container');
+    const mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
+
+    const renderScore = (container, score, gameTitle) => {
+        let ratingColor = "#94a3b8"; 
+        if (score >= 75) ratingColor = "#10b981"; 
+        else if (score >= 50) ratingColor = "#f59e0b"; 
+        else if (score > 0) ratingColor = "#ef4444"; 
+
+        container.title = "Рейтинг игры на сайте Metacritic";
+        container.innerHTML = `<img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1); margin: 0;"> <span style="color: ${ratingColor}; font-weight: 600;">${score}/100</span>`;
+        
+        const gameObj = gamesData.find(g => g.title === gameTitle);
+        if (gameObj) gameObj.rating = score;
+    };
+
+    const renderEmpty = (container) => {
+        container.title = "У игры пока нет рейтинга на Metacritic";
+        container.innerHTML = `<img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(46%) sepia(14%) saturate(996%) hue-rotate(176deg) brightness(94%) contrast(88%); margin: 0;"> <span style="opacity: 0.5;">Рейтинг: tbd</span>`;
+    };
+
+    const gamesToFetch = [];
+
+    for (let container of containers) {
+        const gameTitle = container.getAttribute('data-game-title');
+        const fallbackRating = container.getAttribute('data-fallback-rating');
+        
+        const cachedScore = localStorage.getItem(`mc_rating_${gameTitle}`);
+        
+        if (cachedScore && cachedScore !== "null") {
+            renderScore(container, parseFloat(cachedScore), gameTitle);
+        } else if (cachedScore === "null") {
+            renderEmpty(container);
+        } else {
+            gamesToFetch.push({ container, gameTitle, fallbackRating });
+        }
+    }
+
+    const fetchSingleGame = async (item) => {
+        let finalScore = null;
+        const gameObj = gamesData.find(g => g.title === item.gameTitle);
+        
+        if (gameObj && gameObj.steam_link) {
+            const appIdMatch = gameObj.steam_link.match(/\/app\/(\d+)/);
+            if (appIdMatch && appIdMatch[1]) {
+                try {
+                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appIdMatch[1]}`)}`;
+                    const response = await fetch(proxyUrl);
+                    const data = await response.json();
+                    if (data[appIdMatch[1]]?.success && data[appIdMatch[1]]?.data?.metacritic) {
+                        finalScore = data[appIdMatch[1]].data.metacritic.score;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        if (!finalScore) {
+            try {
+                const response = await fetch(`https://api.rawg.io/api/games?key=${rawgApiKey}&search=${encodeURIComponent(item.gameTitle)}&page_size=1`);
+                const data = await response.json();
+                if (data.results?.[0]?.metacritic) {
+                    finalScore = data.results[0].metacritic;
+                }
+            } catch (e) {}
+        }
+
+        if (!finalScore && item.fallbackRating && !isNaN(parseFloat(item.fallbackRating))) {
+            finalScore = parseFloat(item.fallbackRating);
+        }
+
+        if (finalScore) {
+            localStorage.setItem(`mc_rating_${item.gameTitle}`, finalScore);
+            renderScore(item.container, finalScore, item.gameTitle);
+        } else {
+            localStorage.setItem(`mc_rating_${item.gameTitle}`, "null");
+            renderEmpty(item.container);
+        }
+    };
+
+    const batchSize = 3;
+    for (let i = 0; i < gamesToFetch.length; i += batchSize) {
+        const batch = gamesToFetch.slice(i, i + batchSize);
+        
+        await Promise.all(batch.map(item => fetchSingleGame(item)));
+        
+        if (i + batchSize < gamesToFetch.length) {
+            await new Promise(resolve => setTimeout(resolve, 250));
+        }
+    }
 }
