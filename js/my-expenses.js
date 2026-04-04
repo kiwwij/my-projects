@@ -1,6 +1,6 @@
 const mainWrapper = document.querySelector('.main-wrapper');
 
-if (sessionStorage.getItem('finance_unlocked') !== 'true') {
+if (localStorage.getItem('finance_unlocked') !== 'true') {
     mainWrapper.style.display = 'none';
     
     const overlay = document.createElement('div');
@@ -44,7 +44,7 @@ if (sessionStorage.getItem('finance_unlocked') !== 'true') {
 
     function checkPassword() {
         if (input.value === 'hentaif') {
-            sessionStorage.setItem('finance_unlocked', 'true');
+            localStorage.setItem('finance_unlocked', 'true');
             overlay.remove();
             mainWrapper.style.display = '';
         } else {

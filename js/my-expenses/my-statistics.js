@@ -1,6 +1,6 @@
 const wrapper = document.getElementById('stats-wrapper');
 
-if (sessionStorage.getItem('finance_unlocked') !== 'true') {
+if (localStorage.getItem('finance_unlocked') !== 'true') {
     window.location.href = '../my-expenses.html'; 
 } else {
     wrapper.style.display = 'block';
@@ -240,7 +240,26 @@ function drawCharts(data) {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Баланс: ${context.parsed.y.toFixed(0)} ₴`;
+                        },
+                        afterLabel: function(context) {
+                            const index = context.dataIndex;
+                            const income = mainBarChart.data.datasets[0].data[index] || 0;
+                            const expense = mainBarChart.data.datasets[1].data[index] || 0;
+                            
+                            const diff = income - expense;
+                            const sign = diff > 0 ? '+' : '';
+                            
+                            return `За месяц: ${sign}${diff.toFixed(0)} ₴`;
+                        }
+                    }
+                }
+            },
             scales: { x: { grid: { display: false } }, y: { grid: { color: gridColor } } }
         }
     });

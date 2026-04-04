@@ -489,13 +489,17 @@ async function fetchMetacriticRatings() {
             const appIdMatch = gameObj.steam_link.match(/\/app\/(\d+)/);
             if (appIdMatch && appIdMatch[1]) {
                 try {
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${appIdMatch[1]}`)}`;
+                    const targetUrl = `https://store.steampowered.com/api/appdetails?appids=${appIdMatch[1]}`;
+                    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+                    
                     const response = await fetch(proxyUrl);
                     const data = await response.json();
                     if (data[appIdMatch[1]]?.success && data[appIdMatch[1]]?.data?.metacritic) {
                         finalScore = data[appIdMatch[1]].data.metacritic.score;
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.warn(`Steam API недоступен для ${item.gameTitle}, пробуем RAWG...`);
+                }
             }
         }
 
@@ -506,7 +510,9 @@ async function fetchMetacriticRatings() {
                 if (data.results?.[0]?.metacritic) {
                     finalScore = data.results[0].metacritic;
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.warn(`RAWG API недоступен для ${item.gameTitle}`);
+            }
         }
 
         if (!finalScore && item.fallbackRating && !isNaN(parseFloat(item.fallbackRating))) {

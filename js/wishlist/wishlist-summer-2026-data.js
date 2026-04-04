@@ -63,7 +63,7 @@ const gamesData = [
     //     price_uah: "",
     //     discount_percent: 0,
     //     release_date: "",
-    //     play_status: "playing",
+    //     play_status: "",
     //     rating: "",
     //     progress: 0
     // },
