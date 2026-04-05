@@ -37,14 +37,9 @@ function handleImageError(imgElement) {
     }
 }
 
-function renderBoard() {
-    if (typeof gamesData === 'undefined') return;
-
-    gamesData.sort((a, b) => a.title.localeCompare(b.title));
-
-    const board = document.getElementById('kanban-board');
+function updateQuickStats() {
     const statsContainer = document.getElementById('quick-stats');
-    board.innerHTML = '';
+    if (!statsContainer || typeof gamesData === 'undefined') return;
 
     let totalGames = gamesData.length;
     let totalValue = 0;
@@ -54,14 +49,104 @@ function renderBoard() {
     let unplannedGames = gamesData.filter(g => g.play_status === 'unplanned_completed');
 
     gamesData.forEach(game => {
-        if (game.price_uah > 0 && game.play_status !== 'changed_mind') {
-            totalValue += game.price_uah;
+        if (game.price_uah && game.price_uah > 0 && game.play_status !== 'changed_mind') {
+            totalValue += parseFloat(game.price_uah);
         }
     });
 
-    let pausedListHtml = pausedGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
-    let changedMindListHtml = changedMindGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
-    let unplannedListHtml = unplannedGames.map(g => `<a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>`).join('');
+    const mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
+
+    const generateTooltipList = (games) => {
+        games.sort((a, b) => a.title.localeCompare(b.title));
+
+        return games.map(g => {
+            const escapedTitle = g.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            let discount = g.discount_percent || 0;
+            let badgeSale = '';
+            
+            if (discount > 0) {
+                badgeSale = `<div class="card-badge badge-sale" style="top: 5px; left: 5px; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; line-height: normal;">-${discount}%</div>`;
+            }
+
+            let priceClass = "";
+            let priceContent = `<span style="opacity: 0.5;"><i class='bx bx-loader-alt bx-spin'></i></span>`;
+            
+            if (g.price_uah === undefined || g.price_uah === null || g.price_uah === "") {
+                priceClass = "auto-price-container"; // Класс добавляется ТОЛЬКО если цены нет
+                let cachedPrice = localStorage.getItem(`steam_price_${g.title}`);
+                if (cachedPrice && cachedPrice !== "null") {
+                    let p = parseFloat(cachedPrice);
+                    if (p === 0) priceContent = `<span style="color: var(--accent-green);">Бесплатно</span>`;
+                    else priceContent = `<span>${p}₴</span>`;
+                } else if (cachedPrice === "null") {
+                    priceContent = `<span style="opacity: 0.5;">tbd</span>`;
+                }
+            } else if (g.price_uah > 0) {
+                priceContent = `<span>${g.price_uah}₴</span>`;
+            } else {
+                priceContent = `<span style="color: var(--accent-green);">Бесплатно</span>`;
+            }
+
+            let timeText = g.playtime ? `~${g.playtime}ч` : '<span style="opacity:0.5;">tbd</span>';
+            let releaseText = g.release_date ? g.release_date : '<span style="opacity:0.5;">tbd</span>';
+
+            let cachedRating = g.rating || localStorage.getItem(`mc_rating_${g.title}`);
+            let ratingContent = `<span style="opacity: 0.5;"><i class='bx bx-loader-alt bx-spin'></i></span>`;
+            if (cachedRating && cachedRating !== "null" && !isNaN(parseFloat(cachedRating))) {
+                let score = parseFloat(cachedRating);
+                let ratingColor = "#94a3b8"; 
+                if (score >= 75) ratingColor = "#10b981"; 
+                else if (score >= 50) ratingColor = "#f59e0b"; 
+                else if (score > 0) ratingColor = "#ef4444"; 
+                ratingContent = `<span style="color: ${ratingColor}; font-weight: 600;">${score}/100</span>`;
+            } else if (cachedRating === "null") {
+                ratingContent = `<span style="opacity: 0.5;">tbd</span>`;
+            }
+
+            let currentProgress = g.progress || 0;
+            let progressColor;
+            switch(g.play_status) {
+                case 'completed': progressColor = '#10b981'; break; 
+                case 'playing': progressColor = '#06b6d4'; break;   
+                case 'planned': progressColor = '#f59e0b'; break;   
+                case 'dropped': progressColor = '#ef4444'; break;   
+                default: progressColor = '#94a3b8';                 
+            }
+
+            return `
+            <div class="hover-item-container">
+                <a href="${g.steam_link}" target="_blank" class="hover-item">${g.title}</a>
+                <div class="game-mini-tooltip">
+                    <div style="position: relative; display: block;">
+                        <img src="${g.poster}" alt="poster" style="display: block;">
+                        ${badgeSale}
+                    </div>
+                    <div class="tt-details">
+                        <div class="auto-rating-container" data-game-title="${escapedTitle}" data-fallback-rating="${g.rating || ''}">
+                            <span style="display: inline-flex; width: 1.1rem; justify-content: center; align-items: center;">
+                                <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(48%) sepia(13%) saturate(735%) hue-rotate(176deg) brightness(93%) contrast(89%); margin: 0;">
+                            </span> 
+                            ${ratingContent}
+                        </div>
+                        <div class="${priceClass}" data-game-title="${escapedTitle}" data-discount="${discount}">
+                            <i class='bx bx-purchase-tag'></i> 
+                            ${priceContent}
+                        </div>
+                        <div><i class='bx bx-time-five'></i> <span>${timeText}</span></div>
+                        <div><i class='bx bx-calendar'></i> <span>${releaseText}</span></div>
+                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 6px; overflow: hidden; display: flex;" title="Прогресс: ${currentProgress}%">
+                            <div style="width: ${currentProgress}%; height: 100%; background: ${progressColor}; transition: width 0.3s;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join('');
+    };
+
+    let pausedListHtml = generateTooltipList(pausedGames);
+    let changedMindListHtml = generateTooltipList(changedMindGames);
+    let unplannedListHtml = generateTooltipList(unplannedGames);
 
     let pausedHtml = pausedGames.length > 0 ? `
         <div class="stat-hover-group">
@@ -84,15 +169,50 @@ function renderBoard() {
         </div>
     ` : '';
 
+    let isLate = new Date() >= new Date('2027-01-01T00:00:00');
+
+    let outOfTimeHtml = '';
+    if (isLate) {
+        let outOfTimeGames = gamesData.filter(g => g.play_status === 'planned' || g.play_status === 'paused');
+        if (outOfTimeGames.length > 0) {
+            let outOfTimeListHtml = generateTooltipList(outOfTimeGames);
+            outOfTimeHtml = `
+                <div class="stat-hover-group">
+                    <span style="color: #ef4444;" title="Игры, которые не были пройдены до конца 2026 года"><i class='bx bx-alarm-exclamation'></i> Не успел: ${outOfTimeGames.length}</span>
+                    <div class="stat-hover-list">${outOfTimeListHtml}</div>
+                </div>
+            `;
+        }
+    }
+
     statsContainer.innerHTML = `
         <span title="Общее количество игр"><i class='bx bx-layer'></i> Всего игр: ${totalGames}</span>
         ${pausedHtml}
         ${changedMindHtml}
         ${unplannedHtml}
+        ${outOfTimeHtml}
         <span style="color: #06b6d4;" title="Суммарная стоимость всех игр без учёта скидок"><i class='bx bx-wallet'></i> Общая стоимость: ${Math.round(totalValue).toLocaleString()} ₴</span>
     `;
+}
 
-    kanbanColumns.forEach(col => {
+function renderBoard() {
+    if (typeof gamesData === 'undefined') return;
+
+    gamesData.sort((a, b) => a.title.localeCompare(b.title));
+
+    const board = document.getElementById('kanban-board');
+    board.innerHTML = '';
+
+    updateQuickStats();
+
+    let activeColumns = kanbanColumns;
+    let isLate = new Date() >= new Date('2027-01-01T00:00:00');
+
+    if (isLate) {
+        activeColumns = kanbanColumns.filter(col => col.id !== 'planned');
+    }
+
+    activeColumns.forEach(col => {
         const columnEl = document.createElement('div');
         columnEl.className = 'kanban-column';
         
@@ -100,8 +220,15 @@ function renderBoard() {
         let cardsHtml = columnGames.map(game => createCardHtml(game)).join('');
 
         columnEl.innerHTML = `
-            <div class="column-header">
-                <h2>${col.title} <span class="game-count">${columnGames.length}</span></h2>
+            <div class="column-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="display: flex; align-items: center; gap: 8px; margin: 0;">
+                    ${col.title} <span class="game-count">${columnGames.length}</span>
+                </h2>
+                ${columnGames.length > 0 ? `
+                    <button onclick="toggleAllInColumn(this)" title="Свернуть/развернуть все игры" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; padding: 4px; border-radius: 6px; transition: 0.2s;" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.color='var(--text-muted)'; this.style.background='none';">
+                        <i class='bx bx-collapse-vertical' style="font-size: 1.3rem;"></i>
+                    </button>
+                ` : ''}
             </div>
             <div class="column-content">
                 ${cardsHtml || '<div class="empty-column"><i class="bx bx-ghost"></i> Пусто</div>'}
@@ -111,19 +238,44 @@ function renderBoard() {
     });
 }
 
+function toggleAllInColumn(btn) {
+    const column = btn.closest('.kanban-column');
+    const cards = column.querySelectorAll('.kanban-card');
+    if (cards.length === 0) return;
+
+    const hasExpanded = Array.from(cards).some(card => !card.classList.contains('collapsed'));
+
+    cards.forEach(card => {
+        const isCollapsed = card.classList.contains('collapsed');
+        const toggleBtn = card.querySelector('.toggle-btn');
+        
+        if (hasExpanded && !isCollapsed) {
+            if (toggleBtn) toggleCard(toggleBtn);
+        } else if (!hasExpanded && isCollapsed) {
+            if (toggleBtn) toggleCard(toggleBtn);
+        }
+    });
+}
+
 function createCardHtml(game) {
-    let priceDisplay = '';
-    let badgeSale = '';
+    const escapedTitle = game.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     
+    let badgeSale = '';
+    let priceHtml = '';
+
     if (game.price_uah === undefined || game.price_uah === null || game.price_uah === "") {
-        priceDisplay = `<span style="opacity: 0.5;">tbd</span>`;
+        priceHtml = `
+            <div class="meta-row auto-price-container" data-game-title="${escapedTitle}" data-discount="${game.discount_percent || 0}" title="Загрузка цены...">
+                <i class='bx bx-purchase-tag'></i> 
+                <span style="opacity: 0.5;"><i class='bx bx-loader-alt bx-spin'></i></span>
+            </div>`;
     } else if (game.price_uah > 0) {
-        priceDisplay = `<span>${game.price_uah}₴</span>`;
+        priceHtml = `<div class="meta-row" title="Базовая стоимость игры в Steam"><i class='bx bx-purchase-tag'></i> <span>${game.price_uah}₴</span></div>`;
         if (game.discount_percent > 0) {
-            badgeSale = `<div class="card-badge badge-sale" title="Возможная скидка">-${game.discount_percent}%</div>`;
+            badgeSale = `<div class="card-badge badge-sale" title="Скидка: ${game.discount_percent}%">-${game.discount_percent}%</div>`;
         }
     } else {
-        priceDisplay = `<span style="color: var(--accent-green);">Бесплатно</span>`;
+        priceHtml = `<div class="meta-row" title="Базовая стоимость игры в Steam"><i class='bx bx-purchase-tag'></i> <span style="color: var(--accent-green);">Бесплатно</span></div>`;
     }
 
     let playtimeHtml = game.playtime 
@@ -134,15 +286,13 @@ function createCardHtml(game) {
         ? `<div class="meta-row" title="Дата выхода игры"><i class='bx bx-calendar'></i> <span>${game.release_date}</span></div>` 
         : `<div class="meta-row" title="Точная дата выхода неизвестна"><i class='bx bx-calendar'></i> <span style="opacity: 0.5;">Дата: tbd</span></div>`;
     
-    let priceHtml = `<div class="meta-row" title="Базовая стоимость игры в Steam"><i class='bx bx-purchase-tag'></i> <span>${priceDisplay}</span></div>`;
-    
     let mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
     
-    const escapedTitle = game.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-
     let ratingHtml = `
         <div class="meta-row auto-rating-container" data-game-title="${escapedTitle}" data-fallback-rating="${game.rating || ''}" title="Загрузка рейтинга...">
-            <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(46%) sepia(14%) saturate(996%) hue-rotate(176deg) brightness(94%) contrast(88%); margin: 0;"> 
+            <span style="display: inline-flex; width: 1.1rem; justify-content: center; align-items: center;">
+                <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(48%) sepia(13%) saturate(735%) hue-rotate(176deg) brightness(93%) contrast(89%); margin: 0;">
+            </span> 
             <span style="opacity: 0.5;"><i class='bx bx-loader-alt bx-spin'></i></span>
         </div>`;
 
@@ -160,10 +310,18 @@ function createCardHtml(game) {
         default: progressColor = '#94a3b8';                 
     }
 
+    let collapsedCards = JSON.parse(localStorage.getItem('collapsed_cards') || '[]');
+    let isCollapsed = collapsedCards.includes(game.title);
+
     let cardClasses = 'kanban-card';
     if (game.play_status === 'dropped') {
         cardClasses += ' opacity-70';
     }
+    if (isCollapsed) {
+        cardClasses += ' collapsed';
+    }
+
+    let toggleIcon = isCollapsed ? 'bx-chevron-down' : 'bx-chevron-up';
 
     return `
         <div class="${cardClasses}">
@@ -182,7 +340,7 @@ function createCardHtml(game) {
                         onclick="handleTitleClick(event, this)"
                     >${game.title}</h3>
                     <button class="toggle-btn" onclick="toggleCard(this)" title="Свернуть/Развернуть" style="background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; padding: 2px; border-radius: 4px; transition: 0.2s; flex-shrink: 0;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">
-                        <i class='bx bx-chevron-up' style="font-size: 1.4rem;"></i>
+                        <i class='bx ${toggleIcon}' style="font-size: 1.4rem;"></i>
                     </button>
                 </div>
                 
@@ -225,19 +383,35 @@ function handleTitleClick(event, el) {
 function toggleCard(btn) {
     const card = btn.closest('.kanban-card');
     const icon = btn.querySelector('i');
+    const titleEl = card.querySelector('.card-title');
+    
+    const gameTitle = titleEl.getAttribute('data-title').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
     
     card.classList.toggle('collapsed');
     
+    let collapsedCards = JSON.parse(localStorage.getItem('collapsed_cards') || '[]');
+    
     if (card.classList.contains('collapsed')) {
         icon.classList.replace('bx-chevron-up', 'bx-chevron-down');
+        if (!collapsedCards.includes(gameTitle)) {
+            collapsedCards.push(gameTitle);
+        }
     } else {
         icon.classList.replace('bx-chevron-down', 'bx-chevron-up');
+        collapsedCards = collapsedCards.filter(t => t !== gameTitle);
     }
+    
+    localStorage.setItem('collapsed_cards', JSON.stringify(collapsedCards));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const animationStyles = document.createElement('style');
     animationStyles.innerHTML = `
+        .board-header {
+            position: relative;
+            z-index: 1000;
+        }
+        
         .card-cover-wrapper {
             transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
         }
@@ -272,6 +446,66 @@ document.addEventListener('DOMContentLoaded', () => {
             flex-direction: column;
             gap: 12px;
         }
+        
+        .stat-hover-list { overflow: visible !important; }
+        .hover-item-container { position: relative; }
+        .game-mini-tooltip {
+            position: absolute;
+            left: calc(100% + 15px);
+            top: -20px;
+            width: 220px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+        .hover-item-container:hover .game-mini-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+        .game-mini-tooltip img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .game-mini-tooltip .tt-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .game-mini-tooltip .tt-details div {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .game-mini-tooltip::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: -6px;
+            width: 10px;
+            height: 10px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            border-left: 1px solid var(--border-color);
+            transform: rotate(45deg);
+        }
     `;
     document.head.appendChild(animationStyles);
 
@@ -283,6 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSteamAvatar();
     renderBoard();
     setupStatsModal();
+    setupRefreshButton();
     fetchMetacriticRatings(); 
 });
 
@@ -371,7 +606,6 @@ function populateStats() {
     let avgRating = gamesWithRating > 0 ? Math.round(totalRating / gamesWithRating) : 0;
 
     const modalBody = document.getElementById('stats-modal-body');
-    
     const mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
     
     modalBody.innerHTML = `
@@ -443,47 +677,136 @@ function populateStats() {
 
 async function fetchMetacriticRatings() {
     const rawgApiKey = 'eff5af7536f94b1b862edf995f4ee1f9'; 
-    const containers = document.querySelectorAll('.auto-rating-container');
+    const ratingContainers = document.querySelectorAll('.auto-rating-container');
+    const priceContainers = document.querySelectorAll('.auto-price-container');
     const mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
 
-    const renderScore = (container, score, gameTitle) => {
+    const uniqueGames = new Set();
+    ratingContainers.forEach(c => uniqueGames.add(c.getAttribute('data-game-title')));
+    priceContainers.forEach(c => uniqueGames.add(c.getAttribute('data-game-title')));
+
+    const renderScore = (escapedTitle, score) => {
+        const containers = document.querySelectorAll(`.auto-rating-container[data-game-title="${escapedTitle}"]`);
+        
         let ratingColor = "#94a3b8"; 
         if (score >= 75) ratingColor = "#10b981"; 
         else if (score >= 50) ratingColor = "#f59e0b"; 
         else if (score > 0) ratingColor = "#ef4444"; 
 
-        container.title = "Рейтинг игры на сайте Metacritic";
-        container.innerHTML = `<img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1); margin: 0;"> <span style="color: ${ratingColor}; font-weight: 600;">${score}/100</span>`;
+        containers.forEach(container => {
+            container.title = "Рейтинг игры на сайте Metacritic";
+            container.innerHTML = `
+                <span style="display: inline-flex; width: 1.1rem; justify-content: center; align-items: center;">
+                    <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1); margin: 0;">
+                </span> 
+                <span style="color: ${ratingColor}; font-weight: 600;">${score}/100</span>`;
+        });
         
-        const gameObj = gamesData.find(g => g.title === gameTitle);
+        const gameObj = gamesData.find(g => g.title === escapedTitle.replace(/&quot;/g, '"').replace(/&#39;/g, "'"));
         if (gameObj) gameObj.rating = score;
     };
 
-    const renderEmpty = (container) => {
-        container.title = "У игры пока нет рейтинга на Metacritic";
-        container.innerHTML = `<img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(46%) sepia(14%) saturate(996%) hue-rotate(176deg) brightness(94%) contrast(88%); margin: 0;"> <span style="opacity: 0.5;">Рейтинг: tbd</span>`;
+    const renderEmptyRating = (escapedTitle) => {
+        const containers = document.querySelectorAll(`.auto-rating-container[data-game-title="${escapedTitle}"]`);
+        containers.forEach(container => {
+            container.title = "У игры пока нет рейтинга на Metacritic";
+            container.innerHTML = `
+                <span style="display: inline-flex; width: 1.1rem; justify-content: center; align-items: center;">
+                    <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(48%) sepia(13%) saturate(735%) hue-rotate(176deg) brightness(93%) contrast(89%); margin: 0;">
+                </span> 
+                <span style="opacity: 0.5;">tbd</span>`;
+        });
+    };
+
+    const renderPrice = (escapedTitle, price) => {
+        const containers = document.querySelectorAll(`.auto-price-container[data-game-title="${escapedTitle}"]`);
+        
+        containers.forEach(container => {
+            const discount = parseInt(container.getAttribute('data-discount')) || 0;
+            
+            if (price === 0) {
+                container.title = "Бесплатная игра";
+                container.innerHTML = `<i class='bx bx-purchase-tag'></i> <span style="color: var(--accent-green);">Бесплатно</span>`;
+            } else if (price > 0) {
+                container.title = "Базовая стоимость игры в Steam";
+                container.innerHTML = `<i class='bx bx-purchase-tag'></i> <span>${price}₴</span>`;
+                
+                if (discount > 0) {
+                    const card = container.closest('.kanban-card');
+                    if (card) {
+                        const coverWrapper = card.querySelector('.card-cover-wrapper');
+                        if (coverWrapper) {
+                            let badge = coverWrapper.querySelector('.badge-sale');
+                            if (!badge) {
+                                coverWrapper.insertAdjacentHTML('beforeend', `<div class="card-badge badge-sale" title="Скидка: ${discount}%">-${discount}%</div>`);
+                            }
+                        }
+                    }
+                }
+            } else {
+                container.title = "Цена неизвестна";
+                container.innerHTML = `<i class='bx bx-purchase-tag'></i> <span style="opacity: 0.5;">tbd</span>`;
+            }
+        });
+        
+        const originalTitle = escapedTitle.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        const gameObj = gamesData.find(g => g.title === originalTitle);
+        if (gameObj) {
+            gameObj.price_uah = price;
+            gameObj._is_dynamic_price = true;
+        }
     };
 
     const gamesToFetch = [];
 
-    for (let container of containers) {
-        const gameTitle = container.getAttribute('data-game-title');
-        const fallbackRating = container.getAttribute('data-fallback-rating');
+    uniqueGames.forEach(escapedTitle => {
+        const originalTitle = escapedTitle.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        const gameObj = gamesData.find(g => g.title === originalTitle);
         
-        const cachedScore = localStorage.getItem(`mc_rating_${gameTitle}`);
+        const cachedRating = localStorage.getItem(`mc_rating_${originalTitle}`);
+        const cachedPrice = localStorage.getItem(`steam_price_${originalTitle}`);
         
-        if (cachedScore && cachedScore !== "null") {
-            renderScore(container, parseFloat(cachedScore), gameTitle);
-        } else if (cachedScore === "null") {
-            renderEmpty(container);
-        } else {
-            gamesToFetch.push({ container, gameTitle, fallbackRating });
+        const hasRatingContainer = document.querySelector(`.auto-rating-container[data-game-title="${escapedTitle}"]`);
+        const hasPriceContainer = document.querySelector(`.auto-price-container[data-game-title="${escapedTitle}"]`);
+
+        let needsFetch = false;
+        let itemTask = { 
+            title: originalTitle, 
+            escapedTitle: escapedTitle, 
+            fetchRating: false, 
+            fetchPrice: false,
+            fallbackRating: gameObj?.rating 
+        };
+
+        if (hasRatingContainer) {
+            if (cachedRating && cachedRating !== "null") {
+                renderScore(escapedTitle, parseFloat(cachedRating));
+            } else if (cachedRating === "null") {
+                renderEmptyRating(escapedTitle);
+            } else {
+                itemTask.fetchRating = true;
+                needsFetch = true;
+            }
         }
-    }
+
+        if (hasPriceContainer) {
+            if (cachedPrice && cachedPrice !== "null") {
+                renderPrice(escapedTitle, parseFloat(cachedPrice));
+            } else if (cachedPrice === "null") {
+                renderPrice(escapedTitle, null);
+            } else {
+                itemTask.fetchPrice = true;
+                needsFetch = true;
+            }
+        }
+
+        if (needsFetch) gamesToFetch.push(itemTask);
+    });
 
     const fetchSingleGame = async (item) => {
         let finalScore = null;
-        const gameObj = gamesData.find(g => g.title === item.gameTitle);
+        let finalPrice = null;
+        const gameObj = gamesData.find(g => g.title === item.title);
         
         if (gameObj && gameObj.steam_link) {
             const appIdMatch = gameObj.steam_link.match(/\/app\/(\d+)/);
@@ -494,48 +817,127 @@ async function fetchMetacriticRatings() {
                     
                     const response = await fetch(proxyUrl);
                     const data = await response.json();
-                    if (data[appIdMatch[1]]?.success && data[appIdMatch[1]]?.data?.metacritic) {
-                        finalScore = data[appIdMatch[1]].data.metacritic.score;
+                    const appData = data[appIdMatch[1]]?.data;
+                    
+                    if (appData) {
+                        if (appData.metacritic) {
+                            finalScore = appData.metacritic.score;
+                        }
+                        if (item.fetchPrice) {
+                            if (appData.is_free) {
+                                finalPrice = 0;
+                            } else if (appData.price_overview) {
+                                finalPrice = appData.price_overview.initial / 100;
+                            }
+                        }
                     }
                 } catch (e) {
-                    console.warn(`Steam API недоступен для ${item.gameTitle}, пробуем RAWG...`);
+                    console.warn(`Steam API недоступен для ${item.title}`);
                 }
             }
         }
 
-        if (!finalScore) {
+        if (item.fetchRating && !finalScore) {
             try {
-                const response = await fetch(`https://api.rawg.io/api/games?key=${rawgApiKey}&search=${encodeURIComponent(item.gameTitle)}&page_size=1`);
+                const response = await fetch(`https://api.rawg.io/api/games?key=${rawgApiKey}&search=${encodeURIComponent(item.title)}&page_size=1`);
                 const data = await response.json();
                 if (data.results?.[0]?.metacritic) {
                     finalScore = data.results[0].metacritic;
                 }
-            } catch (e) {
-                console.warn(`RAWG API недоступен для ${item.gameTitle}`);
+            } catch (e) {}
+        }
+
+        if (item.fetchRating) {
+            if (!finalScore && item.fallbackRating && !isNaN(parseFloat(item.fallbackRating))) {
+                finalScore = parseFloat(item.fallbackRating);
+            }
+            if (finalScore) {
+                localStorage.setItem(`mc_rating_${item.title}`, finalScore);
+                renderScore(item.escapedTitle, finalScore);
+            } else {
+                localStorage.setItem(`mc_rating_${item.title}`, "null");
+                renderEmptyRating(item.escapedTitle);
             }
         }
 
-        if (!finalScore && item.fallbackRating && !isNaN(parseFloat(item.fallbackRating))) {
-            finalScore = parseFloat(item.fallbackRating);
-        }
-
-        if (finalScore) {
-            localStorage.setItem(`mc_rating_${item.gameTitle}`, finalScore);
-            renderScore(item.container, finalScore, item.gameTitle);
-        } else {
-            localStorage.setItem(`mc_rating_${item.gameTitle}`, "null");
-            renderEmpty(item.container);
+        if (item.fetchPrice) {
+            if (finalPrice !== null) {
+                localStorage.setItem(`steam_price_${item.title}`, finalPrice);
+                renderPrice(item.escapedTitle, finalPrice);
+            } else {
+                localStorage.setItem(`steam_price_${item.title}`, "null");
+                renderPrice(item.escapedTitle, null);
+            }
         }
     };
 
     const batchSize = 3;
     for (let i = 0; i < gamesToFetch.length; i += batchSize) {
         const batch = gamesToFetch.slice(i, i + batchSize);
-        
         await Promise.all(batch.map(item => fetchSingleGame(item)));
-        
         if (i + batchSize < gamesToFetch.length) {
             await new Promise(resolve => setTimeout(resolve, 250));
         }
     }
+    
+    updateQuickStats();
+}
+
+function setupRefreshButton() {
+    const refreshBtn = document.getElementById('refresh-ratings-btn');
+    if (!refreshBtn) return;
+
+    refreshBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const icon = refreshBtn.querySelector('i');
+        
+        icon.classList.add('bx-spin');
+        refreshBtn.style.pointerEvents = 'none';
+
+        if (typeof gamesData !== 'undefined') {
+            gamesData.forEach(game => {
+                localStorage.removeItem(`mc_rating_${game.title}`);
+                localStorage.removeItem(`steam_price_${game.title}`);
+                if (game._is_dynamic_price) {
+                    game.price_uah = ""; 
+                }
+            });
+        }
+
+        renderBoard();
+
+        const containers = document.querySelectorAll('.auto-rating-container');
+        const mcIconUrl = "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/metacritic-v4mt6kt4i7dvc1ouf1yu5.png/metacritic-ftfgubcsl0406bwla6utd4u.png?_a=DATAiZAAZAA0";
+        
+        containers.forEach(container => {
+            container.title = "Обновление рейтинга...";
+            container.innerHTML = `
+                <span style="display: inline-flex; width: 1.1rem; justify-content: center; align-items: center;">
+                    <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(48%) sepia(13%) saturate(735%) hue-rotate(176deg) brightness(93%) contrast(89%); margin: 0;">
+                </span> 
+                <span style="opacity: 0.5;"><i class='bx bx-loader-alt bx-spin'></i></span>
+            `;
+        });
+
+        await fetchMetacriticRatings();
+
+        icon.classList.remove('bx-spin');
+        refreshBtn.style.pointerEvents = 'auto';
+        
+        let toast = document.getElementById('copy-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'copy-toast';
+            document.body.appendChild(toast);
+        }
+        
+        toast.innerHTML = `<i class='bx bx-check-circle'></i> Данные обновлены`;
+        toast.classList.add('show');
+        
+        if (toast.timeoutId) clearTimeout(toast.timeoutId);
+        
+        toast.timeoutId = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    });
 }

@@ -325,6 +325,13 @@
     "url": "",
     "date": "2026-04-03"
   },
+  "web-novels.html": {
+    "image": "bx bx-library",
+    "description": "A collection of web novels I've read.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-05"
+  },
   ".html": {
     "image": "",
     "description": "",
