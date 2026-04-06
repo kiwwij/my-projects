@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Інтерактивна мапа України з накладанням зображення етнокультурних регіонів.">
+    <meta name="author" content="kiwwij">
+    <title>Етнокультурна мапа України</title>
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238a8a8a'><path d='M12 2C7.589 2 4 5.589 4 9.995 3.971 16.44 11.696 21.784 12 22c0 0 8.029-5.56 8-12.005C20 5.589 16.411 2 12 2zm0 11.114a3.098 3.098 0 1 1 0-6.196 3.098 3.098 0 0 1 0 6.196z'/></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    
+    <link rel="stylesheet" href="../css/ukrainian-ethno-cultural-regions.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="bx bx-map-alt"></i>
+            <span>Етно Мапа</span>
+        </div>
+        <button id="theme-toggle" class="theme-btn">
+            <i class="bx bx-moon"></i>
+        </button>
+    </header>
+
+    <main class="main-content">
+        <aside class="controls">
+            <h2><i class="bx bx-layer"></i> Керування мапою</h2>
+            
+            <div class="control-group search-group relative-container">
+                <div class="search-box">
+                    <input type="text" id="city-search" placeholder="Знайти місто..." autocomplete="off">
+                    <button id="clear-search-btn" class="hidden"><i class="bx bx-x"></i></button>
+                    <button id="search-btn"><i class="bx bx-search"></i></button>
+                </div>
+                <ul id="suggestions-list" class="suggestions-list hidden"></ul>
+            </div>
+
+            <hr class="divider">
+
+            <div class="control-group">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-regions">
+                    <span class="slider"></span>
+                    <span class="label-text">Етнокультурні регіони</span>
+                </label>
+            </div>
+            
+            <div class="control-group opacity-group">
+                <label for="opacity-slider" class="label-text text-small">Прозорість шару:</label>
+                <input type="range" id="opacity-slider" class="range-slider" min="0" max="1" step="0.05" value="0.75">
+            </div>
+
+            <p class="info-text">Увімкніть перемикач, щоб накласти мапу історичних регіонів (наприклад: Галичина, Волинь, Поділля, Сіверщина) поверх сучасної карти.</p>
+            
+            <div class="footer-info">
+                &copy; 2026 kiwwij
+            </div>
+        </aside>
+
+        <div class="map-wrapper">
+            <div id="map-loader" class="skeleton-loader">
+                <i class="bx bx-loader-alt bx-spin"></i>
+                <span>Завантаження мапи...</span>
+            </div>
+            <div id="map"></div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../js/ukrainian-ethno-cultural-regions.js"></script>
+</body>
+</html>
