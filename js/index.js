@@ -220,7 +220,7 @@ function getTechIcon(tech) {
         'ruby': 'bx bxl-ruby', 'git': 'bx bxl-git', 'github': 'bx bxl-github', 'docker': 'bx bxl-docker',
         'figma': 'bx bxl-figma', 'unity': 'bx bxl-unity', 'blender': 'bx bxl-blender', 'android': 'bx bxl-android',
         'apple': 'bx bxl-apple', 'windows': 'bx bxl-windows', 'database': 'bx bxs-data', 'sql': 'bx bxs-data',
-        'mysql': 'bx bxs-data', 'postgresql': 'bx bxl-postgresql', 'mongodb': 'bx bxl-mongodb',
+        'mysql': 'bx bxs-data', 'postgresql': 'bx bxl-postgresql', 'mongodb': 'bx bxl-mongodb', 'leaflet.js': 'bx bx-leaf', 'chart.js': 'bx bx-chart',
     };
     return map[lowerTech] || 'bx bx-code-alt';
 }

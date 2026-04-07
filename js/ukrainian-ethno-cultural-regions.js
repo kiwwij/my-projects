@@ -45,6 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setMapTiles(savedTheme);
 
+    window.addEventListener('resize', () => {
+        map.invalidateSize();
+    });
+
     const searchInput = document.getElementById('city-search');
     const searchBtn = document.getElementById('search-btn');
     const clearBtn = document.getElementById('clear-search-btn');

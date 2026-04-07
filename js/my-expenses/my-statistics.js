@@ -60,6 +60,9 @@ function initStatistics() {
     let globalExpense = 0;
     let monthsCount = 0;
     
+    let globalFixIncome = 0;
+    let globalExtraIncome = 0;
+
     let maxExpenseMonthVal = 0;
     let maxExpenseMonthName = "—";
 
@@ -82,6 +85,10 @@ function initStatistics() {
         const labelFull = `${monthNames[monthStr]} ${yearStr.slice(-2)}`;
 
         const mIncome = (monthData.income.fix || 0) + (monthData.income.extra || 0);
+        
+        globalFixIncome += (monthData.income.fix || 0);
+        globalExtraIncome += (monthData.income.extra || 0);
+
         let mExpense = 0;
 
         if (!yearlyChartData[year]) {
@@ -153,6 +160,12 @@ function initStatistics() {
 
     document.getElementById('m-total-income').innerText = `+${globalIncome.toFixed(0)} ₴`;
     document.getElementById('m-avg-income').innerText = `В среднем: ${avgIncome.toFixed(0)} ₴/мес`;
+
+    if (document.getElementById('m-fix-income')) {
+        document.getElementById('m-fix-income').innerText = globalFixIncome.toFixed(0);
+        document.getElementById('m-extra-income').innerText = globalExtraIncome.toFixed(0);
+    }
+
     document.getElementById('m-total-expense').innerText = `-${globalExpense.toFixed(0)} ₴`;
     document.getElementById('m-avg-expense').innerText = `В среднем: ${avgExpense.toFixed(0)} ₴/мес`;
     

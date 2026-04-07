@@ -33,6 +33,7 @@ body {
     color: var(--text-color);
     transition: var(--transition);
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -95,6 +96,7 @@ body {
     z-index: 10;
     overflow-y: auto;
     position: relative;
+    flex-shrink: 0;
 }
 
 .controls h2 {
@@ -319,6 +321,7 @@ input:checked + .slider::before {
 .map-wrapper {
     flex: 1;
     position: relative;
+    overflow: hidden;
 }
 
 #map {
@@ -364,6 +367,10 @@ input:checked + .slider::before {
 }
 
 @media (max-width: 768px) {
+    .header {
+        padding: 0.8rem 1rem;
+    }
+
     .main-content {
         flex-direction: column-reverse;
     }
@@ -371,6 +378,7 @@ input:checked + .slider::before {
     .controls {
         width: 100%;
         height: auto;
+        max-height: 45vh;
         padding: 1rem;
         border-right: none;
         border-top: 1px solid var(--border-color);
@@ -383,6 +391,7 @@ input:checked + .slider::before {
     }
 
     .map-wrapper {
-        height: 60vh;
+        flex: 1;
+        height: auto;
     }
 }

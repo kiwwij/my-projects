@@ -98,7 +98,6 @@ const scheduleData = {
     }
 };
 
-// --- СИСТЕМА ПЕРЕОЗНАЧЕНЬ (ВІДПРАЦЮВАННЯ, ІСПИТИ) ---
 const dateOverrides = {
     // Скасування пар через стажування Коваленко О.О.
     "2026-03-06": { remove: [2, 3, 4] },
@@ -107,6 +106,8 @@ const dateOverrides = {
 
     // Скасування пар через хворобу Денисюк А.В.
     "2026-04-02": { remove: [7, 8] },
+    "2026-04-16": { remove: [7, 8] },
+    "2026-04-09": { remove: [7, 8] },
 
     // EX = Відпрацювання (СПЕЦ), KOL = Колоквіум
     "2026-03-25": { add: [{ num: 8, start: "14:05", end: "14:40", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2247", teacher: "Коваленко О.О." }] },
@@ -147,6 +148,12 @@ const dateOverrides = {
             { num: 7, start: "14:30", end: "15:15", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2108", teacher: "Денисюк А.В." },
             { num: 8, start: "15:25", end: "16:10", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2108", teacher: "Денисюк А.В." }
         ] 
+    },
+    "2026-05-11": {
+        add: [
+            { num: 7, start: "14:30", end: "15:15", subj: "ОПІ, лабор (Відпр.)", type: "EX", room: "2105", teacher: "Денисюк А.В.", subgroup: 1 },
+            { num: 8, start: "15:25", end: "16:10", subj: "ОПІ, лабор (Відпр.)", type: "EX", room: "2105", teacher: "Денисюк А.В.", subgroup: 1 }
+        ]
     },
 
     // --- РОЗКЛАД СЕСІЇ (08.06 - 19.06) ---
@@ -254,11 +261,11 @@ function injectStyles() {
         const style = document.createElement('style');
         style.id = 'dynamic-schedule-styles';
         style.innerHTML = `
-            .type-EX { border-left-color: #9333ea !important; } /* СПЕЦ - фіолетовий */
-            .type-KOL { border-left-color: #ef4444 !important; } /* КОЛ - червоний */
-            .type-EXAM { border-left-color: #e11d48 !important; } /* Іспит - Яскраво червоний */
-            .type-CONS { border-left-color: #f59e0b !important; } /* Консультація - Жовтий */
-            .type-ZALIK { border-left-color: #10b981 !important; } /* Залік/ДЗ - Зелений */
+            .type-EX { border-left-color: #9333ea !important; } 
+            .type-KOL { border-left-color: #ef4444 !important; } 
+            .type-EXAM { border-left-color: #e11d48 !important; } 
+            .type-CONS { border-left-color: #f59e0b !important; } 
+            .type-ZALIK { border-left-color: #10b981 !important; } 
         `;
         document.head.appendChild(style);
     }
@@ -426,19 +433,21 @@ function renderSchedule() {
     container.innerHTML = '';
 
     const displayDate = getViewedDate();
-    const year = displayDate.getFullYear();
-    const month = displayDate.getMonth();
-    const date = displayDate.getDate();
+    const minHistoryDate = new Date('2024-08-31T23:59:59');
 
-    if (year < 2026 || (year === 2026 && month === 0 && date < 26)) {
+    if (displayDate <= minHistoryDate) {
         container.innerHTML = `
             <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
                 <i class="bx bx-history" style="font-size: 4rem; margin-bottom: 10px;"></i>
-                <br><span style="font-size: 1.2rem; font-weight: bold;">Попередній семестр</span>
-                <br><span style="font-size: 0.9rem; opacity: 0.8;">Для цього періоду розклад відсутній</span>
+                <br><span style="font-size: 1.2rem; font-weight: bold;">Ви ще не навчались</span>
+                <br><span style="font-size: 0.9rem; opacity: 0.8;">Розклад для цього періоду відсутній</span>
             </div>`;
         return;
     }
+
+    const year = displayDate.getFullYear();
+    const month = displayDate.getMonth();
+    const date = displayDate.getDate();
 
     if (year > 2026 || (year === 2026 && month >= 8)) {
         container.innerHTML = `
@@ -554,16 +563,18 @@ function createLessonCard(lesson, typeLabels, isToday, now) {
 
 function updateStatus() {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const date = now.getDate();
+    const minHistoryDate = new Date('2024-08-31T23:59:59');
 
-    if (year < 2026 || (year === 2026 && month === 0 && date < 26)) {
-        document.getElementById('status-title').innerText = "Попередній семестр";
+    if (now <= minHistoryDate) {
+        document.getElementById('status-title').innerText = "Ви ще не навчались";
         document.getElementById('main-timer').innerText = "🕰️";
         document.getElementById('time-left-desc').innerText = "Розклад відсутній";
         return;
     }
+
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const date = now.getDate();
 
     if (year > 2026 || (year === 2026 && month >= 8)) {
         document.getElementById('status-title').innerText = "Розклад відсутній";
@@ -572,7 +583,6 @@ function updateStatus() {
         return;
     }
     
-    // Канікули з 20 червня
     if ((month === 5 && date > 19) || month === 6 || month === 7) {
         document.getElementById('status-title').innerText = "Літні канікули!";
         document.getElementById('main-timer').innerText = "☀️🏖️";
@@ -664,8 +674,32 @@ function updateStatus() {
     } else if (nextLesson) {
         const [startH, startM] = nextLesson.start.split(':').map(Number);
         const startDate = new Date(); startDate.setHours(startH, startM, 0);
-        const diff = startDate - now;
+        
+        let sleepUntilHour = 7;
+        if (nextLesson.num === 3) sleepUntilHour = 8;
+        else if (nextLesson.num === 4) sleepUntilHour = 9;
+        else if (nextLesson.num >= 5) sleepUntilHour = 10;
 
+        const wakeUpTime = new Date();
+        wakeUpTime.setHours(sleepUntilHour, 0, 0, 0);
+        const midnight = new Date();
+        midnight.setHours(0, 0, 0, 0);
+
+        if (now >= midnight && now < wakeUpTime && isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
+            const sleepDiff = wakeUpTime - now;
+            const toLessonDiff = startDate - now;
+            
+            let h = Math.floor(toLessonDiff / 3600000);
+            let m = Math.floor((toLessonDiff % 3600000) / 60000);
+            let toLessonStr = `+${h}:${m < 10 ? '0' : ''}${m} год`;
+
+            titleEl.innerText = "Ви ще можете поспати...";
+            timerEl.innerText = formatTime(sleepDiff);
+            subtitleEl.innerHTML = `<i class='bx bx-bed'></i> до пробудження (До пари: ${toLessonStr})`;
+            return;
+        }
+
+        const diff = startDate - now;
         titleEl.innerText = `Наступна: ${nextLesson.subj}`;
         timerEl.innerText = formatTime(diff);
         subtitleEl.innerHTML = "<i class='bx bx-coffee'></i> до початку";
@@ -700,7 +734,6 @@ function pad(n) {
 
 init();
 
-// для доступу до API необхідно використовувати персональний API токен. тому на сайті не буде працювати це, на жаль
 async function checkAirRaidAlert() {
     const alertBanner = document.getElementById('air-raid-alert');
     if (!alertBanner) return; 
@@ -717,9 +750,6 @@ async function checkAirRaidAlert() {
                       data.states['м. Вінниця'] || 
                       data.states['Вінницька територіальна громада'] ||
                       data.states['Вінницька міська територіальна громада']; 
-        
-        // для тесту дизайну розкопентувати:
-        // isAlert = true; 
 
         if (isAlert) {
             alertBanner.style.display = 'flex';
