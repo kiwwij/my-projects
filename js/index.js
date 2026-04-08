@@ -29,7 +29,7 @@ function isProjectNew(dateString) {
     const currentDate = new Date();
     const diffTime = currentDate - projectDate;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 && diffDays <= 14;
+    return diffDays > 0 && diffDays <= 30;
 }
 
 async function loadProjects() {
@@ -79,7 +79,7 @@ async function loadProjects() {
 
             let badgeHTML = '';
             if (project.date && isProjectNew(project.date)) {
-                badgeHTML = `<div class="new-badge" title="Added in the last 2 weeks">new</div>`;
+                badgeHTML = `<div class="new-badge" title="Added in the last month">new</div>`;
             }
 
             let imageHTML;

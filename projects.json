@@ -339,6 +339,13 @@
     "url": "",
     "date": "2026-04-06"
   },
+  "opi1.html": {
+    "image": "bx bx-book-reader",
+    "description": "OPI. Preparation in colloquium 1.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-08"
+  },
   ".html": {
     "image": "",
     "description": "",

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Посібник для підготовки до колоквіуму та іспиту з Основ програмної інженерії. Строгий перелік, додаткові питання та розумний тест.">
+    <title>ОПІ | Колоквіум 1</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239d4edd'><path d='M4 6c0-1.103.897-2 2-2h12c1.103 0 2 .897 2 2v12c0 1.103-.897 2-2 2H6c-1.103 0-2-.897-2-2V6zm2 0v12h12V6H6zm2 2h8v2H8V8zm0 4h8v2H8v-2zm0 4h5v2H8v-2z'></path></svg>">
+
+    <style>
+        :root[data-theme="light"] {
+            --bg-color: #f8f9fa;
+            --text-color: #2b2d42;
+            --card-bg: #ffffff;
+            --accent-color: #7b2cbf;
+            --accent-hover: #9d4edd;
+            --border-color: #dee2e6;
+            --input-bg: #f1f3f5;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --correct-bg: rgba(40, 167, 69, 0.1);
+            --wrong-bg: rgba(220, 53, 69, 0.1);
+        }
+
+        :root[data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e24;
+            --accent-color: #9d4edd;
+            --accent-hover: #c77dff;
+            --border-color: #3f3f4e;
+            --input-bg: #2b2b36;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --correct-bg: rgba(40, 167, 69, 0.15);
+            --wrong-bg: rgba(220, 53, 69, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: var(--card-bg); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1000px; margin: 0 auto; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent-color); display: flex; align-items: center; gap: 8px; }
+        nav { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: center; }
+        .nav-btn { background: none; border: none; color: var(--text-color); font-size: 1rem; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
+        .nav-btn:hover, .nav-btn.active { background-color: var(--accent-color); color: #fff; }
+        .theme-toggle { background: none; border: none; cursor: pointer; color: var(--text-color); font-size: 1.5rem; display: flex; align-items: center; transition: color 0.3s; margin-left: auto; }
+        .theme-toggle:hover { color: var(--accent-color); }
+        
+        main { flex: 1; padding: 40px 5%; max-width: 1000px; margin: 0 auto; width: 100%; }
+        .tab-pane { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .search-container { position: relative; margin-bottom: 30px; }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--accent-color); font-size: 1.2rem; pointer-events: none; }
+        .clear-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-color); font-size: 1.5rem; cursor: pointer; display: none; opacity: 0.7; transition: opacity 0.2s, color 0.2s; }
+        .clear-icon:hover { opacity: 1; color: var(--accent-color); }
+        .search-input { width: 100%; padding: 15px 45px; border-radius: 12px; border: 1px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); font-size: 1rem; outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+        .search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2); }
+
+        .faq-item { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 20px; padding: 20px; box-shadow: var(--shadow); }
+        .faq-question { font-size: 1.1rem; font-weight: 800; color: var(--accent-color); margin-bottom: 10px; }
+        .faq-answer { font-size: 1rem; color: var(--text-color); opacity: 0.9; line-height: 1.7; white-space: pre-line; }
+
+        .quiz-card { background-color: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); margin-bottom: 20px; }
+        .quiz-card h2 { margin-bottom: 25px; color: var(--accent-color); display: flex; align-items: center; gap: 10px; }
+        .question-block { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .question-block:last-of-type { border-bottom: none; }
+        .question-title { font-weight: 600; margin-bottom: 15px; font-size: 1.1rem; }
+        .options-list { list-style: none; }
+        .options-list li { margin-bottom: 10px; }
+        .options-list label { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 15px; background-color: var(--input-bg); border-radius: 8px; border: 1px solid transparent; transition: all 0.2s; position: relative; }
+        .options-list label:hover:not(.option-disabled) { border-color: var(--accent-color); }
+        .options-list input[type="radio"] { accent-color: var(--accent-color); transform: scale(1.2); cursor: inherit; }
+
+        .option-disabled { cursor: not-allowed !important; opacity: 0.7; }
+        .option-correct { background-color: var(--correct-bg) !important; border-color: #28a745 !important; color: #28a745; font-weight: 600; }
+        .option-wrong { background-color: var(--wrong-bg) !important; border-color: #dc3545 !important; color: #dc3545; }
+        .feedback-icon { margin-left: auto; font-size: 1.3rem; display: flex; align-items: center; }
+
+        .quiz-result { margin-top: 20px; padding: 20px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; text-align: center; display: none; }
+        .quiz-result.show { display: block; animation: fadeIn 0.4s; }
+
+        footer { text-align: center; padding: 20px; background-color: var(--card-bg); border-top: 1px solid var(--border-color); margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; align-items: center; }
+            nav { width: 100%; justify-content: center; }
+            .theme-toggle { margin-left: 0; }
+            main { padding: 20px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="logo"><i class='bx bx-code-block'></i> ОПІ Колоквіум 1</div>
+            <nav>
+                <button class="nav-btn active" data-target="theory-tab"><i class='bx bx-book-reader'></i> Теорія</button>
+                <button class="nav-btn" data-target="quiz-tab"><i class='bx bx-task'></i> Тест</button>
+                <button class="nav-btn" data-target="extra-tab"><i class='bx bx-layer-plus'></i> Додаткові</button>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему"><i class='bx bx-moon'></i></button>
+        </div>
+    </header>
+
+    <main>
+        <section id="theory-tab" class="tab-pane active">
+            <div class="search-container">
+                <i class='bx bx-search search-icon'></i>
+                <input type="text" id="searchInput1" class="search-input" placeholder="Пошук по 25 питанням колоквіуму...">
+                <i class='bx bx-x clear-icon' id="clearSearch1" aria-label="Очистити пошук"></i>
+            </div>
+            <div class="faq-container" id="faqContainer1"></div>
+        </section>
+
+        <section id="quiz-tab" class="tab-pane">
+            <div class="quiz-card">
+                <h2><i class='bx bx-brain'></i> Перевірка знань</h2>
+                <form id="quizForm"></form>
+                <div id="quizResult" class="quiz-result"></div>
+            </div>
+        </section>
+
+        <section id="extra-tab" class="tab-pane">
+            <div class="search-container">
+                <i class='bx bx-search search-icon'></i>
+                <input type="text" id="searchInput2" class="search-input" placeholder="Пошук по додаткових темах (SWEBOK, ТЗ, Ризики)...">
+                <i class='bx bx-x clear-icon' id="clearSearch2" aria-label="Очистити пошук"></i>
+            </div>
+            <div class="faq-container" id="faqContainer2"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> kiwwij</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // --- ДАНІ 1: Строгий список з 25 питань (Колоквіум) ---
+        const questionsDataColloquium = [
+            { q: "1. Основні складові програмної інженерії.", a: "Згідно зі SWEBOK: інженерія вимог, проектування ПЗ, конструювання, тестування, супроводження, управління конфігурацією, управління проектами, процеси ПІ, інструменти та методи, якість ПЗ." },
+            { q: "2. Стандарти програмної інженерії.", a: "Це нормативні документи (наприклад, ISO/IEC 12207, IEEE), які визначають життєвий цикл ПЗ, загальну термінологію, процеси розробки та критерії оцінки якості системи." },
+            { q: "3. SWEBOK", a: "Software Engineering Body of Knowledge — міжнародний стандарт (ISO/IEC TR 19759), який описує загальноприйняті знання з програмної інженерії. Він розбиває знання на 15 галузей (Knowledge Areas)." },
+            { q: "4. PMBOK", a: "Project Management Body of Knowledge — звід знань з управління проектами. Описує процеси, найкращі практики, терміни та рекомендації для успішного керівництва проєктами." },
+            { q: "5. Життєвий цикл створення програмного продукту.", a: "Це безперервний процес, що починається з моменту прийняття рішення про створення ПЗ і закінчується його вилученням з експлуатації. Включає: збір вимог, проектування, реалізацію, тестування, підтримку." },
+            { q: "6. Методології та моделі створення програмного продукту.", a: "Моделі описують стадії розробки (Каскадна, Спіральна, V-модель). Методології дають філософію та практики (Agile, Scrum, RAD).\n\nВибір методології розвитку проєкту залежить від вимог: якщо вони чіткі — обирають Waterfall; якщо гнучкі та постійно змінюються — Agile." },
+            { q: "7. Scrum", a: "Гнучкий фреймворк розробки. Базується на ітераціях (Спринтах тривалістю 1-4 тижні). Має 3 ролі (Product Owner, Scrum Master, Team), 4 події та чіткі артефакти." },
+            { q: "8. KANBAN", a: "Метод управління, що фокусується на візуалізації потоку задач (Kanban-дошка) та жорсткому обмеженні кількості незавершеної роботи (WIP - Work in Progress)." },
+            { q: "9. LEAN", a: "Бережлива розробка ПЗ. Її головний принцип: виключення втрат (сміття — усього, що не приносить цінності клієнту), акцент на навчанні та максимально швидка доставка продукту." },
+            { q: "10. Прототипування", a: "Процес створення початкової робочої моделі ПЗ або його інтерфейсу. Використовується для перевірки концепції та уточнення вимог перед написанням основного коду." },
+            { q: "11. Ѵ-модель", a: "Різновид каскадної моделі. Розробка йде вниз (ліва гілка V), а тестування — вгору (права гілка). Кожному етапу розробки (напр., проєктування архітектури) відповідає свій рівень тестування." },
+            { q: "12. Спіральна модель", a: "Ітеративна модель ЖЦ, головний акцент у якій робиться на аналізі ризиків. Кожен виток спіралі — це створення нової версії (прототипу) з детальною оцінкою ризиків." },
+            { q: "13. Каскадна модель", a: "Лінійно-послідовна модель ЖЦ (Waterfall). Процес йде строгими етапами (вимоги -> дизайн -> код -> тестування). Перехід на наступний етап можливий лише після завершення попереднього." },
+            { q: "14. RAD", a: "Rapid Application Development (Швидка розробка додатків). Передбачає активне залучення користувачів, створення прототипів та кодогенерацію для максимального пришвидшення випуску ПЗ." },
+            { q: "15. FDD", a: "Feature-Driven Development. Гнучка методологія, що орієнтована на розробку конкретних функцій (features). Відбувається планування, проєктування та реалізація кожної окремої властивості." },
+            { q: "16. Карта Захмана", a: "Матриця (фреймворк) для архітектури підприємства або проєкту (Карта Захмана для проєкту). Має 36 клітинок (6 питань: Що, Як, Де, Хто, Коли, Чому × 6 перспектив). Допомагає зв'язати бізнес-вимоги, архітектуру та код проєкту в єдину структуру." },
+            { q: "17. Цільове призначення мови UML", a: "UML (Unified Modeling Language) призначена для візуалізації, специфікації та документування. UML-діаграми проєкту допомагають проєктувати особливості архітектури та технологій ще до початку написання коду." },
+            { q: "18. Категорії UML діаграм", a: "Усі діаграми поділяються на 2 категорії:\n1. Структурні (Діаграма класів, компонентів) — показують статику, архітектуру, особливості технологій.\n2. Поведінки (Use Case, Activity) — показують динаміку системи." },
+            { q: "19. Магічний квадрат (квадрант) Gartner", a: "Аналітичний інструмент (матриця) для оцінки компаній та вибору технологій/архітектури. Оцінює постачальників за осями: 'Повнота бачення' та 'Здатність до реалізації'. Ділить їх на: Лідерів, Претендентів, Провидців, Нішевих гравців." },
+            { q: "20. Чорна скринька в програмній інженерії", a: "Метод тестування, при якому тестувальник перевіряє функціональність ПЗ, не маючи жодного доступу до вихідного коду та внутрішньої архітектури системи." },
+            { q: "21. Біла скринька в програмній інженерії", a: "Метод тестування, що повністю базується на знанні внутрішньої структури, логіки, архітектури та вихідного коду програми." },
+            { q: "22. Сіра скринька в програмній інженерії", a: "Комбінований метод. Тестувальник має часткове знання внутрішньої будови (наприклад, доступ до БД чи особливостей технологій), але тестує систему як звичайний користувач через інтерфейс." },
+            { q: "23. Принципи AGILE", a: "1) Люди та взаємодія важливіші за процеси та інструменти. 2) Працюючий продукт важливіший за документацію. 3) Співпраця із замовником важливіша за контракт. 4) Готовність до змін важливіша за план." },
+            { q: "24. Функціональні вимоги до програмного забезпечення", a: "Описують поведінку системи. Відповідають на питання 'ЩО повинна робити система?' (наприклад: 'Система повинна проводити авторизацію користувача')." },
+            { q: "25. Нефункціональні вимоги до програмного забезпечення", a: "Описують атрибути якості та особливості технологій. Відповідають на питання 'ЯКОЮ повинна бути система?' (наприклад: швидкість відгуку, рівень безпеки, масштабованість, обмеження архітектури)." }
+        ];
+
+        // --- ДАНІ 2: Додаткові питання (з розширеного списку дисципліни) ---
+        const questionsDataExtra = [
+            { q: "1. Стандарт SWEBOK: Деталізація галузей (Вимоги, Проектування, Конструювання, Тестування)", a: "• Інженерія вимог: збір, аналіз та специфікація того, що має робити ПЗ.\n• Проектування: розробка архітектури, інтерфейсів та БД.\n• Конструювання: безпосереднє написання коду.\n• Тестування: перевірка коду на відповідність вимогам та відсутність помилок." },
+            { q: "2. Стандарт SWEBOK: Керування конфігурацією та Якість", a: "• Керування конфігурацією: версіонування коду (напр. Git), відстеження змін, збірка та релізи.\n• Якість: забезпечення та контроль атрибутів ПЗ (надійність, безпека, швидкодія) на всіх етапах ЖЦ." },
+            { q: "3. Інкрементна та Ітеративна моделі життєвого циклу", a: "• Ітеративна: продукт створюється циклами (ітераціями), кожна з яких покращує та уточнює попередню версію.\n• Інкрементна: продукт розбивається на окремі модулі (інкременти), і кожен модуль розробляється та постачається окремо, поступово нарощуючи функціонал системи." },
+            { q: "4. Visual Studio. Основні функціональні блоки.", a: "Це інтегроване середовище розробки (IDE) від Microsoft. Основні блоки:\n1. Редактор коду (з підсвічуванням та автодоповненням).\n2. Компілятор та Дебагер (пошук помилок).\n3. Оглядач рішень (Solution Explorer) для управління файлами.\n4. Візуальні дизайнери інтерфейсів." },
+            { q: "5. Технічне завдання (ТЗ): Основні складові та структура", a: "ТЗ — це юридичний і технічний документ, що описує вимоги до проєкту.\nСтруктура: 1) Вступ і мета проєкту. 2) Вимоги до функціоналу. 3) Нефункціональні вимоги (апаратні обмеження, безпека). 4) Етапи розробки та терміни. 5) Порядок здачі-приймання робіт." },
+            { q: "6. Методика і правила мозкового штурму (Brainstorming)", a: "Метод колективної генерації ідей. Головні правила:\n1. Повна заборона критики на етапі генерації.\n2. Заохочуються найфантастичніші ідеї.\n3. Акцент на кількості ідей, а не їх якості.\n4. Комбінування та покращення ідей інших учасників." },
+            { q: "7. Методика створення сценаріїв за Уолтом Діснеєм", a: "Це метод креативного мислення, що передбачає погляд на задачу з трьох різних ролей:\n1. Мрійник (генерує ідеї без обмежень).\n2. Реаліст (планує, як технічно реалізувати ідею).\n3. Критик (шукає слабкі місця та ризики в плані реаліста)." },
+            { q: "8. Алгоритм представлення проєкту замовнику", a: "1. Визначення болю (проблеми) замовника.\n2. Демонстрація рішення (презентація функціоналу або прототипу).\n3. Обґрунтування вибору технологій (чому це вигідно).\n4. Демонстрація плану робіт, термінів і бюджету.\n5. Відповіді на запитання (робота з запереченнями)." },
+            { q: "9. Ризики. Загальні характеристики та формула", a: "Ризик — це потенційна подія, яка може негативно вплинути на проєкт (бюджет, час, якість).\nФормула оцінки: Ризик (R) = Ймовірність події (P) × Величина наслідків (I)." },
+            { q: "10. Заходи щодо ризиків (прийняття, зменшення, ліквідація)", a: "• Уникнення (ліквідація): зміна плану, щоб ризик взагалі не виник (напр., відмова від нестабільної технології).\n• Зменшення (mitigation): дії для зниження ймовірності або наслідків.\n• Передача: перекладання ризику на 3-тю сторону (страховка, аутсорс).\n• Прийняття: усвідомлене рішення нічого не робити, поки ризик не настане, але мати резерв бюджету." },
+            { q: "11. Деталі Scrum: Спрінти, Учасники, Артефакти", a: "• Учасники: Product Owner (визначає вимоги), Scrum Master (налагоджує процес), Development Team (розробники).\n• Спрінти: фіксовані ітерації (зазвичай 2 тижні).\n• Артефакти: Product Backlog (список усіх задач), Sprint Backlog (задачі на поточний спрінт), Increment (готова частина продукту)." },
+            { q: "12. Управління проектами: Платформи, Таймменеджмент, Контроль", a: "• Платформи: Jira, Trello, Asana (для трекінгу задач та багів).\n• Таймменеджмент: використання діаграм Ганта, Story Points для оцінки задач.\n• Контроль та події: щоденні стендапи (Daily), планування спрінта, ретроспектива для аналізу помилок." }
+        ];
+
+        // --- ДАНІ 3: Тест (мікс з обох списків) ---
+        const quizData = [
+            { q: "Який стандарт визначає загальноприйняті знання з програмної інженерії?", opts: [{t:"SWEBOK",v:1},{t:"PMBOK",v:0},{t:"ISO 9001",v:0}] },
+            { q: "Що з наведеного НЕ є принципом Agile?", opts: [{t:"Детальна документація важливіша за працюючий продукт",v:1},{t:"Співпраця з замовником важливіша за контракт",v:0},{t:"Готовність до змін важливіша за план",v:0}] },
+            { q: "Головне правило Мозкового штурму:", opts: [{t:"Повна заборона критики на етапі генерації ідей",v:1},{t:"Оцінювати кожну ідею одразу після її озвучення",v:0},{t:"Генерувати лише реалістичні ідеї",v:0}] },
+            { q: "Що відображає Карта Захмана в контексті архітектури проєкту?", opts: [{t:"Комплексний погляд на систему через перетин 6 питань (Що, Як, Де...) та 6 перспектив",v:1},{t:"Лише структуру вихідного коду",v:0},{t:"Послідовність виконання спринтів у Scrum",v:0}] },
+            { q: "Ролі в методиці Уолта Діснея:", opts: [{t:"Мрійник, Реаліст, Критик",v:1},{t:"Замовник, Виконавець, Тестувальник",v:0},{t:"Product Owner, Scrum Master, Team",v:0}] },
+            { q: "Які UML-діаграми проєкту відносяться до структурних?", opts: [{t:"Діаграма класів та діаграма компонентів",v:1},{t:"Діаграма прецедентів (Use Case)",v:0},{t:"Діаграма діяльності (Activity)",v:0}] },
+            { q: "Тестування 'Чорна скринька' означає, що:", opts: [{t:"Тестувальник не має доступу до вихідного коду і архітектури",v:1},{t:"Тестувальник бачить код, але не може його змінювати",v:0},{t:"Тестувальник перевіряє кожну гілку коду",v:0}] },
+            { q: "За якою формулою розраховується ризик проєкту?", opts: [{t:"Ймовірність × Наслідки",v:1},{t:"Бюджет / Час",v:0},{t:"Кількість багів × Час тестування",v:0}] },
+            { q: "Що описують нефункціональні вимоги до ПЗ?", opts: [{t:"Атрибути якості (швидкодія, безпека, масштабованість, архітектурні обмеження)",v:1},{t:"Які кнопки користувач може натискати в інтерфейсі",v:0},{t:"Бізнес-логіку програми",v:0}] },
+            { q: "Основний акцент KANBAN:", opts: [{t:"Візуалізація потоку задач та обмеження WIP (Work In Progress)",v:1},{t:"Робота жорсткими спринтами",v:0},{t:"Створення детальної документації перед розробкою",v:0}] },
+            { q: "В якій моделі розробка йде вниз, а тестування — вгору?", opts: [{t:"V-модель",v:1},{t:"Ітеративна",v:0},{t:"Спіральна",v:0}] },
+            { q: "Що означає метод 'Біла скринька'?", opts: [{t:"Тестування, що базується на повному знанні внутрішнього коду та архітектури",v:1},{t:"Тестування без знання коду",v:0},{t:"Оцінка інтерфейсу користувачами",v:0}] },
+            { q: "Один із головних принципів методології LEAN:", opts: [{t:"Виключення втрат (сміття)",v:1},{t:"Максимальна кількість документації",v:0},{t:"Ізоляція розробників від замовника",v:0}] },
+            { q: "Для чого використовується Прототипування?", opts: [{t:"Для перевірки концепції та уточнення вимог перед написанням основного коду",v:1},{t:"Для фінального релізу продукту",v:0},{t:"Для автоматизованого тестування",v:0}] },
+            { q: "Яка модель ЖЦ фокусується на оцінці та мінімізації ризиків на кожній ітерації?", opts: [{t:"Спіральна модель",v:1},{t:"Каскадна (Waterfall)",v:0},{t:"KANBAN",v:0}] }
+        ];
+
+        // --- ФУНКЦІЇ РЕНДЕРУ ТА ПОШУКУ ---
+
+        function renderFAQ(dataArray, containerId) {
+            let html = '';
+            dataArray.forEach(item => {
+                html += `
+                    <div class="faq-item">
+                        <div class="faq-question">${item.q}</div>
+                        <div class="faq-answer">${item.a}</div>
+                    </div>
+                `;
+            });
+            document.getElementById(containerId).innerHTML = html;
+        }
+
+        function setupSearch(inputId, clearIconId, containerId) {
+            const searchInput = document.getElementById(inputId);
+            const clearIcon = document.getElementById(clearIconId);
+            const container = document.getElementById(containerId);
+
+            function performSearch() {
+                const rawTerm = searchInput.value.toLowerCase().trim();
+                clearIcon.style.display = rawTerm.length > 0 ? 'block' : 'none';
+                
+                const searchWords = rawTerm.split(/\s+/).filter(word => word.length > 0);
+                const items = container.querySelectorAll('.faq-item');
+                
+                items.forEach(item => {
+                    const text = item.innerText.toLowerCase();
+                    const isMatch = searchWords.every(word => text.includes(word));
+                    item.style.display = (isMatch || searchWords.length === 0) ? 'block' : 'none';
+                });
+            }
+
+            searchInput.addEventListener('input', performSearch);
+            clearIcon.addEventListener('click', () => { 
+                searchInput.value = ''; 
+                performSearch(); 
+                searchInput.focus(); 
+            });
+        }
+
+        // Рендер і налаштування пошуку для обох вкладок
+        renderFAQ(questionsDataColloquium, 'faqContainer1');
+        setupSearch('searchInput1', 'clearSearch1', 'faqContainer1');
+
+        renderFAQ(questionsDataExtra, 'faqContainer2');
+        setupSearch('searchInput2', 'clearSearch2', 'faqContainer2');
+
+
+        // --- ФУНКЦІЇ ТЕСТУ ---
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        const quizForm = document.getElementById('quizForm');
+        let currentScore = 0;
+        let answeredQuestionsCount = 0;
+
+        function renderQuiz() {
+            const randomizedQuiz = shuffle([...quizData]);
+            let html = '';
+            
+            randomizedQuiz.forEach((qObj, index) => {
+                const randomizedOptions = shuffle([...qObj.opts]);
+                let optionsHtml = '';
+                
+                randomizedOptions.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <li>
+                            <label id="label-q${index}-o${optIndex}">
+                                <input type="radio" name="q${index}" value="${opt.v}" data-qindex="${index}" data-oindex="${optIndex}"> 
+                                <span>${opt.t}</span>
+                                <span class="feedback-icon" id="icon-q${index}-o${optIndex}"></span>
+                            </label>
+                        </li>`;
+                });
+                
+                html += `
+                    <div class="question-block" id="qb-${index}">
+                        <div class="question-title">${index + 1}. ${qObj.q}</div>
+                        <ul class="options-list">${optionsHtml}</ul>
+                    </div>
+                `;
+            });
+            quizForm.innerHTML = html;
+
+            const radios = quizForm.querySelectorAll('input[type="radio"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const qIndex = this.getAttribute('data-qindex');
+                    
+                    const blockRadios = document.querySelectorAll(`input[name="q${qIndex}"]`);
+                    blockRadios.forEach(r => {
+                        r.disabled = true;
+                        document.getElementById(`label-q${qIndex}-o${r.getAttribute('data-oindex')}`).classList.add('option-disabled');
+                    });
+
+                    blockRadios.forEach(r => {
+                        const val = parseInt(r.value);
+                        const oIndex = r.getAttribute('data-oindex');
+                        const label = document.getElementById(`label-q${qIndex}-o${oIndex}`);
+                        const icon = document.getElementById(`icon-q${qIndex}-o${oIndex}`);
+
+                        if (r.checked) {
+                            if (val === 1) {
+                                label.classList.add('option-correct');
+                                icon.innerHTML = "<i class='bx bx-check-circle'></i>";
+                                currentScore++;
+                            } else {
+                                label.classList.add('option-wrong');
+                                icon.innerHTML = "<i class='bx bx-x-circle'></i>";
+                            }
+                        } else if (val === 1) {
+                            label.classList.add('option-correct');
+                            icon.innerHTML = "<i class='bx bx-check-circle'></i>";
+                        }
+                    });
+
+                    answeredQuestionsCount++;
+                    
+                    if (answeredQuestionsCount === randomizedQuiz.length) {
+                        showFinalResult(randomizedQuiz.length);
+                    }
+                });
+            });
+        }
+        renderQuiz();
+
+        function showFinalResult(total) {
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.classList.add('show');
+            const percent = (currentScore / total) * 100;
+
+            if (percent >= 90) {
+                resultDiv.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+                resultDiv.style.color = '#28a745';
+                resultDiv.innerHTML = `<i class='bx bx-party'></i> Відмінний результат: ${currentScore} з ${total}! До іспиту готовий!`;
+            } else if (percent >= 60) {
+                resultDiv.style.backgroundColor = 'rgba(23, 162, 184, 0.1)';
+                resultDiv.style.color = '#17a2b8';
+                resultDiv.innerHTML = `<i class='bx bx-check'></i> Непогано: ${currentScore} з ${total}. Варто ще трохи повторити.`;
+            } else {
+                resultDiv.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+                resultDiv.style.color = '#dc3545';
+                resultDiv.innerHTML = `<i class='bx bx-sad'></i> Твій результат: ${currentScore} з ${total}. Потрібно переглянути теорію.`;
+            }
+            setTimeout(() => resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
+        }
+
+        // --- ПЕРЕМИКАННЯ ВКЛАДОК ---
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const targetId = btn.getAttribute('data-target');
+                tabPanes.forEach(pane => {
+                    pane.classList.toggle('active', pane.id === targetId);
+                });
+            });
+        });
+
+        // --- ТЕМА ---
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        const themeIcon = themeToggleBtn.querySelector('i');
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        themeIcon.className = savedTheme === 'dark' ? 'bx bx-sun' : 'bx bx-moon';
+
+        themeToggleBtn.addEventListener('click', () => {
+            const newTheme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeIcon.className = newTheme === 'dark' ? 'bx bx-sun' : 'bx bx-moon';
+        });
+    </script>
+</body>
+</html>
