@@ -338,12 +338,14 @@ function openRandomProject() {
 }
 
 document.getElementById('random-btn').addEventListener('click', openRandomProject);
-
 document.getElementById('current-year').textContent = new Date().getFullYear();
+
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     updateSteamAvatar();
     initTheme();
+    injectDragStyles();
+    initDragAndDrop();
 });
 
 function renderTechStats(files, projectsConfig) {
@@ -496,10 +498,12 @@ function updatePinnedOrder() {
             card.classList.add('is-pinned');
             card.style.order = pinIndex - 10;
             if(icon) icon.className = 'bx bxs-pin';
+            card.setAttribute('draggable', 'true');
         } else {
             card.classList.remove('is-pinned');
             card.style.order = 0;
             if(icon) icon.className = 'bx bx-pin';
+            card.removeAttribute('draggable');
         }
     });
 }
@@ -523,4 +527,141 @@ function togglePin(event, fileId) {
     }
     localStorage.setItem('pinned_projects', JSON.stringify(pinned));
     updatePinnedOrder();
+}
+
+function injectDragStyles() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .project-card.is-pinned {
+            cursor: grab;
+        }
+        .project-card.is-pinned:active {
+            cursor: grabbing;
+        }
+        .project-card.dragging {
+            opacity: 0.6;
+            transform: scale(0.95);
+            transition: transform 0.2s, opacity 0.2s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        .project-card.drag-over {
+            border: 2px dashed #0984e3 !important;
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function initDragAndDrop() {
+    let draggedElement = null;
+    
+    let touchDropTarget = null;
+    let touchTimer = null;
+    let isDragging = false;
+
+    container.addEventListener('dragstart', (e) => {
+        const card = e.target.closest('.project-card.is-pinned');
+        if (!card) return;
+        draggedElement = card;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', card.getAttribute('data-id')); 
+        setTimeout(() => card.classList.add('dragging'), 0);
+    });
+
+    container.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const targetCard = e.target.closest('.project-card.is-pinned');
+        if (targetCard && targetCard !== draggedElement) {
+            targetCard.classList.add('drag-over');
+        }
+    });
+
+    container.addEventListener('dragleave', (e) => {
+        const targetCard = e.target.closest('.project-card.is-pinned');
+        if (targetCard) targetCard.classList.remove('drag-over');
+    });
+
+    container.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const targetCard = e.target.closest('.project-card.is-pinned');
+        if (targetCard) targetCard.classList.remove('drag-over');
+
+        if (targetCard && draggedElement && targetCard !== draggedElement) {
+            reorderPinnedItems(draggedElement.getAttribute('data-id'), targetCard.getAttribute('data-id'));
+        }
+    });
+
+    container.addEventListener('dragend', () => {
+        if (draggedElement) draggedElement.classList.remove('dragging');
+        draggedElement = null;
+        document.querySelectorAll('.project-card').forEach(c => c.classList.remove('drag-over'));
+    });
+
+    container.addEventListener('touchstart', (e) => {
+        const card = e.target.closest('.project-card.is-pinned');
+        if (!card || e.target.closest('.pin-btn')) return;
+
+        touchTimer = setTimeout(() => {
+            isDragging = true;
+            draggedElement = card;
+            card.classList.add('dragging');
+            if(navigator.vibrate) navigator.vibrate(50);
+        }, 500);
+    }, {passive: true});
+
+    container.addEventListener('touchmove', (e) => {
+        if (!isDragging) {
+            clearTimeout(touchTimer);
+            return;
+        }
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        const targetCard = targetElement ? targetElement.closest('.project-card.is-pinned') : null;
+
+        document.querySelectorAll('.project-card.is-pinned').forEach(c => c.classList.remove('drag-over'));
+
+        if (targetCard && targetCard !== draggedElement) {
+            targetCard.classList.add('drag-over');
+            touchDropTarget = targetCard;
+        } else {
+            touchDropTarget = null;
+        }
+    }, {passive: false});
+
+    container.addEventListener('touchend', (e) => {
+        clearTimeout(touchTimer);
+        
+        if (isDragging) {
+            e.preventDefault();
+            draggedElement.classList.remove('dragging');
+
+            if (touchDropTarget && touchDropTarget !== draggedElement) {
+                reorderPinnedItems(draggedElement.getAttribute('data-id'), touchDropTarget.getAttribute('data-id'));
+            }
+
+            isDragging = false;
+            draggedElement = null;
+            touchDropTarget = null;
+            document.querySelectorAll('.project-card').forEach(c => c.classList.remove('drag-over'));
+        }
+    });
+}
+
+function reorderPinnedItems(draggedId, targetId) {
+    let pinned = JSON.parse(localStorage.getItem('pinned_projects')) || [];
+    const fromIndex = pinned.indexOf(draggedId);
+    const toIndex = pinned.indexOf(targetId);
+
+    if (fromIndex > -1 && toIndex > -1) {
+        pinned.splice(fromIndex, 1);
+        pinned.splice(toIndex, 0, draggedId);
+        
+        localStorage.setItem('pinned_projects', JSON.stringify(pinned));
+        updatePinnedOrder();
+        showToast('<i class="bx bx-sort"></i> Order saved!');
+    }
 }

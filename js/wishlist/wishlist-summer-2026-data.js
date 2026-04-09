@@ -26,7 +26,7 @@ const gamesData = [
         release_date: "27 фев. 2026 г.",
         play_status: "playing",
         rating: "",
-        progress: 50
+        progress: 60
     },
     {
         title: "The Last of Us™ Part II Remastered",

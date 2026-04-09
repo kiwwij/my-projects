@@ -87,6 +87,43 @@
         .quiz-result.show { display: block; animation: fadeIn 0.4s; }
 
         footer { text-align: center; padding: 20px; background-color: var(--card-bg); border-top: 1px solid var(--border-color); margin-top: auto; }
+        
+        /* Стилі для пошуку в хедері */
+.header-search-container {
+    display: none; /* Приховано за замовчуванням */
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 350px;
+    margin: 0 15px;
+    order: 2;
+}
+
+/* Коли хедер має клас scrolled, показуємо пошук */
+header.scrolled .header-search-container {
+    display: block;
+    animation: fadeInDown 0.3s ease;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header-search-container .search-input {
+    padding: 10px 40px; /* Робимо його трохи компактнішим, ніж основний */
+    font-size: 0.95rem;
+}
+
+/* Адаптація для телефонів */
+@media (max-width: 768px) {
+    .header-search-container {
+        order: 4;
+        width: 100%;
+        max-width: 100%;
+        margin: 15px 0 0 0;
+    }
+}
 
         @media (max-width: 768px) {
             .header-content { flex-direction: column; align-items: center; }
@@ -99,16 +136,23 @@
 <body>
 
     <header>
-        <div class="header-content">
-            <div class="logo"><i class='bx bx-code-block'></i> ОПІ Колоквіум 1</div>
-            <nav>
-                <button class="nav-btn active" data-target="theory-tab"><i class='bx bx-book-reader'></i> Теорія</button>
-                <button class="nav-btn" data-target="quiz-tab"><i class='bx bx-task'></i> Тест</button>
-                <button class="nav-btn" data-target="extra-tab"><i class='bx bx-layer-plus'></i> Додаткові</button>
-            </nav>
-            <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему"><i class='bx bx-moon'></i></button>
+    <div class="header-content">
+        <div class="logo"><i class='bx bx-code-block'></i> ОПІ Колоквіум 1</div>
+        <nav>
+            <button class="nav-btn active" data-target="theory-tab"><i class='bx bx-book-reader'></i> Теорія</button>
+            <button class="nav-btn" data-target="quiz-tab"><i class='bx bx-task'></i> Тест</button>
+            <button class="nav-btn" data-target="extra-tab"><i class='bx bx-layer-plus'></i> Додаткові</button>
+        </nav>
+        
+        <div class="header-search-container" id="headerSearchContainer">
+            <i class='bx bx-search search-icon'></i>
+            <input type="text" id="headerSearchInput" class="search-input" placeholder="Швидкий пошук...">
+            <i class='bx bx-x clear-icon' id="clearHeaderSearch" aria-label="Очистити пошук"></i>
         </div>
-    </header>
+
+        <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему"><i class='bx bx-moon'></i></button>
+    </div>
+</header>
 
     <main>
         <section id="theory-tab" class="tab-pane active">
@@ -169,7 +213,7 @@
             { q: "20. Чорна скринька в програмній інженерії", a: "Метод тестування, при якому тестувальник перевіряє функціональність ПЗ, не маючи жодного доступу до вихідного коду та внутрішньої архітектури системи." },
             { q: "21. Біла скринька в програмній інженерії", a: "Метод тестування, що повністю базується на знанні внутрішньої структури, логіки, архітектури та вихідного коду програми." },
             { q: "22. Сіра скринька в програмній інженерії", a: "Комбінований метод. Тестувальник має часткове знання внутрішньої будови (наприклад, доступ до БД чи особливостей технологій), але тестує систему як звичайний користувач через інтерфейс." },
-            { q: "23. Принципи AGILE", a: "1) Люди та взаємодія важливіші за процеси та інструменти. 2) Працюючий продукт важливіший за документацію. 3) Співпраця із замовником важливіша за контракт. 4) Готовність до змін важливіша за план." },
+            { q: "23. Принципи AGILE", a: "1) Люди та взаємодія важливіші за процеси та інструменти.<br>2) Працюючий продукт важливіший за документацію.<br>3) Співпраця із замовником важливіша за контракт.<br>4) Готовність до змін важливіша за план." },
             { q: "24. Функціональні вимоги до програмного забезпечення", a: "Описують поведінку системи. Відповідають на питання 'ЩО повинна робити система?' (наприклад: 'Система повинна проводити авторизацію користувача')." },
             { q: "25. Нефункціональні вимоги до програмного забезпечення", a: "Описують атрибути якості та особливості технологій. Відповідають на питання 'ЯКОЮ повинна бути система?' (наприклад: швидкість відгуку, рівень безпеки, масштабованість, обмеження архітектури)." }
         ];
@@ -389,6 +433,80 @@
         const savedTheme = localStorage.getItem('theme') || 'dark';
         htmlElement.setAttribute('data-theme', savedTheme);
         themeIcon.className = savedTheme === 'dark' ? 'bx bx-sun' : 'bx bx-moon';
+
+        // --- ПОШУК В ХЕДЕРІ ПРИ СКРОЛІ ---
+const header = document.querySelector('header');
+const headerSearchContainer = document.getElementById('headerSearchContainer');
+const headerSearchInput = document.getElementById('headerSearchInput');
+const clearHeaderSearch = document.getElementById('clearHeaderSearch');
+
+// 1. Відстежуємо скролл
+window.addEventListener('scroll', () => {
+    // Якщо проскролили більше 150px і ми не на вкладці "Тест"
+    const isQuizActive = document.getElementById('quiz-tab').classList.contains('active');
+    if (window.scrollY > 150 && !isQuizActive) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+
+// 2. Логіка спільного пошуку
+function performHeaderSearch() {
+    const rawTerm = headerSearchInput.value.toLowerCase().trim();
+    clearHeaderSearch.style.display = rawTerm.length > 0 ? 'block' : 'none';
+    
+    // Визначаємо, яка вкладка зараз активна
+    const activeTab = document.querySelector('.tab-pane.active').id;
+    let container = null;
+
+    if (activeTab === 'theory-tab') {
+        container = document.getElementById('faqContainer1');
+        // Синхронізуємо текст з основним інпутом
+        document.getElementById('searchInput1').value = headerSearchInput.value;
+        document.getElementById('clearSearch1').style.display = rawTerm.length > 0 ? 'block' : 'none';
+    } else if (activeTab === 'extra-tab') {
+        container = document.getElementById('faqContainer2');
+        // Синхронізуємо текст з основним інпутом
+        document.getElementById('searchInput2').value = headerSearchInput.value;
+        document.getElementById('clearSearch2').style.display = rawTerm.length > 0 ? 'block' : 'none';
+    }
+
+    if (container) {
+        const searchWords = rawTerm.split(/\s+/).filter(word => word.length > 0);
+        const items = container.querySelectorAll('.faq-item');
+        
+        items.forEach(item => {
+            const text = item.innerText.toLowerCase();
+            const isMatch = searchWords.every(word => text.includes(word));
+            item.style.display = (isMatch || searchWords.length === 0) ? 'block' : 'none';
+        });
+    }
+}
+
+headerSearchInput.addEventListener('input', performHeaderSearch);
+clearHeaderSearch.addEventListener('click', () => {
+    headerSearchInput.value = '';
+    performHeaderSearch();
+    headerSearchInput.focus();
+});
+
+// Оновлюємо слухач вкладок (щоб ховати пошук в хедері на вкладці "Тест")
+navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // ... (Тут працює твій існуючий код перемикання вкладок) ...
+        const targetId = btn.getAttribute('data-target');
+        
+        // Додаємо цю умову:
+        if (targetId === 'quiz-tab') {
+            header.classList.remove('scrolled');
+        } else if (window.scrollY > 150) {
+            header.classList.add('scrolled');
+            // При перемиканні вкладок оновлюємо результати під нову вкладку
+            performHeaderSearch(); 
+        }
+    });
+});
 
         themeToggleBtn.addEventListener('click', () => {
             const newTheme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';

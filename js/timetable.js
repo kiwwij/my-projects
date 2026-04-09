@@ -699,9 +699,9 @@ function updateStatus() {
             
             let h = Math.floor(toLessonDiff / 3600000);
             let m = Math.floor((toLessonDiff % 3600000) / 60000);
-            let toLessonStr = `+${h}:${m < 10 ? '0' : ''}${m} год`;
+            let toLessonStr = `${h}:${m < 10 ? '0' : ''}${m} год`;
 
-            titleEl.innerText = "Ви ще можете поспати...";
+            titleEl.innerText = "Ви ще можете поспати";
             timerEl.innerText = formatTime(sleepDiff);
             subtitleEl.innerHTML = `<i class='bx bx-bed'></i> до пробудження (До пари: ${toLessonStr})`;
             return;
