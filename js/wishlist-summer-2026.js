@@ -47,6 +47,7 @@ function updateQuickStats() {
     let pausedGames = gamesData.filter(g => g.play_status === 'paused');
     let changedMindGames = gamesData.filter(g => g.play_status === 'changed_mind');
     let unplannedGames = gamesData.filter(g => g.play_status === 'unplanned_completed');
+    let unplannedDroppedGames = gamesData.filter(g => g.play_status === 'unplanned_dropped');
 
     gamesData.forEach(game => {
         if (game.price_uah && game.price_uah > 0 && game.play_status !== 'changed_mind') {
@@ -72,7 +73,7 @@ function updateQuickStats() {
             let priceContent = `<span style="opacity: 0.5;"><i class='bx bx-loader-alt bx-spin'></i></span>`;
             
             if (g.price_uah === undefined || g.price_uah === null || g.price_uah === "") {
-                priceClass = "auto-price-container"; // Класс добавляется ТОЛЬКО если цены нет
+                priceClass = "auto-price-container"; 
                 let cachedPrice = localStorage.getItem(`steam_price_${g.title}`);
                 if (cachedPrice && cachedPrice !== "null") {
                     let p = parseFloat(cachedPrice);
@@ -106,10 +107,12 @@ function updateQuickStats() {
             let currentProgress = g.progress || 0;
             let progressColor;
             switch(g.play_status) {
-                case 'completed': progressColor = '#10b981'; break; 
+                case 'completed': 
+                case 'unplanned_completed': progressColor = '#10b981'; break; 
                 case 'playing': progressColor = '#06b6d4'; break;   
                 case 'planned': progressColor = '#f59e0b'; break;   
-                case 'dropped': progressColor = '#ef4444'; break;   
+                case 'dropped': 
+                case 'unplanned_dropped': progressColor = '#ef4444'; break;   
                 default: progressColor = '#94a3b8';                 
             }
 
@@ -147,6 +150,7 @@ function updateQuickStats() {
     let pausedListHtml = generateTooltipList(pausedGames);
     let changedMindListHtml = generateTooltipList(changedMindGames);
     let unplannedListHtml = generateTooltipList(unplannedGames);
+    let unplannedDroppedListHtml = generateTooltipList(unplannedDroppedGames);
 
     let pausedHtml = pausedGames.length > 0 ? `
         <div class="stat-hover-group">
@@ -164,8 +168,15 @@ function updateQuickStats() {
 
     let unplannedHtml = unplannedGames.length > 0 ? `
         <div class="stat-hover-group">
-            <span style="color: #a855f7;"><i class='bx bx-trophy'></i> Вне плана: ${unplannedGames.length}</span>
+            <span style="color: #10b981;"><i class='bx bx-trophy'></i> Вне плана (Пройдено): ${unplannedGames.length}</span>
             <div class="stat-hover-list">${unplannedListHtml}</div>
+        </div>
+    ` : '';
+
+    let unplannedDroppedHtml = unplannedDroppedGames.length > 0 ? `
+        <div class="stat-hover-group">
+            <span style="color: #ef4444;"><i class='bx bx-x-circle'></i> Вне плана (Дроп): ${unplannedDroppedGames.length}</span>
+            <div class="stat-hover-list">${unplannedDroppedListHtml}</div>
         </div>
     ` : '';
 
@@ -190,6 +201,7 @@ function updateQuickStats() {
         ${pausedHtml}
         ${changedMindHtml}
         ${unplannedHtml}
+        ${unplannedDroppedHtml}
         ${outOfTimeHtml}
         <span style="color: #06b6d4;" title="Суммарная стоимость всех игр без учёта скидок"><i class='bx bx-wallet'></i> Общая стоимость: ${Math.round(totalValue).toLocaleString()} ₴</span>
     `;
@@ -303,10 +315,12 @@ function createCardHtml(game) {
     
     let progressColor;
     switch(game.play_status) {
-        case 'completed': progressColor = '#10b981'; break; 
+        case 'completed': 
+        case 'unplanned_completed': progressColor = '#10b981'; break; 
         case 'playing': progressColor = '#06b6d4'; break;   
         case 'planned': progressColor = '#f59e0b'; break;   
-        case 'dropped': progressColor = '#ef4444'; break;   
+        case 'dropped': 
+        case 'unplanned_dropped': progressColor = '#ef4444'; break;   
         default: progressColor = '#94a3b8';                 
     }
 
@@ -314,7 +328,7 @@ function createCardHtml(game) {
     let isCollapsed = collapsedCards.includes(game.title);
 
     let cardClasses = 'kanban-card';
-    if (game.play_status === 'dropped') {
+    if (game.play_status === 'dropped' || game.play_status === 'unplanned_dropped') {
         cardClasses += ' opacity-70';
     }
     if (isCollapsed) {
@@ -572,26 +586,29 @@ function setupStatsModal() {
 function populateStats() {
     if (typeof gamesData === 'undefined' || gamesData.length === 0) return;
 
-    let totalPlaytime = 0;
+    let totalPlaytimeSpent = 0;
+    let totalBacklogTime = 0;
     let completedCount = 0;
-    let playingCount = 0;
-    let plannedCount = 0;
-    let frozenCount = 0;
     
     let totalRating = 0;
     let gamesWithRating = 0;
-    
     let totalProgressSum = 0;
 
     gamesData.forEach(game => {
-        if (game.play_status === 'completed' || game.play_status === 'unplanned_completed') completedCount++;
-        if (game.play_status === 'playing') playingCount++;
-        if (game.play_status === 'planned') plannedCount++;
-        
-        if (game.play_status === 'paused' || game.play_status === 'dropped') frozenCount++;
+        // Пройдено считается ТОЛЬКО для запланированных игр
+        if (game.play_status === 'completed') completedCount++;
 
+        // Считаем общее потенциальное время бэклога
         if (game.playtime && !isNaN(parseFloat(game.playtime))) {
-            totalPlaytime += parseFloat(game.playtime);
+            let time = parseFloat(game.playtime);
+            totalBacklogTime += time;
+            
+            // Высчитываем реально потраченное время на основе % прохождения
+            const validTimeStatuses = ['completed', 'unplanned_completed', 'paused', 'dropped', 'unplanned_dropped'];
+            if (validTimeStatuses.includes(game.play_status)) {
+                let prog = game.progress || 0;
+                totalPlaytimeSpent += (time * (prog / 100));
+            }
         }
 
         if (game.rating && !isNaN(parseFloat(game.rating))) {
@@ -623,13 +640,15 @@ function populateStats() {
                     <div class="main-stat-item">
                         <div class="icon-wrap green"><i class='bx bx-check-double'></i></div>
                         <div class="stat-text">
-                            <span class="val">${completedCount}</span><span class="lbl"> / ${gamesData.length} пройдено</span>
+                            <div><span class="val">${completedCount}</span> <span class="lbl">/ ${gamesData.length} пройдено</span></div>
+                            <span style="font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; margin-top: 3px;">Без учёта спонтанно пройденных игр</span>
                         </div>
                     </div>
                     <div class="main-stat-item">
                         <div class="icon-wrap orange"><i class='bx bx-time-five'></i></div>
                         <div class="stat-text">
-                            <span class="val">~${Math.round(totalPlaytime)}</span><span class="lbl"> часов суммарно</span>
+                            <div><span class="val">~${Math.round(totalPlaytimeSpent)}</span> <span class="lbl">часов</span></div>
+                            <span style="font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; margin-top: 3px;">Рассчитано по формуле: время сюжета × % прогресса + n</span>
                         </div>
                     </div>
                 </div>
@@ -646,28 +665,12 @@ function populateStats() {
                         <span class="box-sub">По данным Metacritic</span>
                     </div>
                 </div>
-                <div class="stat-box">
-                    <div class="box-icon"><i class='bx bx-archive-in'></i></div>
-                    <div class="box-info">
-                        <span class="box-title">Заморожено</span>
-                        <span class="box-val">${frozenCount} шт.</span>
-                        <span class="box-sub">На паузе или брошено</span>
-                    </div>
-                </div>
                 <div class="stat-box highlight-box">
-                    <div class="box-icon"><i class='bx bx-play-circle'></i></div>
+                    <div class="box-icon"><i class='bx bx-collection'></i></div>
                     <div class="box-info">
-                        <span class="box-title">Сейчас играю</span>
-                        <span class="box-val">${playingCount} шт.</span>
-                        <span class="box-sub">В активном процессе</span>
-                    </div>
-                </div>
-                <div class="stat-box highlight-box">
-                    <div class="box-icon"><i class='bx bx-calendar-star'></i></div>
-                    <div class="box-info">
-                        <span class="box-title">В планах</span>
-                        <span class="box-val">${plannedCount} шт.</span>
-                        <span class="box-sub">Ожидают запуска</span>
+                        <span class="box-title">Потенциал бэклога</span>
+                        <span class="box-val">~${Math.round(totalBacklogTime)} ч.</span>
+                        <span class="box-sub">Время на прохождение всех игр</span>
                     </div>
                 </div>
             </div>

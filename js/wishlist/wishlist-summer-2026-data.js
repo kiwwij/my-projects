@@ -1,4 +1,4 @@
-// Статусы: "planned", "playing", "paused", "completed", "unplanned_completed", "changed_mind", "dropped"
+// Статусы: "planned", "playing", "paused", "completed", "unplanned_completed", "unplanned_dropped" "changed_mind", "dropped"
 // https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp
 
 const gamesData = [
@@ -24,10 +24,24 @@ const gamesData = [
         price_uah: 1999,
         discount_percent: 0,
         release_date: "27 фев. 2026 г.",
-        play_status: "playing",
+        play_status: "dropped",
         rating: "",
-        progress: 60
+        progress: 71
     },
+    // {
+    //     title: "Resident Evil 3",
+    //     steam_link: "https://store.steampowered.com/app/952060/Resident_Evil_3/",
+    //     poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/952060/header.jpg?t=1768956538",
+    //     release_date: "3 апр. 2020 г.",
+    //     price_uah: 1200,
+    //     discount_percent: 90,
+    //     playtime: "6",
+    //     rating: "",
+
+    //     play_status: "unplanned_completed",
+    //     review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
+    //     progress: 100
+    // },
     {
         title: "The Last of Us™ Part II Remastered",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2531310/header.jpg?t=1750959180",
