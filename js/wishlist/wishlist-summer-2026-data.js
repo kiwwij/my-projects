@@ -28,20 +28,48 @@ const gamesData = [
         rating: "",
         progress: 71
     },
-    // {
-    //     title: "Resident Evil 3",
-    //     steam_link: "https://store.steampowered.com/app/952060/Resident_Evil_3/",
-    //     poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/952060/header.jpg?t=1768956538",
-    //     release_date: "3 апр. 2020 г.",
-    //     price_uah: 1200,
-    //     discount_percent: 90,
-    //     playtime: "6",
-    //     rating: "",
+    {
+        title: "Resident Evil 3",
+        steam_link: "https://store.steampowered.com/app/952060/Resident_Evil_3/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/952060/header.jpg?t=1768956538",
+        release_date: "3 апр. 2020 г.",
+        price_uah: 1200,
+        discount_percent: 90,
+        playtime: "6",
+        rating: "",
 
-    //     play_status: "unplanned_completed",
-    //     review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
-    //     progress: 100
-    // },
+        play_status: "unplanned_completed",
+        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
+        progress: 100
+    },
+    {
+        title: "Steelrising",
+        steam_link: "https://store.steampowered.com/app/1283400/Steelrising/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1283400/header.jpg?t=1764149288",
+        release_date: "8 сен. 2022 г.",
+        price_uah: 579,
+        discount_percent: 90,
+        playtime: "15",
+        rating: "",
+
+        play_status: "playing",
+        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
+        progress: 15
+    },
+    {
+        title: "Steelrising - Cagliostro's Secrets",
+        steam_link: "https://store.steampowered.com/app/2004261/Steelrising__Cagliostros_Secrets/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2004261/header.jpg?t=1668070903",
+        release_date: "10 ноя. 2022 г.",
+        price_uah: 229,
+        discount_percent: 50,
+        playtime: "2",
+        rating: "",
+
+        play_status: "playing",
+        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
+        progress: 0
+    },
     {
         title: "The Last of Us™ Part II Remastered",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2531310/header.jpg?t=1750959180",
@@ -66,34 +94,6 @@ const gamesData = [
         release_date: "17 сен. 2024 г.",
         play_status: "planned",
         rating: "",
-        progress: 0
-    },
-    {
-        title: "Steelrising",
-        steam_link: "https://store.steampowered.com/app/1283400/Steelrising/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1283400/header.jpg?t=1764149288",
-        release_date: "8 сен. 2022 г.",
-        price_uah: 579,
-        discount_percent: 90,
-        playtime: "15",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
-        progress: 0
-    },
-    {
-        title: "Steelrising - Cagliostro's Secrets",
-        steam_link: "https://store.steampowered.com/app/2004261/Steelrising__Cagliostros_Secrets/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2004261/header.jpg?t=1668070903",
-        release_date: "10 ноя. 2022 г.",
-        price_uah: 229,
-        discount_percent: 50,
-        playtime: "2",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
         progress: 0
     },
     {
@@ -136,17 +136,4 @@ const gamesData = [
         rating: "",
         progress: 0
     },
-    // {
-    //     title: ",
-    //     poster: "",
-    //     steam_link: "",
-    //     review_link: "",
-    //     playtime: "",
-    //     price_uah: "",
-    //     discount_percent: 0,
-    //     release_date: "",
-    //     play_status: "",
-    //     rating: "",
-    //     progress: 0
-    // },
 ];
