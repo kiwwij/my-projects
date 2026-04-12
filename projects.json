@@ -346,6 +346,13 @@
     "url": "",
     "date": "2026-04-08"
   },
+  "rezero-arc-9.html": {
+    "image": "html/rezero-arc-9/rezero-arc-9.png",
+    "description": "A summary of only the most important and interesting moments from the 9th arc of “Re: Zero.”",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-12"
+  },
   ".html": {
     "image": "",
     "description": "",

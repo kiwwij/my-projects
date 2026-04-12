@@ -54,7 +54,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
-        progress: 15
+        progress: 25
     },
     {
         title: "Steelrising - Cagliostro's Secrets",

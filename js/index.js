@@ -15,6 +15,7 @@ let allProjects = [];
 let inputTimeout;
 let currentFilter = null;
 let showNewOnly = false;
+let isSecretModeEnabled = false;
 
 const techColors = {
     'html': '#e34c26', 'css': '#563d7c', 'js': '#f1e05a', 'javascript': '#f1e05a', 'python': '#3572A5',
@@ -33,7 +34,7 @@ function isProjectNew(dateString) {
 }
 
 async function loadProjects() {
-    const showHidden = localStorage.getItem('unlock_hidden') === 'true';
+    const showHidden = isSecretModeEnabled;
 
     try {
         const response = await fetch(configUrl);
@@ -182,16 +183,14 @@ document.addEventListener('keydown', (e) => {
     }, 1500);
 
     if (inputBuffer === SECRET_CODE) {
-        const isCurrentlyUnlocked = localStorage.getItem('unlock_hidden') === 'true';
-        if (!isCurrentlyUnlocked) {
-            localStorage.setItem('unlock_hidden', 'true');
+        isSecretModeEnabled = !isSecretModeEnabled;
+        if (isSecretModeEnabled) {
             showToast('<i class="bx bx-lock-open-alt"></i> Secret mode activated!');
         } else {
-            localStorage.removeItem('unlock_hidden');
             showToast('<i class="bx bx-lock-alt"></i> Secret mode deactivated.');
         }
         inputBuffer = '';
-        setTimeout(() => location.reload(), 1200);
+        loadProjects().then(() => applyAllFilters());
         return;
     }
 
@@ -303,16 +302,15 @@ searchInput.addEventListener('input', (e) => {
     clearSearchBtn.style.display = val.length > 0 ? 'block' : 'none';
 
     if (val === SECRET_CODE) {
-        const isCurrentlyUnlocked = localStorage.getItem('unlock_hidden') === 'true';
-        if (!isCurrentlyUnlocked) {
-            localStorage.setItem('unlock_hidden', 'true');
+        isSecretModeEnabled = !isSecretModeEnabled;
+        if (isSecretModeEnabled) {
             showToast('<i class="bx bx-lock-open-alt"></i> Secret mode activated!');
         } else {
-            localStorage.removeItem('unlock_hidden');
             showToast('<i class="bx bx-lock-alt"></i> Secret mode deactivated.');
         }
         searchInput.value = '';
-        setTimeout(() => location.reload(), 1200);
+        clearSearchBtn.style.display = 'none';
+        loadProjects().then(() => applyAllFilters());
         return;
     }
 
