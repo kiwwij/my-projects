@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Персональный тир-лист и обзоры игр серии Final Fantasy.">
+    <title>FF Tier List by kiwwij</title>
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/ff-tier-list.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><i class='bx bx-joystick'></i> Final Fantasy kiwwij's tier list</h1>
+            <div class="header-links">
+                <button id="export-btn" title="Экспортировать тир-лист"><i class='bx bx-export'></i></button>
+                <button id="import-btn" title="Импортировать тир-лист"><i class='bx bx-import'></i></button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+                
+                <a href="https://steamcommunity.com/id/serhiosergey" target="_blank" title="Steam"><i class='bx bxl-steam'></i></a>
+                <a href="https://store.steampowered.com/wishlist/id/serhiosergey/" target="_blank" title="Wishlist"><i class='bx bx-list-heart'></i></a>
+                <a href="https://kiwwij.github.io/kiwwij-social-links/" target="_blank" title="Socials"><i class='bx bx-link'></i></a>
+                <button id="theme-toggle" title="Сменить тему"><i class='bx bx-moon'></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="tier-list" id="tier-list"></div>
+        
+        <div class="unranked-pool">
+            <h2><i class='bx bx-collection'></i> Пул игр</h2>
+            <div class="tier-row-content" id="tier-unranked" data-tier="unranked"></div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="close-modal"><i class='bx bx-x'></i></button>
+            <h2 id="modal-title"></h2>
+            
+            <div class="modal-meta">
+                <span class="meta-badge metacritic">
+                    <i class='bx bx-star'></i> <span id="modal-score"></span>
+                </span>
+                <a id="modal-steam" href="#" target="_blank" class="meta-badge steam-link">
+                    <i class='bx bxl-steam'></i> Steam
+                </a>
+            </div>
+
+            <div class="modal-comment">
+                <h3><i class='bx bx-message-square-detail'></i> Моё мнение:</h3>
+                <p id="modal-desc"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/ff-tier-list.js"></script>
+</body>
+</html>

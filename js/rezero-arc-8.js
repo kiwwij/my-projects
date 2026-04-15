@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // 2. Блокируем прокрутку основного сайта
+    // Блокируем прокрутку основного сайта
     // document.body.style.overflow = 'hidden';
 
     const overlay = document.createElement('div');
@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function attemptUnlock() {
         if (input.value === 'hentaif') {
             sessionStorage.setItem('rezero_unlocked', 'true');
-            // Плавное исчезновение
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.remove();
@@ -1265,26 +1264,21 @@ for (let i = 61; i <= 75; i++) {
     });
 }
 
-// --- ЛОГИКА РЕНДЕРИНГА ---
 document.addEventListener('DOMContentLoaded', () => {
     const contentArea = document.getElementById('content-area');
     const navAccordion = document.getElementById('nav-accordion');
     const scrollTopBtn = document.getElementById('scrollTopBtn');
 
-    // Группируем главы по томам
     const chaptersByVolume = {};
     for (const [volId, volData] of Object.entries(volumes)) {
         chaptersByVolume[volId] = [];
     }
 
-    // Рендер контента
     chaptersData.forEach(chapter => {
         const chNum = chapter.id;
         
-        // Пропускаем 7 главу, так как она объединена
         if (chNum === 7) return;
 
-        // Определяем том
         let currentVolId = null;
         for (const [volId, range] of Object.entries(volumes)) {
             if (chNum >= range.start && chNum <= range.end) {
@@ -1297,7 +1291,6 @@ document.addEventListener('DOMContentLoaded', () => {
             chaptersByVolume[currentVolId].push(chNum);
         }
 
-        // Рендер обложки тома (если это первая глава тома)
         const volInfo = volumes[currentVolId];
         if (volInfo && chNum === volInfo.start) {
             const volHtml = `
@@ -1309,7 +1302,6 @@ document.addEventListener('DOMContentLoaded', () => {
             contentArea.insertAdjacentHTML('beforeend', volHtml);
         }
 
-        // Рендер главы
         const title = chapterTitles[chNum] || `Глава ${chNum}`;
         const formattedText = chapter.text.map(p => {
             if (p.trim().startsWith('[') || p.includes(': [')) {
@@ -1332,7 +1324,6 @@ document.addEventListener('DOMContentLoaded', () => {
         contentArea.insertAdjacentHTML('beforeend', chapterHtml);
     });
 
-    // --- ГЕНЕРАЦИЯ МЕНЮ (АККОРДЕОН) ---
     for (const [volId, chList] of Object.entries(chaptersByVolume)) {
         if (chList.length === 0) continue;
 
@@ -1353,7 +1344,6 @@ document.addEventListener('DOMContentLoaded', () => {
             listUl.appendChild(li);
         });
 
-        // Клик по кнопке тома
         volBtn.addEventListener('click', () => {
             volBtn.classList.toggle('active');
             listUl.classList.toggle('show');
@@ -1364,7 +1354,6 @@ document.addEventListener('DOMContentLoaded', () => {
         navAccordion.appendChild(volGroup);
     }
 
-    // --- ПЛАВНАЯ ПРОКРУТКА И ПОДСВЕТКА ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -1372,11 +1361,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = document.getElementById(targetId);
             
             if(target) {
-                // Убираем подсветку у других
                 document.querySelectorAll('.chapter-list a').forEach(a => a.classList.remove('current'));
                 this.classList.add('current');
 
-                // Скролл с отступом
                 const offset = 20; 
                 const elementPosition = target.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - offset;
@@ -1389,7 +1376,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Кнопка наверх
     window.onscroll = function() {
         if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
             scrollTopBtn.style.display = "block";

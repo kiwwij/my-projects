@@ -32,7 +32,7 @@
   "anime-world.html": {
     "image": "https://raw.githubusercontent.com/kiwwij/my-projects/refs/heads/main/html/anime-world/img/favicons/anime-preview.png",
     "description": "A small library / anime advertisement / catalog of watched anime.",
-    "stack": ["html", "css", "js", "github", "git"]
+    "stack": ["git", "html", "css", "js", "github"]
   },
   "sudoku.html": {
     "image": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Sdk_intro.gif",
@@ -87,7 +87,7 @@
   "pleiades.html": {
     "image": "bx bx-analyse", 
     "description": "Interactive 3D star cluster atlas with astronomical data and Re:Zero references. Completely, once again completely made by AI. Purely a website for fun.",
-    "stack": ["html", "css", "js", "github", "chart.js"]
+    "stack": ["chart.js", "html", "css", "js", "github"]
   },
   "newpc.html": {
     "image": "https://files.foxtrot.com.ua/PhotoNew/img_0_6_38474_0_1_MIBDv6.webp",
@@ -314,7 +314,7 @@
   "graphs.html": {
     "image": "bx bx-line-chart",
     "description": "Never mind, it's for vntu.",
-    "stack": ["html", "css", "js", "github", "chart.js"],
+    "stack": ["chart.js", "html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-02"
   },
@@ -335,7 +335,7 @@
   "ukrainian-ethno-cultural-regions.html": {
     "image": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Ukrayinski_Etnokulturni_Rehiony_newp.png",
     "description": "Interactive map of Ukraine with toggleable ethnocultural regions.",
-    "stack": ["html", "css", "js", "github", "leaflet.js"],
+    "stack": ["leaflet.js", "html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-06"
   },
