@@ -77,8 +77,17 @@ let games = [
         img: "https://i.playground.ru/e/55ofWs3SU4OEMkJXK4Dj6A.jpeg?414x574",
         steam: "https://store.steampowered.com/app/39210/FINAL_FANTASY_XIV_Online/?curator_clanid=34459938",
         mc: 86,
-        comment: "Мне ненравятся MMORPG, и эта игра не исключение.",
+        comment: "Мне не нравятся MMORPG в том виде, в котором они предствлены в настоящее время, и эта игра не исключение.",
         tier: "E" 
+    },
+    {
+        id: 8,
+        title: "FINAL FANTASY VII",
+        img: "https://m.media-amazon.com/images/M/MV5BOTllNGEyMTAtNmU3OS00YjAwLWFhZWItOGY0MTFiYzU1ZmFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+        steam: "https://store.steampowered.com/app/3837340/FINAL_FANTASY_VII/?curator_clanid=34459938",
+        mc: 92,
+        comment: "Если не учитывать что игра 1997, то я бы поставил в S-тир, но т.к. в ностоящее время она почти неиграбельная, то ставлю её в E-тир чисто из-за сюжета.",
+        tier: "E"
     },
 
 
@@ -88,7 +97,7 @@ let games = [
         img: "https://image.api.playstation.com/vulcan/ap/rnd/202208/2505/7GhpNUWSPdoNFdMLroXaPXm8.png",
         steam: "https://store.steampowered.com/app/1608070/CRISIS_CORE_FINAL_FANTASY_VII_REUNION/?curator_clanid=34459938",
         mc: 78,
-        comment: "Хочу пройти приувел к 7-ой части, чтобы узнать всю историю.",
+        comment: "Хочу пройти приквел к 7-ой части, чтобы узнать всю историю.",
         tier: "want"
     },
     {
@@ -97,16 +106,7 @@ let games = [
         img: "https://upload.wikimedia.org/wikipedia/ru/2/21/Final_Fantasy_XVI.png",
         steam: "https://store.steampowered.com/app/2515020/FINAL_FANTASY_XVI/?curator_clanid=34459938",
         mc: 87,
-        comment: "Смотрил пару видосов про 16-ую часть, заинтересовался, хочу поиграть, чтобы понять, стоит ли оно того.",
-        tier: "want"
-    },
-    {
-        id: 8,
-        title: "FINAL FANTASY VII",
-        img: "https://m.media-amazon.com/images/M/MV5BOTllNGEyMTAtNmU3OS00YjAwLWFhZWItOGY0MTFiYzU1ZmFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-        steam: "https://store.steampowered.com/app/3837340/FINAL_FANTASY_VII/?curator_clanid=34459938",
-        mc: 92,
-        comment: "Хочу пройти оригинальную 7-ую часть, чтобы понять в чём отличия от ремейка.",
+        comment: "Смотрел пару видосов про 16-ую часть, заинтересовала, хочу поиграть, чтобы понять, стоит ли она того.",
         tier: "want"
     },
     {

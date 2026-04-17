@@ -233,7 +233,7 @@ const database = {
     },
 
     "2026-04": {
-        income: { fix: 7380.56, extra: 0 },
+        income: { fix: 7380.56, extra: 2000 },
 
         weeks: {
             1: {
@@ -267,7 +267,7 @@ const database = {
 /* Другое */    other: 74.99,
             },
             3: {
-/* Продукты */  food: 636.53,
+/* Продукты */  food: 872.95,
 /* Вкусняшки */ snacks: 322.41,
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,

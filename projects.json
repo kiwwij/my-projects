@@ -353,6 +353,27 @@
     "url": "",
     "date": "2026-04-12"
   },
+  "ff-tier-list.html": {
+    "image": "bx bx-joystick",
+    "description": "A personal tier list for Final Fantasy games.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-15"
+  },
+  "rezero-arc-6.html": {
+    "image": "html/rezero-arc-6/rezero-arc-6.jpg",
+    "description": "A summary of Arc 6, taken from a post on the Telegram channel. The summary may be incomplete. https://t.me/kiwwijs/60",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-17"
+  },
+  "rezero-arc-7.html": {
+    "image": "html/rezero-arc-7/rezero-arc-7.jpg",
+    "description": "A summary of Arc 7, taken from a post on the Telegram channel. The summary may be incomplete. https://t.me/kiwwijs/97",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-17"
+  },
   ".html": {
     "image": "",
     "description": "",
