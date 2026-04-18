@@ -132,6 +132,35 @@ body {
 
 .mobile-menu-btn { display: none; position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: var(--accent); color: #000; border: none; z-index: 2000; font-size: 1.8rem; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
 
+.download-txt-btn {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.download-txt-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+}
+
+[data-theme="light"] .download-txt-btn {
+    color: #fff;
+}
+
 @media (max-width: 992px) {
     .sidebar { transform: translateX(-100%); box-shadow: 5px 0 20px rgba(0,0,0,0.5); }
     .sidebar.open { transform: translateX(0); }

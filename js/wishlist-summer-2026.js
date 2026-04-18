@@ -43,15 +43,22 @@ function updateQuickStats() {
 
     let totalGames = gamesData.length;
     let totalValue = 0;
+    let totalValueDiscounted = 0;
 
     let pausedGames = gamesData.filter(g => g.play_status === 'paused');
     let changedMindGames = gamesData.filter(g => g.play_status === 'changed_mind');
     let unplannedGames = gamesData.filter(g => g.play_status === 'unplanned_completed');
     let unplannedDroppedGames = gamesData.filter(g => g.play_status === 'unplanned_dropped');
 
+    const validPriceStatuses = ['planned', 'playing', 'paused', 'completed', 'dropped'];
+
     gamesData.forEach(game => {
-        if (game.price_uah && game.price_uah > 0 && game.play_status !== 'changed_mind') {
-            totalValue += parseFloat(game.price_uah);
+        if (game.price_uah && game.price_uah > 0 && validPriceStatuses.includes(game.play_status)) {
+            let basePrice = parseFloat(game.price_uah);
+            totalValue += basePrice;
+            
+            let discount = game.discount_percent ? parseFloat(game.discount_percent) : 0;
+            totalValueDiscounted += basePrice - (basePrice * (discount / 100));
         }
     });
 
@@ -203,7 +210,7 @@ function updateQuickStats() {
         ${unplannedHtml}
         ${unplannedDroppedHtml}
         ${outOfTimeHtml}
-        <span style="color: #06b6d4;" title="Суммарная стоимость всех игр без учёта скидок"><i class='bx bx-wallet'></i> Общая стоимость: ${Math.round(totalValue).toLocaleString()} ₴</span>
+        <span style="color: #06b6d4;" title="Включая скидки: ${Math.round(totalValueDiscounted).toLocaleString()} ₴"><i class='bx bx-wallet'></i> Общая стоимость: ${Math.round(totalValue).toLocaleString()} ₴</span>
     `;
 }
 
@@ -593,17 +600,16 @@ function populateStats() {
     let totalRating = 0;
     let gamesWithRating = 0;
     let totalProgressSum = 0;
+    const validStatuses = ['planned', 'playing', 'paused', 'completed', 'dropped'];
+    let validGamesCount = gamesData.filter(g => validStatuses.includes(g.play_status)).length;
 
     gamesData.forEach(game => {
-        // Пройдено считается ТОЛЬКО для запланированных игр
         if (game.play_status === 'completed') completedCount++;
 
-        // Считаем общее потенциальное время бэклога
         if (game.playtime && !isNaN(parseFloat(game.playtime))) {
             let time = parseFloat(game.playtime);
             totalBacklogTime += time;
             
-            // Высчитываем реально потраченное время на основе % прохождения
             const validTimeStatuses = ['completed', 'unplanned_completed', 'paused', 'dropped', 'unplanned_dropped'];
             if (validTimeStatuses.includes(game.play_status)) {
                 let prog = game.progress || 0;
@@ -640,8 +646,8 @@ function populateStats() {
                     <div class="main-stat-item">
                         <div class="icon-wrap green"><i class='bx bx-check-double'></i></div>
                         <div class="stat-text">
-                            <div><span class="val">${completedCount}</span> <span class="lbl">/ ${gamesData.length} пройдено</span></div>
-                            <span style="font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; margin-top: 3px;">Без учёта спонтанно пройденных игр</span>
+                            <div><span class="val">${completedCount}</span> <span class="lbl">/ ${validGamesCount} пройдено</span></div>
+                            <span style="font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; margin-top: 3px;">Без учёта спонтанно пройденных, дропнутых игр</span>
                         </div>
                     </div>
                     <div class="main-stat-item">
@@ -668,7 +674,7 @@ function populateStats() {
                 <div class="stat-box highlight-box">
                     <div class="box-icon"><i class='bx bx-collection'></i></div>
                     <div class="box-info">
-                        <span class="box-title">Потенциал бэклога</span>
+                        <span class="box-title">Потенциально посраное время</span>
                         <span class="box-val">~${Math.round(totalBacklogTime)} ч.</span>
                         <span class="box-sub">Время на прохождение всех игр</span>
                     </div>

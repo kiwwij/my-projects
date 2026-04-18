@@ -344,6 +344,26 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     injectDragStyles();
     initDragAndDrop();
+
+    const secretBtn = document.getElementById('secret-facts-btn');
+    if (secretBtn) {
+        secretBtn.addEventListener('click', () => {
+            if (typeof unlockAchievement === 'function') {
+                unlockAchievement('fact_seeker');
+            }
+            window.open('html/facts-about-me.html', '_blank');
+        });
+    }
+
+    const avatarImg = document.querySelector('.avatar');
+    if (avatarImg) {
+        avatarImg.addEventListener('click', () => {
+            avatarImg.classList.add('strange-clicked');
+            setTimeout(() => avatarImg.classList.remove('strange-clicked'), 500);
+            avatarImg.src = 'https://kiwwij.github.io/kiwwij-anime-tier-list/img/about%20me/secret_avatar.png';
+            avatarImg.classList.add('strange-frame');
+        });
+    }
 });
 
 function renderTechStats(files, projectsConfig) {

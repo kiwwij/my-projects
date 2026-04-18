@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Блокируем прокрутку основного сайта
+    // Блокируем прокрутку основного сайта (это должно быть закоммичено всегда)
     // document.body.style.overflow = 'hidden';
 
     const overlay = document.createElement('div');

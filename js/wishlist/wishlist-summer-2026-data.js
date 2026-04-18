@@ -43,6 +43,20 @@ const gamesData = [
         progress: 40
     },
     {
+        title: "Slay the Princess — The Pristine Cut",
+        steam_link: "https://store.steampowered.com/app/1989270/Slay_the_Princess__The_Pristine_Cut/?curator_clanid=1949621",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1989270/74a54248cfec29144de5e867a333c30e6d62801d/header.jpg?t=1775751748",
+        release_date: "23 окт. 2023 г.",
+        price_uah: 375,
+        discount_percent: 45,
+        playtime: "3",
+        rating: "",
+
+        play_status: "changed_mind",
+        review_link: "",
+        progress: 0
+    },
+    {
         title: "Steelrising",
         steam_link: "https://store.steampowered.com/app/1283400/Steelrising/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1283400/header.jpg?t=1764149288",
@@ -54,7 +68,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
-        progress: 40
+        progress: 60
     },
     {
         title: "Steelrising - Cagliostro's Secrets",
@@ -137,24 +151,10 @@ const gamesData = [
         progress: 0
     },
     {
-        title: "Slay the Princess — The Pristine Cut",
-        steam_link: "https://store.steampowered.com/app/1989270/Slay_the_Princess__The_Pristine_Cut/?curator_clanid=1949621",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1989270/74a54248cfec29144de5e867a333c30e6d62801d/header.jpg?t=1775751748",
-        release_date: "23 окт. 2023 г.",
-        price_uah: 375,
-        discount_percent: 45,
-        playtime: "3",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
-        progress: 0
-    },
-    {
         title: "Castaway Diary: Portal to the Unknown Isles",
         steam_link: "https://store.steampowered.com/app/4382260/Castaway_Diary_Portal_to_the_Unknown_Isles/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4382260/98d25ebb3f3192467170d5d6617bc659806f4d8e/header.jpg?t=1776126468",
-        release_date: "",
+        release_date: "2026",
         price_uah: "",
         discount_percent: 0,
         playtime: "",

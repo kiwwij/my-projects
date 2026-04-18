@@ -163,7 +163,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+        
+        const downloadBtn = document.getElementById('downloadTxtBtn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('mousedown', () => downloadBtn.style.transform = 'scale(0.98)');
+            downloadBtn.addEventListener('mouseup', () => downloadBtn.style.transform = 'scale(1)');
 
+            downloadBtn.addEventListener('click', () => {
+                let txtContent = "Re:Zero Arc 9 - Свет безымянной звезды | Полный пересказ\n";
+                txtContent += "==========================================================\n\n";
+
+                chapterOrder.forEach(chId => {
+                    const btnEl = document.querySelector(`.chapter-btn[data-ch="${chId}"]`);
+                    const title = btnEl ? btnEl.innerText : `Глава ${chId}`;
+                    
+                    txtContent += `=== ${title} ===\n\n`;
+
+                    const rawHtml = chaptersContent[chId];
+                    
+                    if (rawHtml) {
+                        const formattedHtml = rawHtml
+                            .replace(/<\/p>/gi, '\n\n')
+                            .replace(/<br\s*[\/]?>/gi, '\n');
+                            
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = formattedHtml;
+                        
+                        const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+                        txtContent += cleanText.trim() + "\n\n";
+                    } else {
+                        txtContent += "[Текст этой главы еще не написан...]\n\n";
+                    }
+
+                    txtContent += "----------------------------------------------------------\n\n";
+                });
+
+                const blob = new Blob([txtContent], { type: "text/plain;charset=utf-8" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "ReZero_Arc9.txt";
+                
+                document.body.appendChild(link);
+                link.click();
+                
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+            });
+        }
         
         const posters = {
             "phase1": "rezero-arc-9/39.webp", 
