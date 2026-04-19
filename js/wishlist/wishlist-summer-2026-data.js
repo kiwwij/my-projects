@@ -178,4 +178,32 @@ const gamesData = [
         review_link: "",
         progress: 0
     },
+    {
+        title: "Clair Obscur: Expedition 33",
+        steam_link: "https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/?l=russian",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1903340/be3305b02d4db0dffa3458537118423bf2792d7e/header.jpg?t=1773676780",
+        release_date: "24 апр. 2025 г.",
+        price_uah: 1499,
+        discount_percent: 20,
+        playtime: "29",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "Homura Hime",
+        steam_link: "https://store.steampowered.com/app/1820000/Homura_Hime/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1820000/9d60f6fb747e235e59bf4f8399adf6a8f55d8f12/header.jpg?t=1773399168",
+        release_date: "4 мар. 2026 г.",
+        price_uah: 515,
+        discount_percent: 10,
+        playtime: "10",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
 ];

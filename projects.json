@@ -374,6 +374,20 @@
     "url": "",
     "date": "2026-04-17"
   },
+  "404.html": {
+    "image": "404",
+    "description": "Page 404",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-18"
+  },
+  "403.html": {
+    "image": "403",
+    "description": "Page 403",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-18"
+  },
   ".html": {
     "image": "",
     "description": "",

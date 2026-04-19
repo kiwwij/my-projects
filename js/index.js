@@ -38,7 +38,17 @@ async function loadProjects() {
 
     try {
         const response = await fetch(configUrl);
-        if (!response.ok) throw new Error();
+        
+        if (response.status === 404) {
+            window.location.href = '404.html';
+            return;
+        }
+        if (response.status === 403) {
+            window.location.href = '403.html';
+            return;
+        }
+
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
         const projectsConfig = await response.json();
         let htmlFiles = [];
