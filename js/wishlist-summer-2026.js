@@ -175,14 +175,14 @@ function updateQuickStats() {
 
     let unplannedHtml = unplannedGames.length > 0 ? `
         <div class="stat-hover-group">
-            <span style="color: #10b981;"><i class='bx bx-trophy'></i> Вне плана (Пройдено): ${unplannedGames.length}</span>
+            <span style="color: #10b981;"><i class='bx bx-trophy'></i> Внепланово прошёл: ${unplannedGames.length}</span>
             <div class="stat-hover-list">${unplannedListHtml}</div>
         </div>
     ` : '';
 
     let unplannedDroppedHtml = unplannedDroppedGames.length > 0 ? `
         <div class="stat-hover-group">
-            <span style="color: #ef4444;"><i class='bx bx-x-circle'></i> Вне плана (Дроп): ${unplannedDroppedGames.length}</span>
+            <span style="color: #ef4444;"><i class='bx bx-x-circle'></i> Внеплановый дроп: ${unplannedDroppedGames.length}</span>
             <div class="stat-hover-list">${unplannedDroppedListHtml}</div>
         </div>
     ` : '';
@@ -600,6 +600,7 @@ function populateStats() {
     let totalRating = 0;
     let gamesWithRating = 0;
     let totalProgressSum = 0;
+    
     const validStatuses = ['planned', 'playing', 'paused', 'completed', 'dropped'];
     let validGamesCount = gamesData.filter(g => validStatuses.includes(g.play_status)).length;
 
@@ -622,10 +623,12 @@ function populateStats() {
             gamesWithRating++;
         }
 
-        totalProgressSum += (game.progress || 0);
+        if (validStatuses.includes(game.play_status)) {
+            totalProgressSum += (game.progress || 0);
+        }
     });
 
-    let completionRate = Math.round(totalProgressSum / gamesData.length) || 0;
+    let completionRate = validGamesCount > 0 ? Math.round(totalProgressSum / validGamesCount) : 0;
     let avgRating = gamesWithRating > 0 ? Math.round(totalRating / gamesWithRating) : 0;
 
     const modalBody = document.getElementById('stats-modal-body');

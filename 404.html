@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>404 | Page Not Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <style>
+        :root {
+            --bg-color: #f7f3ee;
+            --text-main: #332b26;
+            --text-subtle: rgba(51, 43, 38, 0.08);
+            --panel-bg: rgba(247, 243, 238, 0.6);
+            --accent: #FF8C42;
+            --pod-body: linear-gradient(135deg, #e0dbcf, #b8b2a4);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #161514;
+            --text-main: #e8dfd8;
+            --text-subtle: rgba(255, 255, 255, 0.05);
+            --panel-bg: rgba(22, 21, 20, 0.6);
+            --accent: #FFAA66;
+            --pod-body: linear-gradient(135deg, #66635d, #42403a);
+        }
+
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-color);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .top-panel {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--text-subtle);
+        }
+
+        .social-links { 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+            max-width: 80%;
+        }
+        .social-links a {
+            color: var(--text-main); font-size: 1.4rem;
+            text-decoration: none; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .social-links a:hover { color: var(--accent); transform: translateY(-3px); }
+
+        .theme-toggle {
+            cursor: pointer; font-size: 1.6rem;
+            display: flex; align-items: center;
+            color: var(--text-main);
+        }
+
+        .bg-404 {
+            position: absolute;
+            top: 45%; left: 50%; transform: translate(-50%, -50%);
+            font-size: clamp(8rem, 25vw, 22rem);
+            font-weight: 800;
+            color: var(--text-subtle);
+            z-index: 0;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative; z-index: 10;
+            width: 100%; max-width: 800px;
+            text-align: center; padding: 0 20px;
+        }
+
+        .art-scene {
+            position: relative; width: 100%; height: 260px;
+            margin: 0 auto 30px;
+        }
+
+        .ground-line {
+            position: absolute; bottom: 0; left: 15%;
+            width: 70%; height: 2px;
+            background: var(--text-subtle);
+            border-radius: 2px;
+        }
+
+        .pod-bot {
+            position: absolute; bottom: 45px; left: 15%;
+            width: 70px; height: 95px; z-index: 15;
+            animation: floatPod 4s ease-in-out infinite;
+        }
+
+        .pod-body {
+            position: relative; width: 100%; height: 100%;
+            background: var(--pod-body);
+            border-radius: 20px 20px 32px 32px;
+            box-shadow: inset -4px -6px 0 rgba(0,0,0,0.15), inset 2px 2px 0 rgba(255,255,255,0.1);
+            z-index: 2;
+        }
+
+        .pod-eye-lens {
+            position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+            width: 36px; height: 36px; background: #111;
+            border-radius: 50%; border: 2px solid #ddd;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.2);
+        }
+        .pod-eye-lens::after {
+            content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 14px; height: 14px; background: #ff4422; border-radius: 50%;
+            animation: randomEyeGlow 6s infinite;
+        }
+
+        .pod-antenna {
+            position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+            width: 3px; height: 24px; background: #8f8a7c;
+        }
+        .pod-antenna::before {
+            content: ""; position: absolute; top: -7px; left: -5px;
+            width: 12px; height: 12px; background: #b87c4f; border-radius: 50%;
+        }
+
+        .pod-wing {
+            position: absolute; top: 38px; width: 18px; height: 44px;
+            background: #a39b8c; border-radius: 8px; box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2);
+        }
+        .pod-wing.left { left: -14px; transform: rotate(15deg); }
+        .pod-wing.right { right: -14px; transform: rotate(-15deg); }
+        
+        .pod-thruster {
+            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 10px; background: #222; border-radius: 4px; z-index: 1;
+        }
+        .pod-fire {
+            position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+            width: 18px; height: 38px;
+            background: linear-gradient(to bottom, #fff, #ffcf40, #ff5722, transparent);
+            border-radius: 50% 50% 20% 20%;
+            filter: blur(2px); animation: fireFlicker 0.1s infinite alternate;
+            z-index: 0;
+        }
+
+        .chick-master {
+            position: absolute; bottom: 2px; right: 20%;
+            width: 65px; height: 60px; z-index: 20;
+        }
+
+        .chick-body {
+            position: absolute; bottom: 12px; right: 0;
+            width: 55px; height: 42px;
+            background: radial-gradient(circle at 65% 30%, #FFE484, #F7C56E);
+            border-radius: 40% 60% 50% 50%;
+            box-shadow: inset 6px -4px 0 rgba(150, 90, 10, 0.15);
+        }
+        .chick-body::after {
+            content: ""; position: absolute; bottom: 4px; right: -4px;
+            width: 22px; height: 15px; background: #E5B853;
+            border-radius: 50%; transform: rotate(25deg);
+        }
+
+        .chick-head {
+            position: absolute; top: -8px; left: -12px;
+            width: 40px; height: 40px; background: #FFE484;
+            border-radius: 50%; transform-origin: 80% 80%;
+            animation: headPeck 3.5s infinite;
+        }
+
+        .chick-eye {
+            position: absolute; top: 12px; left: 11px;
+            width: 9px; height: 9px; background: #2C1A0F; border-radius: 50%;
+        }
+        .chick-eye::after {
+            content: ""; position: absolute; top: 1px; left: 2px;
+            width: 3px; height: 3px; background: white; border-radius: 50%;
+        }
+
+        .chick-beak {
+            position: absolute; top: 19px; left: -9px;
+            width: 0; height: 0;
+            border-right: 11px solid #FF8C42;
+            border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+            transform: rotate(-8deg);
+        }
+
+        .chick-legs {
+            position: absolute; bottom: 0; right: 18px;
+            width: 3px; height: 13px; background: #E07C3C;
+            box-shadow: -15px 0 0 #E07C3C;
+        }
+
+        .grain-field {
+            position: absolute; bottom: 2px; right: 30%;
+            width: 50px; height: 10px;
+        }
+        .grain {
+            position: absolute; width: 6px; height: 4px;
+            background: #A77B50; border-radius: 40%;
+        }
+        .grain1 { bottom: 0; right: 8px; transform: rotate(-25deg); }
+        .grain2 { bottom: 2px; right: 22px; transform: rotate(15deg); }
+        .grain3 { bottom: 0; right: 35px; transform: rotate(-40deg); }
+
+        @keyframes floatPod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes fireFlicker { 0% { opacity: 0.8; transform: translateX(-50%) scaleY(1); } 100% { opacity: 1; transform: translateX(-50%) scaleY(1.3); } }
+        @keyframes randomEyeGlow { 
+            0%, 90%, 100% { background: #ff4422; box-shadow: 0 0 10px #ff3a1a; } 
+            93%, 97% { background: #ff8866; box-shadow: 0 0 25px #ff8866; } 
+        }
+        @keyframes headPeck {
+            0%, 30%, 70%, 100% { transform: rotate(0deg); }
+            40% { transform: rotate(-35deg) translate(-2px, 2px); }
+            45% { transform: rotate(-15deg); }
+            55% { transform: rotate(-35deg) translate(-2px, 2px); }
+        }
+
+        .text-content h1 { font-size: 2.2rem; margin-bottom: 12px; font-weight: 800; }
+        .text-content p { font-size: 1.1rem; opacity: 0.8; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+        @media (max-width: 600px) {
+            .top-panel { padding: 10px 15px; }
+            .bg-404 { font-size: 6rem; }
+            .pod-bot { left: 5%; }
+            .chick-master { right: 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-panel">
+        <div class="social-links" id="socialBox">
+            <a href="https://www.youtube.com/@serhiosergey" title="YouTube" target="_blank" rel="noopener noreferrer"><i class='bx bxl-youtube'></i></a>
+            <a href="https://t.me/kiwwijs" title="Telegram" target="_blank" rel="noopener noreferrer"><i class='bx bxl-telegram'></i></a>
+            <a href="https://steamcommunity.com/id/serhiosergey/" title="Steam" target="_blank" rel="noopener noreferrer"><i class='bx bxl-steam'></i></a>
+            <a href="https://www.instagram.com/k1wwij/" title="Instagram" target="_blank" rel="noopener noreferrer"><i class='bx bxl-instagram'></i></a>
+            <a href="https://www.twitch.tv/k1wwij" title="Twitch" target="_blank" rel="noopener noreferrer"><i class='bx bxl-twitch'></i></a>
+            <a href="https://github.com/kiwwij" title="GitHub" target="_blank" rel="noopener noreferrer"><i class='bx bxl-github'></i></a>
+            <a href="https://x.com/k1wwij" title="X" target="_blank" rel="noopener noreferrer">
+                <svg style="width: 1em; height: 1em;" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+            </a>
+            <a href="https://www.tiktok.com/@k1wwij" title="TikTok" target="_blank" rel="noopener noreferrer"><i class='bx bxl-tiktok'></i></a>
+            <a href="https://discord.gg/Wd5nVFSG7v" title="Discord" target="_blank" rel="noopener noreferrer"><i class='bx bxl-discord-alt'></i></a>
+            <a href="https://soundcloud.com/kiwwij" title="SoundCloud" target="_blank" rel="noopener noreferrer"><i class='bx bxl-soundcloud'></i></a>
+            <a href="https://www.goodreads.com/user/show/189692316-serhii-takhtarov" title="Goodreads" target="_blank" rel="noopener noreferrer"><i class='bx bxl-goodreads'></i></a>
+        </div>
+        <div class="theme-toggle" id="themeBtn">
+            <i class='bx bx-moon'></i>
+        </div>
+    </header>
+
+    <div class="bg-404">404</div>
+
+    <div class="container">
+        <div class="art-scene">
+            <div class="ground-line"></div>
+            
+            <div class="pod-bot">
+                <div class="pod-body">
+                    <div class="pod-eye-lens"></div>
+                    <div class="pod-antenna"></div>
+                    <div class="pod-wing left"></div>
+                    <div class="pod-wing right"></div>
+                </div>
+                <div class="pod-thruster"><div class="pod-fire"></div></div>
+            </div>
+
+            <div class="grain-field">
+                <div class="grain grain1"></div>
+                <div class="grain grain2"></div>
+                <div class="grain grain3"></div>
+            </div>
+
+            <div class="chick-master">
+                <div class="chick-legs"></div>
+                <div class="chick-body"></div>
+                <div class="chick-head">
+                    <div class="chick-eye"></div>
+                    <div class="chick-beak"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-content">
+            <h1>Page Not Found</h1>
+            <p>The page you are looking for doesn't exist or has been moved. Check the link or try searching for something else.</p>
+        </div>
+    </div>
+
+<script>
+    const themeBtn = document.getElementById('themeBtn');
+    const icon = themeBtn.querySelector('i');
+    
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        icon.className = theme === 'dark' ? 'bx bx-sun' : 'bx bx-moon';
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme) {
+        setTheme(savedTheme);
+    } else if (systemDark) {
+        setTheme('dark');
+    }
+
+    themeBtn.addEventListener('click', () => {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        setTheme(isDark ? 'light' : 'dark');
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+            setTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+</script>
+</body>
+</html>

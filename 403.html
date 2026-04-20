@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>403 | Forbidden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <style>
+        :root {
+            --bg-color: #f7f3ee;
+            --text-main: #332b26;
+            --text-subtle: rgba(51, 43, 38, 0.08);
+            --panel-bg: rgba(247, 243, 238, 0.6);
+            --accent: #FF6B6B;
+            --pod-body: linear-gradient(135deg, #e0dbcf, #b8b2a4);
+            --guardian-body: linear-gradient(135deg, #4a454f, #2b292e);
+            --shield-color: rgba(255, 107, 107, 0.4);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #161514;
+            --text-main: #e8dfd8;
+            --text-subtle: rgba(255, 255, 255, 0.05);
+            --panel-bg: rgba(22, 21, 20, 0.6);
+            --accent: #FF8E8E;
+            --pod-body: linear-gradient(135deg, #66635d, #42403a);
+            --guardian-body: linear-gradient(135deg, #1e1b26, #100e16);
+            --shield-color: rgba(255, 142, 142, 0.3);
+        }
+
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-color);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .top-panel {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--text-subtle);
+        }
+
+        .social-links { 
+            display: flex; gap: 12px; flex-wrap: wrap; max-width: 80%;
+        }
+        .social-links a {
+            color: var(--text-main); font-size: 1.4rem;
+            text-decoration: none; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .social-links a:hover { color: var(--accent); transform: translateY(-3px); }
+
+        .theme-toggle {
+            cursor: pointer; font-size: 1.6rem;
+            display: flex; align-items: center;
+            color: var(--text-main);
+        }
+
+        .bg-403 {
+            position: absolute;
+            top: 45%; left: 50%; transform: translate(-50%, -50%);
+            font-size: clamp(8rem, 25vw, 22rem);
+            font-weight: 800;
+            color: var(--text-subtle);
+            z-index: 0;
+            line-height: 1;
+            pointer-events: none;
+            letter-spacing: -5px;
+        }
+
+        .container {
+            position: relative; z-index: 10;
+            width: 100%; max-width: 800px;
+            text-align: center; padding: 0 20px;
+        }
+
+        .art-scene {
+            position: relative; width: 100%; height: 260px;
+            margin: 0 auto 30px;
+        }
+
+        .ground-line {
+            position: absolute; bottom: 0; left: 15%;
+            width: 70%; height: 2px;
+            background: var(--text-subtle);
+            border-radius: 2px;
+        }
+
+        .guardian {
+            position: absolute; bottom: 4px; right: 25%;
+            width: 94px; height: 140px; z-index: 20;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+        }
+
+        .guardian-body {
+            position: absolute; bottom: 0; right: 0;
+            width: 100%; height: 100%;
+            background: var(--guardian-body);
+            border-radius: 48px 48px 20px 20px;
+            box-shadow: inset 0 -8px 0 rgba(0,0,0,0.4), inset 3px 2px 10px rgba(255,255,240,0.08);
+            clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%);
+        }
+
+        .guardian-horns {
+            position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+            width: 64px; height: 38px; display: flex; justify-content: space-between; z-index: 25;
+        }
+        .horn {
+            width: 18px; height: 34px;
+            background: linear-gradient(135deg, #6a4e3a, #3a2c24);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform: skewX(-5deg); filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
+        }
+        .horn:last-child { transform: skewX(5deg); }
+
+        .guardian-eye {
+            position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
+            width: 44px; height: 20px; background: #1a0c0a; border-radius: 30px;
+            border: 2px solid #b73a1c; box-shadow: 0 0 12px var(--accent); overflow: hidden;
+        }
+        .guardian-eye::after {
+            content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 14px; height: 14px; background: #ff4a1e; border-radius: 50%;
+            box-shadow: 0 0 14px #ff4422; animation: menacingPupil 2.2s ease-in-out infinite;
+        }
+
+        .guardian-scar {
+            position: absolute; bottom: 28px; left: 20px; width: 32px; height: 3px;
+            background: #c23b22; transform: rotate(25deg); border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5); opacity: 0.9;
+        }
+        .guardian-scar::before {
+            content: ""; position: absolute; width: 12px; height: 3px; background: #c23b22;
+            top: -7px; left: 12px; transform: rotate(-15deg);
+        }
+
+        .shield-wall {
+            position: absolute; bottom: 0; left: -52px; width: 56px; height: 190px;
+            background: repeating-linear-gradient(90deg, var(--accent) 0px, var(--accent) 4px, transparent 4px, transparent 12px);
+            border-left: 6px solid var(--accent); border-radius: 30% 0 0 30%; opacity: 0.9;
+            filter: blur(1px) drop-shadow(0 0 12px var(--accent));
+            animation: pulseShield 1.5s infinite alternate ease-in-out;
+            clip-path: polygon(0% 0%, 100% 15%, 85% 50%, 100% 85%, 0% 100%);
+        }
+
+        .pod-bot {
+            position: absolute; bottom: 45px; left: 35%;
+            width: 70px; height: 95px; z-index: 15;
+            animation: bumpShield 3s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+        }
+
+        .pod-body {
+            position: relative; width: 100%; height: 100%;
+            background: var(--pod-body);
+            border-radius: 20px 20px 32px 32px;
+            box-shadow: inset -4px -6px 0 rgba(0,0,0,0.15), inset 2px 2px 0 rgba(255,255,255,0.1);
+            z-index: 2;
+        }
+
+        .pod-eye-lens {
+            position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+            width: 36px; height: 36px; background: #111;
+            border-radius: 50%; border: 2px solid #ddd; box-shadow: 0 0 0 3px rgba(0,0,0,0.2);
+        }
+        
+        .pod-eye-lens::after {
+            content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 14px; height: 14px; background: #ffaa22; border-radius: 50%;
+            box-shadow: 0 0 10px #ffaa22;
+        }
+
+        .pod-antenna {
+            position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+            width: 3px; height: 24px; background: #8f8a7c;
+        }
+        .pod-antenna::before {
+            content: ""; position: absolute; top: -7px; left: -5px;
+            width: 12px; height: 12px; background: #b87c4f; border-radius: 50%;
+        }
+
+        .pod-wing {
+            position: absolute; top: 38px; width: 18px; height: 44px;
+            background: #a39b8c; border-radius: 8px; box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2);
+        }
+        .pod-wing.left { left: -14px; transform: rotate(15deg); }
+        .pod-wing.right { right: -14px; transform: rotate(-15deg); }
+        
+        .pod-thruster {
+            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 10px; background: #222; border-radius: 4px; z-index: 1;
+        }
+        .pod-fire {
+            position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+            width: 18px; height: 38px;
+            background: linear-gradient(to bottom, #fff, #ffcf40, transparent);
+            border-radius: 50% 50% 20% 20%; filter: blur(2px); 
+            animation: fireFlicker 0.1s infinite alternate; z-index: 0;
+        }
+
+        @keyframes menacingPupil {
+            0%, 100% { transform: translate(-50%, -50%) translateX(-12px); width: 12px; height: 12px; background: #ff5e2e; }
+            35% { transform: translate(-50%, -50%) translateX(12px); width: 16px; height: 16px; background: #ff2211; }
+            70% { transform: translate(-50%, -50%) translateX(4px); width: 10px; height: 10px; }
+        }
+
+        @keyframes pulseShield {
+            0% { opacity: 0.65; filter: blur(1px); text-shadow: 0 0 4px red; }
+            100% { opacity: 1; filter: blur(3px); box-shadow: 0 0 18px var(--accent); }
+        }
+
+        @keyframes fireFlicker { 
+            0% { opacity: 0.8; transform: translateX(-50%) scaleY(1); } 
+            100% { opacity: 1; transform: translateX(-50%) scaleY(1.3); } 
+        }
+
+        @keyframes bumpShield { 
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(50px, -5px) rotate(10deg); } 
+            25% { transform: translate(30px, 0px) rotate(-5deg); } 
+            35% { transform: translate(0, -10px) rotate(0deg); } 
+            60% { transform: translate(0, -15px) rotate(0deg); } 
+        }
+
+        .text-content h1 { font-size: 2.2rem; margin-bottom: 12px; font-weight: 800; color: var(--accent); }
+        .text-content p { font-size: 1.1rem; opacity: 0.8; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+        @media (max-width: 600px) {
+            .top-panel { padding: 10px 15px; }
+            .bg-403 { font-size: 6rem; }
+            .pod-bot { left: 15%; }
+            .guardian { right: 10%; width: 78px; height: 118px; }
+            .shield-wall { left: -40px; height: 150px; width: 44px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-panel">
+        <div class="social-links" id="socialBox">
+            <a href="https://www.youtube.com/@serhiosergey" title="YouTube" target="_blank" rel="noopener noreferrer"><i class='bx bxl-youtube'></i></a>
+            <a href="https://t.me/kiwwijs" title="Telegram" target="_blank" rel="noopener noreferrer"><i class='bx bxl-telegram'></i></a>
+            <a href="https://steamcommunity.com/id/serhiosergey/" title="Steam" target="_blank" rel="noopener noreferrer"><i class='bx bxl-steam'></i></a>
+            <a href="https://www.instagram.com/k1wwij/" title="Instagram" target="_blank" rel="noopener noreferrer"><i class='bx bxl-instagram'></i></a>
+            <a href="https://www.twitch.tv/k1wwij" title="Twitch" target="_blank" rel="noopener noreferrer"><i class='bx bxl-twitch'></i></a>
+            <a href="https://github.com/kiwwij" title="GitHub" target="_blank" rel="noopener noreferrer"><i class='bx bxl-github'></i></a>
+            <a href="https://x.com/k1wwij" title="X" target="_blank" rel="noopener noreferrer">
+                <svg style="width: 1em; height: 1em;" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+            </a>
+            <a href="https://www.tiktok.com/@k1wwij" title="TikTok" target="_blank" rel="noopener noreferrer"><i class='bx bxl-tiktok'></i></a>
+            <a href="https://discord.gg/Wd5nVFSG7v" title="Discord" target="_blank" rel="noopener noreferrer"><i class='bx bxl-discord-alt'></i></a>
+            <a href="https://soundcloud.com/kiwwij" title="SoundCloud" target="_blank" rel="noopener noreferrer"><i class='bx bxl-soundcloud'></i></a>
+            <a href="https://www.goodreads.com/user/show/189692316-serhii-takhtarov" title="Goodreads" target="_blank" rel="noopener noreferrer"><i class='bx bxl-goodreads'></i></a>
+        </div>
+        <div class="theme-toggle" id="themeBtn">
+            <i class='bx bx-moon'></i>
+        </div>
+    </header>
+
+    <div class="bg-403">403</div>
+
+    <div class="container">
+        <div class="art-scene">
+            <div class="ground-line"></div>
+            
+            <div class="pod-bot">
+                <div class="pod-body">
+                    <div class="pod-eye-lens"></div>
+                    <div class="pod-antenna"></div>
+                    <div class="pod-wing left"></div>
+                    <div class="pod-wing right"></div>
+                </div>
+                <div class="pod-thruster"><div class="pod-fire"></div></div>
+            </div>
+
+            <div class="guardian">
+                <div class="guardian-horns">
+                    <div class="horn"></div>
+                    <div class="horn"></div>
+                </div>
+                <div class="guardian-body">
+                    <div class="guardian-eye"></div>
+                    <div class="guardian-scar"></div>
+                </div>
+                <div class="shield-wall"></div>
+            </div>
+        </div>
+        
+        <div class="text-content">
+            <h1>Access Denied</h1>
+            <p>You don't have sufficient permissions to cross this border. The guardian system has blocked your request.</p>
+        </div>
+    </div>
+
+<script>
+    const themeBtn = document.getElementById('themeBtn');
+    const icon = themeBtn.querySelector('i');
+    
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        icon.className = theme === 'dark' ? 'bx bx-sun' : 'bx bx-moon';
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme) {
+        setTheme(savedTheme);
+    } else if (systemDark) {
+        setTheme('dark');
+    }
+
+    themeBtn.addEventListener('click', () => {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        setTheme(isDark ? 'light' : 'dark');
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+            setTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+</script>
+</body>
+</html>

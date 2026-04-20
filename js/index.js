@@ -3,7 +3,7 @@ const repo = 'my-projects';
 const folder = 'html';
 const configUrl = 'projects.json';
 
-const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', /* '' */];
+const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', 'secret-facts-about-me.html', /* '' */];
 const SECRET_CODE = 'hentaif';
 let inputBuffer = '';
 
@@ -43,8 +43,14 @@ async function loadProjects() {
             window.location.href = '404.html';
             return;
         }
+        
         if (response.status === 403) {
             window.location.href = '403.html';
+            return;
+        }
+
+        if (response.status >= 500 && response.status < 600) {
+            window.location.href = '500.html';
             return;
         }
 
@@ -361,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof unlockAchievement === 'function') {
                 unlockAchievement('fact_seeker');
             }
-            window.open('html/facts-about-me.html', '_blank');
+            window.open('html/secret-facts-about-me.html', '_blank');
         });
     }
 

@@ -57,6 +57,20 @@ const gamesData = [
         progress: 0
     },
     {
+        title: "Steelrising - Cagliostro's Secrets",
+        steam_link: "https://store.steampowered.com/app/2004261/Steelrising__Cagliostros_Secrets/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2004261/header.jpg?t=1668070903",
+        release_date: "10 ноя. 2022 г.",
+        price_uah: 229,
+        discount_percent: 50,
+        playtime: "2",
+        rating: "",
+
+        play_status: "dropped",
+        review_link: "",
+        progress: 0
+    },
+    {
         title: "Steelrising",
         steam_link: "https://store.steampowered.com/app/1283400/Steelrising/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1283400/header.jpg?t=1764149288",
@@ -68,21 +82,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
-        progress: 60
-    },
-    {
-        title: "Steelrising - Cagliostro's Secrets",
-        steam_link: "https://store.steampowered.com/app/2004261/Steelrising__Cagliostros_Secrets/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2004261/header.jpg?t=1668070903",
-        release_date: "10 ноя. 2022 г.",
-        price_uah: 229,
-        discount_percent: 50,
-        playtime: "2",
-        rating: "",
-
-        play_status: "playing",
-        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
-        progress: 0
+        progress: 80
     },
     {
         title: "The Last of Us™ Part II Remastered",
@@ -200,10 +200,24 @@ const gamesData = [
         price_uah: 515,
         discount_percent: 10,
         playtime: "10",
-        rating: "",
+        rating: "74",
 
         play_status: "planned",
         review_link: "",
         progress: 0
+    },
+    {
+        title: "ELDEN RING Shadow of the Erdtree Edition",
+        steam_link: "https://store.steampowered.com/sub/1010505/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/1010505/c590abe17785b48b25190685ccca24ea6bbd658c/header_586x192.jpg?t=1741302182",
+        release_date: "21 июн. 2024 г.",
+        price_uah: 2399,
+        discount_percent: 0,
+        playtime: "60",
+        rating: "94",
+
+        play_status: "completed",
+        review_link: "",
+        progress: 100
     },
 ];

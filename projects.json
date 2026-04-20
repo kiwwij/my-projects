@@ -376,17 +376,31 @@
   },
   "404.html": {
     "image": "404",
-    "description": "Page 404",
+    "description": "HTTP 404 Not Found",
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-18"
   },
   "403.html": {
     "image": "403",
-    "description": "Page 403",
+    "description": "HTTP 403 Forbidden",
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-18"
+  },
+  "500.html": {
+    "image": "500",
+    "description": "HTTP 500 Internal Server Error",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-20"
+  },
+  "secret-facts-about-me.html": {
+    "image": "",
+    "description": "Personal, sometimes strange and silly facts about me.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-20"
   },
   ".html": {
     "image": "",
