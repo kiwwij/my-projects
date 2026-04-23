@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Social media links, projects, and curated music playlists of kiwwij.">
+    <title>kiwwij | Links</title>
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23242629'/><text x='50%' y='55%' font-family='Nunito, sans-serif' font-weight='900' font-size='60' fill='%23fffffe' dominant-baseline='middle' text-anchor='middle'>k</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Philosopher:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/kiwwij's-social-media-links.css">
+</head>
+<body>
+    <div id="bg-effects"></div>
+
+    <div class="container">
+        <header>
+            <div class="controls">
+                <select id="lang-switch" aria-label="Language">
+                    <option value="en">EN</option>
+                    <option value="ru">RU</option>
+                    <option value="uk">UK</option>
+                </select>
+                <button id="theme-switch" aria-label="Toggle Theme">
+                    <i class="bx bx-moon" id="theme-icon"></i>
+                </button>
+            </div>
+
+            <div class="avatar-container">
+                <div id="avatar-placeholder" class="avatar-placeholder"></div>
+                <img id="profile-avatar" src="" alt="kiwwij avatar" class="avatar" style="display: none;" data-title-i18n="avatarSteam">
+            </div>
+            
+            <h1 class="username">@kiwwij</h1>
+            <p class="description" data-i18n="desc">Hi, I'm Serhii. Here you can find all my social links and favorite music playlists.</p>
+        </header>
+
+        <main>
+            <section class="links-section">
+                <h2 data-i18n="socialsTitle">Social Media</h2>
+                <div class="links-grid">
+                    <a href="https://www.youtube.com/@serhiosergey" data-title-i18n="descYT" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="youtube">
+                        <i class="bx bxl-youtube"></i><span>YouTube</span>
+                    </a>
+                    <a href="https://t.me/kiwwijs" data-title-i18n="descTG" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="telegram">
+                        <i class="bx bxl-telegram"></i><span>Telegram</span>
+                    </a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/" data-title-i18n="descSteam" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="steam">
+                        <i class="bx bxl-steam"></i><span>Steam</span>
+                    </a>
+                    <a href="https://github.com/kiwwij" data-title-i18n="descGH" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="github">
+                        <i class="bx bxl-github"></i><span>GitHub</span>
+                    </a>
+                    <a href="https://discord.gg/Wd5nVFSG7v" data-title-i18n="descDS" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="discord">
+                        <i class="bx bxl-discord-alt"></i><span>Discord</span>
+                    </a>
+                    <a href="https://www.twitch.tv/k1wwij" data-title-i18n="descTW" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="twitch">
+                        <i class="bx bxl-twitch"></i><span>Twitch</span>
+                    </a>
+                    <a href="https://kick.com/kiwwij" data-title-i18n="descKick" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="kick">
+                        <svg class="custom-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="4" y="2" width="4" height="20" />
+                            <rect x="8" y="10" width="4" height="4" />
+                            <rect x="12" y="6" width="4" height="4" />
+                            <rect x="16" y="2" width="4" height="4" />
+                            <rect x="12" y="14" width="4" height="4" />
+                            <rect x="16" y="18" width="4" height="4" />
+                        </svg>
+                        <span>Kick</span>
+                    </a>
+                    <a href="https://x.com/k1wwij" data-title-i18n="descX" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="x">
+                        <svg class="custom-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                        </svg>
+                        <span>X</span>
+                    </a>
+                    <a href="https://www.instagram.com/k1wwij/" data-title-i18n="descIG" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="instagram">
+                        <i class="bx bxl-instagram"></i><span>Instagram</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@k1wwij" data-title-i18n="descTT" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="tiktok">
+                        <i class="bx bxl-tiktok"></i><span>TikTok</span>
+                    </a>
+                    <a href="https://bsky.app/profile/did:plc:fca6a3q2sessqibimbltabiq" data-title-i18n="descBSky" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="bluesky">
+                        <svg class="custom-icon" viewBox="0 0 600 530" fill="currentColor">
+                            <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+                        </svg>
+                        <span>Bluesky</span>
+                    </a>
+                    <a href="https://w.tv/kiwwij" data-title-i18n="descWtv" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="wtv">
+                        <i class="bx bx-tv"></i><span>W.tv</span>
+                    </a>
+                    <a href="https://www.goodreads.com/user/show/189692316-serhii-takhtarov" data-title-i18n="descGR" target="_blank" rel="noopener noreferrer" class="link-btn" data-brand="goodreads">
+                        <svg class="custom-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="'Philosopher', serif" font-weight="700" font-size="28" font-style="italic">g</text>
+                        </svg>
+                        <span>Goodreads</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="links-section">
+                <h2 data-i18n="musicTitle">Music & Playlists</h2>
+                <div class="links-grid">
+                    <a href="https://soundcloud.com/kiwwij" data-title-i18n="descSC" target="_blank" rel="noopener noreferrer" class="link-btn music-btn" data-brand="soundcloud">
+                        <i class="bx bxl-soundcloud"></i><span>SoundCloud</span>
+                    </a>
+                    <a href="https://music.youtube.com/playlist?list=PLov5IgTS5pqlgCtFnLEi7x7uFdu6mQj-C" data-title-i18n="descYTM1" target="_blank" rel="noopener noreferrer" class="link-btn music-btn" data-brand="ytmusic">
+                        <svg class="custom-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10,8 16,12 10,16"/></svg>
+                        <span data-i18n="ytm1">Playlist 1</span>
+                    </a>
+                    <a href="https://music.youtube.com/playlist?list=PLov5IgTS5pqmmF8hmlVcQXWpUBai2C7EZ" data-title-i18n="descYTM2" target="_blank" rel="noopener noreferrer" class="link-btn music-btn" data-brand="ytmusic">
+                        <svg class="custom-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10,8 16,12 10,16"/></svg>
+                        <span data-i18n="ytm2">Playlist 2</span>
+                    </a>
+                    <a href="https://music.youtube.com/playlist?list=PLov5IgTS5pqkDuC__SDej4G0zxH4KKTCJ" data-title-i18n="descYTM4" target="_blank" rel="noopener noreferrer" class="link-btn music-btn" data-brand="ytmusic">
+                        <svg class="custom-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10,8 16,12 10,16"/></svg>
+                        <span data-i18n="ytm4">Playlist 3</span>
+                    </a>
+                    <a href="https://music.youtube.com/playlist?list=PLov5IgTS5pqktJQvn8Qsd9tMlrR1XNnu2" data-title-i18n="descYTM3" target="_blank" rel="noopener noreferrer" class="link-btn music-btn" data-brand="ytmusic">
+                        <svg class="custom-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="10,8 16,12 10,16"/></svg>
+                        <span data-i18n="ytm3">Playlist 4</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/kiwwij's-social-media-links.js"></script>
+</body>
+</html>

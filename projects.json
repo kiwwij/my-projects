@@ -58,7 +58,7 @@
   },
   "kiwwij-social-links": {
     "image": "bx bxs-id-card",
-    "description": "Hub with links to all my social media profiles.",
+    "description": "Hub with links to all my social media profiles (old).",
     "stack": ["html", "css", "js", "github"],
     "url": "https://kiwwij.github.io/kiwwij-social-links/"
   },
@@ -401,6 +401,13 @@
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-20"
+  },
+  "kiwwij's-social-media-links.html": {
+    "image": "k",
+    "description": "My social media links (new).",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-22 "
   },
   ".html": {
     "image": "",

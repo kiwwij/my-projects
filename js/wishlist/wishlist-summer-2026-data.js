@@ -20,7 +20,7 @@ const gamesData = [
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3764200/ce5437442768e38eb575f205ab9397d0264017b0/header.jpg?t=1772587704",
         steam_link: "https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/",
         review_link: "https://telegra.ph/Resident-Evil-Requiem-review-04-01",
-        playtime: "11",
+        playtime: "7",
         price_uah: 1999,
         discount_percent: 0,
         release_date: "27 фев. 2026 г.",
@@ -35,7 +35,7 @@ const gamesData = [
         release_date: "3 апр. 2020 г.",
         price_uah: 1200,
         discount_percent: 90,
-        playtime: "6",
+        playtime: "2",
         rating: "",
 
         play_status: "unplanned_dropped",
@@ -66,8 +66,8 @@ const gamesData = [
         playtime: "2",
         rating: "",
 
-        play_status: "dropped",
-        review_link: "",
+        play_status: "changed_mind",
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/1283400/",
         progress: 0
     },
     {
@@ -77,12 +77,26 @@ const gamesData = [
         release_date: "8 сен. 2022 г.",
         price_uah: 579,
         discount_percent: 90,
-        playtime: "15",
+        playtime: "8",
         rating: "",
 
-        play_status: "playing",
-        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
-        progress: 80
+        play_status: "completed",
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/1283400/",
+        progress: 100
+    },
+    {
+        title: "The Dark Pictures Anthology: House of Ashes",
+        steam_link: "https://store.steampowered.com/app/1281590/The_Dark_Pictures_Anthology_House_of_Ashes/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1281590/header.jpg?t=1728912876",
+        release_date: "22 окт. 2021 г.",
+        price_uah: 499,
+        discount_percent: 90,
+        playtime: "6",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link: "",
+        progress: 25
     },
     {
         title: "The Last of Us™ Part II Remastered",
@@ -206,18 +220,18 @@ const gamesData = [
         review_link: "",
         progress: 0
     },
-    {
-        title: "ELDEN RING Shadow of the Erdtree Edition",
-        steam_link: "https://store.steampowered.com/sub/1010505/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/1010505/c590abe17785b48b25190685ccca24ea6bbd658c/header_586x192.jpg?t=1741302182",
-        release_date: "21 июн. 2024 г.",
-        price_uah: 2399,
-        discount_percent: 0,
-        playtime: "60",
-        rating: "94",
+    // {
+    //     title: "ELDEN RING Shadow of the Erdtree Edition",
+    //     steam_link: "https://store.steampowered.com/sub/1010505/",
+    //     poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/1010505/c590abe17785b48b25190685ccca24ea6bbd658c/header_586x192.jpg?t=1741302182",
+    //     release_date: "21 июн. 2024 г.",
+    //     price_uah: 2399,
+    //     discount_percent: 0,
+    //     playtime: "60",
+    //     rating: "94",
 
-        play_status: "completed",
-        review_link: "",
-        progress: 100
-    },
+    //     play_status: "playing",
+    //     review_link: "",
+    //     progress: 101
+    // },
 ];
