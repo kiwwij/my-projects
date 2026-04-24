@@ -20,7 +20,7 @@ const gamesData = [
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3764200/ce5437442768e38eb575f205ab9397d0264017b0/header.jpg?t=1772587704",
         steam_link: "https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/",
         review_link: "https://telegra.ph/Resident-Evil-Requiem-review-04-01",
-        playtime: "7",
+        playtime: "11",
         price_uah: 1999,
         discount_percent: 0,
         release_date: "27 фев. 2026 г.",
@@ -35,7 +35,7 @@ const gamesData = [
         release_date: "3 апр. 2020 г.",
         price_uah: 1200,
         discount_percent: 90,
-        playtime: "2",
+        playtime: "6",
         rating: "",
 
         play_status: "unplanned_dropped",
@@ -230,8 +230,8 @@ const gamesData = [
     //     playtime: "60",
     //     rating: "94",
 
-    //     play_status: "playing",
+    //     play_status: "completed",
     //     review_link: "",
-    //     progress: 101
+    //     progress: 100
     // },
 ];

@@ -2,7 +2,7 @@ const categories = [
     {
         id: 'cat1',
         folder: 'tg-alt/ass',
-        count: 100,
+        count: 150,
         label: 'Ass',
         icon: 'bx-heart'
     },

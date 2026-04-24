@@ -1,7 +1,7 @@
 const categories = [
     {
         id: 'cat1',
-        folder: 'girls-inst/ass', // Путь относительно html файла
+        folder: 'girls-inst/ass',
         count: 100,
         label: 'Ass',
         icon: 'bx-heart'
@@ -9,7 +9,7 @@ const categories = [
     {
         id: 'cat2',
         folder: 'girls-inst/boobs',
-        count: 100,
+        count: 150,
         label: 'Boobs',
         icon: 'bx-heart-circle'
     },

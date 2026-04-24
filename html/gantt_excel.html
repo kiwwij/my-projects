@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Діаграма Ганта - Проєкт Freyja</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f3f3;
+            margin: 20px;
+        }
+
+        .excel-container {
+            background-color: white;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+        }
+
+        .excel-column-header {
+            background-color: #e6e6e6;
+            color: #666;
+            text-align: center;
+            font-size: 12px;
+            border: 1px solid #d0d0d0;
+            height: 20px;
+        }
+
+        .excel-row-header {
+            background-color: #e6e6e6;
+            color: #666;
+            text-align: center;
+            font-size: 12px;
+            border: 1px solid #d0d0d0;
+            width: 30px;
+        }
+
+        th {
+            background-color: #1D6F42;
+            color: white;
+            font-weight: bold;
+            padding: 8px;
+            border: 1px solid #d0d0d0;
+            text-align: left;
+        }
+
+        td {
+            border: 1px solid #d0d0d0;
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .gantt-container {
+            position: relative;
+            width: 300px;
+            height: 20px;
+            background-color: #eee;
+            border-radius: 3px;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .header-title {
+            background-color: #1D6F42;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="excel-container">
+    <div class="header-title">План-графік розробки Freyja (Веб-адміністрування)</div>
+    
+    <table>
+        <tr>
+            <td class="excel-row-header"></td>
+            <td class="excel-column-header">A</td>
+            <td class="excel-column-header">B</td>
+            <td class="excel-column-header">C</td>
+            <td class="excel-column-header">D</td>
+            <td class="excel-column-header">E</td>
+            <td class="excel-column-header">F</td>
+        </tr>
+        
+        <tr>
+            <td class="excel-row-header">1</td>
+            <th>Завдання</th>
+            <th>Початок</th>
+            <th>Кінець</th>
+            <th>Вартість</th>
+            <th>Виконавець</th>
+            <th>Графік (Січень-Березень)</th>
+        </tr>
+
+        <tr>
+            <td class="excel-row-header">2</td>
+            <td>Проєктування та логіка</td>
+            <td>16.01</td>
+            <td>20.01</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 0%; width: 15%;">16.01</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">3</td>
+            <td>База даних (MySQL)</td>
+            <td>19.01</td>
+            <td>23.01</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 8%; width: 15%; background-color: #2196F3;">19.01</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">4</td>
+            <td>Структура (HTML/CSS)</td>
+            <td>22.01</td>
+            <td>31.01</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 15%; width: 25%;">22.01</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">5</td>
+            <td>Серверна логіка (PHP)</td>
+            <td>01.02</td>
+            <td>10.02</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 40%; width: 20%; background-color: #2196F3;">01.02</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">6</td>
+            <td>Динаміка та AJAX (JS)</td>
+            <td>08.02</td>
+            <td>14.02</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 55%; width: 15%;">08.02</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">7</td>
+            <td>Модулі мешканців та оголошень</td>
+            <td>15.02</td>
+            <td>20.02</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 68%; width: 12%; background-color: #2196F3;">15.02</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">8</td>
+            <td>Інтеграція PDF</td>
+            <td>21.02</td>
+            <td>24.02</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 80%; width: 8%; background-color: #607D8B;">21.02</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">9</td>
+            <td>Комплексне тестування</td>
+            <td>25.02</td>
+            <td>27.02</td>
+            <td>$50</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 88%; width: 7%; background-color: #FF9800;">25.02</div></div></td>
+        </tr>
+        <tr>
+            <td class="excel-row-header">10</td>
+            <td>Розгортання на хостингу</td>
+            <td>28.02</td>
+            <td>01.03</td>
+            <td>$0</td>
+            <td>Тахтаров С.О.</td>
+            <td><div class="gantt-container"><div class="gantt-bar" style="left: 95%; width: 5%; background-color: #9C27B0;">28.02</div></div></td>
+        </tr>
+        <tr style="font-weight: bold; background-color: #e9f5ee;">
+            <td class="excel-row-header">11</td>
+            <td>ЗАГАЛЬНА ВАРТІСТЬ</td>
+            <td></td>
+            <td></td>
+            <td>$50</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

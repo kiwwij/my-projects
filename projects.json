@@ -409,6 +409,13 @@
     "url": "",
     "date": "2026-04-22 "
   },
+  "gantt_excel.html": {
+    "image": "",
+    "description": "just homework at university",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-24"
+  },
   ".html": {
     "image": "",
     "description": "",
