@@ -96,7 +96,7 @@ const gamesData = [
 
         play_status: "unplanned_completed",
         review_link: "",
-        progress: 25
+        progress: 45
     },
     {
         title: "The Last of Us™ Part II Remastered",

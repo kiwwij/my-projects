@@ -141,6 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
         chaptersContent["1"] = `
             <p>Начало 9-й арки. Винсент Волакия и <i>Субару</i> оценивают последствия победы. Война окончена, но настоящие испытания только начинаются...</p>
         `;
+        chaptersContent["2"] = `
+            <p>Сейчас я пробуюу добавить сюда картинку. Например смотретя на Ала.
+            https://witchculttranslation.com/wp-content/uploads/2024/06/FtIVMO-XoAACX6_.jpg
+            
+            Надеюсь получилось.</p>
+        `;
 
         // Интерлюдия: Катя Орели (Английская буква 'i')
         chaptersContent["i1"] = `
@@ -268,7 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
             titleEl.innerText = btnElement.innerText;
             
             let contentHtml = chaptersContent[chId] || `<p>Текст не найден.</p>`;
-            
+
+            // Ищем ссылки, оканчивающиеся на форматы картинок, и оборачиваем их в <img>
+            const imgRegex = /(?<!["'])(https?:\/\/[^\s<]+?\.(?:jpg|jpeg|png|gif|webp))/gi;
+            contentHtml = contentHtml.replace(imgRegex, '<img src="$1" class="chapter-inline-image" alt="Иллюстрация">');
+
             const currentIndex = chapterOrder.indexOf(chId);
             if (currentIndex !== -1 && currentIndex < chapterOrder.length - 1) {
                 const nextChId = chapterOrder[currentIndex + 1];

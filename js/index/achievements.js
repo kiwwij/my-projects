@@ -79,23 +79,38 @@ const achContainer = document.createElement('div');
 achContainer.id = 'achievements-container';
 document.body.appendChild(achContainer);
 
+let audioCtx = null;
+
 function playAchievementSound() {
     try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gainNode = ctx.createGain();
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            audioCtx = new AudioContext();
+        }
+        
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1);
-        gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1);
+        
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+        
         osc.connect(gainNode);
-        gainNode.connect(ctx.destination);
+        gainNode.connect(audioCtx.destination);
+        
         osc.start();
-        osc.stop(ctx.currentTime + 0.5);
-    } catch (e) {}
+        osc.stop(audioCtx.currentTime + 0.5);
+    } catch (e) {
+        console.error("Ошибка воспроизведения звука:", e);
+    }
 }
 
 function updateProgressUI() {
@@ -417,6 +432,30 @@ document.addEventListener('click', (e) => {
         }
     }
 }, true);
+
+console.log("%cDo you want to unlock all achievements? Type Y or N and press Enter.", "color: #00cec9; font-size: 16px; font-weight: bold; background: #2d3436; padding: 10px; border-radius: 5px;");
+
+function unlockAllAchievements() {
+    const achKeys = Object.keys(ACHIEVEMENTS);
+    let delay = 0;
+    
+    achKeys.forEach((id) => {
+        let unlocked = JSON.parse(localStorage.getItem('unlocked_achievements')) || [];
+        if (!unlocked.includes(id)) {
+            setTimeout(() => {
+                unlockAchievement(id);
+            }, delay);
+            delay += 400;
+        }
+    });
+    
+    return "Achievement sequence initiated... Enjoy!";
+}
+
+Object.defineProperty(window, 'Y', { get: unlockAllAchievements });
+Object.defineProperty(window, 'y', { get: unlockAllAchievements });
+Object.defineProperty(window, 'N', { get: () => "Alright, maybe next time! Keep exploring." });
+Object.defineProperty(window, 'n', { get: () => "Alright, maybe next time! Keep exploring." });
 
 // для сброза ачивок
 // localStorage.removeItem('unlocked_achievements');
