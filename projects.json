@@ -327,7 +327,7 @@
   },
   "web-novels.html": {
     "image": "bx bx-library",
-    "description": "A collection of web novels I've read.",
+    "description": "A collection of web novels I've read. (abandoned)",
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-05"
@@ -354,7 +354,7 @@
     "date": "2026-04-12"
   },
   "ff-tier-list.html": {
-    "image": "bx bx-joystick",
+    "image": "https://gh.cdn.sewest.net/assets/ident/news/discover-the-legacy-of-final-fantasy/en_US/FF-Complex-Grid-FINAL-Update-16by9-Sept10.jpg?quality=65",
     "description": "A personal tier list for Final Fantasy games.",
     "stack": ["html", "css", "js", "github"],
     "url": "",
@@ -415,6 +415,13 @@
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-24"
+  },
+  "if.html": {
+    "image": "html/if/if.jpg",
+    "description": "A retelling of all the alternative stories of Re:Zero.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-04-26"
   },
   ".html": {
     "image": "",

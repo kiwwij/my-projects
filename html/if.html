@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Подробные пересказы всех альтернативных историй (IF-маршрутов) вселенной Re:Zero. Всё о Жадности, Гордости, Гневе и других путях Субару.">
+    <title>Re:Zero IF</title>
+    
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/if.css">
+</head>
+<body class="dark-theme">
+    <header>
+        <div class="header-content">
+            <h1 id="logo" onclick="app.goHome()"><i class='bx bx-book-reader'></i> Re:Zero <span>IF</span></h1>
+            <button id="theme-toggle" aria-label="Переключить тему">
+                <i class='bx bx-sun'></i>
+                <span>Тема</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section id="home-view" class="view active">
+            <p class="global-hint"><i class='bx bx-pointer'></i> Нажмите на постер, чтобы прочитать пересказ</p>
+            
+            <div class="grid-container" id="if-grid"></div>
+
+            <p class="global-hint2"><i class='bx bx-list-ol'></i> Все альтернативные истории расположены по порядку появления в сюжете.</p>
+        </section>
+
+        <section id="detail-view" class="view">
+            <button class="back-btn" onclick="app.goHome()">
+                <i class='bx bx-arrow-back'></i> Назад к списку
+            </button>
+            
+            <div class="banner-container">
+                <img id="detail-banner" src="" alt="Баннер" loading="lazy">
+            </div>
+            
+            <div class="detail-content">
+                <div class="detail-header">
+                    <h2 id="detail-title-ru"></h2>
+                    <h3 id="detail-title-en"></h3>
+                </div>
+                
+                <p id="detail-short" class="short-desc-box"></p>
+                
+                <a id="detail-link" href="#" target="_blank" rel="noopener noreferrer" class="read-link">
+                    <i class='bx bx-link-external'></i> Читать на Ranobelib
+                </a>
+
+                <div class="article-section">
+                    <h4><i class='bx bx-book-open'></i> Мой пересказ</h4>
+                    <div id="detail-summary" class="text-body"></div>
+                </div>
+
+                <div class="article-section">
+                    <h4><i class='bx bx-message-square-detail'></i> Моё мнение</h4>
+                    <div id="detail-opinion" class="text-body"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/if.js"></script>
+</body>
+</html>

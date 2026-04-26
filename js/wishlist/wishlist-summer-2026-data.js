@@ -3,19 +3,6 @@
 
 const gamesData = [
     {
-        title: "SWORD ART ONLINE Alicization Lycoris",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1009290/header.jpg?t=1750782350",
-        steam_link: "https://store.steampowered.com/app/1009290/SWORD_ART_ONLINE_Alicization_Lycoris/",
-        review_link: "",
-        playtime: "63",
-        price_uah: 649,
-        discount_percent: 84,
-        release_date: "10 июл. 2020 г.",
-        play_status: "completed",
-        rating: "",
-        progress: 100
-    },
-    {
         title: "Resident Evil Requiem",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3764200/ce5437442768e38eb575f205ab9397d0264017b0/header.jpg?t=1772587704",
         steam_link: "https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/",
@@ -96,7 +83,7 @@ const gamesData = [
 
         play_status: "unplanned_completed",
         review_link: "",
-        progress: 45
+        progress: 100
     },
     {
         title: "The Last of Us™ Part II Remastered",
@@ -122,6 +109,47 @@ const gamesData = [
         release_date: "17 сен. 2024 г.",
         play_status: "planned",
         rating: "",
+        progress: 0
+    },
+    {
+        title: "ELDEN RING Shadow of the Erdtree Edition",
+        steam_link: "https://store.steampowered.com/sub/1010505/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/1010505/c590abe17785b48b25190685ccca24ea6bbd658c/header_586x192.jpg?t=1741302182",
+        release_date: "21 июн. 2024 г.",
+        price_uah: 2399,
+        discount_percent: 0,
+        playtime: "60",
+        rating: "94",
+
+        play_status: "dropped",
+        review_link: "https://telegra.ph/ELDEN-RING-Shadow-of-the-Erdtree-Edition-04-26",
+        progress: 101
+    },
+    {
+        title: "SWORD ART ONLINE Alicization Lycoris",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1009290/header.jpg?t=1750782350",
+        steam_link: "https://store.steampowered.com/app/1009290/SWORD_ART_ONLINE_Alicization_Lycoris/",
+        review_link: "",
+        playtime: "63",
+        price_uah: 649,
+        discount_percent: 84,
+        release_date: "10 июл. 2020 г.",
+        play_status: "completed",
+        rating: "",
+        progress: 100
+    },
+    {
+        title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
+        steam_link: "https://store.steampowered.com/app/1608070/CRISIS_CORE_FINAL_FANTASY_VII_REUNION/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1608070/header.jpg?t=1727791468",
+        release_date: "13 дек. 2022 г.",
+        price_uah: 1099,
+        discount_percent: 60,
+        playtime: "14",
+        rating: "78",
+
+        play_status: "planned",
+        review_link: "",
         progress: 0
     },
     {
@@ -220,18 +248,4 @@ const gamesData = [
         review_link: "",
         progress: 0
     },
-    // {
-    //     title: "ELDEN RING Shadow of the Erdtree Edition",
-    //     steam_link: "https://store.steampowered.com/sub/1010505/",
-    //     poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/subs/1010505/c590abe17785b48b25190685ccca24ea6bbd658c/header_586x192.jpg?t=1741302182",
-    //     release_date: "21 июн. 2024 г.",
-    //     price_uah: 2399,
-    //     discount_percent: 0,
-    //     playtime: "60",
-    //     rating: "94",
-
-    //     play_status: "completed",
-    //     review_link: "",
-    //     progress: 100
-    // },
 ];
