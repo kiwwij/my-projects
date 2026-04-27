@@ -7,6 +7,8 @@
     <meta name="description" content="Подробные пересказы всех альтернативных историй (IF-маршрутов) вселенной Re:Zero. Всё о Жадности, Гордости, Гневе и других путях Субару.">
     <title>Re:Zero IF</title>
     
+    <link rel="icon" href="https://i.redd.it/wh43bczezdyd1.png">
+
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,9 +31,14 @@
         <section id="home-view" class="view active">
             <p class="global-hint"><i class='bx bx-pointer'></i> Нажмите на постер, чтобы прочитать пересказ</p>
             
+            <div class="home-actions" style="text-align: center; margin-bottom: 25px;">
+                <button onclick="app.downloadAll()" class="download-btn">
+                    <i class='bx bx-download'></i> Скачать все истории (.txt)
+                </button>
+            </div>
             <div class="grid-container" id="if-grid"></div>
 
-            <p class="global-hint2"><i class='bx bx-list-ol'></i> Все альтернативные истории расположены по порядку появления в сюжете.</p>
+            <p class="global-hint2"><i class='bx bx-list-ol'></i> Все альтернативные истории расположены по порядку расхождения в сюжете.</p>
         </section>
 
         <section id="detail-view" class="view">
@@ -49,11 +56,20 @@
                     <h3 id="detail-title-en"></h3>
                 </div>
                 
+                <div class="article-section">
+                    <h4><i class='bx bx-git-branch'></i> Точка расхождения</h4>
+                    <p id="detail-divergence" class="text-body"></p>
+                </div>
                 <p id="detail-short" class="short-desc-box"></p>
                 
-                <a id="detail-link" href="#" target="_blank" rel="noopener noreferrer" class="read-link">
-                    <i class='bx bx-link-external'></i> Читать на Ranobelib
-                </a>
+                <div class="action-buttons">
+                    <a id="detail-link" href="#" target="_blank" rel="noopener noreferrer" class="read-link" style="margin-bottom: 0;">
+                        <i class='bx bx-link-external'></i> Читать на Ranobelib
+                    </a>
+                    <button id="detail-download-btn" class="download-btn">
+                        <i class='bx bx-download'></i> Скачать этот пересказ (.txt)
+                    </button>
+                </div>
 
                 <div class="article-section">
                     <h4><i class='bx bx-book-open'></i> Мой пересказ</h4>

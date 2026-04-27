@@ -1,9 +1,23 @@
 const ifData = [
     {
+        id: 'mimagu',
+        titleRu: 'Путаница',
+        fullTitleRu: 'Запутанная жизнь в альтернативном мире с нуля',
+        titleEn: 'Mimagau IF',
+        divergencePoint: '<b>Арка 1.</b> Самое начало истории.',
+        shortDesc: 'Это серия официальных первоапрельских историй, в которых пол всех персонажей изменён на противоположный. Нацуки Субару здесь — японская школьница, Эмилия (Эмилио) — красивый полуэльф-парень, а Рем и Рам — братья. Сюжет начинается в переулке, как в каноне, но из-за смены полов динамика отношений, диалоги и реакции героев сильно меняются.',
+        link: 'docs.google.com/document/d/1KYAzU2bz5g3euEZCg5vKSrgGI1nF7F20/edit',
+        poster: 'https://preview.redd.it/novels-subaru-and-emilio-mimagau-if-v0-or6of19lmyt81.jpg?auto=webp&s=4472916ba8eb960f80b574678a3c8a6b76302241',
+        banner: 'https://embed.pixiv.net/artwork.php?illust_id=125613092&mdate=1735319598',
+        summary: '',
+        opinion: ''
+    },
+    {
         id: 'pride',
         titleRu: 'Гордость',
-        fullTitleRu: 'Ошибочная жизнь в ином мире с нуля',
+        fullTitleRu: 'Ошибочная жизнь в альтернативном мире с нуля',
         titleEn: 'Pride IF - Ayamatsu',
+        divergencePoint: '<b>Арка 1.</b> В самом начале истории, когда Субару оказывается в переулке с бандитами. Вместо того чтобы позвать на помощь, он решает справиться сам.',
         shortDesc: 'Мрачная альтернативная история, где Субару Нацуки, ослеплённый гордыней и любовью к Эмилии, решает уничтожить всех врагов, чтобы сделать её королевой. Он совершает тысячи самоубийств, чтобы получить идеальную «точку сохранения», становится Архиепископом Гордыни, сжигает Лугунику и погибает от руки Рейнхарда.',
         link: 'https://ranobelib.me/ru/book/239839--reif-zero-kara-ayamatsu-isekai-seikatsu', 
         poster: 'https://cover.imglib.info/uploads/cover/reif-zero-kara-ayamatsu-isekai-seikatsu/cover/dfa36ae6-e36d-4468-9c48-f5dca2c0c0bd_orig.jpg',
@@ -31,6 +45,7 @@ const ifData = [
         titleRu: 'Гнев',
         fullTitleRu: 'Утопая в Альтернативном Мире с Нуля',
         titleEn: 'Wrath IF - Oboreru',
+        divergencePoint: '<b>Арка 2.</b> Во время 4-й петли в особняке Розвааля. Прыгнув со скалы, Субару решает не брать Рам за руку.',
         shortDesc: 'Альтернативная история Re:Zero, где Субару не смог преодолеть свою ненависть и отчаяние после травмирующих событий. Он превращается в жестокого параноика, который полагается только на Райнхарда, жертвуя всеми ради защиты Эмилии, становясь «чистильщиком» и теряя собственную личность.',
         link: 'https://ranobelib.me/ru/book/223714--rezero-kara-oboreru-isekai-seikatsu-wn?section=info&ui=4427630',
         poster: 'https://cover.imglib.info/uploads/cover/rezero-kara-oboreru-isekai-seikatsu-wn/cover/8c4c32da-bad7-429d-bfa5-635b11c7de89_orig.jpg',
@@ -53,10 +68,50 @@ const ifData = [
         opinion: 'Конец истории остаётся открытым: автор не описывает саму смерть. Но очевидно одно — полностью сломленный Субару, потерявший всё и уставший от бесконечной паранойи, отдаёт свою жизнь в руки Рам. Он находит своё последнее, безумное утешение в её неизменной злобе, позволяя ей убить себя. Начался ли после этого новый цикл или он умер окончательно — остаётся загадкой, которую каждый читатель трактует по-своему. Очень даже интересная ифка. До этого момента я даже не думал, что Субару может оттолкнуть Эмилию. Также прикольно видеть персонажей из 7-ой и 8-ой арки. По моему они будут ещё в альт истории с Рем. Ставлю ифке 8/10.'
     },
     {
+        id: 'dok',
+        titleRu: 'Смерть или Поцелуй',
+        fullTitleRu: 'Смерть или Поцелуй',
+        titleEn: 'Death or Kiss',
+        divergencePoint: 'Перед событиями <b>3-й арки</b>.',
+        shortDesc: 'Re:Zero -DEATH OR KISS- — визуальная новелла, разработанная компанией 5pb (Steins;Gate). Релиз игры состоялся 30 Марта 2017 года для платформ PS Vita и Playstation 4. Для игры был специально написан оригинальный сюжет.',
+        link: 'docs.google.com/document/d/1KYAzU2bz5g3euEZCg5vKSrgGI1nF7F20/edit',
+        poster: 'https://static.actugaming.net/media/2016/10/re-zero-starting-life-in-another-world-death-or-kiss-game-cover.jpg',
+        banner: 'https://external-preview.redd.it/visual-novel-re-zero-starting-life-in-another-world-death-v0-wb_75D7jDKk6n6LtI7j_wm2-lKFN5hdjY2Tb0lhne_E.jpg?auto=webp&s=db4b844e01f21b28c4aac7f0cbb8a87b75d601df',
+        summary: 'События игры начинаются в Королевстве Лугуника, где проходит конкурс, известный как Всеобщие Выборы Прекрасной Королевы, в котором соревнуются пять кандидаток. Конкурс проводится по нескольким категориям, таким как: витиеватость и элегантность. Победитель получает известность во всём королевстве и некую Метию — магический предмет, приносящий удачу. Однако, когда Субару помогал с организацией конкурса, то случайно поцеловал этот предмет, в результате чего эта вещь сообщила ему: «Отдай мне свою кровь… в обмен на это ты получишь божественную защиту, позволяющую целовать противоположный пол. Однако если ты расскажешь кому-либо об этом проклятии, то будешь страдать от невыносимого несчастья». Из-за несчастья, вызванного проклятием, Субару вынужден использовать свою способность «Посмертное возвращение». В дальнейшем он обращается за помощью к Беатрис и узнает, что ему нужен поцелуй, чтобы избавиться от проклятия. В итоге Субару начинает развивать отношения с Эмилией и другими персонажами, а также вмешивается в конкурс, дабы убедиться, что никто не получит эту проклятую вещь.',
+        opinion: 'Я не играл, что хз даже что и сказать.'
+    },
+    {
+        id: 'pott',
+        titleRu: 'Пророчество о Троне',
+        fullTitleRu: 'Пророчество о Троне',
+        titleEn: 'The Prophecy of the Throne',
+        divergencePoint: 'Начало <b>3-й арки</b> (Королевские выборы).',
+        shortDesc: 'Re:Zero: The Prophecy of the Throne — игра, разработанная компанией Chime Corporation. Релиз состоялся 28 января 2021 на PS4, PC (Steam) и Nintendo Switch. Для игры был написан оригинальный сюжет под контролем автора ранобэ — Таппэя Нагацуки. Также в игре были представлены совершенно новые персонажи, за дизайн которых отвечал иллюстратор ранобэ — Синъитиро Оцука.',
+        link: 'https://store.steampowered.com/app/1277510/ReZERO_Starting_Life_in_Another_World_The_Prophecy_of_the_Throne/?l=russian',
+        poster: 'https://upload.wikimedia.org/wikipedia/en/a/a2/Re-Zero_%E2%88%92_Starting_Life_in_Another_World-_The_Prophecy_of_the_Throne_cover_art.jpeg',
+        banner: 'https://assets.nintendo.com/image/upload/q_auto/f_auto/store/software/switch/70010000029072/0fac29aa9050a8d5d2fb8ab689b3c128c70a49d405bd99311c29324d4e956a25',
+        summary: 'Спустя месяц после того, как Субару очутился в другом мире, в особняк Розвааля приезжает эмиссар, посланный из Королевского замка. Он сообщает, что королевские выборы откладываются без какой-то ведомой на это причины. Отсрочка данного грандиозного события, определяющего будущего правителя Лугуники, побуждает Субару и его друзей к действию. Они возвращаются в Королевскую столицу и обнаруживают, что объявился шестой кандидат на трон. Однако Драконий Камень предсказывал, что должны быть отобраны только пять кандидатов! Кто же самозванец? Подозрения тут же падают на Эмилию. Какие ответы лежат за таинственной паутиной убийств, предательств и заговоров...? ',
+        opinion: 'Я в неё играл, так что вот моё ревью в стиме - '
+    },
+    {
+        id: 'aganau',
+        titleRu: 'Искупление',
+        fullTitleRu: '',
+        titleEn: 'Aganau IF - game Re:zero "Lost in Memories"',
+        divergencePoint: '<b>Арка 3.</b> Временная линия «15-го эпизода» аниме. Петельгейзе убивает Рем на глазах у Субару, но Субару отказывается использовать «Посмертное возвращение».',
+        shortDesc: 'В этой альтернативной ветке из игры «Re:Zero — Lost in Memories», основанная на 3-й арке, Субару не возвращается в особняк Розвааля после смерти Рем, что приводит к трагическому итогу: он превращается в одержимого местью, сломленного человека, пытающегося искупить свои ошибки вместе с Феликсом, Эльзой и Мими.',
+        link: 'https://ranobelib.me/ru/book/220880--orukosuryou-no-akayuki-zenpen?section=info&ui=4427630',
+        poster: 'https://preview.redd.it/game-aganau-if-squad-v0-la9cltkt6yy91.jpg?auto=webp&s=b41376961e42a9bb6a975009b40e5873335deb52',
+        banner: 'https://preview.redd.it/media-aganau-if-subaru-and-elsa-v0-86njm43csbk71.png?auto=webp&s=d3f779e058191c69f635d7d50e917427ec8119f3',
+        summary: 'Рем умерла ужасной смертью от рук смертоносного Архиепископа Греха Петельгейзе. Перед смертью она загадала желание Субару. Слово "жить" стало проклятьем, и Субару запретил себе использовать "Возвращение Смертью" и решил бороться ради обещания Рем. "Убить того человека... Петельгейзе Романе-Конти..." И прошло двадцать лет. Большинство тех, кто знал Субару, умерли, и он остался один. Его единственный компаньон теперь — Патраш, Земляной Дракон. Он днями колесил по стране с ней, и наконец, этот день настал. Информация о Культе Ведьмы, которую он наконец-то добыл, включала местонахождение Петельгейзе, которого он ненавидел, даже если бы очень хотел ненавидеть. Убить Петельгейзе — это всё, на чём держалось существование Субару. Какой смысл во всём этом преследовании, в том, чтобы всё бросить и гнаться за ним? Я даже не представляю, что творится в голове у Субару…',
+        opinion: 'Я в 2025 году видел фан арты по этой ифке и даже представить не мог, что это действительно отдельная альт история. Очень тяжело понять что это такое. Я нашёл перевод на ру, но там есть ещё альт истории, короче тяжело.'
+    },
+    {
         id: 'rem',
         titleRu: 'Лень',
         fullTitleRu: 'Если начать жизнь в альтернативном мире',
         titleEn: 'Sloth IF - Rem',
+        divergencePoint: '<b>Арка 3.</b> Сцена из «18-го эпизода» аниме. Субару предлагает Рем всё бросить и сбежать в Карараги, и она соглашается.',
         shortDesc: 'В этой альтернативной истории рассказывается о том, как Субару и Рем вместе сбежали из Лугуники во время событий 3 арки, оставив всё позади, и начали совместную жизнь в стране Карараги. Печатный вариант этой истории можно было получить, купив одно из BD/DVD изданий аниме Re:Zero.',
         link: 'https://ranobelib.me/ru/book/49137--reif-kara-hajimeru-isekai-seikatsu?section=chapters&ui=4427630',
         poster: 'https://cover.imglib.info/uploads/cover/reif-kara-hajimeru-isekai-seikatsu/cover/ZyhfLdQXP5Ou_250x350.jpg',
@@ -77,10 +132,24 @@ const ifData = [
         opinion: 'Эта просто офигенная история. Милая и добрая. Тут присутвует персонаж и 7-ой и 8-ой арки, что прикольно, и Зарестия, персонаж, которого не показывали в оригинальной истории. И она прикольная. Момент когда Субару даёт слово, что защитит Рем напомнил мне Рудиуса. Ставлю ифке 10/10.'
     },
     {
+        id: 'lust',
+        titleRu: 'Похоть',
+        fullTitleRu: 'Жизнь с нуля в альтернативном мире. Сон бабочки',
+        titleEn: 'Lust IF - Butterfly Dream',
+        divergencePoint: '<b>Нет четкой привязки.</b> Условно помещается после 3-й или 4-й арки.',
+        shortDesc: 'Неканоничная альтернативная история. Она повествует о любовных отношениях Субару с несколькими героинями.',
+        link: 'https://ranobelib.me/ru/book/51438--rezero-harem?ui=4427630',
+        poster: 'https://cover.imglib.info/uploads/cover/rezero-harem/cover/E0nLHUl2Bq4C_250x350.jpg',
+        banner: 'https://i.ytimg.com/vi/Ml9KW3zfY_k/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB9N32GyoLmJrn9FGORVA9NUE19Ag',
+        summary: 'Пока не прочитал',
+        opinion: ''
+    },
+    {
         id: 'greed',
         titleRu: 'Жадность',
-        fullTitleRu: 'Повторение в Альтернативном Мире с Нуля',
+        fullTitleRu: 'Повторение в альтернативном Мире с Нуля',
         titleEn: 'Greed IF - Kasaneru',
+        divergencePoint: '<b>Арка 4.</b> Во время испытаний в Святилище. Субару принимает предложение Ехидны и заключает с ней контракт.',
         shortDesc: 'Была опубликована 1 апреля 2016 года. Таппэй Нагацуки написал главу под названием «Re: Zero kara Kasaneru Isekai Seikatsu» или более известную как «Kasaneru» и «Greed IF» (Жадность), в которой Субару подписал контракт Ехидны и решил использовать по полной свою способность Посмертного Возвращения, чтобы решить все свои проблемы и, в конце концов, сделать Эмилию королевой. История начинается после пятой сюжетной арки.',
         link: 'https://ranobelib.me/ru/book/48611--re-zero-kara-kasaneru-isekai-seikatsu?ui=4427630',
         poster: 'https://cover.imglib.info/uploads/cover/re-zero-kara-kasaneru-isekai-seikatsu/cover/h00rhnPKUBep_250x350.jpg',
@@ -93,6 +162,7 @@ const ifData = [
         titleRu: 'Чревоугодие',
         fullTitleRu: 'Жизнь с нуля в альтернативном мире. Разбитые воспоминания',
         titleEn: 'Gluttony IF - Tsugihagu',
+        divergencePoint: '<b>Арка 6.</b> В Сторожевой Башне Плеяды, после того как Субару теряет свою память и поддается паранойе.',
         shortDesc: 'Неканоничная альтернативная история. Она начинается с событий шестой арки, после того, как Субару теряет свою память. На фоне происходящего он сходит с ума, после чего решает убить всех своих друзей, объединившись с Шаулой, чтобы впоследствии забрать их «Книги мертвых» и восстановить свои воспоминания.',
         link: 'https://ranobelib.me/ru/book/51439--re-zero-kara-tsugihagu-isekai-seikatsu?ui=4427630',
         poster: 'https://cover.imglib.info/uploads/cover/re-zero-kara-tsugihagu-isekai-seikatsu/cover/JDK7g4SNpu8L_250x350.jpg',
@@ -116,6 +186,7 @@ const ifData = [
         titleRu: 'Ложь',
         fullTitleRu: 'Ложь в альтернативном мире с нуля',
         titleEn: 'Re:If - Azamuku',
+        divergencePoint: '<b>Арка 7.</b> Вместо Гинунхайва Сателла кидает Субару прямо в Рапгану, где он встречает Чишу Голда.',
         shortDesc: 'Основной момент разветвления с основной историей — начало седьмой арки, телепортация Субару в Волакию. Вместо Гинунхайва Сателла кидает его прямо в Рапгану, где Винсент берёт Субару, Рем и Луи под стражу. Это была настоящая встреча Нацуки Субару и «Белого Паука» Чиши Голда. Это была настоящая встреча двух людей, чьи судьбы никогда не должны были пересечься, двух людей, которые смогли обмануть судьбу.',
         link: 'https://ranobelib.me/ru/book/233216--reif-azamuku?section=chapters&ui=4427630',
         poster: 'https://cover.imglib.info/uploads/cover/reif-azamuku/cover/e27fc830-306d-4293-8af9-9ef2331292ff_orig.jpg',
@@ -134,8 +205,9 @@ const ifData = [
     {
         id: 'sasageru',
         titleRu: 'Посвящение',
-        fullTitleRu: 'Посвятить жизнь с нуля в альтернативном мире',
+        fullTitleRu: 'Посвятить жизнь в альтернативном мире с нуля',
         titleEn: 'Re:If - Sasageru',
+        divergencePoint: '<b>Арка 9.</b> Расхождение происходит во время событий девятой арки ранобэ.',
         shortDesc: 'Поражение в битве с Альдебараном стало для Нацуки Субару и Беатрис роковым. Проснувшиеся четыре столетия спустя, они сталкиваются с невыносимой реальностью: прежний мир обратился в прах, Империя Волакия правит миром, а близкие люди давно канули в вечность. Пока загадочный Безумный Принц начинает свою охоту, Субару и Беатрис вынуждены искать путь в этой чуждой, враждебной яви. Это история о посвящении себя единственной цели — вернуть ту, ради которой он жил.',
         link: 'https://ranobelib.me/ru/book/261489--zero-kara-sasageru-isekai-seikatsu?section=chapters&ui=4427630',
         poster: 'https://cover.imglib.info/uploads/cover/zero-kara-sasageru-isekai-seikatsu/cover/9000ca4e-42ac-4e31-93ff-7c18204caf7d_orig.jpg',
@@ -144,16 +216,17 @@ const ifData = [
         opinion: ''
     },
     {
-        id: 'lust',
-        titleRu: 'Похоть',
-        fullTitleRu: 'Жизнь с нуля в альтернативном мире. Сон бабочки',
-        titleEn: 'Lust IF - Butterfly Dream',
-        shortDesc: 'Неканоничная альтернативная история. Она повествует о любовных отношениях Субару с несколькими героинями.',
-        link: 'https://ranobelib.me/ru/book/51438--rezero-harem?ui=4427630',
-        poster: 'https://cover.imglib.info/uploads/cover/rezero-harem/cover/E0nLHUl2Bq4C_250x350.jpg',
-        banner: 'https://i.ytimg.com/vi/Ml9KW3zfY_k/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB9N32GyoLmJrn9FGORVA9NUE19Ag',
+        id: 'academy',
+        titleRu: 'Тщеславие',
+        fullTitleRu: 'Школьная жизнь с нуля не в альтернативном мире',
+        titleEn: 'Vainglory IF - First Period',
+        divergencePoint: '<b>Отсутствует.</b> Альтернативная современная вселенная без магии.',
+        shortDesc: 'Одна из альтернативных историй Re:Zero/ Первая часть была опубликована 1 апреля 2015 года. Таппэй Нагацуки написал первую главу альтернативной истории под названием «Re: Zero kara Hajimeru Isekai de wa nai Gakuen Seikatsu» или более известную как «Re:Zero Academy» и «Vainglory IF» (Тщеславие), в которой все персонажи Re:Zero живут в современном мире, в одном городе. Все они ходят в одну и ту же школу — академию Лугуника. После первой части со временем были выпущены ещё три части истории.',
+        link: 'https://ranobelib.me/ru/book/254284--rezero-kara-hajimeru-isekai-de-wa-nai-gakuen-seikatsu-wn?section=chapters&ui=4427630',
+        poster: 'https://cover.imglib.info/uploads/cover/rezero-kara-hajimeru-isekai-de-wa-nai-gakuen-seikatsu-wn/cover/e7ccd0ff-939f-4242-90a8-5cbe6372642a_orig.jpg',
+        banner: 'https://cover.imglib.info/uploads/cover/rezero-kara-hajimeru-isekai-de-wa-nai-gakuen-seikatsu-wn/background/e04e2cfa-4a39-49a7-b509-1a01fdc2a8ed.jpg',
         summary: 'Пока не прочитал',
-        opinion: ''
+        opinion: 'Один из минусов этой ифки в том, что она выходила в разные года, и не факт что на данный момент закончилась.'
     },
 ];
 
@@ -220,6 +293,71 @@ const app = {
         });
     },
 
+    formatText(htmlString) {
+        if (!htmlString) return 'Нет данных.';
+        let text = htmlString.replace(/<br\s*[\/]?>/gi, '\n');
+        text = text.replace(/<\/p>/gi, '\n\n');
+        text = text.replace(/<img[^>]*>/gi, '');
+        text = text.replace(/<[^>]*>?/gm, '');
+        
+        let txt = document.createElement("textarea");
+        txt.innerHTML = text;
+        return txt.value.trim();
+    },
+
+    generateStoryText(item) {
+        const separator = '='.repeat(60);
+        const subSeparator = '-'.repeat(40);
+        return `
+${separator}
+НАЗВАНИЕ: ${item.titleRu} / ${item.fullTitleRu}
+АНГЛ. НАЗВАНИЕ: ${item.titleEn}
+${separator}
+
+ТОЧКА РАСХОЖДЕНИЯ:
+${this.formatText(item.divergencePoint)}
+
+${subSeparator}
+КРАТКОЕ ОПИСАНИЕ:
+${this.formatText(item.shortDesc)}
+
+${subSeparator}
+ПЕРЕСКАЗ СЮЖЕТА:
+${this.formatText(item.summary)}
+
+${subSeparator}
+МОЁ МНЕНИЕ:
+${this.formatText(item.opinion)}
+
+Читать оригинал: ${item.link}
+`.trim();
+    },
+
+    downloadFile(filename, content) {
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    },
+
+    downloadSingle(id) {
+        const item = ifData.find(i => i.id === id);
+        if (!item) return;
+        const text = this.generateStoryText(item);
+        this.downloadFile(`ReZero_IF_${item.titleRu}.txt`, text);
+    },
+
+    downloadAll() {
+        const header = `СБОРНИК ВСЕХ АЛЬТЕРНАТИВНЫХ ИСТОРИЙ (IF) RE:ZERO\n\n`;
+        const allText = ifData.map(item => this.generateStoryText(item)).join('\n\n\n\n' + '* '.repeat(30) + '\n\n\n\n');
+        this.downloadFile('ReZero_All_IF_Stories.txt', header + allText);
+    },
+
     showDetail(id) {
         const item = ifData.find(i => i.id === id);
         if (!item) return;
@@ -227,10 +365,12 @@ const app = {
         document.getElementById('detail-banner').src = item.banner;
         document.getElementById('detail-title-ru').textContent = item.fullTitleRu; 
         document.getElementById('detail-title-en').textContent = item.titleEn;
+        document.getElementById('detail-divergence').innerHTML = item.divergencePoint;
         document.getElementById('detail-short').textContent = item.shortDesc;
         document.getElementById('detail-link').href = item.link;
         document.getElementById('detail-summary').innerHTML = item.summary;
         document.getElementById('detail-opinion').innerHTML = item.opinion;
+        document.getElementById('detail-download-btn').onclick = () => this.downloadSingle(id);
 
         this.homeView.classList.remove('active');
         this.detailView.classList.add('active');
