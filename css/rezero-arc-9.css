@@ -103,7 +103,11 @@ body {
 .chapter-header h1 { font-family: var(--font-heading); font-size: 3rem; color: var(--accent); line-height: 1.2; }
 
 .chapter-body { line-height: 1.8; font-size: 1.15rem; color: var(--text-primary); }
-.chapter-body p { margin-bottom: 25px; }
+.chapter-body p { 
+    margin-bottom: 25px; 
+    text-align: justify;
+    hyphens: auto;
+}
 .chapter-body b, .chapter-body strong { color: var(--accent); font-weight: 600; }
 
 .next-chapter-container { margin-top: 50px; padding-top: 30px; border-top: 1px dashed var(--border); text-align: right; }
@@ -168,6 +172,78 @@ body {
     margin: 30px auto;
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.character-speech {
+    display: block;
+    padding: 10px 20px;
+    margin: 15px 0;
+    background: rgba(255, 215, 0, 0.05);
+    border-left: 3px solid var(--accent);
+    font-style: italic;
+    border-radius: 4px;
+}
+
+.char-name {
+    color: var(--accent);
+    font-weight: bold;
+    font-style: normal;
+    margin-right: 5px;
+}
+
+.character-speech b {
+    color: var(--text-primary);
+}
+
+.glossary-section {
+    margin: 40px 0;
+    padding: 25px 30px;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.glossary-title {
+    font-family: var(--font-heading);
+    color: var(--accent);
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.glossary-item {
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border);
+}
+
+.glossary-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.glossary-term {
+    color: #fff;
+    font-weight: 600;
+    background: var(--accent-glow);
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+[data-theme="light"] .glossary-term {
+    color: #000;
+}
+
+.glossary-desc {
+    color: var(--text-secondary);
 }
 
 @media (max-width: 992px) {

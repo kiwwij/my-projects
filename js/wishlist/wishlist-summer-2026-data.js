@@ -134,8 +134,50 @@ const gamesData = [
         price_uah: 649,
         discount_percent: 84,
         release_date: "10 июл. 2020 г.",
-        play_status: "completed",
+        play_status: "changed_mind",
         rating: "",
+        progress: 100
+    },
+    {
+        title: "CODE VEIN Demo",
+        steam_link: "https://store.steampowered.com/app/678960/CODE_VEIN/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1192670/header.jpg?t=1580311484",
+        release_date: "27 сен. 2019 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "2",
+        rating: "",
+
+        play_status: "completed",
+        review_link: "",
+        progress: 100
+    },
+    {
+        title: "CODE VEIN II - Character Creator Demo",
+        steam_link: "https://store.steampowered.com/app/3733960/CODE_VEIN_II__Character_Creator_Demo/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3733960/90cb4eaaff1ae8d11832620ef29d76cf79ca67bb/header.jpg?t=1769122815",
+        release_date: "23 янв. 2026 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "1",
+        rating: "70",
+
+        play_status: "completed",
+        review_link: "",
+        progress: 100
+    },
+    {
+        title: "Your Friend's Mom",
+        steam_link: "https://store.steampowered.com/app/4397180/Your_Friends_Mom/",
+        poster: "https://clan.fastly.steamstatic.com/images/45982283/799ed1952ac372b48111a557db298b3c6cd261ca_400x225.png", // https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4397180/9c614cc9be49ac2b8840f199e4842c83ca682d44/header.jpg?t=1776080503
+        release_date: "6 мар. 2026 г.",
+        price_uah: 27,
+        discount_percent: 27,
+        playtime: "6",
+        rating: "",
+
+        play_status: "completed",
+        review_link: "",
         progress: 100
     },
     {
@@ -243,6 +285,34 @@ const gamesData = [
         discount_percent: 10,
         playtime: "10",
         rating: "74",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "CODE VEIN",
+        steam_link: "https://store.steampowered.com/app/678960/CODE_VEIN/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/678960/header.jpg?t=1766015412",
+        release_date: "27 сен. 2019 г.",
+        price_uah: 799,
+        discount_percent: 85,
+        playtime: "26",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "CODE VEIN II",
+        steam_link: "https://store.steampowered.com/app/2362060/CODE_VEIN_II/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2362060/955e8f3fce6d832c286ac8013657ed6fc51f1f85/header.jpg?t=1770242240",
+        release_date: "30 янв. 2026 г.",
+        price_uah: 1999,
+        discount_percent: 25,
+        playtime: "33",
+        rating: "70",
 
         play_status: "planned",
         review_link: "",
