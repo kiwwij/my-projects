@@ -330,12 +330,12 @@ const database = {
     },
 
     "2026-05": {
-        // income: { fix: 5880.56, extra: 0 },
+        income: { fix: 5880.56, extra: 0 },
 
         weeks: {
             1: {
-/* Продукты */  food: 0,
-/* Вкусняшки */ snacks: 0,
+/* Продукты */  food: 102,
+/* Вкусняшки */ snacks: 101,
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,
 /* Жильё */     rent: 0,
@@ -345,7 +345,7 @@ const database = {
 /* Одежда */    clothes: 0,
 /* Техника */   tech: 0,
 /* Подарки */   gifts: 0,
-/* Игры */      games: 0, // 439 за CRISIS CORE –FINAL FANTASY VII– REUNION
+/* Игры */      games: 436,
 /* Другое */    other: 0,
             },
             2: {

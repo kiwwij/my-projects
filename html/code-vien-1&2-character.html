@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Наглядное сравнение дизайна персонажа в разных эмоциональных состояниях между играми CODE VEIN I и CODE VEIN II.">
+    <title>Сравнение персонажей | CODE VEIN</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0a0aa'><path d='M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-13h2v4h-2zm0 6h2v2h-2z'/></svg>">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #1a1a1e;
+            --card-bg: #25252b;
+            --text-main: #e0e0e8;
+            --text-muted: #a0a0aa;
+            --placeholder: #2f2f36;
+            --modal-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f7f5f0;
+            --card-bg: #ffffff;
+            --text-main: #2d2d34;
+            --text-muted: #6b6b76;
+            --placeholder: #e9e5db;
+            --modal-bg: rgba(255, 255, 255, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 1.8rem;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--placeholder);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .project-desc {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            h1 { font-size: 1.4rem; }
+            .project-desc { font-size: 0.9rem; }
+        }
+
+        .comparison-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 12px;
+            text-align: center;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--placeholder);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            background-color: var(--placeholder);
+        }
+
+        .image-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .image-wrapper img.loaded {
+            opacity: 1;
+        }
+
+        .image-label {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.65);
+            color: #ffffff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            gap: 20px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-img-wrapper {
+            flex: 1;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .modal-img-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .modal-caption {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: var(--text-main);
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                gap: 10px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <i class='bx bxs-mask bx-md'></i>
+            <h1>Сравнение персонажей</h1>
+        </div>
+        <button class="theme-toggle" id="theme-btn" aria-label="Переключить тему">
+            <i class='bx bx-moon'></i>
+        </button>
+    </header>
+
+    <div class="project-desc">
+        <i class='bx bx-info-circle'></i>
+        <span>Наглядное сравнение дизайна моего персонажа в разных эмоциональных состояниях между играми CODE VEIN I и CODE VEIN II.</span>
+    </div>
+
+    <main class="gallery">
+        <article class="comparison-card">
+            <div class="card-header">
+                <i class='bx bx-meh'></i>
+                <span></span>
+            </div>
+            <div class="image-container">
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/17254885137308152994/557BF1916503B42D731B5A7882B9F67D25773E89/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Спокойствие CODE VEIN I" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV I</span>
+                </div>
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/14236132007933820864/0A0B974F824958F76745BC1D9F01B2BBCDED64E9/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Спокойствие CODE VEIN II" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV II</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="comparison-card">
+            <div class="card-header">
+                <i class='bx bx-smile'></i>
+                <span></span>
+            </div>
+            <div class="image-container">
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/16283432438332729604/3B9BB3DC7F04B326C3D2DEE1A32974B597A27FD3/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Улыбка CODE VEIN I" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV I</span>
+                </div>
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/11415289040164965875/349D69CC30B10D2F11D488E5C7002C14BB426932/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Улыбка CODE VEIN II" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV II</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="comparison-card">
+            <div class="card-header">
+                <i class='bx bx-angry'></i>
+                <span></span>
+            </div>
+            <div class="image-container">
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/14154180521444822006/F7EA0ACC06598F16208D43E70527A068AD748590/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Гнев CODE VEIN I" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV I</span>
+                </div>
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/18280047055805269894/75AFDAFDEB97A57627D4A6C1F112C086F59EE23E/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Гнев CODE VEIN II" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV II</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="comparison-card">
+            <div class="card-header">
+                <i class='bx bx-sad'></i>
+                <span></span>
+            </div>
+            <div class="image-container">
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/14839401556451999727/C2A5D6D5AA3F3CB9EFA7142FAF0161C1FB7B83AC/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Печаль CODE VEIN I" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV I</span>
+                </div>
+                <div class="image-wrapper">
+                    <img src="https://images.steamusercontent.com/ugc/14874220400568600363/295BAD81F18F1864E9910A259F3C6CCA3730EB90/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Печаль CODE VEIN II" loading="lazy" onload="this.classList.add('loaded')">
+                    <span class="image-label">CV II</span>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <div id="compare-modal" class="modal">
+        <span class="close-btn" id="close-modal">&times;</span>
+        <div class="modal-content">
+            <div class="modal-img-wrapper">
+                <img id="modal-img-1" src="" alt="Изображение 1">
+                <span class="image-label">CODE VEIN I</span>
+            </div>
+            <div class="modal-img-wrapper">
+                <img id="modal-img-2" src="" alt="Изображение 2">
+                <span class="image-label">CODE VEIN II</span>
+            </div>
+        </div>
+        <div class="modal-caption" id="modal-caption">Эмоция</div>
+    </div>
+
+    <script>
+        const themeBtn = document.getElementById('theme-btn');
+        const themeIcon = themeBtn.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+
+        if (currentTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.className = 'bx bx-sun';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'bx bx-moon';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'bx bx-sun';
+            }
+        });
+
+        const modal = document.getElementById('compare-modal');
+        const closeModal = document.getElementById('close-modal');
+        const modalImg1 = document.getElementById('modal-img-1');
+        const modalImg2 = document.getElementById('modal-img-2');
+        const modalCaption = document.getElementById('modal-caption');
+
+        document.querySelectorAll('.comparison-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const imgs = card.querySelectorAll('img');
+                const emotionText = card.querySelector('.card-header span').textContent;
+                
+                modalImg1.src = imgs[0].src;
+                modalImg2.src = imgs[1].src;
+                modalCaption.textContent = emotionText;
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

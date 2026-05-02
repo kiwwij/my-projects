@@ -190,7 +190,7 @@ const gamesData = [
         playtime: "14",
         rating: "78",
 
-        play_status: "planned",
+        play_status: "playing",
         review_link: "",
         progress: 0
     },

@@ -423,6 +423,13 @@
     "url": "",
     "date": "2026-04-26"
   },
+  "code-vien-1&2-character.html": {
+    "image": "bx bxs-mask",
+    "description": "A comparison of my character's design between CODE VEIN and CODE VEIN II.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-01"
+  },
   ".html": {
     "image": "",
     "description": "",
