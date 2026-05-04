@@ -121,7 +121,7 @@ const gamesData = [
         playtime: "60",
         rating: "94",
 
-        play_status: "dropped",
+        play_status: "changed_mind",
         review_link: "https://telegra.ph/ELDEN-RING-Shadow-of-the-Erdtree-Edition-04-26",
         progress: 101
     },
@@ -191,8 +191,8 @@ const gamesData = [
         rating: "78",
 
         play_status: "playing",
-        review_link: "",
-        progress: 0
+        review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
+        progress: 10
     },
     {
         title: "Re:ZERO -Starting Life in Another World- The Prophecy of the Throne",

@@ -430,6 +430,20 @@
     "url": "",
     "date": "2026-05-01"
   },
+  "algorithms.html": {
+    "image": "⚔️",
+    "description": "Battle of the Algorithms",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-04"
+  },
+  "windows-12.html": {
+    "image": "bx bx-windows",
+    "description": "Windows 12 Web (abandoned)",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-04"
+  },
   ".html": {
     "image": "",
     "description": "",

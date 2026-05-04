@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light" class="animations-on glass-on">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 12 Web</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/windows-12.css">
+</head>
+<body>
+    <div id="wallpaper"></div>
+    <main id="desktop" class="desktop grid-layout icon-size-medium"></main>
+    <div id="activation-watermark">
+        Активация Windows<br>
+        Перейдите в раздел "Параметры", чтобы активировать Windows.
+    </div>
+    <div id="windows-container"></div>
+    <div id="context-menu" class="glass hidden">
+        <div class="menu-item" id="ctx-view-large"><i class='bx bx-check ctx-check hidden'></i> Крупные значки</div>
+        <div class="menu-item" id="ctx-view-medium"><i class='bx bx-check ctx-check'></i> Средние значки</div>
+        <div class="menu-item" id="ctx-view-small"><i class='bx bx-check ctx-check hidden'></i> Мелкие значки</div>
+        <hr>
+        <div class="menu-item" id="ctx-view-grid"><i class='bx bx-check ctx-check'></i> Выровнять по сетке</div>
+        <div class="menu-item" id="ctx-view-free"><i class='bx bx-check ctx-check hidden'></i> Свободное перемещение</div>
+        <hr>
+        <div class="menu-item" id="ctx-new-folder"><i class='bx bx-folder-plus'></i> Создать папку</div>
+        <div class="menu-item" id="ctx-new-txt"><i class='bx bx-file-blank'></i> Создать текстовый документ</div>
+        <hr>
+        <div class="menu-item" id="ctx-personalize"><i class='bx bx-palette'></i> Персонализация</div>
+    </div>
+    <div id="start-menu" class="glass hidden">
+        <div class="start-header">
+            <div class="user-info">
+                <div class="avatar" id="start-avatar"><i class='bx bx-user'></i></div>
+                <span id="start-username">Пользователь</span>
+            </div>
+            <button id="power-btn" class="icon-btn"><i class='bx bx-power-off'></i></button>
+        </div>
+        <div class="start-search">
+            <i class='bx bx-search'></i>
+            <input type="text" placeholder="Поиск приложений, файлов...">
+        </div>
+        <div class="start-pinned">
+            <h3>Закреплённые</h3>
+            <div class="start-grid">
+                <div class="start-app" data-app="explorer"><i class='bx bx-folder'></i><br>Проводник</div>
+                <div class="start-app" data-app="notepad"><i class='bx bx-notepad'></i><br>Блокнот</div>
+                <div class="start-app" data-app="paint"><i class='bx bx-paint'></i><br>Paint</div>
+                <div class="start-app" data-app="settings"><i class='bx bx-cog'></i><br>Параметры</div>
+            </div>
+        </div>
+    </div>
+    <footer id="taskbar" class="glass">
+        <div class="taskbar-left">
+            <button class="taskbar-btn"><i class='bx bx-cloud'></i> 20°C</button>
+        </div>
+        <div class="taskbar-center">
+            <button id="start-btn" class="taskbar-btn start-logo" title="Пуск"><i class='bx bxl-windows'></i></button>
+        </div>
+        <div class="taskbar-right">
+            <button id="lang-toggle" class="taskbar-btn">РУС</button>
+            <div id="clock-widget" class="clock">
+                <div id="time">00:00</div>
+                <div id="date">01.01.2026</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/windows-12.js"></script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="ru" data-theme="light" class="animations-on glass-on">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 12 Web Concept</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/windows-12.css">
+</head>
+<body class="wallpaper-1">
+
+    <div id="setup-screen" class="glass hidden">
+        <div class="setup-container">
+            <h2>Добро пожаловать в Windows 12</h2>
+            <p>Давайте настроим систему.</p>
+            
+            <div class="setting-group" style="margin-top: 15px;">
+                <label>Ваше имя</label>
+                <input type="text" id="setup-name" class="setting-input" placeholder="Например: Алексей">
+            </div>
+            
+            <div class="setting-group">
+                <label>Выберите аватар</label>
+                <div class="avatar-selection">
+                    <div class="avatar-option selected" data-icon="bx-user"><i class='bx bx-user'></i></div>
+                    <div class="avatar-option" data-icon="bx-ghost"><i class='bx bx-ghost'></i></div>
+                    <div class="avatar-option" data-icon="bx-bot"><i class='bx bx-bot'></i></div>
+                    <div class="avatar-option" data-icon="bx-cat"><i class='bx bx-cat'></i></div>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label>Язык системы</label>
+                <select id="setup-lang" class="setting-input">
+                    <option value="ru" selected>Русский</option>
+                    <option value="en">English</option>
+                    <option value="uk">Українська</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label>Регион (для погоды и времени)</label>
+                <button class="setting-btn" id="auto-detect-geo" style="margin-bottom: 10px; width: 100%;"><i class='bx bx-target-lock'></i> Определить автоматически</button>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="setup-country" class="setting-input" placeholder="Страна">
+                    <input type="text" id="setup-city" class="setting-input" placeholder="Город">
+                </div>
+            </div>
+
+            <button class="setting-btn" id="finish-setup" style="width: 100%; margin-top: 10px; padding: 12px;">Начать работу</button>
+        </div>
+    </div>
+
+    <main id="desktop" class="desktop icon-size-medium"></main>
+
+    <div id="activation-watermark">
+        Активация Windows<br>
+        Перейдите в раздел "Параметры", чтобы надёжно активировать систему.
+    </div>
+
+    <div id="windows-container"></div>
+
+    <div id="context-menu" class="glass hidden">
+        <div class="menu-item has-submenu">
+            <i class='bx bx-show'></i> Вид <i class='bx bx-chevron-right' style="margin-left:auto"></i>
+            <div class="submenu glass">
+                <div class="menu-item" id="ctx-view-large"><i class='bx bx-check ctx-check hidden'></i> Крупные значки</div>
+                <div class="menu-item" id="ctx-view-medium"><i class='bx bx-check ctx-check'></i> Средние значки</div>
+                <div class="menu-item" id="ctx-view-small"><i class='bx bx-check ctx-check hidden'></i> Мелкие значки</div>
+                <hr>
+                <div class="menu-item" id="ctx-view-grid"><i class='bx bx-check ctx-check'></i> Выровнять по сетке</div>
+                <div class="menu-item" id="ctx-view-free"><i class='bx bx-check ctx-check hidden'></i> Свободное перемещение</div>
+            </div>
+        </div>
+        <div class="menu-item has-submenu">
+            <i class='bx bx-plus-circle'></i> Создать <i class='bx bx-chevron-right' style="margin-left:auto"></i>
+            <div class="submenu glass">
+                <div class="menu-item" id="ctx-new-folder"><i class='bx bx-folder'></i> Папку</div>
+                <div class="menu-item" id="ctx-new-txt"><i class='bx bx-file-blank'></i> Текстовый документ</div>
+            </div>
+        </div>
+        <hr>
+        <div class="menu-item" id="ctx-personalize"><i class='bx bx-palette'></i> Персонализация</div>
+    </div>
+
+    <div id="start-menu" class="glass hidden">
+        <div class="start-header">
+            <div class="user-info">
+                <div class="avatar" id="start-avatar"><i class='bx bx-user'></i></div>
+                <span id="start-username">Пользователь</span>
+            </div>
+            <button id="power-btn" class="icon-btn"><i class='bx bx-power-off'></i></button>
+        </div>
+        <div class="start-search">
+            <i class='bx bx-search'></i>
+            <input type="text" id="start-search-input" placeholder="Поиск программ и файлов...">
+        </div>
+        
+        <div class="start-pinned" id="start-pinned-section">
+            <h3>Закреплённые</h3>
+            <div class="start-grid" id="start-pinned-grid">
+            </div>
+        </div>
+
+        <div class="start-pinned hidden" id="start-search-section">
+            <h3>Результаты</h3>
+            <div class="start-grid" id="start-search-results"></div>
+        </div>
+    </div>
+
+    <div id="calendar-widget" class="glass hidden">
+        <div class="cal-header" id="cal-month-year">Май 2026</div>
+        <div class="cal-days-header">
+            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <footer id="taskbar" class="glass">
+        <div class="taskbar-left">
+            <button class="taskbar-btn" id="weather-widget" title="Погода"><i class='bx bx-cloud'></i> <span>--°C</span></button>
+        </div>
+        <div class="taskbar-center" id="taskbar-apps-container">
+            <button id="start-btn" class="taskbar-btn start-logo" title="Пуск"><i class='bx bxl-windows'></i></button>
+        </div>
+        <div class="taskbar-right">
+            <button id="lang-toggle" class="taskbar-btn">РУС</button>
+            <div id="clock-widget" class="clock">
+                <div id="time">00:00</div>
+                <div id="date">01.01.2026</div>
+            </div>
+        </div>
+    </footer>
+
+    <input type="file" id="global-file-upload" style="display:none" accept=".txt,.pdf">
+
+    <script src="../js/windows-12.js"></script>
+</body>
+</html> -->

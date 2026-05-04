@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Алгоритмическая битва за территорию / Algorithmic territory war">
+    <title>Arena War</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/algorithms.css">
+</head>
+<body data-theme="dark">
+
+    <div class="app-container">
+        <header class="header">
+            <div class="header-top">
+                <h1 id="titleText">Arena War</h1>
+                <div class="controls">
+                    <button id="themeToggle" class="icon-btn" aria-label="Toggle Theme">
+                        <i class='bx bx-moon'></i>
+                    </button>
+                    <button id="langToggle" class="icon-btn" aria-label="Toggle Language">
+                        <i class='bx bx-globe'></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="project-desc">
+                <i class='bx bx-network-chart'></i>
+                <span id="descText">An algorithmic territory war simulation where 8 distinct strategies compete for grid dominance.</span>
+            </div>
+
+            <div class="settings-panel">
+                <div class="setting-item">
+                    <label id="speedLabel">Скорость</label>
+                    <input type="range" id="speedCtrl" min="1" max="100" value="50">
+                </div>
+                <div class="setting-item">
+                    <label id="sizeLabel">Размер сетки</label>
+                    <input type="range" id="sizeCtrl" min="20" max="120" value="50">
+                </div>
+                <div class="setting-item">
+                    <label id="shapeLabel">Форма поля</label>
+                    <select id="shapeCtrl">
+                        <option value="square" id="optSquare">Квадратная</option>
+                        <option value="circle" id="optCircle">Круглая</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="canvas-wrapper">
+                <div id="canvasSkeleton" class="skeleton-box">
+                    <i class='bx bx-loader-alt bx-spin'></i>
+                </div>
+                <canvas id="arenaCanvas"></canvas>
+            </div>
+
+            <div class="side-panel">
+                <div class="leaderboard" id="leaderboard"></div>
+                
+                <div class="actions">
+                    <button id="startBtn" class="btn primary-btn"><i class='bx bx-play'></i> <span id="startText">Начать</span></button>
+                    <button id="resetBtn" class="btn"><i class='bx bx-refresh'></i> <span id="resetText">Сброс</span></button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/algorithms.js" defer></script>
+</body>
+</html>
