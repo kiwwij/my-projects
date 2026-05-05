@@ -2,6 +2,8 @@
 // income: { fix: 7880.56, extra: 0 },
 const database = {
     "2026-01": {
+        
+        // Доход: fix - стипендия/пенсия/зп, extra - подарки
         income: { fix: 7643, extra: 0 },
 
         weeks: {
@@ -76,7 +78,6 @@ const database = {
     },
 
     "2026-02": {
-        // Доход: fix - стипендия/пенсия/зп, extra - подарки
         income: { fix: 7643.21, extra: 846 },
 
         weeks: {

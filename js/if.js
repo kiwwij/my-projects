@@ -28,7 +28,7 @@ const ifData = [
         titleEn: 'Pride IF - Ayamatsu',
         divergencePoint: '<b>Арка 1.</b> В самом начале истории, когда Субару оказывается в переулке с бандитами. Вместо того чтобы позвать на помощь, он решает справиться сам.',
         shortDesc: 'Мрачная альтернативная история, где Субару Нацуки, ослеплённый гордыней и любовью к Эмилии, решает уничтожить всех врагов, чтобы сделать её королевой. Он совершает тысячи самоубийств, чтобы получить идеальную «точку сохранения», становится Архиепископом Гордыни, сжигает Лугунику и погибает от руки Рейнхарда.',
-        link: 'https://ranobelib.me/ru/book/239839--reif-zero-kara-ayamatsu-isekai-seikatsu', 
+        link: 'https://ranobelib.me/ru/book/239839--reif-zero-kara-ayamatsu-isekai-seikatsu',
         poster: 'https://cover.imglib.info/uploads/cover/reif-zero-kara-ayamatsu-isekai-seikatsu/cover/dfa36ae6-e36d-4468-9c48-f5dca2c0c0bd_orig.jpg',
         banner: 'https://cover.imglib.info/uploads/cover/reif-zero-kara-ayamatsu-isekai-seikatsu/background/e8f77cb2-77b7-41cc-bce9-3b213aa51587.jpg',
         summary: `Нацуки Субару проживает свою <b>восемьдесят восьмую</b> попытку спасти ту, чья улыбка стала его единственным маяком в океане страданий. Начало истории «Гордости» пропитано запахом гари и вкусом собственной крови. Очнувшись в знакомой столице, Субару хладнокровно расправляется с грабителями в переулке и даёт себе клятву спасти сереброволосую девушку любой ценой.
@@ -339,7 +339,7 @@ const app = {
             const card = document.createElement('div');
             card.className = 'card';
             card.onclick = () => this.showDetail(item.id);
-            
+
             card.innerHTML = `
                 <div class="card-img-wrapper">
                     <img src="${item.poster}" alt="${item.titleRu}" loading="lazy">
@@ -359,7 +359,7 @@ const app = {
         text = text.replace(/<\/p>/gi, '\n\n');
         text = text.replace(/<img[^>]*>/gi, '');
         text = text.replace(/<[^>]*>?/gm, '');
-        
+
         let txt = document.createElement("textarea");
         txt.innerHTML = text;
         return txt.value.trim();
@@ -423,7 +423,7 @@ ${this.formatText(item.opinion)}
         if (!item) return;
 
         document.getElementById('detail-banner').src = item.banner;
-        document.getElementById('detail-title-ru').textContent = item.fullTitleRu; 
+        document.getElementById('detail-title-ru').textContent = item.fullTitleRu;
         document.getElementById('detail-title-en').textContent = item.titleEn;
         document.getElementById('detail-divergence').innerHTML = item.divergencePoint;
         document.getElementById('detail-short').textContent = item.shortDesc;

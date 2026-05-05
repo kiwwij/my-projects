@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             font-family: 'Inter', sans-serif; transition: opacity 0.5s ease;
         `;
 
-        const lockMessage = isLockedOut 
+        const lockMessage = isLockedOut
             ? `<h2 style="margin: 0 0 10px; color: #FF4C4C; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(255, 76, 76, 0.6);">Доступ заблокирован</h2>
                <p style="margin: 0 0 30px; color: #E0E0E0; font-size: 0.95rem; line-height: 1.5;">Слишком много неверных попыток.<br>Система заблокирована на 24 часа.</p>`
             : `<h2 style="margin: 0 0 10px; color: #FFFFFF; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">Архивы Безымянной Звезды</h2>
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 let attempts = parseInt(localStorage.getItem(attemptsKey) || '0') + 1;
                 localStorage.setItem(attemptsKey, attempts);
-                
+
                 if (attempts >= 9) {
                     localStorage.setItem(lockoutTimeKey, Date.now() + (24 * 60 * 60 * 1000));
                     location.reload();
@@ -121,15 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    
+
     function initPage() {
         const chaptersContent = {};
         const chapterOrder = [
-            '1','2','3','4','5','6','i1','7','8','9','10','11','12','13',
-            '14','15','16','17','18','19','20','21','22','23',
-            '24','25','26','27','28','29','30','31','32','33','34','35','36',
-            '37','38','39','40','41','42','43','44','45','46','47','48','49',
-            '50','51','52','53','54','55','56','57','58','59','i2','c1'
+            '1', '2', '3', '4', '5', '6', 'i1', '7', '8', '9', '10', '11', '12', '13',
+            '14', '15', '16', '17', '18', '19', '20', '21', '22', '23',
+            '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36',
+            '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49',
+            '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', 'i2', 'c1'
         ];
 
         chapterOrder.forEach(ch => {
@@ -370,7 +370,7 @@ https://witchculttranslation.com/wp-content/uploads/2024/08/image_2024-08-13_18-
 Джамаль начинает истерически смеяться, и из его единственного глаза текут слёзы радости. Его сестра исчезла, похищенная <i>«ублюдком»</i>, которого все считали мёртвым. Но для Джамаля это лучший исход на свете — его любимая сестра наконец-то воссоединилась со своим женихом.
 https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
         `;
-// — </i> </b> [Термины]
+        // — </i> </b> [Термины]
         chaptersContent["7"] = `
 и так
         `;
@@ -402,7 +402,7 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
 
 
 
-        
+
         const downloadBtn = document.getElementById('downloadTxtBtn');
         if (downloadBtn) {
             downloadBtn.addEventListener('mousedown', () => downloadBtn.style.transform = 'scale(0.98)');
@@ -415,19 +415,19 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
                 chapterOrder.forEach(chId => {
                     const btnEl = document.querySelector(`.chapter-btn[data-ch="${chId}"]`);
                     const title = btnEl ? btnEl.innerText : `Глава ${chId}`;
-                    
+
                     txtContent += `=== ${title} ===\n\n`;
 
                     const rawHtml = chaptersContent[chId];
-                    
+
                     if (rawHtml) {
                         const formattedHtml = rawHtml
                             .replace(/<\/p>/gi, '\n\n')
                             .replace(/<br\s*[\/]?>/gi, '\n');
-                            
+
                         const tempDiv = document.createElement('div');
                         tempDiv.innerHTML = formattedHtml;
-                        
+
                         const cleanText = tempDiv.textContent || tempDiv.innerText || "";
                         txtContent += cleanText.trim() + "\n\n";
                     } else {
@@ -441,20 +441,20 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(blob);
                 link.download = "ReZero_Arc9.txt";
-                
+
                 document.body.appendChild(link);
                 link.click();
-                
+
                 document.body.removeChild(link);
                 URL.revokeObjectURL(link.href);
             });
         }
-        
+
         const posters = {
-            "phase1": "rezero-arc-9/39.webp", 
+            "phase1": "rezero-arc-9/39.webp",
             "phase2": "rezero-arc-9/40.webp",
-            "phase3": "rezero-arc-9/41.webp", 
-            "phase4": "rezero-arc-9/42.webp", 
+            "phase3": "rezero-arc-9/41.webp",
+            "phase4": "rezero-arc-9/42.webp",
             "phase5": "rezero-arc-9/43.webp"
         };
 
@@ -491,10 +491,10 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
             const chId = btnElement.getAttribute('data-ch');
             const phaseGroup = btnElement.closest('.phase-group');
             const phaseId = phaseGroup.getAttribute('data-phase');
-            
+
             document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
-            
+
             const chaptersDiv = btnElement.closest('.phase-chapters');
             const phaseBtn = phaseGroup.querySelector('.phase-btn');
             if (!chaptersDiv.classList.contains('open')) {
@@ -505,15 +505,15 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
             initialState.style.display = 'none';
             chapterContent.style.display = 'block';
             titleEl.innerText = btnElement.innerText;
-            
+
             let contentHtml = chaptersContent[chId] || `Текст не найден.`;
 
             contentHtml = contentHtml.replace(/<p>/gi, '').replace(/<\/p>/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n');
 
             let glossaryHtml = '';
-            const glossarySplit = contentHtml.split(/\[Термины\]/i); 
+            const glossarySplit = contentHtml.split(/\[Термины\]/i);
             if (glossarySplit.length > 1) {
-                contentHtml = glossarySplit[0]; 
+                contentHtml = glossarySplit[0];
                 const glossaryText = glossarySplit[1].trim();
 
                 const terms = glossaryText.split(/\n+/).filter(line => line.trim().length > 0);
@@ -541,7 +541,7 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
             contentHtml = contentHtml.split(/\n+/).map(line => line.trim()).filter(line => line.length > 0).map(line => `<p>${line}</p>`).join('');
 
             contentHtml = contentHtml.replace(/([А-ЯЁ][а-яё]+:?\s*)?(\[―?\s*.*?\])/g, '<span class="character-speech"><span class="char-name">$1</span>$2</span>');
-            
+
             contentHtml += glossaryHtml;
 
             const currentIndex = chapterOrder.indexOf(chId);
@@ -554,7 +554,7 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
                         </button>
                     </div>`;
             }
-            
+
             textEl.innerHTML = contentHtml;
             localStorage.setItem('arc9_last_read', chId);
 
@@ -612,7 +612,7 @@ https://pbs.twimg.com/media/GYQAQrxXQAAMgug.jpg
                 const modal = document.getElementById('resumeModal');
                 document.getElementById('resumeChapterName').innerText = targetBtn.innerText;
                 modal.style.display = 'flex';
-                
+
                 document.getElementById('resumeYes').onclick = () => {
                     modal.style.display = 'none';
                     loadChapter(targetBtn);
