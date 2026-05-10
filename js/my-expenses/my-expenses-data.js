@@ -350,12 +350,12 @@ const database = {
 /* Другое */    other: 0,
             },
             2: {
-/* Продукты */  food: 393.04,
-/* Вкусняшки */ snacks: 130.47,
+/* Продукты */  food: 776.50,
+/* Вкусняшки */ snacks: 384.41,
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,
 /* Жильё */     rent: 0,
-/* Услуги */    services: 0, // 99 за YouTube Premium
+/* Услуги */    services: 99,
 /* Здоровье */  health: 0,
 /* Барбершоп */ barber: 0,
 /* Одежда */    clothes: 0,

@@ -318,4 +318,18 @@ const gamesData = [
         review_link: "",
         progress: 0
     },
+    {
+        title: "Stupid Never Dies",
+        steam_link: "https://store.steampowered.com/app/3486530/Stupid_Never_Dies/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3486530/a0e9e634387acee3b2b6fc0dbb6110a890b0050d/header.jpg?t=1773348495",
+        release_date: "2026",
+        price_uah: "",
+        discount_percent: 0,
+        playtime: "",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
 ];

@@ -85,7 +85,7 @@
     "stack": ["html", "css", "js", "github"]
   },
   "pleiades.html": {
-    "image": "bx bx-analyse", 
+    "image": "bx bx-analyse",
     "description": "Interactive 3D star cluster atlas with astronomical data and Re:Zero references. Completely, once again completely made by AI. Purely a website for fun.",
     "stack": ["chart.js", "html", "css", "js", "github"]
   },
