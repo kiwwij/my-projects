@@ -246,6 +246,84 @@ body {
     color: var(--text-secondary);
 }
 
+/* Прогресс-бар чтения */
+.reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 9999; /* Поверх всего */
+}
+
+[data-theme="light"] .reading-progress-container {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+    transition: width 0.15s ease-out;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* Навигация между главами (замена старых стилей next-chapter) */
+.chapter-navigation {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 12px 24px;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+}
+
+.prev-chapter-btn {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.prev-chapter-btn:hover {
+    background: var(--accent-glow);
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.next-chapter-btn {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(255, 214, 0, 0.3);
+    margin-left: auto; /* Сдвигает кнопку вправо, если нет предыдущей */
+}
+
+.next-chapter-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 214, 0, 0.4);
+}
+
+[data-theme="light"] .next-chapter-btn { color: #fff; }
+
 @media (max-width: 992px) {
     .sidebar { transform: translateX(-100%); box-shadow: 5px 0 20px rgba(0,0,0,0.5); }
     .sidebar.open { transform: translateX(0); }

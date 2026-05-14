@@ -331,7 +331,7 @@ const database = {
     },
 
     "2026-05": {
-        income: { fix: 5880.56, extra: 0 },
+        income: { fix: 7880.56, extra: 0 },
 
         weeks: {
             1: {
@@ -365,8 +365,8 @@ const database = {
 /* Другое */    other: 9.49,
             },
             3: {
-/* Продукты */  food: 0,
-/* Вкусняшки */ snacks: 0,
+/* Продукты */  food: 625.39,
+/* Вкусняшки */ snacks: 406.61,
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,
 /* Жильё */     rent: 0,

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freyja – MS Project (Lab 7)</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #217346;
+            --border-color: #d4d4d4;
+            --bg-light: #f3f2f1;
+            --bar-completed: #10b981;
+            --font-family: 'Nunito', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-family);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toolbar {
+            background-color: var(--bg-light);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 20px;
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .toolbar div {
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toolbar div:hover:not(.status) { background-color: #e1dfdd; }
+
+        .active-tab { border-bottom: 2px solid var(--primary-color); font-weight: 700; }
+
+        .status { margin-left: auto; color: var(--bar-completed); font-weight: 700; cursor: default; }
+
+        .workspace { flex: 1; display: flex; overflow: hidden; }
+
+        .tab-content { display: none; width: 100%; height: 100%; }
+        #tab-tasks { display: flex; }
+
+        .grid-pane { width: 45%; border-right: 2px solid var(--border-color); overflow: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { border: 1px solid var(--border-color); padding: 8px 10px; text-align: left; white-space: nowrap; }
+        th { background: var(--bg-light); position: sticky; top: 0; z-index: 10; }
+        .parent-row { font-weight: 700; background: #fcfcfc; }
+
+        .gantt-pane { width: 55%; overflow: auto; background: #faf9f8; position: relative; }
+        .gantt-header { display: flex; position: sticky; top: 0; background: var(--bg-light); z-index: 10; border-bottom: 1px solid var(--border-color); }
+        .gantt-day { min-width: 45px; padding: 8px 0; text-align: center; border-right: 1px solid var(--border-color); font-size: 11px; font-weight: 700; }
+        .gantt-row { display: flex; height: 35px; border-bottom: 1px solid var(--border-color); position: relative; }
+        .gantt-cell { min-width: 45px; border-right: 1px dashed #e1dfdd; }
+        
+        .bar {
+            position: absolute; top: 6px; height: 22px; background: var(--bar-completed);
+            border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stage-label {
+            position: absolute; top: 8px; font-weight: 700; color: var(--primary-color);
+            font-size: 13px; white-space: nowrap; display: flex; align-items: center; gap: 5px;
+        }
+
+        .mock-view { padding: 30px; width: 100%; }
+        .card { background: white; border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; max-width: 600px; }
+        .res-item { display: flex; align-items: center; gap: 15px; margin-top: 15px; padding: 10px; border-bottom: 1px solid #eee; }
+        .avatar { width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<header><i class='bx bxs-spreadsheet'></i> Freyja Project Management</header>
+
+<div class="toolbar">
+    <div class="active-tab" onclick="showTab('tab-tasks', this)"><i class='bx bx-task'></i> Завдання</div>
+    <div onclick="showTab('tab-resources', this)"><i class='bx bx-group'></i> Ресурси</div>
+    <div onclick="showTab('tab-reports', this)"><i class='bx bx-bar-chart-alt-2'></i> Звітність</div>
+    <div class="status"><i class='bx bxs-check-circle'></i> Статус: Завершено 100%</div>
+</div>
+
+<div class="workspace">
+    <div id="tab-tasks" class="tab-content">
+        <div class="grid-pane">
+            <table>
+                <thead>
+                    <tr><th>№</th><th>Назва</th><th>Дні</th><th>Виконавець</th><th>Статус</th></tr>
+                </thead>
+                <tbody id="task-body"></tbody>
+            </table>
+        </div>
+        <div class="gantt-pane">
+            <div class="gantt-header" id="gantt-head"></div>
+            <div id="gantt-body"></div>
+        </div>
+    </div>
+
+    <div id="tab-resources" class="tab-content mock-view">
+        <div class="card">
+            <h3><i class='bx bx-user-check'></i> Персонал проєкту</h3>
+            <div class="res-item">
+                <div class="avatar">ЮО</div>
+                <div><b>Юхимчук Олександр</b><br><small>Team Lead</small></div>
+            </div>
+            <div class="res-item">
+                <div class="avatar">ТС</div>
+                <div><b>Тахтаров Сергій</b><br><small>Backend & Frontend Developer</small></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-reports" class="tab-content mock-view">
+        <div class="card">
+            <h3><i class='bx bx-line-chart'></i> Підсумки</h3>
+            <p style="margin-top:10px;">Всі 12 завдань завершені успішно.</p>
+            <div style="margin-top:15px; background: #e6fffa; padding:15px; border-radius:5px; color:#2c7a7b;">
+                <b>Прогрес:</b> 100% | <b>Витрачено:</b> 16 робочих днів
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showTab(id, el) {
+        document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+        document.querySelectorAll('.toolbar div').forEach(d => d.classList.remove('active-tab'));
+        document.getElementById(id).style.display = (id === 'tab-tasks' ? 'flex' : 'block');
+        el.classList.add('active-tab');
+    }
+
+    const data = [
+        { id: "1", p:1, name: "Етап 1: Проєктування та налаштування", d: 4, start: 1, end: 4 },
+        { id: "1.1", name: "Аналіз вимог та створення UML-діаграм", d: 2, res: "Юхимчук О. (Team Lead)", start: 1, end: 2 },
+        { id: "1.2", name: "Проєктування БД MySQL", d: 1, res: "Тахтаров С. (Backend Developer)", start: 3, end: 3 },
+        { id: "1.3", name: "Налаштування хостингу (InfinityFree)", d: 1, res: "Тахтаров С.", start: 4, end: 4 },
+        { id: "2", p:1, name: "Етап 2: Клієнтська частина (Frontend)", d: 7, start: 5, end: 11 },
+        { id: "2.1", name: "Верстка головної панелі адміністратора", d: 3, res: "Тахтаров С. (Frontend Developer)", start: 5, end: 7 },
+        { id: "2.2", name: "Розробка темної теми та UI елементів", d: 2, res: "Тахтаров С.", start: 8, end: 9 },
+        { id: "2.3", name: "Написання JS логіки та AJAX запитів", d: 2, res: "Тахтаров С.", start: 10, end: 11 },
+        { id: "3", p:1, name: "Етап 3: Серверна частина (Backend)", d: 8, start: 5, end: 12 },
+        { id: "3.1", name: "Реалізація модуля авторизації/сесій", d: 2, res: "Тахтаров С. (Backend Developer)", start: 5, end: 6 },
+        { id: "3.2", name: "CRUD операції для мешканців ОСББ", d: 3, res: "Тахтаров С.", start: 7, end: 9 },
+        { id: "3.3", name: "Інтеграція генерації звітів", d: 3, res: "Тахтаров С.", start: 10, end: 12 },
+        { id: "4", p:1, name: "Етап 4: Інтеграція та тестування", d: 4, start: 13, end: 16 },
+        { id: "4.1", name: "Злиття Frontend та Backend", d: 2, res: "Тахтаров С.", start: 13, end: 14 },
+        { id: "4.2", name: "Тестування та виправлення багів", d: 2, res: "Юхимчук О., Тахтаров С.", start: 15, end: 16 }
+    ];
+
+    const grid = document.getElementById('task-body');
+    const gHead = document.getElementById('gantt-head');
+    const gBody = document.getElementById('gantt-body');
+    const cellW = 45;
+
+    for(let i=0; i<16; i++) {
+        let d = new Date(2026, 3, 1 + i);
+        gHead.innerHTML += `<div class="gantt-day">${d.getDate().toString().padStart(2,'0')}.04</div>`;
+    }
+
+    data.forEach(t => {
+        grid.innerHTML += `<tr class="${t.p ? 'parent-row' : ''}">
+            <td>${t.id}</td>
+            <td style="padding-left:${t.p?10:30}px"><i class='bx bx-${t.p?'folder':'file'}'></i> ${t.name}</td>
+            <td>${t.d}</td><td>${t.res || ''}</td>
+            <td style="color:#10b981; font-weight:700">100% ✓</td>
+        </tr>`;
+
+        let row = document.createElement('div');
+        row.className = 'gantt-row';
+        for(let i=0; i<16; i++) row.innerHTML += `<div class="gantt-cell"></div>`;
+        
+        if(t.p) {
+            row.innerHTML += `<div class="stage-label" style="left:${(t.start-1)*cellW + 5}px"><i class='bx bx-flag'></i> ${t.name}</div>`;
+        } else {
+            let bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.left = `${(t.start-1)*cellW + 2}px`;
+            bar.style.width = `${t.d*cellW - 4}px`;
+            bar.innerHTML = "<i class='bx bx-check'></i>";
+            row.appendChild(bar);
+        }
+        gBody.appendChild(row);
+    });
+</script>
+</body>
+</html>

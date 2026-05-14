@@ -444,6 +444,13 @@
     "url": "",
     "date": "2026-05-04"
   },
+  "gantt-chart.html": {
+    "image": "bx bxs-spreadsheet",
+    "description": "Freyja - MS Project (Lab 7).",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-11"
+  },
   ".html": {
     "image": "",
     "description": "",
