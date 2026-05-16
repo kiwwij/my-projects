@@ -4,9 +4,9 @@
     --text-main: #e0e0e0;
     --text-muted: #a0a0a0;
     --accent: #3b82f6;
-    --lec-color: #f59e0b;  /* ЛК - Желтый */
-    --prac-color: #10b981; /* ПЗ - Зеленый */
-    --lab-color: #3b82f6;  /* ЛР - Синий */
+    --lec-color: #f59e0b;
+    --prac-color: #10b981;
+    --lab-color: #3b82f6;
 }
 
 body {
@@ -26,7 +26,6 @@ body {
     max-width: 600px;
 }
 
-/* Налаштування (Select) */
 .settings-bar {
     display: flex;
     gap: 10px;
@@ -48,7 +47,6 @@ body {
     border-color: var(--accent);
 }
 
-/* Status Card */
 .status-card {
     background: linear-gradient(135deg, #2563eb, #1e40af);
     padding: 20px;
@@ -81,7 +79,6 @@ body {
     gap: 5px;
 }
 
-/* Controls */
 .controls {
     display: flex;
     justify-content: space-between;
@@ -97,6 +94,24 @@ body {
     color: var(--text-main);
     text-transform: capitalize;
     font-size: 0.95rem;
+}
+
+.weather-widget {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    border: 1px solid rgba(255,255,255,0.05);
+    backdrop-filter: blur(4px);
+}
+
+.weather-widget i {
+    font-size: 1.1rem;
+    color: var(--accent);
 }
 
 .week-nav {
@@ -152,7 +167,6 @@ body {
 }
 .reset-view:hover { opacity: 1; }
 
-/* Tabs */
 .days-nav {
     display: flex;
     overflow-x: auto;
@@ -182,7 +196,6 @@ body {
     font-weight: 600;
 }
 
-/* Schedule List */
 .schedule-list {
     display: flex;
     flex-direction: column;
@@ -190,19 +203,10 @@ body {
     position: relative;
 }
 
-.slide-out-left {
-    animation: slideOutLeft 0.25s forwards ease-in-out;
-}
-.slide-out-right {
-    animation: slideOutRight 0.25s forwards ease-in-out;
-}
-
-.slide-in-right {
-    animation: slideInRight 0.25s forwards ease-in-out;
-}
-.slide-in-left {
-    animation: slideInLeft 0.25s forwards ease-in-out;
-}
+.slide-out-left { animation: slideOutLeft 0.25s forwards ease-in-out; }
+.slide-out-right { animation: slideOutRight 0.25s forwards ease-in-out; }
+.slide-in-right { animation: slideInRight 0.25s forwards ease-in-out; }
+.slide-in-left { animation: slideInLeft 0.25s forwards ease-in-out; }
 
 @keyframes slideOutLeft {
     from { transform: translateX(0); opacity: 1; }
@@ -338,10 +342,4 @@ body.alert-mode .lesson-card {
 body.alert-mode .lesson-card.active {
     border-color: #ef4444; 
     opacity: 0.6;
-}
-
-@keyframes pulse-alert {
-    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }

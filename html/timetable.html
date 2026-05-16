@@ -36,7 +36,13 @@
     </div>
 
     <div class="controls">
-        <div class="date-display" id="current-date">--.--.----</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="date-display" id="current-date">--.--.----</div>
+            <div id="weather-widget" class="weather-widget" style="display: none;">
+                <i class='bx bx-cloud' id="weather-icon"></i>
+                <span id="weather-temp">--°C</span>
+            </div>
+        </div>
         <div class="week-nav">
             <button class="nav-btn" onclick="changeWeek(-1)"><i class='bx bx-chevron-left'></i></button>
             <span id="week-badge" class="week-badge">Тиждень 1</span>
