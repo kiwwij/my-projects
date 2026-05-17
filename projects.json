@@ -451,6 +451,13 @@
     "url": "",
     "date": "2026-05-11"
   },
+  "violet-evergarden.html": {
+    "image": "https://i.ytimg.com/vi/Jygu0PNT-y8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBluxMPo9JTK_U2D594cnWr-G37Tg",
+    "description": "A summary of the anime Violet Evergarden.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-17-05"
+  },
   ".html": {
     "image": "",
     "description": "",
