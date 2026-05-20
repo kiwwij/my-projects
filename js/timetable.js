@@ -1,5 +1,5 @@
 const allSchedules = {
-    // 4-й семестр (2 курс, весна 2026)
+    // 4-й семестр (2 курс, зима-весна 2026)
     4: {
         1: {
             1: [
@@ -98,13 +98,13 @@ const allSchedules = {
         }
     },
     
-    // 5-й семестр (3 курс, осінь 2026)
+    // 5-й семестр (3 курс, осінь-зима 2026/27)
     5: {
         1: {},
         2: {}
     },
     
-    // 6-й семестр (3 курс, весна 2027)
+    // 6-й семестр (3 курс, зима-весна 2027)
     6: {
         1: {},
         2: {}
@@ -129,7 +129,18 @@ const dateOverrides = {
     "2026-04-20": { remove: [5], add: [{ num: 5, start: "12:15", end: "13:00", subj: "Метрол. оцінювання ПЗ (Кол.)", type: "KOL", room: "12 Зал", teacher: "Дудатьєв І.А." }] },
     "2026-04-27": { remove: [7], add: [{ num: 7, start: "14:00", end: "15:00", subj: "Основи прогр. інженерії (Відпр.)", type: "EX", room: "2108", teacher: "Денисюк А.В." }] },
     "2026-05-18": { remove: [1, 2, 3, 4, 5], add: [{ num: 5, start: "12:15", end: "13:00", subj: "Метрол. оцінювання ПЗ (Кол.)", type: "KOL", room: "12 Зал", teacher: "Дудатьєв І.А." }] },
-    "2026-05-27": { remove: [1, 2, 6], add: [{ num: 1, start: "08:15", end: "09:00", subj: "Графічні редактори (Кол.)", type: "KOL", room: "2247A", teacher: "Чехместрук Р.Ю." }, { num: 2, start: "09:15", end: "10:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." }, { num: 6, start: "13:15", end: "14:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." }] },
+    "2026-05-27": { remove: [1, 3, 4], add: [{ num: 1, start: "08:15", end: "09:00", subj: "Графічні редактори (Кол.)", type: "KOL", room: "2247A", teacher: "Чехместрук Р.Ю." }, /* { num: 3, start: "10:15", end: "11:00", subj: "Графічні редактори (Кол.)", type: "KOL", room: "1318", teacher: "Чехместрук Р.Ю." }*/] },
+    "2026-05-29": {
+        remove: [7],
+    },
+    "2026-06-03": {
+        remove: [1, 2, 3, 4, 6],
+        add: [
+            { num: 1, start: "08:15", end: "09:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." },
+            { num: 2, start: "09:15", end: "10:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." },
+            // { num: 6, start: "13:15", end: "14:00", subj: "Архітектура та проект. ПЗ (Кол.)", type: "KOL", room: "2247A", teacher: "Бабюк Н.П." }
+        ]
+    },
 
     "2026-06-08": { add: [{ num: 3, start: "09:00", end: "10:00", subj: "Архітектура та проект. ПЗ", type: "CONS", room: "2108", teacher: "Бабюк Н.П." }] },
     "2026-06-09": { add: [{ num: 3, start: "10:00", end: "11:20", subj: "Архітектура та проект. ПЗ", type: "EXAM", room: "2108", teacher: "Бабюк Н.П." }] },
@@ -167,7 +178,6 @@ document.getElementById('subgroup-select').addEventListener('change', (e) => {
     updateStatus();
 });
 
-// Автоматичне визначення семестру по даті
 function getSemesterInfo(date) {
     const y = date.getFullYear();
     const m = date.getMonth(); // 0-11
@@ -224,7 +234,7 @@ function applyLateMayFilter(lessons, targetDate) {
             
             if (subj.includes("іноземна")) return false;
             if (subj.includes("фізична культура")) return false;
-            if (subj.includes("політ. історія") && type === "PZ") return false;
+            if (subj.includes("політ. історія") && type === "LK") return false;
             if (subj.includes("граф") && type === "PZ") return false;
             if (subj.includes("теор. ймов") && (type === "PZ" || type === "LR")) return false;
             if (subj.includes("метрол. оцінювання") && type === "LR") return false;
@@ -377,8 +387,10 @@ function isSameWeek(d1, d2) {
 
 function updateDateDisplay() {
     const displayDate = getViewedDate();
-    const options = { weekday: 'long', day: 'numeric', month: 'long' };
-    document.getElementById('current-date').innerText = displayDate.toLocaleDateString('uk-UA', options);
+    const days = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота'];
+    const weekday = days[displayDate.getDay()];
+    const datePart = displayDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
+    document.getElementById('current-date').innerText = `${weekday}, ${datePart}`;
     
     const weekType = getWeekType(viewDate);
     const badge = document.getElementById('week-badge');
@@ -679,10 +691,10 @@ async function fetchWeather() {
         const isDay = data.current.is_day === 1;
         const iconEl = document.getElementById('weather-icon');
         
-        if (code === 0) {
-            iconEl.className = isDay ? 'bx bx-sun' : 'bx bx-moon'; // Ясно
-        } else if (code === 1 || code === 2 || code === 3) {
-            iconEl.className = 'bx bx-cloud'; // Хмарно / Мінлива хмарність
+        if (code === 0 || code === 1) { // 0 - Ясно, 1 - Переважно ясно (сонце або місяць)
+            iconEl.className = isDay ? 'bx bx-sun' : 'bx bx-moon'; 
+        } else if (code === 2 || code === 3) { // 2 - Мінлива хмарність, 3 - Хмарно
+            iconEl.className = 'bx bx-cloud'; 
         } else if (code >= 45 && code <= 48) {
             iconEl.className = 'bx bx-fog'; // Туман
         } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
@@ -696,7 +708,9 @@ async function fetchWeather() {
         }
         
         widget.style.display = 'flex';
-    } catch (error) { console.error("Weather err:", error); }
+    } catch (error) { 
+        console.error("Weather err:", error); 
+    }
 }
 
 fetchWeather();

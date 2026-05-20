@@ -250,7 +250,6 @@ body {
 
 .lesson-card.past { opacity: 0.5; }
 
-/* Colors for types */
 .type-LK { border-left-color: var(--lec-color); }
 .type-PZ { border-left-color: var(--prac-color); }
 .type-LR { border-left-color: var(--lab-color); }
@@ -342,4 +341,8 @@ body.alert-mode .lesson-card {
 body.alert-mode .lesson-card.active {
     border-color: #ef4444; 
     opacity: 0.6;
+}
+
+.status-detail i {
+    transform: translateY(1.5px);
 }

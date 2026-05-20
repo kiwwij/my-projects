@@ -2,7 +2,7 @@
 // income: { fix: 7880.56, extra: 0 },
 const database = {
     "2026-01": {
-        
+
         // Доход: fix - стипендия/пенсия/зп, extra - подарки
         income: { fix: 7643, extra: 0 },
 
@@ -380,8 +380,8 @@ const database = {
 /* Другое */    other: 0,
             },
             4: {
-/* Продукты */  food: 0,
-/* Вкусняшки */ snacks: 0,
+/* Продукты */  food: 749.85,
+/* Вкусняшки */ snacks: 183.49,
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,
 /* Жильё */     rent: 0,
