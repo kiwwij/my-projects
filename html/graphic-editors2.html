@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <title>Графічні редактори | Конспект 2</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10c1.385 0 2.5-1.115 2.5-2.5 0-.606-.232-1.161-.618-1.579-.279-.304-.457-.699-.457-1.121 0-.911.751-1.65 1.666-1.65h1.745c2.868 0 5.164-2.544 5.164-5.65C22 6.25 17.514 2 12 2zm-4.5 9c-.828 0-1.5-.672-1.5-1.5S6.672 8 7.5 8 9 8.672 9 9.5 8.328 11 7.5 11zm3-3c-.828 0-1.5-.672-1.5-1.5S9.672 5 10.5 5 12 5.672 12 6.5 11.328 8 10.5 8zm3 0c-.828 0-1.5-.672-1.5-1.5S12.672 5 13.5 5 15 5.672 15 6.5 14.328 8 13.5 8zm3 3c-.828 0-1.5-.672-1.5-1.5S15.672 8 16.5 8 18 8.672 18 9.5 17.328 11 16.5 11z' fill='%23888'/></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <link rel="stylesheet" href="../css/graphic-editors2.css">
+
+</head>
+<body class="dark-theme">
+
+    <header>
+        <div class="header-container">
+            <h1><i class='bx bx-palette'></i> Графічні редактори: Illustrator та Figma</h1>
+            <button id="theme-toggle" aria-label="Змінити тему">
+                <i class='bx bx-sun' id="theme-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="layout-container skeleton-load">
+        <aside class="sidebar">
+            <nav class="toc">
+                <div class="toc-title"><i class='bx bx-list-ul'></i> Зміст</div>
+                <ul id="toc-list">
+                    <li><a href="#topic-1" class="active">1. Основи Illustrator</a></li>
+                    <li><a href="#topic-2">2. Типографія</a></li>
+                    <li><a href="#topic-3">3. Режими малювання</a></li>
+                    <li><a href="#topic-4">4. Контури та точки</a></li>
+                    <li><a href="#topic-5">5. Заливка та Обведення</a></li>
+                    <li><a href="#topic-6">6. Фігури та прив'язки</a></li>
+                    <li><a href="#topic-7">7. Виділення та порядок</a></li>
+                    <li><a href="#topic-8">8. Вимірювання та Artboards</a></li>
+                    <li><a href="#topic-9">9. Базові поняття Figma</a></li>
+                    
+                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 15px 0;">
+                    <li><a href="#questions" style="color: white; font-weight: 700;"><i class='bx bx-message-square-dots'></i> Питання до колоквіуму</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content-reader">
+            <div class="intro">
+                <h2>Конспект з векторної графіки та UI/UX</h2>
+                <p>Детальні матеріали для підготовки до занять та іспитів з Adobe Illustrator та Figma.</p>
+            </div>
+
+            <section id="topic-1" class="topic-section">
+                <h3><i class='bx bx-pen'></i> 1. Основи роботи в Adobe Illustrator</h3>
+                <p><strong>Базові інструменти та навігація:</strong></p>
+                <ul>
+                    <li><strong>Панель інструментів:</strong> Містить усі необхідні інструменти для створення, виділення, малювання та редагування об'єктів.</li>
+                    <li><strong>Меню навігації:</strong> Використовує <em>Hand Tool</em> (пробіл + перетягування) для переміщення та <em>Zoom Tool</em> (Alt + коліщатко миші) для масштабування.</li>
+                    <li><strong>Шари (Layers) та Видимість:</strong> Організовують елементи як стопки плівок. Іконка "ока" дозволяє приховувати або показувати об'єкти.</li>
+                    <li><strong>Групи:</strong> Об'єднання кількох об'єктів в єдине ціле (Ctrl + G) для спільної трансформації.</li>
+                </ul>
+                <p><strong>Чим відрізняються інструменти виділення:</strong></p>
+                <ul>
+                    <li><strong>Виділення (V) / Selection Tool:</strong> Виділяє цілі об'єкти або групи повністю.</li>
+                    <li><strong>Часткове виділення (A) / Direct Selection Tool:</strong> Редагує окремі точки прив'язки (вузли) або сегменти контуру.</li>
+                    <li><strong>Групове виділення / Group Selection Tool:</strong> Виділяє окремий об'єкт всередині групи без її розгруповання. Наступне натискання виділяє вищу ієрархічну групу.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-2" class="topic-section">
+                <h3><i class='bx bx-text'></i> 2. Типографія: Основні поняття</h3>
+                <p>Типографія — це мистецтво та техніка оформлення тексту. Головні терміни:</p>
+                <ul>
+                    <li><strong>Кернінг (Kerning):</strong> Налаштування відстані між <em>двома конкретними</em> літерами.</li>
+                    <li><strong>Трекінг (Tracking):</strong> Рівномірна зміна відстані між <em>усіма</em> символами у виділеному фрагменті.</li>
+                    <li><strong>Інтерліньяж (Leading):</strong> Відстань між базовими лініями сусідніх рядків тексту (міжрядковий інтервал).</li>
+                    <li><strong>Гарнітура (Typeface) та Шрифт (Font):</strong> Гарнітура — це сімейство (Arial), а шрифт — конкретне накреслення (Arial Bold 12pt).</li>
+                    <li><strong>Кегль:</strong> Розмір шрифту в пунктах (pt).</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-3" class="topic-section">
+                <h3><i class='bx bx-layer'></i> 3. Режими малювання в Illustrator</h3>
+                <p>Існують різні режими взаємодії та розміщення нових об'єктів (перемикаються комбінацією Shift+D):</p>
+                <ul>
+                    <li><strong>Звичайне (Draw Normal):</strong> Новий об'єкт розміщується поверх вибраного або на передньому плані шару.</li>
+                    <li><strong>Малювання позаду (Draw Behind):</strong> Нові об'єкти створюються позаду всіх елементів шару або безпосередньо під вибраним об'єктом.</li>
+                    <li><strong>Малювання всередині (Draw Inside):</strong> Дозволяє малювати всередині існуючого об'єкта, створюючи відсічні маски (Clipping Masks) автоматично.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-4" class="topic-section">
+                <h3><i class='bx bx-git-commit'></i> 4. Векторна графіка: Контури та точки</h3>
+                <p>У векторній графіці <strong>контур (Path)</strong> — це основний блок малюнка. Складається з прямих чи кривих відрізків, з'єднаних <strong>точками прив'язки (Anchor Points)</strong>.</p>
+                <ul>
+                    <li><strong>Типи контурів:</strong> Відкриті (як лінія) або Замкнені (як коло).</li>
+                    <li><strong>Редагування:</strong> Форму змінюють перетягуванням точок, керуючих ліній (вусиків) або самих відрізків.</li>
+                </ul>
+                <p><strong>Типи точок прив'язки:</strong></p>
+                <ul>
+                    <li><em>Кутові (Corner):</em> Контур різко змінює напрямок (злам).</li>
+                    <li><em>Згладжені (Smooth):</em> Криві відрізки з'єднуються в плавний перехід.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-5" class="topic-section">
+                <h3><i class='bx bx-paint'></i> 5. Властивості контурів: Заливка та Обведення</h3>
+                <p>Заливка (Fill) і обведення (Stroke) — це базові атрибути будь-якого контуру.</p>
+                <ul>
+                    <li><strong>Заливка:</strong> Дозволяє застосувати суцільний колір, візерунок або градієнт до внутрішньої області замкненого контуру.</li>
+                    <li><strong>Обведення:</strong> Обрамлення (лінія) самого контуру. Може відрізнятися за товщиною (weight), кольором, стилем (напр. пунктир) та вирівнюванням (всередину, назовні, по центру).</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-6" class="topic-section">
+                <h3><i class='bx bx-shape-polygon'></i> 6. Налаштування параметрів прив'язки та малювання фігур</h3>
+                <p><strong>Налаштування:</strong> <em>Редагування -> Параметри -> Виділення і прив'язка</em>. Можна налаштувати розмір точок, стиль ліній, тип виділення при наведенні.</p>
+                <p><strong>Параметри фігур:</strong></p>
+                <ul>
+                    <li><strong>Лінія:</strong> довжина та кут нахилу.</li>
+                    <li><strong>Дуга:</strong> довжина осей, відкрита/закрита, опуклість.</li>
+                    <li><strong>Зірка:</strong> Радіус 1 (до зовнішніх точок), Радіус 2 (до внутрішніх), кількість променів.</li>
+                    <li><strong>Спіраль:</strong> радіус, відсоток зниження (наскільки виток менший за попередній), кількість сегментів.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-7" class="topic-section">
+                <h3><i class='bx bx-select-multiple'></i> 7. Виділення та порядкування об'єктів</h3>
+                <p><strong>Додаткові інструменти виділення:</strong></p>
+                <ul>
+                    <li><strong>Чарівна паличка:</strong> Виділяє всі об'єкти з подібними атрибутами (колір, товщина ліній).</li>
+                    <li><strong>Вибір перспективи:</strong> Виділяє та переміщує об'єкти відносно сітки перспективи.</li>
+                    <li><strong>Швидка заливка (Live Paint):</strong> Виділяє грані (замкнені області) та краї (сегменти між перетинами).</li>
+                </ul>
+                <p><strong>Виділення у шарах:</strong> Щоб виділити об'єкт у складній групі, треба відкрити панель "Шари", розгорнути ієрархію і натиснути на кружечок (кнопку цілі) праворуч від назви об'єкта.</p>
+                <p><strong>Порядкування:</strong> Скопіювати об'єкт точно в ті самі координати: <em>Ctrl+C</em> -> <em>Shift+Ctrl+V</em> (Вставити на місце).</p>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-8" class="topic-section">
+                <h3><i class='bx bx-ruler'></i> 8. Вимірювання, шрифти, монтажні області</h3>
+                <ul>
+                    <li><strong>Вимірювання:</strong> Використовуються Лінійки (Ctrl+R), напрямні лінії (Guides) та "Розумні напрямні" (Smart Guides) для автоматичного вирівнювання.</li>
+                    <li><strong>Шрифти:</strong> Будь-який текст можна перетворити на векторні контури (Create Outlines), після чого літери редагуються як фігури точками прив'язки.</li>
+                    <li><strong>Монтажні області (Artboards):</strong> Віртуальні полотна (сторінки). Дозволяють створювати багатосторінкові файли або різні версії дизайну в одному робочому просторі. Змінюються інструментом <em>Shift+O</em>.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="topic-9" class="topic-section">
+                <h3><i class='bx bxl-figma'></i> 9. Базові поняття Figma</h3>
+                <ul>
+                    <li><strong>Figma:</strong> Хмарний інструмент для дизайну інтерфейсів та спільної роботи.</li>
+                    <li><strong>Frame (Фрейм):</strong> Основний контейнер (екран/сторінка). Має власні сітки, заливки та може обрізати контент (Clip content).</li>
+                    <li><strong>Groups (Групи):</strong> Лише об'єднують шари. Межі групи завжди жорстко залежать від її вмісту.</li>
+                    <li><strong>Auto Layout:</strong> Автокомпонування. Елементи автоматично вирівнюються, зберігають відступи та адаптуються під контент (як Flexbox у CSS).</li>
+                    <li><strong>Components & Library:</strong> Елементи багаторазового використання. Зміна Main Component оновлює всі його копії. Бібліотека дозволяє шерити компоненти між файлами.</li>
+                    <li><strong>Constraints:</strong> Правила прив'язки (наприклад, фіксація меню зліва-згори при розтягуванні фрейму).</li>
+                    <li><strong>Grid:</strong> Сітка (колонки/рядки) для вирівнювання макету.</li>
+                    <li><strong>Prototype:</strong> Режим створення інтерактивних моделей з анімаціями та переходами.</li>
+                    <li><strong>Dev Mode & Inspect:</strong> Режим для розробників для копіювання коду, розмірів та експорту графіки.</li>
+                </ul>
+                <a href="#questions" class="back-to-q"><i class='bx bx-arrow-back'></i> Повернутися до питань</a>
+            </section>
+
+            <section id="questions" class="topic-section" style="margin-top: 5rem; border-top: 2px dashed var(--border-color); padding-top: 3rem;">
+                <h2><i class='bx bx-message-square-dots'></i> Питання до колоквіуму</h2>
+                <p style="margin-bottom: 2rem;">Перевір свої знання з Illustrator та Figma.</p>
+
+                <div class="qa-item">
+                    <div class="qa-question">1. Яка різниця між інструментами Selection Tool (V) та Direct Selection Tool (A)?</div>
+                    <div class="qa-answer">Selection Tool (V) виділяє весь об'єкт або групу. Direct Selection Tool (A) виділяє і дозволяє редагувати окремі точки прив'язки або відрізки контуру.</div>
+                    <a href="#topic-1" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 1</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">2. Чим відрізняється кернінг від трекінгу?</div>
+                    <div class="qa-answer">Кернінг — це зміна відстані між двома конкретними літерами. Трекінг — це зміна відстані між усіма літерами у виділеному тексті рівномірно.</div>
+                    <a href="#topic-2" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 2</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">3. Що дає режим "Малювання всередині" (Draw Inside)?</div>
+                    <div class="qa-answer">Дозволяє автоматично створювати відсічну маску (Clipping Mask), малюючи нові об'єкти суворо в межах існуючого виділеного об'єкта.</div>
+                    <a href="#topic-3" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 3</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">4. Які бувають типи точок прив'язки і в чому їх різниця?</div>
+                    <div class="qa-answer">Кутові (Corner) утворюють гострий злам контуру, а згладжені (Smooth) створюють плавний перехід між кривими лініями.</div>
+                    <a href="#topic-4" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 4</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">5. Які параметри можна налаштувати при створенні об'єкта "Зірка"?</div>
+                    <div class="qa-answer">Можна задати Радіус 1 (до зовнішніх кінців променів), Радіус 2 (до внутрішніх кутів) та кількість променів.</div>
+                    <a href="#topic-6" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 6</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">6. Як працює інструмент "Чарівна паличка" в Illustrator?</div>
+                    <div class="qa-answer">Він виділяє одразу всі об'єкти на полотні, які мають схожі атрибути (наприклад, однаковий колір заливки або товщину обведення).</div>
+                    <a href="#topic-7" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 7</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">7. Що таке монтажні області (Artboards) і для чого вони потрібні?</div>
+                    <div class="qa-answer">Це віртуальні полотна в одному файлі. Дозволяють зручно малювати кілька версій дизайну, створювати багатосторінкові PDF та експортувати різні графічні елементи разом.</div>
+                    <a href="#topic-8" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 8</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">8. Чим Фрейм (Frame) у Figma відрізняється від Групи (Group)?</div>
+                    <div class="qa-answer">Фрейм — це самостійний контейнер, який може мати свої розміри, сітки, заливки та обрізати контент. Розмір Групи завжди жорстко залежить виключно від об'єктів всередині неї.</div>
+                    <a href="#topic-9" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 9</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">9. Що таке Auto Layout у Figma?</div>
+                    <div class="qa-answer">Це функція автокомпонування, яка автоматично вирівнює елементи, зберігає між ними відступи та дозволяє інтерфейсу адаптуватися до зміни контенту (наприклад, зміна розміру кнопки від тексту).</div>
+                    <a href="#topic-9" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 9</a>
+                </div>
+
+                <div class="qa-item">
+                    <div class="qa-question">10. У чому головна перевага використання Components (Компонентів)?</div>
+                    <div class="qa-answer">При зміні головного (Main) компонента, всі його копії (Instances) у макеті оновлюються автоматично, що надзвичайно пришвидшує роботу.</div>
+                    <a href="#topic-9" class="qa-link"><i class='bx bx-book-open'></i> Читати детально в Темі 9</a>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/graphic-editors2.js"></script>
+</body>
+</html>

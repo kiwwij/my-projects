@@ -181,6 +181,20 @@ const gamesData = [
         progress: 100
     },
     {
+        title: "Subnautica 2",
+        steam_link: "https://store.steampowered.com/app/1962700/Subnautica_2/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1962700/header.jpg?t=1779360380",
+        release_date: "14 мая. 2026 г.",
+        price_uah: 899,
+        discount_percent: 0,
+        playtime: "15",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link: "",
+        progress: 100
+    },
+    {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
         steam_link: "https://store.steampowered.com/app/1608070/CRISIS_CORE_FINAL_FANTASY_VII_REUNION/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1608070/header.jpg?t=1727791468",
