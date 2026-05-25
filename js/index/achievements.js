@@ -117,7 +117,7 @@ function updateProgressUI() {
     const unlocked = JSON.parse(localStorage.getItem('unlocked_achievements')) || [];
     const progressEl = document.getElementById('achievement-progress');
     if (progressEl) {
-        progressEl.innerText = `🏆 ${unlocked.length}/${TOTAL_ACHIEVEMENTS}`;
+        progressEl.innerHTML = `<i class='bx bxs-trophy'></i> ${unlocked.length}/${TOTAL_ACHIEVEMENTS}`;
         if (unlocked.length === TOTAL_ACHIEVEMENTS) {
             progressEl.classList.add('completed');
             progressEl.title = "100% Completed!";
@@ -155,7 +155,53 @@ function unlockAchievement(id) {
     }, 4500);
 }
 
-document.addEventListener('DOMContentLoaded', updateProgressUI);
+function initStreakCounter() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    let streakData = JSON.parse(localStorage.getItem('daily_streak')) || { count: 0, best: 0, lastVisit: 0 };
+    
+    const msInDay = 86400000; 
+    const diffDays = Math.round((todayTime - streakData.lastVisit) / msInDay); 
+    
+    if (streakData.lastVisit === 0 || diffDays > 3) {
+        streakData.count = 1;
+        streakData.lastVisit = todayTime;
+    } else if (diffDays > 0 && diffDays <= 3) {
+        streakData.count += 1;
+        streakData.lastVisit = todayTime;
+    }
+    
+    if (streakData.count > streakData.best) {
+        streakData.best = streakData.count;
+    }
+    
+    localStorage.setItem('daily_streak', JSON.stringify(streakData));
+    
+    const footer = document.querySelector('footer');
+    if (footer) {
+        const separator = document.createElement('span');
+        separator.textContent = '•';
+        
+        const streakSpan = document.createElement('span');
+        streakSpan.className = 'ach-progress'; 
+        streakSpan.title = `Best streak: ${streakData.best} days`;
+        streakSpan.innerHTML = `🔥 ${streakData.count}`;
+
+        if (streakData.count >= 3) {
+            streakSpan.style.color = '#e17055'; 
+        }
+        
+        footer.appendChild(separator);
+        footer.appendChild(streakSpan);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateProgressUI();
+    initStreakCounter();
+});
 
 let randomClicks = 0;
 const randomBtn = document.getElementById('random-btn');
@@ -346,7 +392,7 @@ const asciiArt = `
 ⠘⣿⣿⣿⣿⣷⣭⣓⡽⡆⡄⢀⣤⣾⣿⣿⣿⣿⣿⡿⠋
 ⠄⢨⡻⡇⣿⢿⣿⣿⣭⡶⣿⣿⣿⣜⢿⡇⡿⠟⠉
 ⠄⠸⣷⡅⣫⣾⣿⣿⣿⣷⣙⢿⣿⣿⣷⣦⣚⡀
-⠄⠄⢉⣾⡟+Rep⠈⢻⣿⣷⣅⢻⣿⣿⣿⣿⣿⣶⣶⡆⠄⣤⡀
+⠄⠄⢉⣾⡟⠄⣤⡀⠈⢻⣿⣷⣅⢻⣿⣿⣿⣿⣿⣶⣶⡆⠄⣤⡀
 ⠄⢠⣿⣿⣧⣀⣀⣀⣀⣼⣿⣿⣿⡎⢿⣿⣿⣿⣿⣿⣿⣇⠄⠈⠁
 ⠄⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢇⣎⢿⣿⣿⣿⣿⣿⣿⣿⣶⣶
 ⠄⠄⠻⢿⣿⣿⣿⣿⣿⣿⣿⢟⣫⣾⣿⣷⡹⣿⣿⣿⣿⣿⣿⣿⡟
