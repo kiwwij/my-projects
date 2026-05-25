@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Personal music collection and curated playlists.">
+    <title>all my music playlists</title>
+    <link rel="icon" type="image/svg+xml" href="https://i.pinimg.com/736x/49/97/a4/4997a4358f45f91bb6fe1a884cc20d92.jpg">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/my-music-playlists.css">
+</head>
+<body>
+
+    <nav class="navbar glass-panel">
+        <div class="nav-content">
+            <div class="logo">
+                <i class='bx bx-headphone'></i>
+                <span data-i18n="title"></span>
+            </div>
+            
+            <div class="controls">
+                <button id="themeToggle" class="icon-btn">
+                    <i class='bx bx-moon'></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div id="playlistsList" class="playlists-list"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/gh/kiwwij/kiwwij-anime-tier-list@main/data/all-music-data.js?v=1"></script>
+    <script src="../js/my-music-playlists.js"></script>
+</body>
+</html>

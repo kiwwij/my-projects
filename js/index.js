@@ -16,6 +16,7 @@ let inputTimeout;
 let currentFilter = null;
 let showNewOnly = false;
 let isSecretModeEnabled = false;
+let showUnseenOnly = false;
 
 const techColors = {
     'html': '#e34c26', 'css': '#563d7c', 'js': '#f1e05a', 'javascript': '#f1e05a', 'python': '#3572A5',
@@ -283,6 +284,7 @@ function initTheme() {
 
 function applyAllFilters() {
     const val = searchInput.value.toLowerCase();
+    const openedProjects = JSON.parse(localStorage.getItem('opened_projects')) || [];
 
     allProjects.forEach(card => {
         const name = card.getAttribute('data-name') || '';
@@ -290,12 +292,15 @@ function applyAllFilters() {
         const stackString = card.getAttribute('data-stack') || '';
         const stackArray = stackString ? stackString.split(',') : [];
         const isNew = card.getAttribute('data-is-new') === 'true';
+        const projectId = card.getAttribute('data-id');
 
         let matchesSearch = val === '' || name.includes(val) || desc.includes(val) || stackString.includes(val);
         let matchesTech = currentFilter === null || stackArray.includes(currentFilter);
         let matchesNew = !showNewOnly || isNew;
+        
+        let matchesUnseen = !showUnseenOnly || !openedProjects.includes(projectId);
 
-        if (matchesSearch && matchesTech && matchesNew) {
+        if (matchesSearch && matchesTech && matchesNew && matchesUnseen) {
             card.style.display = 'flex';
         } else {
             card.style.display = 'none';
@@ -309,6 +314,25 @@ if (filterNewBtn) {
     filterNewBtn.addEventListener('click', () => {
         showNewOnly = !showNewOnly;
         filterNewBtn.classList.toggle('active', showNewOnly);
+        applyAllFilters();
+    });
+}
+
+const filterUnseenBtn = document.getElementById('filter-unseen-btn');
+if (filterUnseenBtn) {
+    filterUnseenBtn.addEventListener('click', () => {
+        showUnseenOnly = !showUnseenOnly;
+        filterUnseenBtn.classList.toggle('active', showUnseenOnly);
+        
+        const icon = filterUnseenBtn.querySelector('i');
+        if (showUnseenOnly) {
+            icon.className = 'bx bx-show';
+            filterUnseenBtn.title = "Show all projects";
+        } else {
+            icon.className = 'bx bx-hide';
+            filterUnseenBtn.title = "Show only unviewed projects";
+        }
+        
         applyAllFilters();
     });
 }

@@ -465,6 +465,20 @@
     "url": "",
     "date": "2026-05-22"
   },
+  "my-music-playlists.html": {
+    "image": "https://marketing.brain.com.ua/static/articles_description_ru/img_20231103105015.jpeg",
+    "description": "A collection of my favorite music playlists.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-25"
+  },
+  "snake.html": {
+    "image": "🐍",
+    "description": "A web-based version of the classic Snake game.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-25"
+  },
   ".html": {
     "image": "",
     "description": "",

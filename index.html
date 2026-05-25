@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/index/achievements.css">
+    <link rel="stylesheet" href="css/index/recommended.css">
 </head>
 <body>
     <button id="secret-facts-btn" title=""></button>
@@ -40,6 +41,14 @@
             </div>
         </header>
         <main>
+            <div class="recommended-section">
+                <h2 class="recommended-title" id="recommended-toggle" style="cursor: pointer; user-select: none;">
+                    <i class='bx bx-chevron-right' id="recommended-icon" style="transition: transform 0.3s;"></i> Recommended Projects
+                </h2>
+                <div id="recommended-grid" class="grid recommended-grid"></div>
+            </div>
+            <hr class="section-divider">
+
             <div class="controls">
                 <h2>
                     <i class='bx bx-folder-open'></i> 
@@ -55,9 +64,13 @@
                         </svg>
                     </button>
 
+                    <button id="filter-unseen-btn" class="icon-btn" title="Show only unviewed projects">
+                        <i class='bx bx-hide'></i>
+                    </button>
+
                     <button id="random-btn" class="icon-btn" title="Open random project (R)">
                         <i class='bx bx-dice-5'></i>
-                </button>
+                    </button>
 
                     <div class="search-wrapper">
                         <i class='bx bx-search search-icon'></i>
@@ -105,5 +118,6 @@
     <div id="toast-container"></div>
     <script src="js/index.js"></script>
     <script src="js/index/achievements.js"></script>
+    <script src="js/index/recommended.js"></script>
 </body>
 </html>

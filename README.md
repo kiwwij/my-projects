@@ -1,11 +1,12 @@
 # 📂 Kiwwij's Project Hub
 
-More than just a portfolio—this is a dynamic, interactive archive of my development work, experiments, and coding projects.This hub prioritizes blazing-fast performance and seamless UX.
+More than just a portfolio—this is a dynamic, interactive archive of my development work, experiments, and coding projects. This hub prioritizes blazing-fast performance and seamless UX.
 
 ## ✨ Key Features
 
 - **⚡ Lightning-Fast Rendering:** Projects are rendered on the fly from a centralized `projects.json` configuration, ensuring instant load times with zero backend dependencies.
 - **📊 Live Tech Analytics:** The hub scans project configurations to generate an interactive "Skill Meter." Filter projects by specific technologies (PHP, JS, mysql, etc.) with a single click.
+- **🎯 Dynamic Recommendations:** A smart, collapsible "Recommended Projects" panel featuring hand-picked showcases alongside an automatically detected **"Latest"** project (safely bypassing JSON templates), featuring non-clickable tech stacks to avoid misclicks and opening seamlessly in new tabs.
 - **⌨️ Power User Hotkeys:** Navigate like a pro without touching your mouse:
   - `/` — Focus search bar
   - `R` — Open a random project

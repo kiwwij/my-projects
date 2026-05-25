@@ -71,6 +71,24 @@ const ACHIEVEMENTS = {
         icon: "bx-folder-open", 
         hint: "View 10 different projects." 
     },
+    curious_explorer: {
+        title: "Curious Explorer",
+        desc: "Recommendations are there for a reason, right?",
+        icon: "bx-star",
+        hint: "Open the recommended projects tab."
+    },
+    dedicated_visitor: {
+        title: "True Dedication",
+        desc: "17 days in a row! You really like it here.",
+        icon: "bxs-flame",
+        hint: "Visit the site 17 days in a row."
+    },
+    platinum_trophy: {
+        title: "Platinum Trophy",
+        desc: "You have opened every single project. A true completionist!",
+        icon: "bxs-trophy",
+        isHidden: true // просмотр всех проектов
+    },
 };
 
 const TOTAL_ACHIEVEMENTS = Object.keys(ACHIEVEMENTS).length;
@@ -176,9 +194,13 @@ function initStreakCounter() {
     if (streakData.count > streakData.best) {
         streakData.best = streakData.count;
     }
-    
+
     localStorage.setItem('daily_streak', JSON.stringify(streakData));
     
+    if (streakData.count >= 17) {
+        unlockAchievement('dedicated_visitor');
+    }
+
     const footer = document.querySelector('footer');
     if (footer) {
         const separator = document.createElement('span');
@@ -259,11 +281,28 @@ if (avatar) {
 }
 
 document.addEventListener('click', (e) => {
-    if (e.target.closest('.pin-btn')) {
-        setTimeout(() => {
-            const pinned = JSON.parse(localStorage.getItem('pinned_projects')) || [];
-            if (pinned.length === 4) unlockAchievement('collector');
-        }, 100);
+    const card = e.target.closest('.project-card');
+    
+    if (card) {
+        const projectId = card.getAttribute('data-id');
+        if (projectId) {
+            let opened = JSON.parse(localStorage.getItem('opened_projects')) || [];
+            
+            if (!opened.includes(projectId)) {
+                opened.push(projectId);
+                localStorage.setItem('opened_projects', JSON.stringify(opened));
+            }
+            
+            if (opened.length >= 10) {
+                unlockAchievement('project_buff');
+            }
+
+            const totalProjects = document.querySelectorAll('#projects-grid .project-card').length;
+
+            if (totalProjects > 0 && opened.length >= totalProjects) {
+                unlockAchievement('platinum_trophy');
+            }
+        }
     }
 }, true);
 
