@@ -51,28 +51,6 @@ const database = {
                 saved: 0,
                 transport: 650,
                 other: 0,
-            },
-            5: {
-                food: 0,
-                snacks: 0,
-                services: 0,
-                games: 0,
-                tech: 0,
-                health: 0,
-                clothes: 0,
-                saved: 0,
-                other: 0,
-            },
-            6: {
-                food: 0,
-                snacks: 0,
-                services: 0,
-                games: 0,
-                tech: 0,
-                health: 0,
-                clothes: 0,
-                saved: 0,
-                other: 0,
             }
         }
     },
@@ -81,17 +59,6 @@ const database = {
         income: { fix: 7643.21, extra: 846 },
 
         weeks: {
-            1: {
-                food: 0,
-                snacks: 0,
-                services: 0,
-                games: 0,
-                tech: 0,
-                health: 0,
-                clothes: 0,
-                saved: 0,
-                other: 0,
-            },
             2: {
                 food: 164.54,
                 snacks: 704.38,
@@ -135,18 +102,7 @@ const database = {
                 clothes: 0,
                 saved: 0,
                 other: 0,
-            },
-            6: {
-                food: 0,
-                snacks: 0,
-                services: 0,
-                games: 0,
-                tech: 0,
-                health: 0,
-                clothes: 0,
-                saved: 0,
-                other: 0,
-            },
+            }
         }
     },
 
@@ -234,7 +190,7 @@ const database = {
     },
 
     "2026-04": {
-        income: { fix: 7380.56, extra: 2190 },
+        income: { fix: 7880.56, extra: 2190 },
 
         weeks: {
             1: {
@@ -311,22 +267,7 @@ const database = {
 /* Подарки */   gifts: 0,
 /* Игры */      games: 0,
 /* Другое */    other: 1.5,
-            },
-            6: {
-/* Продукты */  food: 0,
-/* Вкусняшки */ snacks: 0,
-/* Рестораны */ dining: 0,
-/* Проезд */    transport: 0,
-/* Жильё */     rent: 0,
-/* Услуги */    services: 0,
-/* Здоровье */  health: 0,
-/* Барбершоп */ barber: 0,
-/* Одежда */    clothes: 0,
-/* Техника */   tech: 0,
-/* Подарки */   gifts: 0,
-/* Игры */      games: 0,
-/* Другое */    other: 0,
-            },
+            }
         }
     },
 
@@ -395,35 +336,20 @@ const database = {
 /* Другое */    other: 0,
             },
             5: {
-/* Продукты */  food: 332.02,
-/* Вкусняшки */ snacks: 51.98,
+/* Продукты */  food: 687.21,
+/* Вкусняшки */ snacks: 186.94, // 84.5 за чипси
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,
 /* Жильё */     rent: 0,
-/* Услуги */    services: 0,
+/* Услуги */    services: 0, // 150 за інет + 143.88 за телефон + 26 за інте Паши = 319.88
 /* Здоровье */  health: 0,
 /* Барбершоп */ barber: 500,
 /* Одежда */    clothes: 0,
 /* Техника */   tech: 0,
 /* Подарки */   gifts: 0,
 /* Игры */      games: 0,
-/* Другое */    other: 0,
-            },
-            6: {
-/* Продукты */  food: 0,
-/* Вкусняшки */ snacks: 0,
-/* Рестораны */ dining: 0,
-/* Проезд */    transport: 0,
-/* Жильё */     rent: 0,
-/* Услуги */    services: 0,
-/* Здоровье */  health: 0,
-/* Барбершоп */ barber: 0,
-/* Одежда */    clothes: 0,
-/* Техника */   tech: 0,
-/* Подарки */   gifts: 0,
-/* Игры */      games: 0,
-/* Другое */    other: 0,
-            },
+/* Другое */    other: 1.49, // 5 комісія
+            }
         }
     },
     "2026-06": {

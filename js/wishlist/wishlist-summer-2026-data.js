@@ -195,6 +195,62 @@ const gamesData = [
         progress: 0
     },
     {
+        title: "REANIMAL Friend's Pass",
+        steam_link: "https://store.steampowered.com/app/2129530/REANIMAL/?l=ukrainian",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2129530/4cdda917a0155258a2e7909d7869f35d8f980f96/header.jpg?t=1771918402",
+        release_date: "13 фев. 2026 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "6",
+        rating: "",
+
+        play_status: "unplanned_dropped",
+        review_link: "",
+        progress: 17
+    },
+    {
+        title: "FINAL FANTASY X/X-2 HD Remaster",
+        steam_link: "https://store.steampowered.com/app/359870/FINAL_FANTASY_XX2_HD_Remaster/?l=russian",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/359870/header.jpg?t=1773826230",
+        release_date: "12 мая. 2016 г.",
+        price_uah: 379,
+        discount_percent: 60,
+        playtime: "50",
+        rating: "",
+
+        play_status: "changed_mind",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "tModLoader",
+        steam_link: "https://store.steampowered.com/app/1281930/tModLoader/?l=russian",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1281930/header.jpg?t=1718143594",
+        release_date: "16 мая. 2020 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "30",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link: "",
+        progress: 100
+    },
+    {
+        title: "Terraria",
+        steam_link: "https://store.steampowered.com/app/105600/Terraria/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/105600/header.jpg?t=1769844435",
+        release_date: "16 мая. 2011 г.",
+        price_uah: 225,
+        discount_percent: 50,
+        playtime: "30",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link: "",
+        progress: 100
+    },
+    {
         title: "Subnautica 2",
         steam_link: "https://store.steampowered.com/app/1962700/Subnautica_2/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1962700/header.jpg?t=1779360380",
@@ -206,7 +262,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "",
-        progress: 66
+        progress: 70
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
@@ -270,20 +326,6 @@ const gamesData = [
         price_uah: "",
         discount_percent: 0,
         playtime: "",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
-        progress: 0
-    },
-    {
-        title: "FINAL FANTASY X/X-2 HD Remaster",
-        steam_link: "https://store.steampowered.com/app/359870/FINAL_FANTASY_XX2_HD_Remaster/?l=russian",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/359870/header.jpg?t=1773826230",
-        release_date: "12 мая. 2016 г.",
-        price_uah: 379,
-        discount_percent: 60,
-        playtime: "50",
         rating: "",
 
         play_status: "planned",

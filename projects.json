@@ -479,6 +479,13 @@
     "url": "",
     "date": "2026-05-25"
   },
+  "rezero-arc-10.html": {
+    "image": "html/rezero-arc-10/rezero-arc-10.png",
+    "description": "A summary moments from the 10th arc of “Re: Zero.”",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-26"
+  },
   ".html": {
     "image": "",
     "description": "",

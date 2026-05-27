@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Пересказ 10-й арки Re:Zero — The Land of the Lion Kings. Подробности сюжета от kiwwij.">
+    <title>Re:Zero Arc 10 — Пересказ</title>
+    
+    <link rel="icon" type="image/svg+xml" href="rezero-arc-10/lion.png">
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/rezero-arc-10.css">
+</head>
+<body>
+    <div id="readingProgressContainer" class="reading-progress-container" style="display: none;">
+        <div id="readingProgressBar" class="reading-progress-bar"></div>
+    </div>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class='bx bx-menu'></i>
+    </button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><img src="rezero-arc-10/lion.png" alt="Lion" class="lion-icon">10-ая Арка</h2>
+            <button id="themeToggle" class="theme-toggle">
+                <i class='bx bx-sun'></i>
+            </button>
+        </div>
+        
+        <nav class="nav-content">
+            <button id="downloadTxtBtn" class="download-txt-btn">
+                <i class='bx bx-download'></i> Скачать .txt
+            </button>
+
+            <div class="phase-group" data-phase="phase1">
+                <button class="phase-btn"><i class='bx bx-book-content'></i> Том 44 <i class='bx bx-chevron-down arrow'></i></button>
+                <div class="phase-chapters">
+                    <button class="chapter-btn" data-ch="1">Глава 1: Друзья</button>
+                    <button class="chapter-btn" data-ch="2">Глава 2: Таинство Церкви</button>
+                    <button class="chapter-btn" data-ch="3">Глава 3: Проблеск света</button>
+                    <button class="chapter-btn" data-ch="4">Глава 4: Дабро пожаловать</button>
+                    <button class="chapter-btn" data-ch="5">Глава 5: Итог небольшого крюка</button>
+                    <button class="chapter-btn" data-ch="6">Глава 6: Белое каление</button>
+                    <button class="chapter-btn" data-ch="7">Глава 7: Мои друзья</button>
+                    <button class="chapter-btn" data-ch="i1">Интерлюдие: “――Почему?..”</button>
+                    <button class="chapter-btn" data-ch="8">Глава 8: Итог выбора</button>
+                    <button class="chapter-btn" data-ch="9">Глава 9: Нытик</button>
+                    <button class="chapter-btn" data-ch="10">Глава 10: Недоверие</button>
+                    <button class="chapter-btn" data-ch="11">Глава 11: Почему сияет драконий жемчуг</button>
+                    <button class="chapter-btn" data-ch="12">Глава 12: Стон</button>
+                </div>
+            </div>
+
+            <div class="phase-group" data-phase="phase2">
+                <button class="phase-btn"><i class='bx bx-book-content'></i> Том 45 <i class='bx bx-chevron-down arrow'></i></button>
+                <div class="phase-chapters">
+                    <button class="chapter-btn" data-ch="13">Глава 13: Не запятнать кровью</button>
+                    <button class="chapter-btn" data-ch="14">Глава 14: Мятежник</button>
+                    <button class="chapter-btn" data-ch="15">Глава 15: С тобой хоть в ад</button>
+                    <button class="chapter-btn" data-ch="16">Глава 16: Удар исподтишка</button>
+                    <button class="chapter-btn" data-ch="17">Глава 17: Сгорите же дотла</button>
+                    <button class="chapter-btn" data-ch="18">Глава 18: Чудесный сон</button>
+                    <button class="chapter-btn" data-ch="19">Глава 19: Враг не по зубам</button>
+                    <button class="chapter-btn" data-ch="20">Глава 20: Овечка в собачьем зеркале</button>
+                    <button class="chapter-btn" data-ch="21">Глава 21: Шесть Языков</button>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <article class="reader-container">
+            
+            <div id="initialState" class="initial-state">
+                <div class="intro-glow">
+                    <img src="rezero-arc-10/rezero-arc-10.png" alt="Re:Zero Arc 10" class="intro-image">
+                </div>
+                <h2 class="intro-title">Страна Короля Льва</h2>
+                <p class="intro-desc">Приятного чтения!</p>
+                <p class="intro-hint"><img src="rezero-arc-10/lion.png" alt="Lion" class="lion-icon"> Выберите том и главу в меню слева, чтобы начать чтение.</p>
+            </div>
+
+            <div id="chapterContent" style="display: none;">
+                <div id="posterContainer" class="volume-poster-container">
+                    <div class="skeleton poster-skeleton"></div>
+                    <img src="" alt="Обложка" class="volume-poster" id="volumePoster" style="display: none;">
+                </div>
+                
+                <header class="chapter-header">
+                    <h1 id="chapterTitle">Страна Короля Льва</h1>
+                </header>
+
+                <div class="chapter-body" id="chapterText"></div>
+            </div>
+
+        </article>
+    </main>
+
+    <div id="resumeModal" class="resume-modal-overlay" style="display: none;">
+        <div class="resume-modal">
+            <i class='bx bx-book-reader'></i>
+            <h3>С возвращением!</h3>
+            <p>Вы остановились на: <br><strong id="resumeChapterName">Глава 1</strong></p>
+            <div class="resume-btns">
+                <button id="resumeYes" class="btn-primary">Продолжить чтение</button>
+                <button id="resumeNo" class="btn-secondary">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/rezero-arc-10.js"></script>
+</body>
+</html>
