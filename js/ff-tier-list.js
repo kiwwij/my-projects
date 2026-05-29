@@ -30,6 +30,15 @@ let games = [
         tier: "S"
     },
     {
+        id: 9,
+        title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
+        img: "https://image.api.playstation.com/vulcan/ap/rnd/202208/2505/7GhpNUWSPdoNFdMLroXaPXm8.png",
+        steam: "https://store.steampowered.com/app/1608070/CRISIS_CORE_FINAL_FANTASY_VII_REUNION/?curator_clanid=34459938",
+        mc: 78,
+        comment: "Хочу пройти приквел к 7-ой части, чтобы узнать всю историю.",
+        tier: "A"
+    },
+    {
         id: 4,
         title: "Final Fantasy XIII",
         img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292120/library_600x900_2x.jpg",
@@ -91,15 +100,8 @@ let games = [
     },
 
 
-    {
-        id: 9,
-        title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
-        img: "https://image.api.playstation.com/vulcan/ap/rnd/202208/2505/7GhpNUWSPdoNFdMLroXaPXm8.png",
-        steam: "https://store.steampowered.com/app/1608070/CRISIS_CORE_FINAL_FANTASY_VII_REUNION/?curator_clanid=34459938",
-        mc: 78,
-        comment: "Хочу пройти приквел к 7-ой части, чтобы узнать всю историю.",
-        tier: "want"
-    },
+    
+
     {
         id: 10,
         title: "FINAL FANTASY XVI",
@@ -115,7 +117,7 @@ let games = [
         img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/359870/library_600x900_2x.jpg",
         steam: "https://store.steampowered.com/app/359870/",
         mc: 92,
-        comment: "Одна из лучших историй в серии с отличным вайбом, по словам игроков.",
+        comment: "Одна из лучших историй в серии с отличным вайбом, по словам игроков. Но, я не хочу ни играть, ни смотреть прохождение, поэтому буде в этом тире.",
         tier: "want"
     },
     {
@@ -124,7 +126,7 @@ let games = [
         img: "ff-tier-list/ff9.jpg",
         steam: "https://store.steampowered.com/app/377840/FINAL_FANTASY_IX/",
         mc: 94,
-        comment: "Вообще ничего не известно про эту чатсь.",
+        comment: "Вообще ничего не знаю про эту чатсь. И не хочу узнавать. Остаётся тут.",
         tier: "want"
     },
 ];

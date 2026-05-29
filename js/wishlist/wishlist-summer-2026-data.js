@@ -229,12 +229,12 @@ const gamesData = [
         release_date: "16 мая. 2020 г.",
         price_uah: 0,
         discount_percent: 0,
-        playtime: "30",
-        rating: "",
+        playtime: "19",
+        rating: "83",
 
         play_status: "unplanned_completed",
         review_link: "",
-        progress: 100
+        progress: 101
     },
     {
         title: "Terraria",
@@ -243,10 +243,24 @@ const gamesData = [
         release_date: "16 мая. 2011 г.",
         price_uah: 225,
         discount_percent: 50,
-        playtime: "30",
+        playtime: "10",
         rating: "",
 
         play_status: "unplanned_completed",
+        review_link: "",
+        progress: 101
+    },
+    {
+        title: "Dispatch Demo",
+        steam_link: "https://store.steampowered.com/app/3674060/Dispatch_Demo/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3674060/77ff82991a726d1d8973d7efb744e55a534659a3/header.jpg?t=1749414581",
+        release_date: "29 мая. 2025 г.",
+        price_uah: "0",
+        discount_percent: 0,
+        playtime: "0.5",
+        rating: "",
+
+        play_status: "completed",
         review_link: "",
         progress: 100
     },
@@ -382,6 +396,34 @@ const gamesData = [
         price_uah: "",
         discount_percent: 0,
         playtime: "",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "Bayonetta",
+        steam_link: "https://store.steampowered.com/app/460790/Bayonetta/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/460790/header.jpg?t=1763677459",
+        release_date: "11 апр. 2017 г.",
+        price_uah: "499",
+        discount_percent: 70,
+        playtime: "11",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "Dispatch",
+        steam_link: "https://store.steampowered.com/app/2592160/Dispatch/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2592160/header.jpg?t=1779899220",
+        release_date: "22 окт. 2025 г.",
+        price_uah: "600",
+        discount_percent: 20,
+        playtime: "8",
         rating: "",
 
         play_status: "planned",
