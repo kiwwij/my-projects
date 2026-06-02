@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <title>Архітектура ПЗ. Колоквіум №2</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <style>
+        :root[data-theme="dark"] {
+            --bg: #0f172a;          
+            --c-bg: #1e293b;        
+            --txt: #f8fafc;         
+            --mut: #94a3b8;         
+            --pr: #818cf8;          
+            --pr-l: #6366f1;        
+            --suc: #10b981;         
+            --err: #ef4444;         
+            --sh: 0 4px 15px -3px rgba(0,0,0,0.5); 
+            --bd: #334155;          
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f8fafc;          
+            --c-bg: #ffffff;        
+            --txt: #1e293b;         
+            --mut: #64748b;         
+            --pr: #6366f1;          
+            --pr-l: #818cf8;        
+            --suc: #10b981;
+            --err: #ef4444;
+            --sh: 0 4px 15px -3px rgba(0,0,0,0.05);
+            --bd: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--txt);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        i {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+        }
+
+        header {
+            background: var(--c-bg);
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .ht {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pr);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-btn {
+            background: transparent;
+            border: 1px solid var(--bd);
+            color: var(--txt);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .theme-btn:hover { background: var(--bg); }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg);
+            padding: 0.4rem;
+            border-radius: 14px;
+            border: 1px solid var(--bd);
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--mut);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tab.act {
+            background: var(--c-bg);
+            color: var(--pr);
+            box-shadow: var(--sh);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .sec { display: none; animation: fi .4s ease; }
+        .sec.act { display: block; }
+        @keyframes fi { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card { perspective: 1000px; height: 260px; cursor: pointer; }
+        .c-in {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d; border-radius: 16px; box-shadow: var(--sh);
+        }
+        .card.flip .c-in { transform: rotateY(180deg); }
+        .c-f, .c-b {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 1rem;
+            border: 1px solid var(--bd);
+        }
+        .c-f { background: var(--c-bg); }
+        .c-f i { font-size: 2.5rem; color: var(--pr); }
+        .c-b {
+            transform: rotateY(180deg); background: var(--pr); color: #fff;
+            text-align: left; align-items: flex-start; overflow-y: auto; font-size: 1rem;
+        }
+        .c-b::-webkit-scrollbar { width: 4px; }
+        .c-b::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); border-radius: 10px; }
+
+        .q-cnt {
+            max-width: 800px; margin: 0 auto; background: var(--c-bg);
+            padding: 2rem; border-radius: 16px; box-shadow: var(--sh);
+            border: 1px solid var(--bd);
+        }
+        .q-hd { display: flex; justify-content: space-between; margin-bottom: 1.5rem; color: var(--mut); font-weight: 600; }
+        .q-txt { font-size: 1.25rem; font-weight: 600; margin-bottom: 2rem; line-height: 1.4; }
+        .q-opt { display: flex; flex-direction: column; gap: 0.8rem; }
+        .obtn {
+            background: var(--bg); border: 2px solid var(--bd); padding: 1rem;
+            border-radius: 12px; text-align: left; font-size: 1rem; cursor: pointer; color: var(--txt);
+        }
+        .obtn:hover:not(:disabled) { border-color: var(--pr); }
+        .obtn.y { background: rgba(16, 185, 129, 0.1); border-color: var(--suc); color: var(--suc); }
+        .obtn.n { background: rgba(239, 68, 68, 0.1); border-color: var(--err); color: var(--err); }
+        .q-act { margin-top: 2rem; text-align: right; }
+        
+        .btn {
+            background: var(--pr); color: #fff; border: none; padding: 0.75rem 1.5rem;
+            border-radius: 10px; font-weight: 600; cursor: pointer; display: inline-flex;
+            align-items: center; gap: 0.5rem;
+        }
+        .btn:hover { background: var(--pr-l); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .l-cnt { display: flex; flex-direction: column; gap: 1rem; max-width: 900px; margin: 0 auto; }
+        .l-it {
+            background: var(--c-bg); padding: 1.5rem; border-radius: 16px;
+            box-shadow: var(--sh); border: 1px solid var(--bd);
+        }
+        .l-q { font-weight: 600; font-size: 1.1rem; margin-bottom: 0.8rem; display: flex; gap: 0.5rem; align-items: flex-start; }
+        .l-q i { color: var(--pr); margin-top: 2px; font-size: 1.2rem; }
+        .l-a { color: var(--mut); line-height: 1.6; padding-left: 1.7rem; font-size: 0.95rem; }
+
+        @media (max-width: 600px) {
+            header { padding: 1rem; gap: 1rem; }
+            .logo { font-size: 1.2rem; }
+            .theme-btn { width: 35px; height: 35px; font-size: 1rem; }
+            .tabs { width: 100%; overflow-x: auto; border-radius: 10px; }
+            .tab { flex: 1; text-align: center; padding: 0.5rem; font-size: 0.85rem; justify-content: center; }
+            
+            main { padding: 1rem; }
+            
+            .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.8rem; }
+            .card { height: 200px; }
+            .c-f, .c-b { padding: 1rem; }
+            .c-f i { font-size: 1.8rem; }
+            .c-f h3 { font-size: 0.9rem !important; }
+            .c-f p { font-size: 0.8rem !important; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+            .c-b { font-size: 0.85rem; }
+            
+            .q-cnt { padding: 1.2rem; }
+            .q-txt { font-size: 1.1rem; margin-bottom: 1.5rem; }
+            .obtn { padding: 0.8rem; font-size: 0.9rem; }
+            
+            .l-it { padding: 1rem; }
+            .l-q { font-size: 1rem; }
+            .l-a { font-size: 0.9rem; padding-left: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="ht">
+            <div class="logo"><i class='bx bx-brain'></i> Архітектура ПЗ. Колоквіум №2</div>
+            <button id="theme-toggle" class="theme-btn"><i class='bx bx-sun'></i></button>
+        </div>
+        <nav class="tabs">
+            <button class="tab act" data-t="cards-sec"><i class='bx bx-carousel'></i> Картки</button>
+            <button class="tab" data-t="quiz-sec"><i class='bx bx-check-square'></i> Тести</button>
+            <button class="tab" data-t="list-sec"><i class='bx bx-list-ul'></i> Усі питання</button>
+        </nav>
+    </header>
+    
+    <main>
+        <div id="cards-sec" class="sec act">
+            <div style="margin-bottom:1rem; text-align:right;">
+                <button class="btn" id="s-cards"><i class='bx bx-refresh'></i> Перемішати</button>
+            </div>
+            <div id="cards-grid" class="grid"></div>
+        </div>
+        
+        <div id="quiz-sec" class="sec">
+            <div class="q-cnt">
+                <div class="q-hd"><span id="q-prog"></span><span id="q-score"></span></div>
+                <div class="q-txt" id="q-txt"></div>
+                <div class="q-opt" id="q-opt"></div>
+                <div class="q-act"><button class="btn" id="n-btn" disabled>Наступне <i class='bx bx-right-arrow-alt'></i></button></div>
+            </div>
+        </div>
+        
+        <div id="list-sec" class="sec">
+            <div class="l-cnt" id="l-cnt"></div>
+        </div>
+    </main>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+        const icon = themeToggle.querySelector('i');
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        root.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            updateThemeIcon(targetTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            icon.className = theme === 'dark' ? 'bx bx-sun' : 'bx bx-moon';
+        }
+
+        const qaData = [
+            { q: "1. Що таке архітектурний стиль, назвіть декілька найпоширеніших?", a: "Архітектурний стиль — це набір принципів і правил проектування системи. Приклади: клієнт-серверний, мікросервісний, MVC, шаруватий." },
+            { q: "2. Які існують рівні архітектурних стилів/паттернів?", a: "Існують рівні: аплікації, сервісу, інтеграції, даних, управління даними." },
+            { q: "3. Які архітектурні стилі визначені на рівні аплікації?", a: "До них належать: MVC, N-рівнева (Layered) архітектура, MVVM, компонентна архітектура." },
+            { q: "4. Які архітектурні стилі визначені на рівні сервісу?", a: "Основні стилі: сервіс-орієнтована архітектура (SOA) та мікросервісна архітектура (Microservices)." },
+            { q: "5. Які архітектурні стилі визначені на рівні інтеграції?", a: "Шина повідомлень (Message Bus), Hub-and-Spoke, Peer-to-Peer (P2P)." },
+            { q: "6. Які архітектурні стилі визначені на рівні даних?", a: "Спільна база даних (Shared Database), CQRS, Event Sourcing." },
+            { q: "7. Які архітектурні стилі визначені на рівні управління даними?", a: "Master Data Management (MDM), Data Lake." },
+            { q: "8. Які архітектурні стилі визначені серед міжрівневих стилів?", a: "Подійно-орієнтована архітектура (Event-Driven) та Publisher-Subscriber (видавець-підписник)." },
+            { q: "9. Хто такі 'Банда Чотирьох' (Gang of Four, GoF)?", a: "Еріх Гамма, Річард Хелм, Ральф Джонсон та Джон Вліссідес — автори знаменитої книги 'Design Patterns'." },
+            { q: "10. Скільки патернів описано в оригінальній книзі GoF?", a: "В оригінальній книзі описано 23 класичних патерни." },
+            { q: "11. Що таке Creational Patterns? Назвіть декілька з них.", a: "Твірні патерни відповідають за безпечне та гнучке створення об'єктів. Приклади: Singleton, Builder, Factory Method." },
+            { q: "12. Що таке Structural Patterns? Назвіть декілька з них.", a: "Структурні патерни допомагають складати об'єкти в більші структури. Приклади: Adapter, Decorator, Facade." },
+            { q: "13. Що таке Behavioral Patterns? Назвіть декілька з них.", a: "Поведінкові патерни розподіляють обов'язки та алгоритми між об'єктами. Приклади: Observer, Strategy, Command." },
+            { q: "14. У чому полягає суть патерна Singleton і які проблеми він вирішує?", a: "Гарантує, що клас має лише один екземпляр, і надає глобальну точку доступу до нього, запобігаючи створенню дублікатів." },
+            { q: "15. Для чого використовується патерн Factory Method?", a: "Делегує створення об'єктів підкласам, дозволяючи інтерфейсу створювати екземпляри без прив'язки до їхніх конкретних класів." },
+            { q: "16. Як працює патерн Abstract Factory і які його переваги?", a: "Створює сімейства пов'язаних об'єктів (наприклад, UI-елементи для різних ОС) без вказівки їхніх конкретних класів." },
+            { q: "17. Що таке патерн Builder і у яких випадках його доцільно застосовувати?", a: "Розділяє створення складного об'єкта і його представлення, дозволяючи покроково конструювати об'єкт (наприклад, конфігуратор ПК)." },
+            { q: "18. Як працює патерн Prototype і коли варто його використовувати?", a: "Дозволяє створювати нові об'єкти шляхом клонування існуючого екземпляра замість конструювання з нуля, що економить ресурси." },
+            { q: "19. Як працює патерн Adapter?", a: "Перетворює інтерфейс одного класу на інший, очікуваний клієнтом, працюючи як 'перекладач' для несумісних класів." },
+            { q: "20. У чому суть патерна Bridge і яку проблему він вирішує?", a: "Розділяє абстракцію та її реалізацію так, щоб їх можна було змінювати незалежно (наприклад, інтерфейс пульта та реалізація телевізора)." },
+            { q: "21. Що таке патерн Composite і як його застосовують у ієрархіях об’єктів?", a: "Компонує об'єкти в деревоподібні структури для представлення ієрархій 'частина-ціле', дозволяючи однаково працювати з окремим об'єктом та групою." },
+            { q: "22. Для чого використовується патерн Decorator і які його типові приклади?", a: "Динамічно додає нові обов'язки об'єкту без його модифікації. Приклад: додавання різних топінгів до кави зі зміною ціни." },
+            { q: "23. Як працює патерн Facade і яку роль він відіграє в архітектурі системи?", a: "Надає єдиний, спрощений інтерфейс до складної підсистеми класів, приховуючи її внутрішню складність від клієнта." },
+            { q: "24. Що таке патерн Flyweight і як він допомагає оптимізувати використання пам’яті?", a: "Економить пам'ять, розділяючи спільний стан між великою кількістю дрібних об'єктів замість того, щоб кожен об'єкт зберігав усі дані." },
+            { q: "25. Які основні сценарії використання патерна Proxy?", a: "Використовується для лінивої ініціалізації (відкладене створення), контролю доступу, логування або кешування запитів до реального об'єкта." },
+            { q: "26. Як працює патерн Chain of Responsibility і які його плюси та мінуси?", a: "Передає запит ланцюжком обробників. Плюс: зменшує зв'язність. Мінус: запит може залишитися необробленим, якщо ніхто його не перехопить." },
+            { q: "27. У чому полягає ідея патерна Command?", a: "Інкапсулює запит як об'єкт, дозволяючи параметризувати клієнтів, ставити команди в чергу, логувати їх або реалізовувати операцію скасування (Undo)." },
+            { q: "28. Що таке патерн Iterator і як він підтримує прозорий обхід колекцій?", a: "Надає спосіб послідовного доступу до елементів колекції без розкриття її внутрішньої структури (масив, дерево, список)." },
+            { q: "29. Як працює патерн Mediator і яку функцію виконує в складних системах?", a: "Зменшує хаос залежностей, змушуючи об'єкти спілкуватися не безпосередньо один з одним, а через єдиний об'єкт-посередник." },
+            { q: "30. У чому полягає суть патерна Memento і коли його слід застосовувати?", a: "Дозволяє зберігати та відновлювати попередній стан об'єкта без розкриття деталей його внутрішньої реалізації (для функцій збереження/скасування)." },
+            { q: "31. Як працює патерн Observer і які системи найчастіше його використовують?", a: "Створює механізм підписки: при зміні стану одного об'єкта всі залежні сповіщаються. Часто застосовується в UI та подійно-орієнтованих системах." },
+            { q: "32. Що таке патерн State і як він допомагає управляти поведінкою об'єктів?", a: "Дозволяє об'єкту змінювати свою поведінку при зміні внутрішнього стану, наче це різні класи (наприклад, стани медіаплеєра: Play, Pause, Stop)." },
+            { q: "33. Як працює патерн Strategy і як він допомагає інкапсулювати алгоритми?", a: "Визначає сімейство алгоритмів і робить їх взаємозамінними під час виконання програми (наприклад, вибір способу сортування або оплати)." },
+            { q: "34. У чому суть патерна Template Method?", a: "Визначає кістяк алгоритму в суперкласі, дозволяючи підкласам перевизначати окремі кроки без зміни загальної структури алгоритму." },
+            { q: "35. Як працює патерн Visitor і у яких випадках він є корисним?", a: "Дозволяє додавати нові операції до об'єктів без зміни їхніх класів. Корисний для виконання операцій над складними структурами, як абстрактні синтаксичні дерева." },
+            { q: "36. Як визначає якість програмного забезпечення асоціація IEEE?", a: "Ступінь, до якого система, компонент або процес відповідають заданим вимогам та потребам замовника." },
+            { q: "37. Як визначається якість ПЗ у стандарті ISO 9000:2007?", a: "Ступінь, до якого сукупність власних характеристик продукту або сервісу відповідає визначеним вимогам." },
+            { q: "38. Які є основні характеристики якості ПЗ?", a: "Функціональність, надійність, зручність використання (usability), ефективність, супроводжуваність, портативність." },
+            { q: "39. Що включають у себе характеристики «функціональність», «надійність», «ефективність» ПЗ?", a: "Функціональність — наявність потрібних функцій; Надійність — безвідмовна робота; Ефективність — швидкість і раціональне використання ресурсів системи." },
+            { q: "40. Що таке забезпечення якості (QA)? Чим воно відрізняється від тестування ПЗ?", a: "QA — це превентивний процес забезпечення якості на всіх етапах розробки, тоді як тестування — це пошук багів у вже створеному продукті." },
+            { q: "41. Що таке тестування ПЗ (Software Testing)? Які основні види діяльності входять до процесу тестування?", a: "Перевірка відповідності між реальною і очікуваною поведінкою ПЗ. Включає: планування, дизайн тестів, виконання, звітність." },
+            { q: "42. Які існують основні види тестування за рівнем знання системи?", a: "Тестування білого ящика (коду), чорного ящика (функціоналу без знання коду) та сірого ящика (часткове знання)." },
+            { q: "43. Які основні види тестування за об'єктом тестування?", a: "Функціональне тестування, тестування продуктивності, безпеки, UI, локалізації, сумісності." },
+            { q: "44. Які основні види тестування за часом виконання тестування?", a: "Альфа-тестування, бета-тестування, димове (Smoke), санітарне (Sanity) та регресійне." },
+            { q: "45. Які основні види тестування за ступенем ізольованості компонентів?", a: "Модульне (Unit), інтеграційне та системне тестування." },
+            { q: "46. Які основні види тестування за ступенем автоматизації і за ступенем підготовленості?", a: "За автоматизацією: ручне і автоматизоване. За підготовкою: формальне (за написаними тест-кейсами) та дослідницьке (Exploratory)." },
+            { q: "47. Як зазвичай організовано базу даних помилок і яка її мета?", a: "Організована у трекерах (напр., Jira) для відстеження дефектів за статусом, пріоритетом та виконавцем. Мета — гарантувати їх виправлення." },
+            { q: "48. Як визначається поняття copyleft і яку роль воно відіграє у поширенні вільного ПЗ?", a: "Copyleft вимагає, щоб усі модифіковані і розширені версії вільного ПЗ поширювалися під тією ж самою вільною ліцензією (захищає від закриття коду)." },
+            { q: "49. Які категорії програм належать до вільного програмного забезпечення?", a: "Операційні системи (Linux), компілятори (GCC), веб-сервери (Apache), СКБД (PostgreSQL)." },
+            { q: "50. Які чотири свободи визначають вільне програмне забезпечення?", a: "0) Запускати програму; 1) Вивчати/змінювати код; 2) Розповсюджувати копії; 3) Покращувати і публікувати зміни." },
+            { q: "51. Які критерії повинна відповідати ліцензія, щоб її можна було вважати відкритою (Open Source)?", a: "Вільне розповсюдження, доступ до вихідного коду, дозвіл на модифікації та відсутність дискримінації людей чи сфер застосування." },
+            { q: "52. Назвіть щонайменше три поширені ліцензії відкритого ПЗ.", a: "MIT License, GNU GPL (General Public License), Apache License 2.0." },
+            { q: "53. Які особисті немайнові права має автор комп’ютерного твору?", a: "Право на авторство, право на ім'я (псевдонім), право на недоторканність твору (захист від спотворення)." },
+            { q: "54. Які майнові права належать творцю програмного забезпечення?", a: "Право використовувати ПЗ, продавати його, здавати в оренду, дозволяти або забороняти використання іншим особам." },
+            { q: "55. Як ви розумієте поняття галузевого, державного і міжнародного стандартів?", a: "Галузеві діють у межах індустрії (напр., банки), державні (ДСТУ) — на території країни, міжнародні (ISO/IEC) — визнані у всьому світі." },
+            { q: "56. Що таке BSP і які кроки включає цей стандарт?", a: "Business System Planning — це методологія планування ІС. Кроки: визначення бізнес-цілей, процесів, класів даних, розробка архітектури ІС." },
+            { q: "57. Чим відрізняється ISO/IEC 12207 від інших стандартів?", a: "Він фокусується виключно на процесах життєвого циклу ПЗ (від задуму до виведення з експлуатації), поділяючи їх на основні, допоміжні та організаційні." },
+            { q: "58. Які основні розділи містить керівництво SWEBOK?", a: "Містить 15 областей знань: вимоги, проектування, конструювання, тестування, супровід, управління конфігурацією та процесами інженерії ПЗ тощо." },
+            { q: "59. Що таке CMM і для чого він використовується?", a: "Capability Maturity Model — модель для оцінки рівня зрілості процесів розробки ПЗ в організації (від початкового до оптимізованого рівня)." },
+            { q: "60. Які існують типи проектів у галузі розробки ПЗ?", a: "Розробка з нуля (Greenfield), модифікація існуючого (Brownfield), міграція, інтеграційні проекти, R&D (науково-дослідні)." },
+            { q: "61. Які основні фази включає процес розробки ПЗ за методологією RUP?", a: "Чотири фази: Початок (Inception), Проектування/Уточнення (Elaboration), Побудова (Construction) та Впровадження (Transition)." },
+            { q: "62. Які ключові особливості методології Microsoft Solution Framework (MSF)?", a: "Гнучкий фреймворк, що комбінує адаптивність Agile зі структурованістю традиційних методів, сильно орієнтований на управління ризиками." },
+            { q: "63. У чому полягає суть командної моделі в MSF?", a: "Складається з ролей рівноправних партнерів (Менеджмент продукту, Архітектура, Розробка, Тестування, Реліз), де кожен несе відповідальність за свій напрямок." },
+            { q: "64. Що таке процесна модель MSF?", a: "Це ітеративний підхід, розбитий на фази, кожна з яких завершується головною віхою (Milestone) для оцінки та перевірки результатів." },
+            { q: "65. Для яких команд розробників найкраще підходить методологія eXtreme Programming (XP)?", a: "Для малих та середніх команд (до 15 осіб) в умовах вимог замовника, які дуже часто та непередбачувано змінюються." },
+            { q: "66. Які чотири цінності є основою XP?", a: "Комунікація, Простота, Зворотний зв'язок (Feedback) та Сміливість (Courage)." },
+            { q: "67. Назвіть щонайменше п’ять методик, що використовуються в XP.", a: "Парне програмування, розробка через тестування (TDD), безперервна інтеграція (CI), рефакторинг, колективне володіння кодом." },
+            { q: "68. У чому полягає ідея гнучкої розробки (Agile)?", a: "Філософія, що ставить в пріоритет швидку поставку робочого ПЗ, адаптацію до постійних змін та тісну, щоденну співпрацю з замовником." },
+            { q: "69. Які основні положення викладені в Agile-маніфесті?", a: "Люди важливіші за процеси; робоче ПЗ важливіше за документацію; співпраця з замовником важливіша за контракти; готовність до змін важливіша за план." },
+            { q: "70. Як співвідносяться гнучкі (Agile) та формальні методи розробки ПЗ?", a: "Формальні методи покладаються на жорсткі плани і математичну доказовість (для критичних систем), тоді як Agile — адаптивний, ітеративний і гнучкий підхід." }
+        ];
+
+        qaData.forEach(item => {
+            let opts = [item.a];
+            while(opts.length < 4 && qaData.length >= 4) {
+                let r = qaData[Math.floor(Math.random() * qaData.length)].a;
+                if(!opts.includes(r)) opts.push(r);
+            }
+            item.options = opts.sort(() => Math.random() - 0.5);
+        });
+
+        const qsa = (s) => document.querySelectorAll(s);
+        qsa('.tab').forEach(b => {
+            b.addEventListener('click', () => {
+                qsa('.tab').forEach(t => t.classList.remove('act'));
+                qsa('.sec').forEach(s => s.classList.remove('act'));
+                b.classList.add('act');
+                document.getElementById(b.dataset.t).classList.add('act');
+            });
+        });
+
+        const cGrid = document.getElementById('cards-grid');
+        function renderCards(data) {
+            cGrid.innerHTML = '';
+            data.forEach((item) => {
+                const c = document.createElement('div'); c.className = 'card';
+                
+                let qNum = "Питання";
+                let qText = item.q;
+                if (item.q.includes('.')) {
+                    qNum += " " + item.q.split('.')[0];
+                    qText = item.q.substring(item.q.indexOf('.') + 1).trim();
+                }
+
+                c.innerHTML = `
+                    <div class="c-in">
+                        <div class="c-f">
+                            <i class='bx bx-brain'></i>
+                            <h3 style="font-size: 1.1rem; padding: 0 10px;">${qNum}</h3>
+                            <p style="font-size: 0.95rem; padding: 0 10px; color: var(--mut);">${qText}</p>
+                        </div>
+                        <div class="c-b">
+                            <p>${item.a}</p>
+                        </div>
+                    </div>`;
+                c.addEventListener('click', () => c.classList.toggle('flip'));
+                cGrid.appendChild(c);
+            });
+        }
+        renderCards(qaData);
+        document.getElementById('s-cards').addEventListener('click', () => renderCards([...qaData].sort(() => Math.random() - 0.5)));
+
+        const lCnt = document.getElementById('l-cnt');
+        qaData.forEach(item => {
+            lCnt.innerHTML += `
+                <div class="l-it">
+                    <div class="l-q"><i class='bx bx-message-square-detail'></i> <span>${item.q}</span></div>
+                    <div class="l-a">${item.a}</div>
+                </div>`;
+        });
+
+        let cQ = 0, score = 0, quiz = [...qaData].sort(() => Math.random() - 0.5);
+        const qTxt = document.getElementById('q-txt'), qOpt = document.getElementById('q-opt'), nextB = document.getElementById('n-btn');
+
+        function loadQ() {
+            if (quiz.length === 0) return;
+            nextB.disabled = true;
+            let qD = quiz[cQ];
+            document.getElementById('q-prog').innerText = `Питання ${cQ+1} / ${quiz.length}`;
+            document.getElementById('q-score').innerText = `Рахунок: ${score}`;
+            qTxt.innerText = qD.q; qOpt.innerHTML = '';
+            
+            qD.options.forEach(opt => {
+                let btn = document.createElement('button'); btn.className = 'obtn'; btn.innerText = opt;
+                btn.addEventListener('click', () => {
+                    qsa('.obtn').forEach(b => b.disabled = true);
+                    if(opt === qD.a) { btn.classList.add('y'); score++; } 
+                    else {
+                        btn.classList.add('n');
+                        qsa('.obtn').forEach(b => { if(b.innerText === qD.a) b.classList.add('y') });
+                    }
+                    document.getElementById('q-score').innerText = `Рахунок: ${score}`;
+                    if(cQ < quiz.length - 1) nextB.disabled = false;
+                    else { 
+                        nextB.innerHTML = "Завершити тест <i class='bx bx-check-double'></i>"; 
+                        nextB.disabled = false; 
+                        nextB.onclick = () => alert(`Тест завершено! Твій результат: ${score}/${quiz.length}`); 
+                    }
+                });
+                qOpt.appendChild(btn);
+            });
+        }
+        nextB.addEventListener('click', () => { cQ++; loadQ(); });
+        loadQ();
+    </script>
+</body>
+</html>

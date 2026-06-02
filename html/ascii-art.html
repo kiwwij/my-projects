@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Эстетичный генератор ASCII-артов. Конвертируйте ваши изображения и текст в стильную символьную графику с множеством настроек.">
+    <title>ASCII Art Generator</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>░</text></svg>">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/ascii-art.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class='bx bx-grid-alt'></i>
+            <span>ASCII Art</span>
+        </div>
+        <button id="themeToggle" class="btn-icon" aria-label="Переключить тему">
+            <i class='bx bx-sun'></i>
+        </button>
+    </header>
+
+    <main class="container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="imageTab">
+                <i class='bx bx-image-alt'></i> Картинка
+            </button>
+            <button class="tab-btn" data-tab="textTab">
+                <i class='bx bx-text'></i> Текст
+            </button>
+        </div>
+
+        <div class="control-panel">
+            <div id="imageTab" class="tab-content active">
+                <div class="upload-wrapper placeholder-wrapper">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <label for="imageInput" class="upload-label">
+                        <i class='bx bx-upload'></i>
+                        <span>Нажмите, чтобы загрузить</span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="textTab" class="tab-content">
+                <div class="input-wrapper">
+                    <textarea id="textInput" placeholder="Введите текст..."></textarea>
+                </div>
+                <div class="settings-group" style="margin-top: 15px;">
+                    <label>Размер шрифта текста: <span id="textSizeVal">60</span></label>
+                    <input type="range" id="textSize" min="20" max="150" value="60">
+                </div>
+            </div>
+
+            <div class="global-settings">
+                <div class="settings-grid">
+                    <div class="settings-group">
+                        <label>Детализация: <span id="resolutionVal">0.15</span></label>
+                        <input type="range" id="resolution" min="0.05" max="0.5" step="0.01" value="0.15">
+                    </div>
+                    <div class="settings-group">
+                        <label>Яркость: <span id="brightnessVal">0</span></label>
+                        <input type="range" id="brightness" min="-100" max="100" value="0">
+                    </div>
+                    <div class="settings-group">
+                        <label>Контраст: <span id="contrastVal">0</span></label>
+                        <input type="range" id="contrast" min="-100" max="100" value="0">
+                    </div>
+                    <div class="settings-group">
+                        <label>Символы:</label>
+                        <select id="charset">
+                            <option value="standard">Стандартные (Плотные)</option>
+                            <option value="blocks">Блоки (█▓▒░)</option>
+                            <option value="binary">Бинарные (01)</option>
+                            <option value="minimal">Минимализм (.-+*)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-actions">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="invert">
+                        <i class='bx bx-reflect-vertical'></i> Инверсия
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="colorMode">
+                        <i class='bx bx-palette'></i> В цвете
+                    </label>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="generateBtn" class="btn-primary">
+                    <i class='bx bx-cog'></i> Сгенерировать
+                </button>
+                <button id="resetBtn" class="btn-secondary">
+                    <i class='bx bx-refresh'></i> Сбросить настройки
+                </button>
+            </div>
+        </div>
+
+        <div class="output-panel">
+            <div class="output-actions">
+                <button id="copyBtn" class="btn-secondary">
+                    <i class='bx bx-copy-alt'></i> Копировать текст
+                </button>
+                <button id="downloadBtn" class="btn-secondary">
+                    <i class='bx bx-download'></i> Скачать картинкой
+                </button>
+            </div>
+            <div class="ascii-container placeholder-bg" id="asciiWrapper">
+                <div id="placeholder" class="placeholder-content">
+                    <i class='bx bx-terminal'></i>
+                    <p>Здесь появится результат</p>
+                </div>
+                <pre id="asciiOutput"></pre>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/ascii-art.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Эстетичный инструмент для создания аниме тир-листов.">
+    <title>Anime Tier Maker</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+    
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/anime-tier-list.css">
+</head>
+<body>
+    <header class="glass-nav">
+        <div class="nav-brand icon-center">
+            <i class='bx bxs-layer-plus'></i>
+            <span>Аниме тирмейкер</span>
+        </div>
+        
+        <div class="header-controls">
+            <button id="btn-save" class="action-btn icon-center" title="Сохранить тир-лист">
+                <i class='bx bxs-save'></i> Сохранить
+            </button>
+            <label for="file-upload" class="action-btn icon-center" title="Загрузить тир-лист">
+                <i class='bx bx-upload'></i> Загрузить
+            </label>
+            <input type="file" id="file-upload" accept=".json" style="display: none;">
+            
+            <button id="layout-btn" class="icon-center" title="Изменить компоновку">
+                <i class='bx bx-dock-left'></i>
+            </button>
+            <button id="theme-btn" class="icon-center" title="Сменить тему">
+                <i class='bx bxs-moon'></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container" id="main-container">
+        
+        <div class="layout-left">
+            <section class="search-panel glass-box">
+                <div class="search-input-wrapper">
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="search-input" placeholder="Поиск аниме только на англ...">
+                    <i class='bx bx-x' id="clear-search" style="display: none;" title="Очистить поиск"></i>
+                </div>
+                <div id="results-area" class="grid-results drop-zone"></div>
+            </section>
+
+            <section class="storage-panel glass-box">
+                <h2 class="section-title icon-center"><i class='bx bx-box'></i> Хранилище</h2>
+                <div id="storage-area" class="storage-grid drop-zone"></div>
+            </section>
+        </div>
+
+        <div class="layout-right">
+            <div class="tier-controls">
+                <button id="btn-add-tier" class="action-btn outline icon-center">
+                    <i class='bx bx-plus'></i> Добавить тир
+                </button>
+            </div>
+            <section class="tier-board" id="tier-board"></section>
+        </div>
+    </main>
+
+    <div id="anime-modal" class="modal-overlay">
+        <div class="modal-content glass-box">
+            <button id="modal-close" class="close-btn"><i class='bx bx-x'></i></button>
+            <div class="modal-body">
+                <div class="modal-poster">
+                    <img id="modal-img" src="" alt="Poster">
+                </div>
+                <div class="modal-info">
+                    <h2 id="modal-title">Загрузка...</h2>
+                    <div class="modal-meta">
+                        <span id="modal-type" class="meta-tag"><i class='bx bx-tv'></i> TV</span>
+                        <span id="modal-year" class="meta-tag"><i class='bx bx-calendar'></i> 2023</span>
+                        <span id="modal-rating" class="meta-tag">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M2 2h20v20H2V2zm4 15h3v-6.5l3 3.5 3-3.5V17h3V7h-3l-3 4.5L9 7H6v10z"/>
+                            </svg> 
+                            <span id="rating-val">8.5</span>
+                        </span>
+                        <span id="modal-episodes" class="meta-tag"><i class='bx bx-list-ol'></i> 24 эп.</span>
+                    </div>
+                    <div class="modal-desc-container">
+                        <p id="modal-desc">Пожалуйста, подождите...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/anime-tier-list.js"></script>
+</body>
+</html>

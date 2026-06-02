@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    localStorage.setItem('rezero_arc10_unlocked', 'true'); // закоммитить для блокировки страницы
+   // localStorage.setItem('rezero_arc10_unlocked', 'true');  разкоммитить для разблокировки страницы
 
     const lockKey = 'rezero_arc10_unlocked';
     const attemptsKey = 'rezero_arc10_attempts';
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const posters = {
-            "phase1": "rezero-arc-10/44.webp",
+            "phase1": "rezero-arc-10/44.jpg",
             "phase2": "rezero-arc-10/45.jpg",
 
             "phase3": "rezero-arc-10/46.webp",

@@ -53,7 +53,7 @@
   "kiwwij-anime-tier-list": {
     "image": "bx bxs-user-detail",
     "description": "Personal page about me, my interests, and anime tier list.",
-    "stack": ["html", "css", "js", "github"],
+    "stack": ["chart.js", "html", "css", "js", "github"],
     "url": "https://kiwwij.github.io/kiwwij-anime-tier-list/"
   },
   "kiwwij-social-links": {
@@ -485,6 +485,27 @@
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-05-26"
+  },
+  "anime-tier-list.html": {
+    "image": "bx bx-slider-alt",
+    "description": "Sort and build your perfect anime tier list.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-31"
+  },
+  "ascii-art.html": {
+    "image": "░",
+    "description": "ASCII Art Generator. Convert images and text into character art.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-31"
+  },
+  "architecture-pz-col2.html": {
+    "image": "bx bx-brain",
+    "description": "Software architecture. Preparation in colloquium 2.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-05-31"
   },
   ".html": {
     "image": "",
