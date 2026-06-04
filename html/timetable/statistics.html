@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика | 5ПІ-24б</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/10691/10691802.png">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../css/timetable.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="controls" style="justify-content: flex-start; gap: 15px; margin-bottom: 25px;">
+        <a href="../timetable.html" class="nav-btn" style="text-decoration: none; width: 40px; height: 40px;">
+            <i class='bx bx-arrow-back' style="font-size: 1.5rem;"></i>
+        </a>
+        <div class="date-display" style="font-size: 1.3rem;">Статистика навчання</div>
+    </div>
+
+    <div class="settings-bar" style="margin-bottom: 20px;">
+        <select id="stats-period-select" class="settings-select">
+            </select>
+        <div class="settings-select" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); pointer-events: none; border-color: transparent;">
+            <i class='bx bx-group' style="margin-right: 5px; color: var(--accent);"></i>
+            <span id="current-subgroup-display">Підгрупа</span>
+        </div>
+    </div>
+
+    <div id="stats-content"></div>
+</div>
+
+<div style="display: none;">
+    <div id="current-date"></div><div id="week-badge"></div>
+    <div id="schedule-container"></div><div id="status-title"></div>
+    <div id="main-timer"></div><div id="time-left-desc"></div>
+    <div id="weather-widget"></div><div id="weather-temp"></div>
+    <i id="weather-icon"></i><div id="reset-view-btn"></div>
+</div>
+
+<script src="../../js/timetable.js"></script>
+<script src="../../js/timetable/statistics.js"></script>
+</body>
+<div style="text-align: center; opacity: 0.5; font-size: 12px; margin-top: 25px; padding-bottom: 10px;">
+    &copy; 2026 kiwwij
+</div>
+</html>

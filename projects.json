@@ -45,7 +45,8 @@
     "stack": ["html", "css", "js", "github"]
   },
   "Homeowners-association": {
-    "image": "https://kasyanenko.com.ua/wp-content/uploads/2020/08/ede2a50ec1a2ab6501ce7f737c21a90b.jpeg",
+    "image": "https://sud.ua/uploads/news/2024/10/24/4c35a4d6d466e78f2ded4ddd2934ac677c34e591.jpg",
+    "old_image": "https://kasyanenko.com.ua/wp-content/uploads/2020/08/ede2a50ec1a2ab6501ce7f737c21a90b.jpeg",
     "description": "A Homeowners Association (HOA) in Ukrainian is ОСББ (Об'єднання співвласників багатоквартирного будинку) that manages common areas and infrastructure. Project on IT-Universe 2026. The site might not be working, so the link leads to a video. But here's a link to the site - https://testosbb.xo.je/php/login.php?i=1",
     "stack": ["php", "mysql", "html", "css", "js"],
     "url": "https://www.youtube.com/watch?v=e4T7vQ328a4"
@@ -164,7 +165,7 @@
   "timetable.html": {
     "image": "bx bx-calendar-event",
     "description": "VNTU schedule for February.",
-    "stack": ["html", "css", "js", "github"]
+    "stack": ["chart.js", "html", "css", "js", "github"]
   },
   "avatars.html": {
     "image": "bx bx-image",
