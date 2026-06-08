@@ -507,25 +507,25 @@ let lastScrollTop = 0;
 
 window.addEventListener("scroll", () => {
     let st = window.pageYOffset || document.documentElement.scrollTop;
-    let isMobile = window.innerWidth <= 768;
+    let documentHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    let windowHeight = window.innerHeight;
 
     clearTimeout(scrollTimeout);
 
-    if (st > 300) {
-        scrollTopBtn.classList.add("show");
-    } else {
-        scrollTopBtn.classList.remove("show");
-    }
-
-    if (isMobile && scrollBottomBtn) {
-        let documentHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-        let windowHeight = window.innerHeight;
-
-        if (st > lastScrollTop && st < documentHeight - windowHeight - 100) {
-            scrollBottomBtn.classList.add("show");
-            scrollTopBtn.classList.remove("show");
+    if (st > lastScrollTop) {
+        if (st < documentHeight - windowHeight - 50) {
+            if (scrollBottomBtn) scrollBottomBtn.classList.add("show");
+            if (scrollTopBtn) scrollTopBtn.classList.remove("show");
         } else {
-            scrollBottomBtn.classList.remove("show");
+            if (scrollBottomBtn) scrollBottomBtn.classList.remove("show");
+            if (scrollTopBtn) scrollTopBtn.classList.add("show");
+        }
+    } else if (st < lastScrollTop) {
+        if (st > 100) {
+            if (scrollTopBtn) scrollTopBtn.classList.add("show");
+            if (scrollBottomBtn) scrollBottomBtn.classList.remove("show");
+        } else {
+            if (scrollTopBtn) scrollTopBtn.classList.remove("show");
         }
     }
 
@@ -534,7 +534,7 @@ window.addEventListener("scroll", () => {
     scrollTimeout = setTimeout(() => {
         if (scrollTopBtn) scrollTopBtn.classList.remove("show");
         if (scrollBottomBtn) scrollBottomBtn.classList.remove("show");
-    }, 5000);
+    }, 3000);
 });
 
 function topFunction() {

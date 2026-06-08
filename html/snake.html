@@ -402,51 +402,109 @@
                 { dir: 'right', dx: 1, dy: 0 }
             ];
 
-            let queue = [{ x: head.x, y: head.y, path: [] }];
-            let visited = new Set([`${head.x},${head.y}`]);
-            let bestMove = null;
-
-            while (queue.length > 0) {
-                let curr = queue.shift();
-
-                if (curr.x === apple.x && curr.y === apple.y) {
-                    bestMove = curr.path[0];
-                    break;
-                }
-
-                for (let m of moves) {
-                    let nx = curr.x + m.dx;
-                    let ny = curr.y + m.dy;
-                    let key = `${nx},${ny}`;
-
-                    if (nx < 1 || nx > gridSize || ny < 1 || ny > gridSize) continue;
+            function getSafeMoves(startX, startY, currentSnake) {
+                return moves.filter(m => {
+                    let nx = startX + m.dx;
+                    let ny = startY + m.dy;
                     
-                    let hitBody = snake.some((seg, idx) => seg.x === nx && seg.y === ny && idx !== snake.length - 1);
+                    if (nx < 1 || nx > gridSize || ny < 1 || ny > gridSize) return false;
+                    
+                    let hitBody = currentSnake.some((seg, idx) => 
+                        seg.x === nx && seg.y === ny && idx !== currentSnake.length - 1
+                    );
+                    return !hitBody;
+                });
+            }
 
-                    if (!hitBody && !visited.has(key)) {
-                        visited.add(key);
-                        queue.push({ x: nx, y: ny, path: [...curr.path, m.dir] });
+            function bfs(startX, startY, targetX, targetY, currentSnake) {
+                let queue = [{ x: startX, y: startY, path: [] }];
+                let visited = new Set([`${startX},${startY}`]);
+
+                while (queue.length > 0) {
+                    let curr = queue.shift();
+                    if (curr.x === targetX && curr.y === targetY) return curr.path;
+                    
+                    let safeMoves = getSafeMoves(curr.x, curr.y, currentSnake);
+                    for (let m of safeMoves) {
+                        let nx = curr.x + m.dx;
+                        let ny = curr.y + m.dy;
+                        let key = `${nx},${ny}`;
+                        if (!visited.has(key)) {
+                            visited.add(key);
+                            queue.push({ x: nx, y: ny, path: [...curr.path, m.dir] });
+                        }
                     }
+                }
+                return null;
+            }
+
+            let pathToApple = bfs(head.x, head.y, apple.x, apple.y, snake);
+
+            if (pathToApple && pathToApple.length > 0) {
+                let nextDir = pathToApple[0];
+                let moveInfo = moves.find(m => m.dir === nextDir);
+                let nx = head.x + moveInfo.dx;
+                let ny = head.y + moveInfo.dy;
+                let isEating = (nx === apple.x && ny === apple.y);
+                let virtualSnake = isEating 
+                    ? [{x: nx, y: ny}, ...snake] 
+                    : [{x: nx, y: ny}, ...snake.slice(0, -1)];
+                let virtualTail = virtualSnake[virtualSnake.length - 1];
+                let pathToTail = bfs(nx, ny, virtualTail.x, virtualTail.y, virtualSnake);
+                
+                if (pathToTail !== null || snake.length <= 3) {
+                    return nextDir;
                 }
             }
 
-            if (bestMove) return bestMove;
+            let safeMoves = getSafeMoves(head.x, head.y, snake);
+            let bestSurvivalMove = null;
+            let maxFreeSpace = -1;
 
-            for (let m of moves) {
-                if (m.dir === 'up' && direction === 'down') continue;
-                if (m.dir === 'down' && direction === 'up') continue;
-                if (m.dir === 'left' && direction === 'right') continue;
-                if (m.dir === 'right' && direction === 'left') continue;
-
+            for (let m of safeMoves) {
                 let nx = head.x + m.dx;
                 let ny = head.y + m.dy;
                 
-                if (nx >= 1 && nx <= gridSize && ny >= 1 && ny <= gridSize) {
-                    if (!snake.some(seg => seg.x === nx && seg.y === ny)) {
-                        return m.dir;
+                let virtualSnake = [{x: nx, y: ny}, ...snake.slice(0, -1)];
+                let virtualTail = virtualSnake[virtualSnake.length - 1];
+                
+                let visited = new Set([`${nx},${ny}`]);
+                let queue = [{x: nx, y: ny}];
+                let spaceCount = 0;
+                let canReachTail = false;
+
+                while(queue.length > 0) {
+                    let curr = queue.shift();
+                    spaceCount++;
+                    
+                    if (curr.x === virtualTail.x && curr.y === virtualTail.y) {
+                        canReachTail = true;
+                    }
+
+                    let currentSafeMoves = getSafeMoves(curr.x, curr.y, virtualSnake);
+                    for(let cm of currentSafeMoves) {
+                        let cx = curr.x + cm.dx;
+                        let cy = curr.y + cm.dy;
+                        let key = `${cx},${cy}`;
+                        if (!visited.has(key)) {
+                            visited.add(key);
+                            queue.push({x: cx, y: cy});
+                        }
                     }
                 }
+
+                if (canReachTail && spaceCount > maxFreeSpace) {
+                    maxFreeSpace = spaceCount;
+                    bestSurvivalMove = m.dir;
+                } else if (!bestSurvivalMove && spaceCount > maxFreeSpace) {
+                    maxFreeSpace = spaceCount;
+                    bestSurvivalMove = m.dir;
+                }
             }
+
+            if (bestSurvivalMove) return bestSurvivalMove;
+
+            for (let m of safeMoves) return m.dir;
 
             return direction;
         }

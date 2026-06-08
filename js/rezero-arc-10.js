@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ? `<h2 style="margin: 0 0 10px; color: #FF4C4C; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(255, 76, 76, 0.6);">Доступ заблокирован</h2>
                <p style="margin: 0 0 30px; color: #E0E0E0; font-size: 0.95rem; line-height: 1.5;">Слишком много неверных попыток.<br>Система заблокирована на 24 часа.</p>`
             : `<h2 style="margin: 0 0 10px; color: #FFFFFF; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);">Страна Короля Льва</h2>
-               <p style="margin: 0 0 30px; color: #E0E0E0; font-size: 0.95rem; line-height: 1.5;">Доступ ограничен. Подсказка:<br><strong style="color: #f59e0b;">Лучшая девочка из Re:Zero 🦋</strong></p>
+               <p style="margin: 0 0 30px; color: #E0E0E0; font-size: 0.95rem; line-height: 1.5;">Доступ временно ограничен. Подсказка:<br><strong style="color: #f59e0b;">Лучшая девочка из Re:Zero 🦋</strong></p>
                <input type="password" id="rezero-pwd" placeholder="****" style="
                    width: 100%; padding: 18px; margin-bottom: 20px;
                    border: 2px solid #4a2d00; border-radius: 15px;

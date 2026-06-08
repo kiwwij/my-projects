@@ -54,7 +54,7 @@
   "kiwwij-anime-tier-list": {
     "image": "bx bxs-user-detail",
     "description": "Personal page about me, my interests, and anime tier list.",
-    "stack": ["chart.js", "html", "css", "js", "github"],
+    "stack": ["python", "chart.js", "html", "css", "js", "github"],
     "url": "https://kiwwij.github.io/kiwwij-anime-tier-list/"
   },
   "kiwwij-social-links": {
@@ -160,7 +160,7 @@
     "image": "bx bx-gift",
     "description": "If your name is Max, DON'T open. A small gift for my friend.",
     "stack": ["html", "css", "js", "github"],
-    "url": "https://kiwwij.github.io/day-x/countdown.html"
+    "date": "2025-09-12"
   },
   "timetable.html": {
     "image": "bx bx-calendar-event",
@@ -240,7 +240,7 @@
   "teor.html": {
     "image": "",
     "description": "just homework at university",
-    "stack": ["html", "css", "js", "github"]
+    "stack": ["chart.js", "html", "css", "js", "github"]
   },
   "octopath-traveler.html": {
     "image": "bx bx-compass",
@@ -507,6 +507,13 @@
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-05-31"
+  },
+  "who_are_you.html": {
+    "image": "?",
+    "description": "New Year's Greetings for 2026 to Friends.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "https://kiwwij.github.io/my-projects/html/day-x/new year/who_are_you.html",
+    "date": "2025-12-09"
   },
   ".html": {
     "image": "",

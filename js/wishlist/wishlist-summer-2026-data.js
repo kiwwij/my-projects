@@ -279,6 +279,20 @@ const gamesData = [
         progress: 70
     },
     {
+        title: "Dispatch",
+        steam_link: "https://store.steampowered.com/app/2592160/Dispatch/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2592160/header.jpg?t=1779899220",
+        release_date: "22 окт. 2025 г.",
+        price_uah: "600",
+        discount_percent: 20,
+        playtime: "8",
+        rating: "",
+
+        play_status: "playing",
+        review_link: "",
+        progress: 62
+    },
+    {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
         steam_link: "https://store.steampowered.com/app/1608070/CRISIS_CORE_FINAL_FANTASY_VII_REUNION/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1608070/header.jpg?t=1727791468",
@@ -366,7 +380,7 @@ const gamesData = [
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/678960/header.jpg?t=1766015412",
         release_date: "27 сен. 2019 г.",
         price_uah: 799,
-        discount_percent: 85,
+        discount_percent: 90,
         playtime: "26",
         rating: "",
 
@@ -410,20 +424,6 @@ const gamesData = [
         price_uah: "499",
         discount_percent: 70,
         playtime: "11",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
-        progress: 0
-    },
-    {
-        title: "Dispatch",
-        steam_link: "https://store.steampowered.com/app/2592160/Dispatch/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2592160/header.jpg?t=1779899220",
-        release_date: "22 окт. 2025 г.",
-        price_uah: "600",
-        discount_percent: 20,
-        playtime: "8",
         rating: "",
 
         play_status: "planned",

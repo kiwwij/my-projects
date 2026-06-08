@@ -354,8 +354,9 @@ h2 {
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-#scrollBottomBtn { display: none; }
-#scrollTopBtn { bottom: 30px; }
+#scrollTopBtn, #scrollBottomBtn { 
+    bottom: 30px; 
+}
 
 #scrollTopBtn.show, #scrollBottomBtn.show { 
     opacity: 1; visibility: visible; transform: translateY(0); 
@@ -855,4 +856,17 @@ footer a:hover { color: var(--accent); }
 @keyframes strangeRainbow {
     0% { filter: hue-rotate(0deg); transform: rotate(0deg); }
     100% { filter: hue-rotate(360deg); transform: rotate(360deg); }
+}
+
+.card-image-wrapper .card-image.placeholder {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .card-image.placeholder i, 
+    .card-image.placeholder span {
+        font-size: 3.5rem !important;
+    }
 }

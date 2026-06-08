@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="kiwwij">
+  <title>Время ещё не пришло...</title>
+  <link rel="shortcut icon" href="img/guts.webp">
+  <link rel="stylesheet" href="../../css/day-x/countdown.css">
+  <script src="../../js/day-x.js" defer></script>
+</head>
+
+<audio id="countdown-music" src="sounds/countdown_music.mp3" loop preload="auto"></audio>
+<button id="musicToggle" class="music-btn">🔇</button>
+
+<body>
+  <div id="countdownContent" class="container">
+    <h1>Время ещё не пришло</h1>
+
+    <p class="message">До дня Х осталось совсем немного. Возвращайтесь позже!</p>
+
+    <div class="countdown">
+        <span id="countdown-days">0</span>
+        <span id="countdown-hours">0</span>
+        <span id="countdown-minutes">0</span>
+        <span id="countdown-seconds">0</span>
+    </div>
+
+        <div class="countdown-label">
+        <span>дней</span>
+        <span>часов</span>
+        <span>минут</span>
+        <span>секунд</span>
+
+    </div>
+
+    <a id="calendarLink" target="_blank" class="google-calendar-btn">
+      📅 Добавить напоминание в Google Calendar
+    </a>
+    <p class="note">Данный сайт будет доступен только 1 день в году. Не упусти возможность узнать, что на нём!</p>
+  </div>
+</body>
+</html>
