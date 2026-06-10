@@ -196,6 +196,7 @@ select, #theme-switch {
 .link-btn[data-brand="youtube"]:hover { background-color: #FF0000; color: #fff; }
 .link-btn[data-brand="telegram"]:hover { background-color: #2AABEE; color: #fff; }
 .link-btn[data-brand="steam"]:hover { background-color: #171a21; color: #fff; }
+.link-btn[data-brand="reddit"]:hover { background-color: #FF4500; color: #fff; }
 .link-btn[data-brand="github"]:hover { background-color: #333333; color: #fff; }
 .link-btn[data-brand="discord"]:hover { background-color: #5865F2; color: #fff; }
 .link-btn[data-brand="twitch"]:hover { background-color: #9146FF; color: #fff; }

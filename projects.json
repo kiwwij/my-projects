@@ -57,11 +57,11 @@
     "stack": ["python", "chart.js", "html", "css", "js", "github"],
     "url": "https://kiwwij.github.io/kiwwij-anime-tier-list/"
   },
-  "kiwwij-social-links": {
+  "kiwwij-social-links.html": {
     "image": "bx bxs-id-card",
     "description": "Hub with links to all my social media profiles (old).",
     "stack": ["html", "css", "js", "github"],
-    "url": "https://kiwwij.github.io/kiwwij-social-links/"
+    "date": "2026-10-12"
   },
   "online-library": {
     "image": "https://kiwwij.github.io/online-library/img/librium_logo.png",
@@ -512,8 +512,15 @@
     "image": "?",
     "description": "New Year's Greetings for 2026 to Friends.",
     "stack": ["html", "css", "js", "github"],
-    "url": "https://kiwwij.github.io/my-projects/html/day-x/new year/who_are_you.html",
+    "url": "https://kiwwij.github.io/my-projects/html/day-x/new%20year/who_are_u.html",
     "date": "2025-12-09"
+  },
+  "my-projects.html": {
+    "image": "📂",
+    "description": "Why is this here? I don't know)",
+    "stack": ["html", "css", "js", "github"],
+    "url": "https://kiwwij.github.io/my-projects/",
+    "date": "2025-12-30"
   },
   ".html": {
     "image": "",

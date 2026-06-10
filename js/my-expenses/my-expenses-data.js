@@ -398,7 +398,7 @@ const database = {
 /* Одежда */    clothes: 0,
 /* Техника */   tech: 0,
 /* Подарки */   gifts: 0,
-/* Игры */      games: 0,
+/* Игры */      games: 0, // 79 за CODE VIEN
 /* Другое */    other: 0,
             },
             4: {

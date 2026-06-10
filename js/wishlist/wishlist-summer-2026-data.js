@@ -123,7 +123,7 @@ const gamesData = [
 
         play_status: "changed_mind",
         review_link: "https://telegra.ph/ELDEN-RING-Shadow-of-the-Erdtree-Edition-04-26",
-        progress: 101
+        progress: 0
     },
     {
         title: "SWORD ART ONLINE Alicization Lycoris",
@@ -136,7 +136,7 @@ const gamesData = [
         release_date: "10 июл. 2020 г.",
         play_status: "changed_mind",
         rating: "",
-        progress: 100
+        progress: 0
     },
     {
         title: "CODE VEIN Demo",
@@ -285,12 +285,26 @@ const gamesData = [
         release_date: "22 окт. 2025 г.",
         price_uah: "600",
         discount_percent: 20,
-        playtime: "8",
+        playtime: "7.5",
         rating: "",
+
+        play_status: "completed",
+        review_link: "https://telegra.ph/Dispatch-review-06-08",
+        progress: 100
+    },
+    {
+        title: "ATRI -My Dear Moments- Demo",
+        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1263470/header.jpg?t=1588321271",
+        release_date: "1 май. 2020",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "2",
+        rating: "80",
 
         play_status: "playing",
         review_link: "",
-        progress: 62
+        progress: 25
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
@@ -302,7 +316,7 @@ const gamesData = [
         playtime: "14",
         rating: "78",
 
-        play_status: "playing",
+        play_status: "paused",
         review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
         progress: 30
     },
@@ -425,6 +439,20 @@ const gamesData = [
         discount_percent: 70,
         playtime: "11",
         rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "ATRI -My Dear Moments-",
+        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1230140/header.jpg?t=1761759369",
+        release_date: "18 июн. 2020 г.",
+        price_uah: 292,
+        discount_percent: 55,
+        playtime: "10",
+        rating: "80",
 
         play_status: "planned",
         review_link: "",

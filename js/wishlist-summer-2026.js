@@ -709,7 +709,7 @@ async function fetchMetacriticRatings() {
             container.title = "Рейтинг игры на сайте Metacritic";
             container.innerHTML = `
                 <span style="display: inline-flex; width: 1.1rem; justify-content: center; align-items: center;">
-                    <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(1); margin: 0;">
+                    <img src="${mcIconUrl}" style="width: 14px; height: 14px; filter: invert(48%) sepia(13%) saturate(735%) hue-rotate(176deg) brightness(93%) contrast(89%); margin: 0;">
                 </span> 
                 <span style="color: ${ratingColor}; font-weight: 600;">${score}/100</span>`;
         });
