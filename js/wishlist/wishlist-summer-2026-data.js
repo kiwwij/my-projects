@@ -293,6 +293,20 @@ const gamesData = [
         progress: 100
     },
     {
+        title: "Echoes of Aincrad DEMO Version",
+        steam_link: "https://store.steampowered.com/app/2244210/Echoes_of_Aincrad/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4148250/afd5a96ebc1247efc4e3bf864bf3ea219b9a4e7e/header.jpg?t=1781542585",
+        release_date: "15 июн. 2026 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "2",
+        rating: "",
+
+        play_status: "playing",
+        review_link: "",
+        progress: 0
+    },
+    {
         title: "CODE VEIN",
         steam_link: "https://store.steampowered.com/app/678960/CODE_VEIN/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/678960/header.jpg?t=1766015412",

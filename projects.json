@@ -522,6 +522,13 @@
     "url": "https://kiwwij.github.io/my-projects/",
     "date": "2025-12-30"
   },
+  "a-perfectionist's-showcase.html": {
+    "image": "bx bxs-medal",
+    "description": "A showcase of my perfectionist steam games.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-06-15"
+  },
   ".html": {
     "image": "",
     "description": "",
