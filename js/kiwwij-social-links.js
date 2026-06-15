@@ -118,9 +118,9 @@ bgLayer.style.width = '100%';
 bgLayer.style.height = '100%';
 bgLayer.style.zIndex = '0';
 bgLayer.style.background = `
-  url('img/kaneki1.png') left bottom no-repeat,
-  url('img/kaneki3.png') center bottom no-repeat,
-  url('img/kaneki2.png') right bottom no-repeat
+  url('kiwwij-social-links/img/kaneki1.png') left bottom no-repeat,
+  url('kiwwij-social-links/img/kaneki3.png') center bottom no-repeat,
+  url('kiwwij-social-links/img/kaneki2.png') right bottom no-repeat
 `;
 bgLayer.style.backgroundSize = "20%, 25%, 20%";
 bgLayer.style.opacity = '0.05';

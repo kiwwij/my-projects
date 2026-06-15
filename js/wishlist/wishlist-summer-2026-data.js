@@ -293,6 +293,20 @@ const gamesData = [
         progress: 100
     },
     {
+        title: "CODE VEIN",
+        steam_link: "https://store.steampowered.com/app/678960/CODE_VEIN/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/678960/header.jpg?t=1766015412",
+        release_date: "27 сен. 2019 г.",
+        price_uah: 799,
+        discount_percent: 90,
+        playtime: "26",
+        rating: "",
+
+        play_status: "playing",
+        review_link: "",
+        progress: 5
+    },
+    {
         title: "ATRI -My Dear Moments- Demo",
         steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1263470/header.jpg?t=1588321271",
@@ -389,20 +403,6 @@ const gamesData = [
         progress: 0
     },
     {
-        title: "CODE VEIN",
-        steam_link: "https://store.steampowered.com/app/678960/CODE_VEIN/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/678960/header.jpg?t=1766015412",
-        release_date: "27 сен. 2019 г.",
-        price_uah: 799,
-        discount_percent: 90,
-        playtime: "26",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
-        progress: 0
-    },
-    {
         title: "CODE VEIN II",
         steam_link: "https://store.steampowered.com/app/2362060/CODE_VEIN_II/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2362060/955e8f3fce6d832c286ac8013657ed6fc51f1f85/header.jpg?t=1770242240",
@@ -453,6 +453,20 @@ const gamesData = [
         discount_percent: 55,
         playtime: "10",
         rating: "80",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "FINAL FANTASY VII REVELATION",
+        steam_link: "https://store.steampowered.com/app/4354570/FINAL_FANTASY_VII_REVELATION/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4354570/c82a370d62d715234771be34c6ff3c928c7d78e2/header.jpg?t=1781198176",
+        release_date: "2027 г.",
+        price_uah: "",
+        discount_percent: 0,
+        playtime: "",
+        rating: "",
 
         play_status: "planned",
         review_link: "",

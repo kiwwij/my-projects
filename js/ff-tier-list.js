@@ -111,24 +111,6 @@ let games = [
         comment: "Смотрел пару видосов про 16-ую часть, заинтересовала, хочу поиграть, чтобы понять, стоит ли она того.",
         tier: "want"
     },
-    {
-        id: 6,
-        title: "Final Fantasy X/X-2 HD Remaster",
-        img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/359870/library_600x900_2x.jpg",
-        steam: "https://store.steampowered.com/app/359870/",
-        mc: 92,
-        comment: "Одна из лучших историй в серии с отличным вайбом, по словам игроков. Но, я не хочу ни играть, ни смотреть прохождение, поэтому буде в этом тире.",
-        tier: "want"
-    },
-    {
-        id: 11,
-        title: "FINAL FANTASY IX",
-        img: "ff-tier-list/ff9.jpg",
-        steam: "https://store.steampowered.com/app/377840/FINAL_FANTASY_IX/",
-        mc: 94,
-        comment: "Вообще ничего не знаю про эту чатсь. И не хочу узнавать. Остаётся тут.",
-        tier: "want"
-    },
 ];
 
 let draggedGame = null;

@@ -89,6 +89,12 @@ const ACHIEVEMENTS = {
         icon: "bxs-trophy",
         isHidden: true // просмотр всех проектов
     },
+    recursion: {
+        title: "Recursion?",
+        desc: "You tried to open an archive inside an archive.",
+        icon: "bx-folder-open",
+        isHidden: true // клик по my-projects
+    },
 };
 
 const TOTAL_ACHIEVEMENTS = Object.keys(ACHIEVEMENTS).length;
@@ -284,21 +290,23 @@ document.addEventListener('click', (e) => {
     const card = e.target.closest('.project-card');
     
     if (card) {
-        const projectId = card.getAttribute('data-id');
+        const projectId = card.getAttribute('data-id') || card.getAttribute('href');
+        
         if (projectId) {
+            if (projectId.includes('my-projects')) {
+                unlockAchievement('recursion');
+            }
+
             let opened = JSON.parse(localStorage.getItem('opened_projects')) || [];
-            
+
             if (!opened.includes(projectId)) {
                 opened.push(projectId);
                 localStorage.setItem('opened_projects', JSON.stringify(opened));
             }
-            
             if (opened.length >= 10) {
                 unlockAchievement('project_buff');
             }
-
             const totalProjects = document.querySelectorAll('#projects-grid .project-card').length;
-
             if (totalProjects > 0 && opened.length >= totalProjects) {
                 unlockAchievement('platinum_trophy');
             }
