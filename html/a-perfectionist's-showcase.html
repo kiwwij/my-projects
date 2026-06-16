@@ -19,9 +19,15 @@
                 <i class='bx bxs-medal'></i> Витрина перфекциониста
             </a>
         </h1>
-        <button id="theme-toggle" class="btn" title="Сменить тему">
-            <i class='bx bxs-moon'></i>
-        </button>
+        <div class="header-controls">
+            <div class="search-container">
+                <i class='bx bx-search search-icon'></i>
+                <input type="text" id="game-search" class="search-input" placeholder="Поиск витрины...">
+            </div>
+            <button id="theme-toggle" class="btn" title="Сменить тему">
+                <i class='bx bxs-moon'></i>
+            </button>
+        </div>
     </header>
 
     <main class="container">
@@ -31,5 +37,8 @@
     </main>
 
     <script src="../js/a-perfectionist's-showcase.js"></script>
+    <button id="scroll-to-top" class="btn scroll-to-top" title="Вернуться наверх">
+        <i class='bx bx-up-arrow-alt'></i>
+    </button>
 </body>
 </html>

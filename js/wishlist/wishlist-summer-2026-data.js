@@ -299,10 +299,65 @@ const gamesData = [
         release_date: "15 июн. 2026 г.",
         price_uah: 0,
         discount_percent: 0,
-        playtime: "2",
+        playtime: "3.5",
         rating: "",
 
-        play_status: "playing",
+        play_status: "dropped",
+        review_link: "",
+        progress: 43
+    },
+    {
+        title: "Echoes of Aincrad",
+        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2244210/7f0745382bc945351cc3334c7f0b947c8a22b896/header.jpg?t=1773426830",
+        steam_link: "https://store.steampowered.com/app/2244210/Echoes_of_Aincrad/",
+        review_link: "",
+        playtime: "",
+        price_uah: 1999,
+        discount_percent: 0,
+        release_date: "10 июл. 2026 г.",
+        play_status: "changed_mind",
+        rating: "",
+        progress: 0
+    },
+    {
+        title: "Mortal Shell II - Open Beta",
+        steam_link: "https://store.steampowered.com/app/4711740/Mortal_Shell_II__V_betateste/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4711740/022831730f6b0dcddf6fdf5812b8f9eea5c165db/header_russian.jpg?t=1780931153",
+        release_date: "6 июн. 2026 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "3",
+        rating: "",
+
+        play_status: "changed_mind",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "ATRI -My Dear Moments-",
+        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1230140/header.jpg?t=1761759369",
+        release_date: "18 июн. 2020 г.",
+        price_uah: 292,
+        discount_percent: 55,
+        playtime: "10",
+        rating: "80",
+
+        play_status: "changed_mind",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "Castaway Diary: Portal to the Unknown Isles",
+        steam_link: "https://store.steampowered.com/app/4382260/Castaway_Diary_Portal_to_the_Unknown_Isles/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4382260/98d25ebb3f3192467170d5d6617bc659806f4d8e/header.jpg?t=1776126468",
+        release_date: "2026",
+        price_uah: "",
+        discount_percent: 0,
+        playtime: "",
+        rating: "",
+
+        play_status: "changed_mind",
         review_link: "",
         progress: 0
     },
@@ -318,7 +373,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "",
-        progress: 5
+        progress: 19
     },
     {
         title: "ATRI -My Dear Moments- Demo",
@@ -363,19 +418,6 @@ const gamesData = [
         progress: 20
     },
     {
-        title: "Echoes of Aincrad",
-        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2244210/7f0745382bc945351cc3334c7f0b947c8a22b896/header.jpg?t=1773426830",
-        steam_link: "https://store.steampowered.com/app/2244210/Echoes_of_Aincrad/",
-        review_link: "",
-        playtime: "",
-        price_uah: 1999,
-        discount_percent: 0,
-        release_date: "10 июл. 2026 г.",
-        play_status: "planned",
-        rating: "",
-        progress: 0
-    },
-    {
         title: "Kena: Scars of Kosmora",
         poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3485810/cdc09903826e4e34076552de69664202e51c0392/header.jpg?t=1772132932",
         steam_link: "https://store.steampowered.com/app/3485810/Kena_Scars_of_Kosmora/",
@@ -386,20 +428,6 @@ const gamesData = [
         release_date: "2026",
         play_status: "planned",
         rating: "",
-        progress: 0
-    },
-    {
-        title: "Castaway Diary: Portal to the Unknown Isles",
-        steam_link: "https://store.steampowered.com/app/4382260/Castaway_Diary_Portal_to_the_Unknown_Isles/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4382260/98d25ebb3f3192467170d5d6617bc659806f4d8e/header.jpg?t=1776126468",
-        release_date: "2026",
-        price_uah: "",
-        discount_percent: 0,
-        playtime: "",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
         progress: 0
     },
     {
@@ -453,20 +481,6 @@ const gamesData = [
         discount_percent: 70,
         playtime: "11",
         rating: "",
-
-        play_status: "planned",
-        review_link: "",
-        progress: 0
-    },
-    {
-        title: "ATRI -My Dear Moments-",
-        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1230140/header.jpg?t=1761759369",
-        release_date: "18 июн. 2020 г.",
-        price_uah: 292,
-        discount_percent: 55,
-        playtime: "10",
-        rating: "80",
 
         play_status: "planned",
         review_link: "",

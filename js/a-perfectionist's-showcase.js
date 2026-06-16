@@ -165,7 +165,121 @@ const showcasesData = [
                 total: 17,
             }
         ]
-    }
+    },
+    {
+        boardTitle: "Dishonored",
+        games: [
+            {
+                title: "Dishonored",
+                steamUrl: "https://store.steampowered.com/app/217980/Dishonored/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/217980/header.jpg?t=1703085041",
+                achieved: 80,
+                total: 80,
+            },
+            {
+                title: "Dishonored 2",
+                steamUrl: "https://store.steampowered.com/app/403640/Dishonored_2/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/403640/header.jpg?t=1750785918",
+                achieved: 50,
+                total: 50,
+            },
+        ]
+    },
+    {
+        boardTitle: "Aragami",
+        games: [
+            {
+                title: "Aragami",
+                steamUrl: "https://store.steampowered.com/app/280160/Aragami/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/280160/header.jpg?t=1776370640",
+                achieved: 51,
+                total: 51,
+            },
+            {
+                title: "Aragami 2",
+                steamUrl: "https://store.steampowered.com/app/1158370/Aragami_2/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1158370/header.jpg?t=1776370347",
+                achieved: 44,
+                total: 44,
+            },
+        ]
+    },
+    {
+        boardTitle: "Little Nightmares",
+        games: [
+            {
+                title: "Little Nightmares",
+                steamUrl: "https://store.steampowered.com/app/424840/Little_Nightmares/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/424840/facf9a7a675c6d7f210d96d6b111caffe0386cd5/header.jpg?t=1773135169",
+                achieved: 22,
+                total: 22,
+            },
+            {
+                title: "Little Nightmares 2",
+                steamUrl: "https://store.steampowered.com/app/860510/Little_Nightmares_II/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/860510/header.jpg?t=1730127763",
+                achieved: 35,
+                total: 35,
+            },
+        ]
+    },
+    {
+        boardTitle: "Sword Art Online",
+        games: [
+            {
+                title: "Sword Art Online: Fatal Bullet",
+                steamUrl: "https://store.steampowered.com/app/626690/Sword_Art_Online_Fatal_Bullet/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/626690/header.jpg?t=1774478152",
+                achieved: 63,
+                total: 63,
+            },
+            {
+                title: "SWORD ART ONLINE Alicization Lycoris",
+                steamUrl: "https://store.steampowered.com/app/1009290/SWORD_ART_ONLINE_Alicization_Lycoris/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1009290/header.jpg?t=1750782350",
+                achieved: 67,
+                total: 67,
+            },
+        ]
+    },
+    {
+        boardTitle: "Slime Rancher",
+        games: [
+            {
+                title: "Slime Rancher",
+                steamUrl: "https://store.steampowered.com/app/433340/Slime_Rancher/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/433340/header.jpg?t=1758651509",
+                achieved: 57,
+                total: 57,
+            },
+            {
+                title: "Slime Rancher 2",
+                steamUrl: "https://store.steampowered.com/app/1657630/Slime_Rancher_2/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1657630/e0ebd5982e69895132d4ffdf80a1a6048ab53d25/header.jpg?t=1776359011",
+                achieved: 27,
+                total: 27,
+            },
+        ]
+    },
+    {
+        boardTitle: "We Were Here",
+        games: [
+            {
+                title: "We Were Here Forever",
+                steamUrl: "https://store.steampowered.com/app/1341290/We_Were_Here_Forever/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1341290/header.jpg?t=1764331788",
+                achieved: 39,
+                total: 39,
+            },
+            {
+                title: "We Were Here Expeditions: The FriendShip",
+                steamUrl: "https://store.steampowered.com/app/2296990/We_Were_Here_Expeditions_The_FriendShip/",
+                banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2296990/header.jpg?t=1764331912",
+                achieved: 12,
+                total: 12,
+            },
+        ]
+    },
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -173,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rootElement = document.documentElement;
     const container = document.getElementById('showcases-container');
     const navContainer = document.getElementById('section-nav');
+    const searchInput = document.getElementById('game-search');
 
     const initTheme = () => {
         const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -200,14 +315,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const renderShowcases = () => {
+    const renderShowcases = (searchQuery = '') => {
         container.innerHTML = ''; 
         navContainer.innerHTML = '';
         
         let totalAchievementsAllGames = 0;
         let perfectGamesCount = 0;
 
-        showcasesData.forEach((board, index) => {
+        const query = searchQuery.toLowerCase().trim();
+        const sortedShowcases = [...showcasesData].sort((a, b) => a.boardTitle.localeCompare(b.boardTitle));
+
+        sortedShowcases.forEach((board, index) => {
+            const filteredGames = board.games.filter(game => 
+                game.title.toLowerCase().includes(query)
+            );
+
+            if (filteredGames.length === 0) return;
+
             const boardId = `board-${index}`;
             const navLink = document.createElement('a');
             navLink.href = `#${boardId}`;
@@ -226,7 +350,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const grid = document.createElement('div');
             grid.className = 'games-grid';
 
-            board.games.forEach(game => {
+            const sortedGames = [...filteredGames].sort((a, b) => a.title.localeCompare(b.title));
+            
+            sortedGames.forEach(game => {
                 totalAchievementsAllGames += game.achieved; 
                 
                 const isPerfect = game.total > 0 && game.achieved === game.total;
@@ -250,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ` : '';
 
                 card.innerHTML = `
-                    <img class="game-banner" src="${game.banner}" alt="${game.title}">
+                    <img class="game-banner" src="${game.banner}" alt="${game.title}" loading="lazy">
                     <div class="${statsClasses}">
                         Достижения: ${game.achieved} из ${game.total}
                         ${ribbonHTML}
@@ -264,14 +390,46 @@ document.addEventListener('DOMContentLoaded', () => {
             container.appendChild(boardDiv);
         });
 
-        const totalStatsBlock = document.createElement('div');
-        totalStatsBlock.className = 'total-stats-block';
-        totalStatsBlock.innerHTML = `
-            <h3><i class='bx bxs-trophy'></i> Идеальных игр: <span class="highlight-number">${perfectGamesCount}</span></h3>
-            <h3><i class='bx bxs-medal'></i> Всего достижений: <span class="highlight-number">${totalAchievementsAllGames}</span></h3>
-        `;
-        container.appendChild(totalStatsBlock);
+        if (container.children.length > 0) {
+            const totalStatsBlock = document.createElement('div');
+            totalStatsBlock.className = 'total-stats-block';
+            totalStatsBlock.innerHTML = `
+                <h3><i class='bx bxs-trophy'></i> Идеальных игр: <span class="highlight-number">${perfectGamesCount}</span></h3>
+                <h3><i class='bx bxs-medal'></i> Всего достижений: <span class="highlight-number">${totalAchievementsAllGames}</span></h3>
+            `;
+            container.appendChild(totalStatsBlock);
+        } else {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 50px 0; color: var(--text-main); font-size: 1.2rem;">
+                    Игры не найдены 🕵️‍♂️
+                </div>
+            `;
+        }
     };
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            renderShowcases(e.target.value);
+        });
+    }
+
+    const scrollTopBtn = document.getElementById('scroll-to-top');
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 
     initTheme();
     renderShowcases();
