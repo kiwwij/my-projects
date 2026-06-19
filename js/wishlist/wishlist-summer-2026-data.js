@@ -362,6 +362,20 @@ const gamesData = [
         progress: 0
     },
     {
+        title: "Slender: The Eight Pages",
+        steam_link: "",
+        poster: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Slender_Logo.jpg",
+        release_date: "26 июн. 2012 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "0.5",
+        rating: "78",
+
+        play_status: "unplanned_completed",
+        review_link: "",
+        progress: 100
+    },
+    {
         title: "CODE VEIN",
         steam_link: "https://store.steampowered.com/app/678960/CODE_VEIN/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/678960/header.jpg?t=1766015412",
@@ -373,7 +387,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "",
-        progress: 19
+        progress: 31
     },
     {
         title: "ATRI -My Dear Moments- Demo",
