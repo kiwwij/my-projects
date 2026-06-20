@@ -609,9 +609,12 @@ function populateStats() {
 
         if (game.playtime && !isNaN(parseFloat(game.playtime))) {
             let time = parseFloat(game.playtime);
-            totalBacklogTime += time;
             
-            const validTimeStatuses = ['completed', 'unplanned_completed', 'paused', 'dropped', 'unplanned_dropped'];
+            if (game.play_status !== 'changed_mind') {
+                totalBacklogTime += time;
+            }
+            
+            const validTimeStatuses = ['completed', 'unplanned_completed', 'paused', 'dropped', 'unplanned_dropped', 'playing'];
             if (validTimeStatuses.includes(game.play_status)) {
                 let prog = game.progress || 0;
                 totalPlaytimeSpent += (time * (prog / 100));
@@ -657,7 +660,7 @@ function populateStats() {
                         <div class="icon-wrap orange"><i class='bx bx-time-five'></i></div>
                         <div class="stat-text">
                             <div><span class="val">~${Math.round(totalPlaytimeSpent)}</span> <span class="lbl">часов</span></div>
-                            <span style="font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; margin-top: 3px;">Рассчитано по формуле: время сюжета × % прогресса + n</span>
+                            <span style="font-size: 0.65rem; color: var(--text-muted); opacity: 0.8; margin-top: 3px;">Рассчитано по формуле: время сюжета × % прогресса + n кол-во игр</span>
                         </div>
                     </div>
                 </div>

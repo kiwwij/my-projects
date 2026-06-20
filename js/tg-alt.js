@@ -6,6 +6,8 @@ const lightboxImg = document.getElementById('lightbox-img');
 const lightboxVideo = document.getElementById('lightbox-video');
 const closeBtn = document.querySelector('.close-btn');
 
+let lazyObserver = null;
+
 function initMenu() {
     categories.forEach((cat, index) => {
         const li = document.createElement('li');
@@ -34,14 +36,32 @@ function loadCategory(category) {
     title.textContent = category.label;
     galleryGrid.innerHTML = '';
 
+    if (lazyObserver) {
+        lazyObserver.disconnect();
+    }
+
+    lazyObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const card = entry.target;
+                const index = card.dataset.index;
+                const mediaContainer = card.querySelector('.media-container');
+                findAndLoadMedia(mediaContainer, category.folder, index);
+                observer.unobserve(card);
+            }
+        });
+    }, {
+        rootMargin: '300px 0px',
+        threshold: 0.1
+    });
+
     for (let i = 1; i <= category.count; i++) {
         const card = document.createElement('div');
         card.className = 'media-card';
+        card.dataset.index = i;
 
         const mediaContainer = document.createElement('div');
         mediaContainer.className = 'media-container';
-        
-        findAndLoadMedia(mediaContainer, category.folder, i);
 
         const tag = document.createElement('div');
         tag.className = 'media-tag';
@@ -50,6 +70,8 @@ function loadCategory(category) {
         card.appendChild(mediaContainer);
         card.appendChild(tag);
         galleryGrid.appendChild(card);
+
+        lazyObserver.observe(card);
     }
 }
 
@@ -58,8 +80,8 @@ function findAndLoadMedia(container, folder, index) {
     
     const possibleImagePaths = [];
     imageExtensions.forEach(ext => {
-        possibleImagePaths.push(`${folder}/1(${index}).${ext}`);   // Без пробела
-        possibleImagePaths.push(`${folder}/1 (${index}).${ext}`);  // С пробелом
+        possibleImagePaths.push(`${folder}/1(${index}).${ext}`);
+        possibleImagePaths.push(`${folder}/1 (${index}).${ext}`);
     });
 
     function tryNextImage(pathIndex) {

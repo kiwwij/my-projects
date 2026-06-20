@@ -390,7 +390,7 @@ const database = {
 /* Продукты */  food: 171.29,
 /* Вкусняшки */ snacks: 757.71,
 /* Рестораны */ dining: 0,
-/* Проезд */    transport: 0,
+/* Проезд */    transport: 186,
 /* Жильё */     rent: 0,
 /* Услуги */    services: 0,
 /* Здоровье */  health: 0,

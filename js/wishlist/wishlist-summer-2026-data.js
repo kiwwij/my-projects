@@ -387,7 +387,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "",
-        progress: 31
+        progress: 37
     },
     {
         title: "ATRI -My Dear Moments- Demo",
