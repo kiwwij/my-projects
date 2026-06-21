@@ -285,7 +285,6 @@ function initTheme() {
 function applyAllFilters() {
     const rawVal = searchInput.value;
     const val = typeof processSearchQuery === 'function' ? processSearchQuery(rawVal) : rawVal.toLowerCase();
-    const openedProjects = JSON.parse(localStorage.getItem('opened_projects')) || [];
 
     allProjects.forEach(card => {
         const name = card.getAttribute('data-name') || '';
