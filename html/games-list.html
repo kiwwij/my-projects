@@ -9,37 +9,36 @@
         body { background-color: #1a202c; color: #e2e8f0; }
         
         .tier-zone { 
-            min-height: 120px; 
-            transition: background-color 0.2s;
+            min-height: 140px; 
+            transition: background-color 0.2s, border-color 0.2s;
         }
         
-        /* Стили карточек с постерами */
         .game-card { 
             cursor: grab; 
-            transition: transform 0.1s;
+            transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
             background-color: #2d3748;
             background-size: cover;
             background-position: center;
             overflow: hidden;
         }
+        .game-card:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); }
         .game-card:active { cursor: grabbing; transform: scale(0.95); }
-        .game-card.dragging { opacity: 0.4; border: 2px dashed #cbd5e0; }
+        .game-card.dragging { opacity: 0.3; border: 2px dashed #cbd5e0; transform: scale(0.9); }
         
-        /* Градиент и текст поверх картинки */
         .card-title-overlay {
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            padding: 8px 4px 4px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.95));
+            padding: 12px 4px 6px;
             font-size: 0.75rem;
             text-align: center;
             line-height: 1.1;
             font-weight: bold;
             text-shadow: 1px 1px 2px black;
+            pointer-events: none;
         }
 
-        /* Индикатор загрузки API */
         .loading-spinner {
             border: 2px solid rgba(255,255,255,0.2);
             border-top: 2px solid white;
@@ -53,7 +52,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-6 font-sans">
+<body class="p-6 font-sans relative overflow-x-hidden">
 
     <div class="max-w-screen-2xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -62,6 +61,12 @@
                 <button onclick="resetData()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm transition">
                     Сброс до оригинала
                 </button>
+                
+                <input type="file" id="file-upload" accept=".js" class="hidden" onchange="handleFileUpload(event)">
+                <button onclick="document.getElementById('file-upload').click()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm transition">
+                    Загрузить games-data.js
+                </button>
+
                 <button onclick="downloadJS()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm transition">
                     Скачать games-data.js
                 </button>
@@ -72,12 +77,41 @@
             </div>
     </div>
 
+    <div id="edit-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-gray-900 border-l border-gray-700 shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+        <div class="p-6 flex-1 flex flex-col h-full">
+            <h2 class="text-xl font-bold mb-6 text-white border-b border-gray-700 pb-3">Редактирование игры</h2>
+            
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Название (Оригинал)</label>
+                <input id="drawer-game-title" type="text" readonly class="w-full bg-gray-800 border border-gray-700 rounded p-2.5 text-gray-400 focus:outline-none cursor-not-allowed">
+            </div>
+
+            <div class="flex-1 flex flex-col mb-6">
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Твой отзыв / Ревью</label>
+                <textarea id="drawer-game-review" class="w-full flex-1 bg-gray-800 border border-gray-700 rounded p-3 text-white focus:outline-none focus:border-blue-500 resize-none text-sm leading-relaxed"></textarea>
+            </div>
+
+            <div class="flex space-x-3 mt-auto">
+                <button onclick="closeDrawer()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 px-4 rounded transition text-sm">
+                    Отмена
+                </button>
+                <button onclick="saveDrawerChanges()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded transition text-sm">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="drawer-overlay" class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 z-40" onclick="closeDrawer()"></div>
+
     <script>
-        // === КОНФИГ API ===
         const RAWG_API_KEY = 'eff5af7536f94b1b862edf995f4ee1f9';
         const posterCache = JSON.parse(localStorage.getItem('posterCache') || '{}');
         const requestQueue = [];
-        let isProcessingQueue = false;
+        const MAX_CONCURRENT_REQUESTS = 5;
+        let activeRequests = 0;
+
+        let currentEditingCard = null;
 
         const tierColors = {
             'S': 'bg-red-500',
@@ -93,7 +127,7 @@
             'S': [
                 {
                     title: "Minecraft",
-                    review: "Кайфовая игра на расслабон с друзьями. Свыше 7к часов. Прошёл на платину.",
+                    review: "Надо ли кому-то рассказывать почему эта игра у меня в S тире? Я не знаю сколько времени провёл в ней как сам, так и с другими людьми. Я играл со Жмыхом по телефону, снимал сериалы с друзьями, гриферил, строил города, школы, играл в прятки, стримил, Херобрин взламывал сервер, играл с читами (Flux b4), снимал разные видосы, выживал на серверах и много, много чего ещё.",
                 },
                 {
                     title: "The Elder Scrolls V: Skyrim",
@@ -101,143 +135,586 @@
                 },
                 {
                     title: "Dota 2",
-                    review: "Это не игра, а кусок кала, в который я наиграл уже 3к+ часов. Увы не могу просто взять и перестать играть.",
+                    review: "Это не игра, а кусок кала, в который я наиграл уже 4к+ часов. Увы не могу просто взять и перестать играть, слишком много времени на неё потратил.",
+                },
+                {
+                    title: "Elden Ring",
+                    review: "Не было такой игры, по которой я посмотрел очень много видосов перед тем как купить и самому поиграть + то кол-во времени, которое я потратил на неё, прошло с диким кайфом. Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1245620/",
                 },
                 {
                     title: "Tiny Bunny",
-                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1421250/",
+                    review: "Одна из первых и лучших визуальных новелл, что я играл. Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1421250/",
+                },
+                {
+                    title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
+                    review: "Ревью - ",
                 },
             ],
             'A': [
-                { title: "The Last of Us Part I", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1888930/" },
-                { title: "Atomic Heart", review: "Ревью - https://steamcommunity.com/profiles/76561199512523461/recommended/668580/" },
-                { title: "Cyberpunk 2077", review: "Невертоятная графика, атмосфера, музыка и персонажи. Моя 1ая концовка просто дроп с крыши. Разные билды + моды дают повод несколько раз перепройти. Прошёл на платину." },
-                { title: "Dark Souls: Remastered", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/570940/" },
-                { title: "Dark Souls II: Scholar of the First Sin", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/335300/" },
-                { title: "Dark Souls III", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/374320/" },
-                { title: "FINAL FANTASY VII REMAKE INTERGRADE", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1462040/" },
-                { title: "Hollow Knight: Silksong", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1030300/" },
-                { title: "It takes two", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Lies of P", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1627720/" },
-                { title: "Raft", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/648800/" },
-                { title: "Tomb Raider (2013)", review: "Частичное ревью - https://steamcommunity.com/id/serhiosergey/recommended/750920/" },
-                { title: "Slime Rancher", review: "Прикольная игра на расслабон. Проходил очень много раз.Прошёл на платину." },
-                { title: "FINAL FANTASY VII REBIRTH", review: "Ревью - " },
-                { title: "Genshin Impact", review: "Стой, стой, стой. Дай всё объясню. В 1ые года я дико кайфовал от этого кала, играл по 12 часов каждый день. Сейчас я бы в неё не смог играть, но вот раньше..." },
-                { title: "Honkai Star Rail", review: "Стой, стой, стой. Дай всё объясню. На выходе мне игра понравилась даже больше чем геншин. Он не такой душный, нет открытого мира. Быстро зашёл, прошёл и вышел. И я прошёл HSR за пол года. Собрал 2 пачки, прокачал и закрыл карту. Вот и всё. Сейчас я бы в неё не смог играть." }
+                {
+                    title: "The Last of Us Part I",
+                    review: "Лучшая сюжетная игра. Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1888930/",
+                },
+                {
+                    title: "FINAL FANTASY VII REBIRTH",
+                    review: "Сюжет ремейка 7-ой финалки крутой, но из-за того что она разделена на части, но не могу всю серию поставить в 1 ряд. 2-ая часть лучше 1-ой. Ревью - https://steamcommunity.com/id/serhiosergey/recommended/2909400/",
+                },
+                {
+                    title: "Stellar Blade",
+                    review: "Эта игра выше других соулсов только, потому что я там играл за красивую женщину, и был нормальный сюжет. Ревью - https://steamcommunity.com/id/serhiosergey/recommended/3489700/",
+                },
+                {
+                    title: "Lies of P",
+                    review: "Ниже Евы только из-за персонажа. Геймплей ближе к даркам, что мне более приятно. Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1627720/",
+                },
+                {
+                    title: "Dark Souls III",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/374320/",
+                },
+                {
+                    title: "FINAL FANTASY VII REMAKE INTERGRADE",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1462040/",
+                },
+                {
+                    title: "Baldur's Gate III",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1086940/",
+                },
+                {
+                    title: "Dark Souls: Remastered",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/570940/",
+                },
+                {
+                    title: "Dark Souls II: Scholar of the First Sin",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/335300/",
+                },
+                {
+                    title: "Cyberpunk 2077",
+                    review: "Крутая атмосфера игра с хорошей музыкой и персонажами. Моя 1-ая концовка просто дроп с крыши. Есть возможность создавать разные билды.",
+                },
+                {
+                    title: "CODE VEIN",
+                    review: "Ревью - ",
+                },
+                {
+                    title: "Hollow Knight: Silksong",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1030300/",
+                },
+                {
+                    title: "Atomic Heart",
+                    review: "Хорошая игра с не самыми интересным сюжетом, но с большим кол-вом фарма, что я люблю. Отличные саунды. Ревью - https://steamcommunity.com/profiles/76561199512523461/recommended/668580/",
+                },
+                {
+                    title: "Sea of Thieves",
+                    review: "В этой игре и подраться можно, и квесты попроходить, и просто поболтать, плавая по океану.",
+                },
+                {
+                    title: "Elden Ring NIGHTREIGN",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/2622380/",
+                },
+                {
+                    title: "Raft",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/648800/",
+                },
+                {
+                    title: "It takes two",
+                    review: "Игра для парочек, поэтому играл с дуругом.",
+                },
+                {
+                    title: "Dispatch",
+                    review: "Я не фанат супергеройки, но эта игра мне понравилась. Я не могу сказать, что она какая-то особенная, но она и не плохая. Самая обычная игра. У неё есть красивая картинка, запоминающиеся саундтреки и персонажи. Сюжет простой. В конце игры я убил Полога и остался с Блейзер. Так как эту игру купил мой друг на свой аккаунт, за что ему большое спасибо (кстати, с Днём Рождения :D), то я не буду проходить её на все ачивки и открывать все концовки. Посмотрю все возможные выборы на ютубе. Касаемо выбора романтических линий, то мне не хватило возможности сближаться с другими персонажами (конечно, я имею в виду женского пола), но думаю разрабы специально так сделали. Геймплейные элементы с подбором героев на мисси были интересными. Ещё могу сказать, что озвучка от 'NikiStudio' очень хорошая, но на момент написания обзора (08.06.2026) есть только 2 эпизода из 8. Нейро-озвучка плохая + в игре есть проблема с русскими субтитрами. Поэтому половины игры проходил на русском, половину на английском. Ставлю игре... 7/10.",
+                },
+                {
+                    title: "Tomb Raider (2013)",
+                    review: "Частичное ревью - https://steamcommunity.com/id/serhiosergey/recommended/750920/",
+                },
+                {
+                    title: "Sekiro: shadows die twice",
+                    review: "Одна из самых неинтересных мне игр Бабадзаки. Короткая, заточена на парирование, но  всё равно прикольная. Ревью - https://steamcommunity.com/profiles/76561199512523461/recommended/814380/",
+                },
+                {
+                    title: "Valorant",
+                    review: "Почти любая сессионка/соревновательная игра будет хуже  сюжетных. Поэтому она так низка в тире.",
+                },
+                {
+                    title: "Marvel Rivals",
+                    review: "Офигенные скины.",
+                },
+                {
+                    title: "Honkai Star Rail",
+                    review: "Стой, стой, стой. Дай всё объясню. На выходе мне игра понравилась даже больше чем геншин. Она не такая душная, нет открытого мира. Быстро зашёл, прошёл и вышел. И я прошёл HSR за пол года. Собрал 2 пачки, прокачал и закрыл карту. Вот и всё. Сейчас я бы в неё не смог играть с таким же рвением. Видос по ней - https://www.youtube.com/watch?v=nuKPX3VKD7g",
+                },
+                {
+                    title: "Genshin Impact",
+                    review: "Стой, стой, стой. Дай всё объясню. В 1-ые года я дико кайфовал от этой игры. Играл по 12 часов всё лето 2023 года. была бы возможность скипать все диалоги, то я бы вернулся и просто чистил карту. Видос по игре - https://www.youtube.com/watch?v=8dmlRNb8beY",
+                },
+                {
+                    title: "Slime Rancher",
+                    review: "Прикольная игра на расслабон. Проходил очень много раз.",
+                },
             ],
             'B': [
-                { title: "Aragami", review: "Играл с другом, было весело и атмосферно. Прошёл на платину." },
-                { title: "Dishonored", review: "Мега атмосферная игра с интересным геймплеем. Прошёл на платину." },
-                { title: "Elden Ring NIGHTREIGN", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/2622380/" },
-                { title: "Escape the Backrooms", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Everlasting Summer", review: "2ая моя визуальная новелла после Зайчика. Моя концовка - плохая концовка с пионером. Прошёл на платину." },
-                { title: "God of War", review: "Отличная графика, атмосфера, музыка, но после середины было скучновато. Прошёл на платину." },
-                { title: "Grounded", review: "Играл с другом даже не с 1, было весело. Прошёл на платину." },
-                { title: "Gunfire Reborn", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Hollow Knight", review: "Кайфовая метроидвания с атмосферой. Прошёл на платину." },
-                { title: "Inmost", review: "Атмосферная игра, но короткая. Прошёл на платину." },
-                { title: "Kingdom two Crowns", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "MiSide", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/2527500/" },
-                { title: "My Therapy", review: "Прикольная игрушка, но есть только пролог. Жду продолжение." },
-                { title: "Neceasse", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Resident Evil 4 Remake", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/2050650/" },
-                { title: "Resident Evil Village", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1196590/" },
-                { title: "Rise of the Tomb Raider", review: "Частичное ревью - https://steamcommunity.com/id/serhiosergey/recommended/750920/" },
-                { title: "Sekiro: shadows die twice", review: "Ревью - https://steamcommunity.com/profiles/76561199512523461/recommended/814380/" },
-                { title: "Ship of Fools", review: "Играл с другом, было весело. Прошёл на платину.", img: "games/Ship_of_Fools.avif" },
-                { title: "Slime Rancher 2", review: "Прикольная игра на расслабон, но 1ая часть атмосферней. Прошёл на платину." },
-                { title: "Sons of the Forest", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "SWORD ART ONLINE Alicization Lycoris", review: "Смотрел я как-то давно одно ютубера по САО 'Tim Fairy', играл понравилась, поиграл. Прошёл на платину." },
-                { title: "Trine 4: The Nightmare Prince", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "We Were Here Expeditions: The FriendShip", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "We Were Here Forever", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Marvel Rivals", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Golf With Your Friends", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Liar's Bar", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "PEAK", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Pic Me", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Pummel Party", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Roboquest", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Uno", review: "Играл с другом, было весело. Прошёл на платину." },
-                { title: "Among Us", review: "Играл с другом, даже не с одним, было весело." },
-                { title: "Bioshock Infinite", review: "" },
-                { title: "Divinity: Original Sin 2", review: "Играл с другом, было весело." },
-                { title: "Far Cry 5", review: "Играл с другом, было весело." },
-                { title: "Northgard", review: "Играл с другом, было весело. Прикольная стратегия." },
-                { title: "Heroes of Might and Magic 3: Complete", review: "Играл со знакомым, неплохо. Прикольная стратегия." },
-                { title: "Soulcalibur VI", review: "Играл с другом, было весело." },
-                { title: "Rainbow Six Siege", review: "Играл с другом, было весело." },
-                { title: "Voidtrain", review: "Играл с другом, было весело." },
-                { title: "Valorant", review: "Играл с другом, даже не с одним, было весело." },
-                { title: "Shape of Dreams: Prologue", review: "Играл с другом, что-то по типу RoR2. (название игры в стиме без 'Prologue')" },
-                { title: "Ghost of Tsushima", review: "Ревью - https://steamcommunity.com/profiles/76561199512523461/recommended/2215430/" },
-                { title: "Shadow of the Tomb Raider", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/750920/" },
-                { title: "Abyssus", review: "Играл с другом, было весело." }
+                {
+                    title: "Everlasting Summer",
+                    review: "2-ая моя визуальная новелла после Зайчика. Моя 1-ая концовка - плохая концовка с пионером, любимая - плохая с Леной.",
+                },
+                {
+                    title: "Dishonored",
+                    review: "Мега атмосферная игра с интересным геймплеем.",
+                },
+                {
+                    title: "Resident Evil Village",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1196590/",
+                },
+                {
+                    title: "Resident Evil 4 Remake",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/2050650/",
+                },
+                {
+                    title: "Sons of the Forest",
+                    review: "Играл с другом 7+ часов подряд, было весело, но он уже не осилил прохождение, а одному играть скучно.",
+                },
+                {
+                    title: "Ghost of Tsushima",
+                    review: "Ревью - https://steamcommunity.com/profiles/76561199512523461/recommended/2215430/",
+                },
+                {
+                    title: "Shadow of the Tomb Raider",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/750920/",
+                },
+                {
+                    title: "Rise of the Tomb Raider",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/750920/",
+                },
+                {
+                    title: "Divinity: Original Sin 2",
+                    review: "Мене интереснее, чем БГ3. Самому играть в неё скучно, поэтому играл с другом. Поиграли 20+ часов, поссорились и на этом всё.",
+                },
+                {
+                    title: "Resident Evil 6",
+                    review: "Проходили с другом, было весело. Но это пока самая слабая, неинтересная часть RE, а ещё я с этой части понял насколько много в этой серии игр самоповторов.",
+                },
+                {
+                    title: "Subnautica 2",
+                    review: "Играли с другом, по началу было не понятно, но спустя пару часиков понравилось. Играли почти с самого релиза, так что контента было не так много, но всё равно достаточно.",
+                    img: "games/Subnautica_2.jpg",
+                },
+                {
+                    title: "Lords of the Fallen",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1501750/",
+                },
+                {
+                    title: "Hollow Knight",
+                    review: "",
+                },
+                {
+                    title: "Slime Rancher 2",
+                    review: "Прикольная игра на расслабон, но 1ая часть атмосферней + не такая вырвиглазная.",
+                },
+                {
+                    title: "Terraria",
+                    review: "Спустя 200+ часов понял, что эта игра мне не нравится. Однотипная фармёжка ради прокачки сета, оружия и артифактов. Боссы в ваниле скучные. Моды фиксят эту проблему, но не до конца.",
+                },
+                {
+                    title: "SWORD ART ONLINE Alicization Lycoris",
+                    review: "Смотрел я как-то давно одно ютубера по САО 'Tim Fairy', даже донатил ему 1 раз. Сама игра понравилась.",
+                },
+                {
+                    title: "Warhammer 40,000: Space Marine 2",
+                    review: "Хорошая игра, но не стоит своих денег, даже за 67% скидку оч дорого, т.к. там сюжета на +-10 часов. Игра красивая, оптимизированная. Играл с другом, было весело.",
+                },
+                {
+                    title: "MiSide",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/2527500/",
+                },
+                {
+                    title: "Shape of Dreams: Prologue",
+                    review: "Зашёл, пару раз пробежался, удалил и так каждый раз через пару месяцев.",
+                },
+                {
+                    title: "Aragami",
+                    review: "Играл с другом, было весело. Игра атмосферная.",
+                },
+                {
+                    title: "Escape the Backrooms",
+                    review: "Смешная игра. Играть только с друзьями!",
+                },
+                {
+                    title: "My Therapy",
+                    review: "Прикольная игрушка, но есть только пролог. Жду продолжение.",
+                },
+                {
+                    title: "PEAK",
+                    review: "",
+                    img: "games/PEAK.jpg",
+                },
+                {
+                    title: "Golf With Your Friends",
+                    review: "",
+                },
+                {
+                    title: "God of War",
+                    review: "Отличная графика, атмосфера, музыка, но после середины стало скучно играть, хз почему.",
+                },
+                {
+                    title: "Bioshock Infinite",
+                    review: "Хорошая игра, но я её так и не прошёл до конца, но когда-нибудь пройду!",
+                },
+                {
+                    title: "Inmost",
+                    review: "Атмосферная, но короткая игра.",
+                },
+                {
+                    title: "Gunfire Reborn",
+                    review: "",
+                },
+                {
+                    title: "Ship of Fools",
+                    review: "",
+                    img: "games/Ship_of_Fools.avif",
+                },
+                {
+                    title: "Voidtrain",
+                    review: "",
+                },
+                {
+                    title: "Uno",
+                    review: "",
+                },
+                {
+                    title: "Among Us",
+                    review: "",
+                },
+                {
+                    title: "Liar's Bar",
+                    review: "",
+                },
+                {
+                    title: "Pummel Party",
+                    review: "",
+                },
+                {
+                    title: "Grounded",
+                    review: "",
+                },
+                {
+                    title: "Kingdom two Crowns",
+                    review: "",
+                },
+                {
+                    title: "Heroes of Might and Magic 3: Complete",
+                    review: "",
+                },
+                {
+                    title: "Northgard",
+                    review: "",
+                },
             ],
             'C': [
-                { title: "Aragami 2", review: "Хуже чем 1ая часть. Прошёл на платину." },
-                { title: "Dishonored 2", review: "Все теже механику, но больше динамик, чтоли. Но скучная. Прошёл на платину." },
-                { title: "Fran Bow", review: "Атмосферная игра, но скучная. Прошёл на платину." },
-                { title: "Higurashi When They Cry Hou - Ch.1", review: "" },
-                { title: "Higurashi When They Cry Hou - Ch.2", review: "" },
-                { title: "Higurashi When They Cry Hou - Ch.3", review: "https://kiwwij.github.io/kiwwij-anime-tier-list/terminal.html" },
-                { title: "Higurashi When They Cry Hou - Ch.4", review: "https://kiwwij.github.io/kiwwij-anime-tier-list/naebalova.net" },
-                { title: "Higurashi When They Cry Hou - Ch.5", review: "" },
-                { title: "Higurashi When They Cry Hou - Ch.6", review: "" },
-                { title: "Higurashi When They Cry Hou - Ch.7", review: "" },
-                { title: "Higurashi When They Cry Hou - Ch.8", review: "" },
-                { title: "Higurashi When They Cry Hou - Rei", review: "" },
-                { title: "Higurashi When They Cry Hou - Hou+", review: "", img: "games/Higurashi_When_They_Cry_Hou+.jpg" },
-                { title: "Kena: Bridge of Spirits", review: "Невероятная графика, но оптимизация хромает. Атмосфера и музыка норм. Прошёл на платину." },
-                { title: "little nightmares", review: "Управление всё портит. Так то игра атмосферная. Прошёл на платину." },
-                { title: "little nightmares II", review: "Управление всё портит. Так то игра атмосферная, лучше 1ой. Прошёл на платину." },
-                { title: "Portal 2", review: "Кайфовая игрушка, но не более. Финальная песня кайф. Прошёл на платину." },
-                { title: "The Quarry", review: "Ревбю - https://steamcommunity.com/id/serhiosergey/recommended/1577120/" },
-                { title: "Sally Face", review: "Скучная игра, думал будет лучше. Прошёл на платину." },
-                { title: "Styx: Shards of Darkness", review: "Скучная игра, думал будет лучше. Прошёл на платину." },
-                { title: "Sword Art Online: Fatal Bullet", review: "Подумал, что будет прикольно, по типу алисизации, но нет. Прошёл на платину." }
+                {
+                    title: "Kena: Bridge of Spirits",
+                    review: "Невероятная графика, но оптимизация хромает. Атмосфера игра и музыка норм.",
+                },
+                {
+                    title: "Portal 2",
+                    review: "Кайфовая игрушка, но не более. Финальная песня кайф.",
+                },
+                {
+                    title: "The Quarry",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1577120/",
+                },
+                {
+                    title: "The Dark Pictures Anthology: House of Ashes",
+                    review: "не самая интересная часть картинок, но типо норм. много нелогичных моментов + я в начале не понял как делать выбор на джойстике. У меня в конце выжило 4 человека, 1го я убил случайно, потому что не понял что от меня хотят, а 2 других умерли просто так. Я никак не мог их спасти. В цонце началось солнечное затмение и на сколько что это нереалистичный сюжетный поворот. Игра на любителя.",
+                },
+                {
+                    title: "Steelrisng",
+                    review: "коротко по игре. она простая, ну уж слишком. после 6 часов прохождения я повысил 3 параметра на 6ый уровень и оружие на 5ый, после чего я просто пробегал всю карту и не отвлекался на врагов, боссы умирали с 1ой попытки. баланс в игре сломанный. враги и боссы легко умирают от расходников, наложения холода в начале игры с помощью огнестрельного оружия - имба. потом мы юзаем ледяные или любые другие гранаты. сюжет незамысловатый. графика плохая, как и оптимизация. в инете говорили, что все локации одинаковые, но я с этим согласен на половину. в игре достаточно разнообразия, но из-за одно цветокора, игра чувствуется везде одинаковой. но вот последния локация красивая. разнообразие оружия и одежды маленькое. также в инете говорили, что не понятно куда идти, но на самом деле всё оч просто, если юзать компас. игра прикольная, но слабая. за 57 грн норм, но не за фулл прайс. за DLC ничего говорить не буду, не играл. во-первых, не хочу, во-вторых, не понял как в него попасть) 6/10",
+                },
+                {
+                    title: "little nightmares II",
+                    review: "Управление всё портит. Так то игра атмосферная и интересная, лучше 1ой.",
+                },
+                {
+                    title: "little nightmares",
+                    review: "Управление всё портит. Так то игра атмосферная и интересная.",
+                },
+                {
+                    title: "Aragami 2",
+                    review: "Хуже чем 1-ая часть. Даже не знаю чем. Мб из-за того что нет развития. Почти нет отличий от 1-ой.",
+                },
+                {
+                    title: "Dishonored 2",
+                    review: "Всё теже механику, может чутка больше динамик. Но после 1-ой части скучная.",
+                },
+                {
+                    title: "Soulcalibur VI",
+                    review: "",
+                },
+                {
+                    title: "Neceasse",
+                    review: "",
+                },
+                {
+                    title: "Sword Art Online: Fatal Bullet",
+                    review: "Подумал, что будет прикольно, по типу алисизации, но нет.",
+                },
+                {
+                    title: "Still Wakes the Deep",
+                    review: "Типо хоррор игра, которая не пугает. А концовка в ней кал. Прошёл чисто из-за того, что друг попросил. 4 часа жизни в пустую.",
+                },
+                {
+                    title: "Fran Bow",
+                    review: "Смотреть видосы интереснее, чем играть самому.",
+                },
+                {
+                    title: "Abyssus",
+                    review: "",
+                },
+                {
+                    title: "Roboquest",
+                    review: "",
+                },
+                {
+                    title: "Pic Me",
+                    review: "",
+                },
+                {
+                    title: "We Were Here Expeditions: The FriendShip",
+                    review: "",
+                },
+                {
+                    title: "We Were Here Forever",
+                    review: "",
+                },
+                {
+                    title: "Sally Face",
+                    review: "Смотреть видосы интереснее, чем играть самому.",
+                },
+                {
+                    title: "Trine 4: The Nightmare Prince",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.1",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.2",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.3",
+                    review: "https://kiwwij.github.io/kiwwij-anime-tier-list/terminal.html",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.4",
+                    review: "https://kiwwij.github.io/kiwwij-anime-tier-list/naebalova.net",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.5",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.6",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.7",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Ch.8",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Rei",
+                    review: "",
+                },
+                {
+                    title: "Higurashi When They Cry Hou - Hou+",
+                    review: "",
+                    img: "games/Higurashi_When_They_Cry_Hou+.jpg",
+                },
+                {
+                    title: "Slender: The Eight Pages",
+                    review: "Не оригинальная игра. Прошёл 2 из 3-ёх локаций. Карты почти не отличаются. Игра слишком простая.",
+                    img: "games/Slender_The_Eight_Pages.jpg",
+                },
             ],
             'D': [
-                { title: "The Dark Queen of Mortholme", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/3587610/" },
-                { title: "Knock-knock", review: "Добавил чисто за выслугу лет. Крутая страшная игра с прикольным сюжетом. Прошёл на платину." },
-                { title: "Plague Inc: Evolved", review: "Добавил чисто за выслугу лет. Поиграть чуть-чуть, но не больше." },
-                { title: "Hogwarts Legacy", review: "Пытался пройти несколько раз, но не моё." },
-                { title: "Astroneers", review: "Играл с другом, даже не с одним, было весело." },
-                { title: "Bioshock Remastered", review: "Пытался пройти, но не моё." },
-                { title: "Black Myth: Wukong", review: "Пытался пройти, но не моё." },
-                { title: "The Elder Scrolls Online", review: "Пытался и не 1 раз пройти, но не моё." },
-                { title: "S.T.A.L.K.E.R. 2: Heart of Chornobyl", review: "На минимальных 30 фпс. Пытался пройти." },
-                { title: "Reus", review: "За выслугул лет. Поиграть чуть-чуть, но не больше." },
-                { title: "Black Souls I", review: "Почти прошёл, но если бы в игре не было pdf моментов, было бы даже не стыдно говорить, что я прошёл эту игру.", img: "games/Black_Souls_I.jpg" },
-                { title: "Red Hood's Woods", review: "Небольшое раскрытие персонажа из БС 1. Причины все те же.", img: "games/Red_Hood's_Woods.png" }
+                {
+                    title: "NieR:Automata",
+                    review: "Когда-то дам 4-ый шанс этой игре. Небольшое ревью - https://telegra.ph/NieRAutomata-review-03-01",
+                },
+                {
+                    title: "FINAL FANTASY® XIII",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/292120/",
+                    img: "games/FINAL_FANTASY_XIII.jpg",
+                },
+                {
+                    title: "Resident Evil Requiem",
+                    review: "Небольшое ревью - https://telegra.ph/Resident-Evil-Requiem-review-04-01",
+                    img: "games/Resident_Evil_Requiem.jpg",
+                },
+                {
+                    title: "Knock-knock",
+                    review: "За выслугу лет. Крутая страшная игра с прикольным сюжетом. Когда-то снимал видосы по ней.",
+                },
+                {
+                    title: "The Dark Queen of Mortholme",
+                    review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/3587610/",
+                    img: "games/The_Dark_Queen_of_Mortholme.jpg",
+                },
+                {
+                    title: "Red Hood's Woods",
+                    review: "Небольшое раскрытие персонажа из БС 1. Причины все те же.",
+                    img: "games/Red_Hood's_Woods.png",
+                },
+                {
+                    title: "Black Souls I",
+                    review: "Почти прошёл, но если бы в игре не было pdf моментов, было бы даже не стыдно говорить, что я играл в эту игру.",
+                    img: "games/Black_Souls_I.jpg",
+                },
+                {
+                    title: "Plague Inc: Evolved",
+                    review: "Добавил чисто за выслугу лет. Поиграть чуть-чуть, но не больше.",
+                },
+                {
+                    title: "Resident Evil 3",
+                    review: "Я уже устал от резиков, так что дропнул эту часть, но она не самая плохая.",
+                },
+                {
+                    title: "Reus",
+                    review: "За выслугу лет.",
+                },
+                {
+                    title: "READY OR NOT",
+                    review: "Играли с другом, прошли 2-3 миссии и застряли. Ну и решили дропнуть, но в целом неплохая игра.",
+                },
+                {
+                    title: "The Elder Scrolls IV: Oblivion Remastered",
+                    review: "Небольшое ревью - https://telegra.ph/The-Elder-Scrolls-IV-Oblivion-Remastered-review-03-14",
+                },
+                {
+                    title: "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
+                    review: "На минимальных 30 фпс. Пытался пройти. Оценки нет, поэтому и внизу топа.",
+                },
             ],
             'E': [
-                { title: "Your Mother", review: "Купил в рофл. Прошёл на платину в рофл." },
-                { title: "Hitler is My Crush: Love and Fascism", review: "Купил в рофл. Прошёл на платину в рофл." },
-                { title: "Humans are not that against Lizardwomen", review: "Пик игровой индустрии. Платина.", img: "games/Humans_are_not_that_against_Lizardwomen.jpg" },
-                { title: "Humans are not that against Lizardwomen 2", review: "Пик игровой индустрии 2. Платина.", img: "games/Humans_are_not_that_against_Lizardwomen2.jpg" },
-                { title: "HENTAI - World War II", review: "Платина." },
-                { title: "Bongo Cat", review: "Думал себе на стримы вместо вебки выводить. Платина." },
-                { title: "Chasing Tails ~A Promise in the Snow~", review: "Платина." },
-                { title: "Stalker", review: "Мне Илья подарил, это не моё. Платина." },
-                { title: "Final Fantasy XV Windows Edition", review: "Пытался поиграть, но не понравилось." },
-                { title: "Magicka 2", review: "Играли с другом, не зашло." }
+                {
+                    title: "Humans are not that against Lizardwomen 2",
+                    review: "Пик игровой индустрии 2.",
+                    img: "games/Humans_are_not_that_against_Lizardwomen2.jpg",
+                },
+                {
+                    title: "Humans are not that against Lizardwomen",
+                    review: "Пик игровой индустрии.",
+                    img: "games/Humans_are_not_that_against_Lizardwomen.jpg",
+                },
+                {
+                    title: "Magicka 2",
+                    review: "Играли с другом, не зашло.",
+                },
+                {
+                    title: "Your Mother",
+                    review: "",
+                },
+                {
+                    title: "Chasing Tails ~A Promise in the Snow~",
+                    review: "",
+                    img: "games/Chasing_Tails_A-Promise_in_the_Snow.webp",
+                },
+                {
+                    title: "Bongo Cat",
+                    review: "Думал себе на стримы вместо вебки выводить.",
+                },
+                {
+                    title: "Stalker",
+                    review: "Мне Илья подарил на др. Обязан был пройти. Но игра такая залупа.",
+                },
+                {
+                    title: "HENTAI - World War II",
+                    review: "",
+                },
+                {
+                    title: "Hitler is My Crush: Love and Fascism",
+                    review: "",
+                    img: "games/Hitler_is_My_Crush_Love_and_Fascism.jpg",
+                },
             ],
             'F': [
-                { title: "Counter-Strike 2", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/730/" },
-                { title: "The Witcher 3: Wild Hunt", review: "Пытался пройти несколько раз, но не моё." },
-                { title: "Read Dead Redemption 2", review: "Пытался пройти несколько раз (18 часов игры), но не моё.", img: "games/Read_Dead_Redemption2.webp" },
-                { title: "Grand Theft Auto V", review: "Кал" },
-                { title: "Rust", review: "" },
-                { title: "Lords of the Fallen", review: "Ревью - https://steamcommunity.com/id/serhiosergey/recommended/1501750/" }
-            ]
+                {
+                    title: "Final Fantasy XV Windows Edition",
+                    review: "Небольшое ревью - https://telegra.ph/FINAL-FANTASY-XV-WINDOWS-EDITION-review-03-13",
+                },
+                {
+                    title: "Counter-Strike 2",
+                    review: "Потраченного времени жаль. Пятикратно переваренный кал. Ревью - https://steamcommunity.com/id/serhiosergey/recommended/730/",
+                },
+                {
+                    title: "Black Myth: Wukong",
+                    review: "Китайский солуслайк про мартышку. Ну... не, некайф.",
+                },
+                {
+                    title: "Bioshock Remastered",
+                    review: "Скучная игра.",
+                },
+                {
+                    title: "Read Dead Redemption 2",
+                    review: "Я пытался пройти эту игру, потратил 18 часов, но не смог. Унылый кал, как и ГТА.",
+                    img: "games/Read_Dead_Redemption2.webp",
+                },
+                {
+                    title: "The Witcher 3: Wild Hunt",
+                    review: "Пытался пройти несколько раз, но не моё. Управление чувствуется не как в условно Скайриме. Буду ждать 4-ую часть. А там ещё гг Цири! ммм))))",
+                },
+                {
+                    title: "Styx: Shards of Darkness",
+                    review: "Скучная игра, думал будет лучше.",
+                },
+                {
+                    title: "Far Cry 5",
+                    review: "Играл с другом, но по какой-то причине дропнули.",
+                },
+                {
+                    title: "Reanimal",
+                    review: "Те же маленькие кошмары, только скучнее. Управление всё ещё неудобное. Я в моменте тильтанул и не захотел играть дальше. Радует что есть френд пасс.",
+                },
+                {
+                    title: "The Elder Scrolls Online",
+                    review: "Ещё одно MMORPG, которое мне не понравилось. В него просто скучно играть.",
+                },
+                {
+                    title: "Hogwarts Legacy",
+                    review: "Просто скучная.",
+                },
+                {
+                    title: "Rainbow Six Siege",
+                    review: "",
+                },
+                {
+                    title: "Astroneers",
+                    review: "Скучная игра. Если поиграть подольше, то мб понравилась бы, а так есть игру ко-оп игры.",
+                },
+                {
+                    title: "No Rest for the Wicked",
+                    review: "Пытались пройти с другом. Потратили 2 часа для того чтобы понят куда идти по сюжету, 10 мин чё-то посмотрели, а потом снова не поняли куда идти. -1к+ грн",
+                },
+                {
+                    title: "Rust",
+                    review: "",
+                },
+                {
+                    title: "Grand Theft Auto V",
+                    review: "Я не понимаю как можно играть в игры серии ГТА. Это унылое говно.",
+                },
+            ],
         };
 
         let currentData = {};
 
         function init() {
-            const saved = localStorage.getItem('tierListGamesPro');
+            const saved = localStorage.getItem('tierListGamesPro_v3');
             if (saved) {
                 currentData = JSON.parse(saved);
             } else {
@@ -246,15 +723,15 @@
             renderTiers();
         }
 
-        // === ОЧЕРЕДЬ ЗАПРОСОВ К API ===
         async function processQueue() {
-            if (requestQueue.length === 0) {
-                isProcessingQueue = false;
+            if (requestQueue.length === 0 || activeRequests >= MAX_CONCURRENT_REQUESTS) {
                 return;
             }
-            isProcessingQueue = true;
             
+            activeRequests++;
             const { title, cardElement } = requestQueue.shift();
+            
+            processQueue();
             
             try {
                 const url = `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&search=${encodeURIComponent(title)}&page_size=1`;
@@ -274,20 +751,18 @@
             } catch (e) {
                 console.error('API Error:', e);
                 removeLoader(cardElement);
+            } finally {
+                activeRequests--;
+                setTimeout(processQueue, 300);
             }
-
-            // Небольшая задержка перед следующим запросом (как в твоем index.js)
-            setTimeout(processQueue, 700);
         }
 
         function loadCardPoster(cardElement, game) {
-            // Если в data уже прописана картинка напрямую
             if (game.img) {
                 applyPoster(cardElement, game.img);
                 return;
             }
 
-            // Проверяем кэш
             if (posterCache[game.title]) {
                 if (posterCache[game.title] !== 'NOT_FOUND') {
                     applyPoster(cardElement, posterCache[game.title]);
@@ -297,18 +772,17 @@
                 return;
             }
 
-            // Добавляем спиннер загрузки
             const spinner = document.createElement('div');
             spinner.className = 'loading-spinner';
             cardElement.appendChild(spinner);
 
-            // Отправляем в очередь на запрос
             requestQueue.push({ title: game.title, cardElement: cardElement });
-            if (!isProcessingQueue) processQueue();
+            processQueue();
         }
 
         function applyPoster(card, url) {
-            card.style.backgroundImage = `url('${url}')`;
+            const finalUrl = (url.startsWith('games/') || url.startsWith('img/')) ? `img/${url.replace('img/', '')}` : url;
+            card.style.backgroundImage = `url('${finalUrl}')`;
             removeLoader(card);
         }
 
@@ -317,7 +791,6 @@
             if (spinner) spinner.remove();
         }
 
-        // === ГЕНЕРАЦИЯ ИНТЕРФЕЙСА ===
         function renderTiers() {
             const container = document.getElementById('tier-container');
             container.innerHTML = '';
@@ -326,14 +799,14 @@
                 const games = currentData[tier] || [];
                 
                 const row = document.createElement('div');
-                row.className = 'flex flex-col md:flex-row bg-gray-900 rounded overflow-hidden shadow-lg';
+                row.className = 'flex flex-col md:flex-row bg-gray-900 rounded overflow-hidden shadow-lg border border-transparent transition-colors duration-200';
                 
                 const label = document.createElement('div');
                 label.className = `w-full md:w-28 flex-shrink-0 flex items-center justify-center text-4xl font-bold py-6 ${tierColors[tier]}`;
                 label.textContent = tier;
                 
                 const dropZone = document.createElement('div');
-                dropZone.className = 'tier-zone flex-1 flex flex-wrap gap-2 p-3 relative';
+                dropZone.className = 'tier-zone flex-1 flex flex-wrap gap-2 p-3 relative rounded-r transition-colors duration-200';
                 dropZone.dataset.tier = tier;
                 
                 dropZone.addEventListener('dragover', handleDragOverZone);
@@ -341,12 +814,9 @@
 
                 games.forEach((game) => {
                     const card = document.createElement('div');
-                    // Размеры постеров (примерно 3x4)
-                    card.className = 'game-card w-24 h-32 md:w-28 md:h-40 rounded border border-gray-600';
+                    card.className = 'game-card w-24 h-32 md:w-28 md:h-40 rounded border border-gray-600 shadow-md';
                     card.draggable = true;
                     card.title = game.title;
-                    
-                    // Сохраняем сам объект игры прямо в DOM элемент (!важно для перестроения)
                     card.gameData = game;
 
                     const titleOverlay = document.createElement('div');
@@ -354,12 +824,15 @@
                     titleOverlay.textContent = game.title;
                     card.appendChild(titleOverlay);
 
-                    // Грузим постер
                     loadCardPoster(card, game);
 
-                    // События
                     card.addEventListener('dragstart', handleDragStart);
                     card.addEventListener('dragend', handleDragEnd);
+                    
+                    card.addEventListener('click', () => {
+                        if (card.classList.contains('dragging')) return;
+                        openDrawer(card);
+                    });
 
                     dropZone.appendChild(card);
                 });
@@ -370,26 +843,27 @@
             }
         }
 
-        // === DRAG & DROP С СОРТИРОВКОЙ ===
         let draggedElement = null;
 
         function handleDragStart(e) {
             draggedElement = e.target;
             e.target.classList.add('dragging');
-            // Немного прозрачности при переносе
             e.dataTransfer.effectAllowed = 'move';
         }
 
         function handleDragEnd(e) {
             e.target.classList.remove('dragging');
             draggedElement = null;
+            document.querySelectorAll('.tier-zone').forEach(z => z.classList.remove('bg-gray-800/60'));
         }
 
         function handleDragOverZone(e) {
             e.preventDefault();
             const dropZone = e.currentTarget;
             
-            // Находим карточку, над которой сейчас находится курсор
+            document.querySelectorAll('.tier-zone').forEach(z => z.classList.remove('bg-gray-800/60'));
+            dropZone.classList.add('bg-gray-800/60');
+            
             const cards = [...dropZone.querySelectorAll('.game-card:not(.dragging)')];
             
             const hoverCard = cards.find(card => {
@@ -399,54 +873,79 @@
             });
 
             if (hoverCard) {
-                // Если мы навели на карту, вычисляем, в какую половину (левую/правую)
                 const rect = hoverCard.getBoundingClientRect();
                 if (e.clientX < rect.left + rect.width / 2) {
-                    dropZone.insertBefore(draggedElement, hoverCard); // Вставляем ДО
+                    dropZone.insertBefore(draggedElement, hoverCard);
                 } else {
-                    dropZone.insertBefore(draggedElement, hoverCard.nextSibling); // Вставляем ПОСЛЕ
+                    dropZone.insertBefore(draggedElement, hoverCard.nextSibling);
                 }
             } else if (e.target === dropZone) {
-                // Если курсор просто в зоне, но не над конкретной картой - кидаем в конец
                 dropZone.appendChild(draggedElement);
             }
         }
 
         function handleDrop(e) {
             e.preventDefault();
-            // Как только мы отпустили элемент (и DOM перестроился визуально),
-            // мы считываем весь DOM и пересобираем объект currentData
+            document.querySelectorAll('.tier-zone').forEach(z => z.classList.remove('bg-gray-800/60'));
             syncDataFromDOM();
         }
 
-        // === СИНХРОНИЗАЦИЯ ДАННЫХ ===
         function syncDataFromDOM() {
             const newData = {};
             document.querySelectorAll('.tier-zone').forEach(zone => {
                 const tier = zone.dataset.tier;
                 newData[tier] = [];
-                
-                // Перебираем элементы внутри зоны в том порядке, в котором они сейчас на экране
                 zone.querySelectorAll('.game-card').forEach(card => {
                     newData[tier].push(card.gameData);
                 });
             });
-            
             currentData = newData;
-            localStorage.setItem('tierListGamesPro', JSON.stringify(currentData));
+            localStorage.setItem('tierListGamesPro_v3', JSON.stringify(currentData));
+        }
+
+        function openDrawer(card) {
+            currentEditingCard = card;
+            document.getElementById('drawer-game-title').value = card.gameData.title;
+            document.getElementById('drawer-game-review').value = card.gameData.review || "";
+            
+            const drawer = document.getElementById('edit-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            drawer.classList.remove('translate-x-full');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            overlay.classList.add('opacity-50', 'pointer-events-auto');
+        }
+
+        function closeDrawer() {
+            currentEditingCard = null;
+            const drawer = document.getElementById('edit-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            drawer.classList.add('translate-x-full');
+            overlay.classList.remove('opacity-50', 'pointer-events-auto');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function saveDrawerChanges() {
+            if (!currentEditingCard) return;
+            
+            const newReview = document.getElementById('drawer-game-review').value;
+            currentEditingCard.gameData.review = newReview;
+            
+            syncDataFromDOM();
+            closeDrawer();
+            
+            currentEditingCard.classList.add('border-green-400');
+            setTimeout(() => currentEditingCard.classList.remove('border-green-400'), 500);
         }
 
         function resetData() {
             if (confirm("Сбросить до оригинального состояния? Все изменения будут потеряны.")) {
-                localStorage.removeItem('tierListGamesPro');
+                localStorage.removeItem('tierListGamesPro_v3');
                 init();
             }
         }
 
-        // === СКАЧИВАНИЕ ФАЙЛА ===
         function downloadJS() {
-            let jsContent = `// 1. Создаем уникальную переменную для шкал ИГР
-const gameRatingScales = {
+            let jsContent = `const gameRatingScales = {
     standard: [
         { rank: 'S', color: 'bg-red-500' },
         { rank: 'A', color: 'bg-orange-500' },
@@ -457,7 +956,7 @@ const gameRatingScales = {
         { rank: 'F', color: 'bg-gray-600' }
     ],
     personal: [
-        { rank: 'Могу играть бесконечно', color: 'bg-red-500' },
+        { rank: 'Лучшие', color: 'bg-red-500' },
         { rank: 'Дикий кайф', color: 'bg-orange-500' },
         { rank: 'Крепкий проект', color: 'bg-yellow-400' },
         { rank: 'Прошёл и забыл', color: 'bg-green-500' },
@@ -467,11 +966,10 @@ const gameRatingScales = {
     ]
 };
 
-// 2. Добавляем данные, если основной объект существует
 if (typeof tierListData !== 'undefined') {
     
     tierListData['Игры'] = {
-        type: 'game', // Важный флаг для API RAWG
+        type: 'game',
         data: {\n`;
 
             for (const tier in currentData) {
@@ -500,6 +998,33 @@ if (typeof tierListData !== 'undefined') {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                let tierListData = {};
+                
+                try {
+                    eval(content);
+                    if (tierListData['Игры'] && tierListData['Игры'].data) {
+                        currentData = tierListData['Игры'].data;
+                        localStorage.setItem('tierListGamesPro_v3', JSON.stringify(currentData));
+                        renderTiers();
+                    } else {
+                        alert('Файл не содержит надёжных данных для тир-листа.');
+                    }
+                } catch (err) {
+                    alert('Ошибка при чтении файла. Убедитесь, что загружён корректный games-data.js.');
+                }
+                
+                event.target.value = '';
+            };
+            reader.readAsText(file);
         }
 
         init();

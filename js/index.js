@@ -283,7 +283,8 @@ function initTheme() {
 }
 
 function applyAllFilters() {
-    const val = searchInput.value.toLowerCase();
+    const rawVal = searchInput.value;
+    const val = typeof processSearchQuery === 'function' ? processSearchQuery(rawVal) : rawVal.toLowerCase();
     const openedProjects = JSON.parse(localStorage.getItem('opened_projects')) || [];
 
     allProjects.forEach(card => {
