@@ -39,12 +39,12 @@ async function loadProjects() {
 
     try {
         const response = await fetch(configUrl);
-        
+
         if (response.status === 404) {
             window.location.href = '404.html';
             return;
         }
-        
+
         if (response.status === 403) {
             window.location.href = '403.html';
             return;
@@ -263,7 +263,7 @@ async function updateSteamAvatar() {
                 }
             }
         }
-    } catch (err) {}
+    } catch (err) { }
 }
 
 function initTheme() {
@@ -285,6 +285,8 @@ function initTheme() {
 function applyAllFilters() {
     const rawVal = searchInput.value;
     const val = typeof processSearchQuery === 'function' ? processSearchQuery(rawVal) : rawVal.toLowerCase();
+
+    let openedProjects = JSON.parse(localStorage.getItem('opened_projects')) || [];
 
     allProjects.forEach(card => {
         const name = card.getAttribute('data-name') || '';
@@ -323,7 +325,7 @@ if (filterUnseenBtn) {
     filterUnseenBtn.addEventListener('click', () => {
         showUnseenOnly = !showUnseenOnly;
         filterUnseenBtn.classList.toggle('active', showUnseenOnly);
-        
+
         const icon = filterUnseenBtn.querySelector('i');
         if (showUnseenOnly) {
             icon.className = 'bx bx-show';
@@ -332,7 +334,7 @@ if (filterUnseenBtn) {
             icon.className = 'bx bx-hide';
             filterUnseenBtn.title = "Show only unviewed projects";
         }
-        
+
         applyAllFilters();
     });
 }
@@ -469,14 +471,14 @@ function filterByTech(tech) {
 
     if (currentFilter === tech) {
         currentFilter = null;
-        if(statsContainer) statsContainer.classList.remove('has-active-filter');
-        if(cloudContainer) cloudContainer.classList.remove('has-active-filter');
+        if (statsContainer) statsContainer.classList.remove('has-active-filter');
+        if (cloudContainer) cloudContainer.classList.remove('has-active-filter');
         document.querySelectorAll('.stat-bar').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tech-tag').forEach(el => el.classList.remove('active'));
     } else {
         currentFilter = tech;
-        if(statsContainer) statsContainer.classList.add('has-active-filter');
-        if(cloudContainer) cloudContainer.classList.add('has-active-filter');
+        if (statsContainer) statsContainer.classList.add('has-active-filter');
+        if (cloudContainer) cloudContainer.classList.add('has-active-filter');
 
         document.querySelectorAll('.stat-bar').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tech-tag').forEach(el => el.classList.remove('active'));
@@ -555,12 +557,12 @@ function updatePinnedOrder() {
         if (pinIndex > -1) {
             card.classList.add('is-pinned');
             card.style.order = pinIndex - 10;
-            if(icon) icon.className = 'bx bxs-pin';
+            if (icon) icon.className = 'bx bxs-pin';
             card.setAttribute('draggable', 'true');
         } else {
             card.classList.remove('is-pinned');
             card.style.order = 0;
-            if(icon) icon.className = 'bx bx-pin';
+            if (icon) icon.className = 'bx bx-pin';
             card.removeAttribute('draggable');
         }
     });
@@ -614,7 +616,7 @@ function injectDragStyles() {
 
 function initDragAndDrop() {
     let draggedElement = null;
-    
+
     let touchDropTarget = null;
     let touchTimer = null;
     let isDragging = false;
@@ -624,7 +626,7 @@ function initDragAndDrop() {
         if (!card) return;
         draggedElement = card;
         e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', card.getAttribute('data-id')); 
+        e.dataTransfer.setData('text/plain', card.getAttribute('data-id'));
         setTimeout(() => card.classList.add('dragging'), 0);
     });
 
@@ -665,9 +667,9 @@ function initDragAndDrop() {
             isDragging = true;
             draggedElement = card;
             card.classList.add('dragging');
-            if(navigator.vibrate) navigator.vibrate(50);
+            if (navigator.vibrate) navigator.vibrate(50);
         }, 500);
-    }, {passive: true});
+    }, { passive: true });
 
     container.addEventListener('touchmove', (e) => {
         if (!isDragging) {
@@ -688,11 +690,11 @@ function initDragAndDrop() {
         } else {
             touchDropTarget = null;
         }
-    }, {passive: false});
+    }, { passive: false });
 
     container.addEventListener('touchend', (e) => {
         clearTimeout(touchTimer);
-        
+
         if (isDragging) {
             e.preventDefault();
             draggedElement.classList.remove('dragging');
@@ -717,7 +719,7 @@ function reorderPinnedItems(draggedId, targetId) {
     if (fromIndex > -1 && toIndex > -1) {
         pinned.splice(fromIndex, 1);
         pinned.splice(toIndex, 0, draggedId);
-        
+
         localStorage.setItem('pinned_projects', JSON.stringify(pinned));
         updatePinnedOrder();
         showToast('<i class="bx bx-sort"></i> Order saved!');

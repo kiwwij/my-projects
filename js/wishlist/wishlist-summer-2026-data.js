@@ -12,7 +12,7 @@ const gamesData = [
         discount_percent: 0,
         release_date: "27 фев. 2026 г.",
         play_status: "dropped",
-        rating: "",
+        rating: "89",
         progress: 71
     },
     {
@@ -37,7 +37,7 @@ const gamesData = [
         price_uah: 375,
         discount_percent: 45,
         playtime: "3",
-        rating: "",
+        rating: "90",
 
         play_status: "changed_mind",
         review_link: "",
@@ -202,7 +202,7 @@ const gamesData = [
         price_uah: 0,
         discount_percent: 0,
         playtime: "6",
-        rating: "",
+        rating: "80",
 
         play_status: "unplanned_dropped",
         review_link: "",
@@ -258,7 +258,7 @@ const gamesData = [
         price_uah: "0",
         discount_percent: 0,
         playtime: "0.5",
-        rating: "",
+        rating: "87",
 
         play_status: "completed",
         review_link: "",
@@ -286,7 +286,7 @@ const gamesData = [
         price_uah: "600",
         discount_percent: 20,
         playtime: "7.5",
-        rating: "",
+        rating: "87",
 
         play_status: "completed",
         review_link: "https://telegra.ph/Dispatch-review-06-08",
@@ -382,26 +382,12 @@ const gamesData = [
         release_date: "27 сен. 2019 г.",
         price_uah: 799,
         discount_percent: 90,
-        playtime: "26",
+        playtime: "16",
         rating: "",
 
-        play_status: "playing",
-        review_link: "",
-        progress: 50
-    },
-    {
-        title: "ATRI -My Dear Moments- Demo",
-        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1263470/header.jpg?t=1588321271",
-        release_date: "1 май. 2020",
-        price_uah: 0,
-        discount_percent: 0,
-        playtime: "2",
-        rating: "80",
-
-        play_status: "playing",
-        review_link: "",
-        progress: 25
+        play_status: "completed",
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/678960/",
+        progress: 100
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
@@ -413,9 +399,23 @@ const gamesData = [
         playtime: "14",
         rating: "78",
 
-        play_status: "paused",
+        play_status: "playing",
         review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
         progress: 30
+    },
+    {
+        title: "ATRI -My Dear Moments- Demo",
+        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1263470/header.jpg?t=1588321271",
+        release_date: "1 май. 2020",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "2",
+        rating: "80",
+
+        play_status: "paused",
+        review_link: "",
+        progress: 25
     },
     {
         title: "Re:ZERO -Starting Life in Another World- The Prophecy of the Throne",
