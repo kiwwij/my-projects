@@ -86,19 +86,6 @@ const gamesData = [
         progress: 100
     },
     {
-        title: "The Last of Us™ Part II Remastered",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2531310/header.jpg?t=1750959180",
-        steam_link: "https://store.steampowered.com/app/2531310/Odni_iz_nas_CHast_II_Obnovlennaya_versiya/",
-        review_link: "",
-        playtime: "23",
-        price_uah: 1499,
-        discount_percent: 20,
-        release_date: "3 апр. 2025 г.",
-        play_status: "planned",
-        rating: "",
-        progress: 0
-    },
-    {
         title: "FINAL FANTASY XVI",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2515020/header.jpg?t=1773294537",
         steam_link: "https://store.steampowered.com/app/2515020/FINAL_FANTASY_XVI/",
@@ -387,6 +374,89 @@ const gamesData = [
 
         play_status: "completed",
         review_link: "https://steamcommunity.com/id/serhiosergey/recommended/678960/",
+        progress: 100
+    },
+    {
+        title: "Русы не против Ящерок 2",
+        steam_link: "https://store.steampowered.com/app/2642840/Rusy_ne_protiv_YAshherok_2/",
+        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2642840/fdf0c62899f36a04f172c5bcf5af5c8ce1582f90/header_russian.jpg?t=1775738702",
+        release_date: "6 ноя. 2025 г.",
+        price_uah: 225,
+        discount_percent: 30,
+        playtime: "1",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link: "",
+        progress: 100
+    },
+    {
+        title: "Гиперборея: Хорнизоляция",
+        steam_link: "https://store.steampowered.com/app/4102950/Giperboreya_Xornizolyacziya/?curator_clanid=40305758",
+        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4102950/6b0a7fc035c2db46013dee9839cbf3524437d859/header.jpg?t=1775862661",
+        release_date: "9 апр. 2026 г.",
+        price_uah: 130,
+        discount_percent: 25,
+        playtime: "0.2",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link: "",
+        progress: 100
+    },
+    {
+        title: "The Last of Us™ Part II Remastered",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2531310/header.jpg?t=1750959180",
+        steam_link: "https://store.steampowered.com/app/2531310/Odni_iz_nas_CHast_II_Obnovlennaya_versiya/",
+        review_link: "",
+        playtime: "23",
+        price_uah: 1499,
+        discount_percent: 20,
+        release_date: "3 апр. 2025 г.",
+        play_status: "unplanned_dropped",
+        rating: "",
+        progress: 0
+    },
+    {
+        title: "ELDEN RING NIGHTREIGN",
+        steam_link: "https://store.steampowered.com/app/2622380/ELDEN_RING_NIGHTREIGN/?l=russian",
+        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2622380/header.jpg?t=1773099036",
+        release_date: "30 мая. 2025 г.",
+        price_uah: 1199,
+        discount_percent: 25,
+        playtime: "53",
+        rating: "77",
+
+        play_status: "unplanned_dropped",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "Minecraft",
+        steam_link: "",
+        poster: "https://gaming-cdn.com/images/products/442/616x353/minecraft-java-and-bedrock-edition-pc-mac-cover.jpg?v=1769503807",
+        release_date: "17 май. 2009 г.",
+        price_uah: 1350,
+        discount_percent: 50,
+        playtime: "5",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link:"",
+        progress: 100
+    },
+    {
+        title: "Escape from Yandere",
+        steam_link: "https://store.steampowered.com/app/4081840/Escape_from_Yandere/",
+        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4081840/357a2f59ec1939f8d0025c0121e86b0f3dabf12c/header.jpg?t=1771446146",
+        release_date: "7 фев. 2026 г.",
+        price_uah: 124,
+        discount_percent: 20,
+        playtime: "1",
+        rating: "",
+
+        play_status: "unplanned_completed",
+        review_link:"",
         progress: 100
     },
     {

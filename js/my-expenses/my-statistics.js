@@ -140,11 +140,38 @@ function initStatistics() {
     const totalSaved = globalIncome - globalExpense;
     const saveRate = globalIncome > 0 ? ((totalSaved / globalIncome) * 100) : 0;
 
-    const absoluteTotal = 48000 + 21000 + totalSaved;
+    const baseUAH = 48500;
+    const dollarsAmount = 500;
     const absSavedEl = document.getElementById('absolute-total-saved');
-    if (absSavedEl) {
-        absSavedEl.innerText = `Общий капитал: ~${absoluteTotal.toFixed(0)} ₴`;
-    }
+    const usdAmountEl = document.getElementById('usd-amount');
+
+    fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json')
+        .then(response => response.json())
+        .then(data => {
+            const usdRate = data[0].rate;
+            const absoluteTotal = baseUAH + (dollarsAmount * usdRate) + totalSaved;
+            
+            if (absSavedEl) {
+                absSavedEl.innerText = `Общий капитал: ~${absoluteTotal.toFixed(0)} ₴`;
+            }
+            
+            if (usdAmountEl) {
+                usdAmountEl.title = `Курс НБУ: ${usdRate.toFixed(2)} ₴ / $`;
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки курса валют:', error);
+            const fallbackRate = 41.0; 
+            const absoluteTotal = baseUAH + (dollarsAmount * fallbackRate) + totalSaved;
+            
+            if (absSavedEl) {
+                absSavedEl.innerText = `Общий капитал: ~${absoluteTotal.toFixed(0)} ₴ (без учета нового курса)`;
+            }
+            
+            if (usdAmountEl) {
+                usdAmountEl.title = `Курс (запасной): ${fallbackRate.toFixed(2)} ₴ / $`;
+            }
+        });
 
     let topCatName = "—";
     let topCatVal = 0;

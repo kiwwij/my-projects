@@ -287,7 +287,7 @@ const showcasesData = [
                 title: "Гиперборея: Хорнизоляция",
                 steamUrl: "https://store.steampowered.com/app/4102950/Giperboreya_Xornizolyacziya/",
                 banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4102950/6b0a7fc035c2db46013dee9839cbf3524437d859/header.jpg?t=1775862661",
-                achieved: 0,
+                achieved: 41,
                 total: 41,
             },
             {
@@ -301,7 +301,7 @@ const showcasesData = [
                 title: "Русы не против Ящерок 2",
                 steamUrl: "https://store.steampowered.com/app/2642840/Rusy_ne_protiv_YAshherok_2/?curator_clanid=40305758",
                 banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2642840/fdf0c62899f36a04f172c5bcf5af5c8ce1582f90/header_russian.jpg?t=1775738702",
-                achieved: 0,
+                achieved: 72,
                 total: 72,
             },
         ]
