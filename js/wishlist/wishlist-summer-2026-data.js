@@ -457,7 +457,7 @@ const gamesData = [
 
         play_status: "unplanned_completed",
         review_link:"",
-        progress: 100
+        progress: 10
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",

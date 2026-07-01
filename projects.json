@@ -529,6 +529,13 @@
     "url": "",
     "date": "2026-06-15"
   },
+  "QA-notes.html": {
+    "image": "bx bx-book-open",
+    "description": "A comprehensive guide to Quality Assurance basics, testing methodologies, and project lifecycles.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-07-01"
+  },
   ".html": {
     "image": "",
     "description": "",
