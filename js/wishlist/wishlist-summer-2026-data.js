@@ -457,7 +457,21 @@ const gamesData = [
 
         play_status: "unplanned_completed",
         review_link:"",
-        progress: 10
+        progress: 100
+    },
+    {
+        title: "Clair Obscur: Expedition 33",
+        steam_link: "https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/?l=russian",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1903340/be3305b02d4db0dffa3458537118423bf2792d7e/header.jpg?t=1773676780",
+        release_date: "24 апр. 2025 г.",
+        price_uah: 1499,
+        discount_percent: 20,
+        playtime: "29",
+        rating: "",
+
+        play_status: "playing",
+        review_link: "",
+        progress: 15
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
@@ -469,7 +483,7 @@ const gamesData = [
         playtime: "14",
         rating: "78",
 
-        play_status: "playing",
+        play_status: "paused",
         review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
         progress: 30
     },
@@ -512,20 +526,6 @@ const gamesData = [
         release_date: "2026",
         play_status: "planned",
         rating: "",
-        progress: 0
-    },
-    {
-        title: "Clair Obscur: Expedition 33",
-        steam_link: "https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/?l=russian",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1903340/be3305b02d4db0dffa3458537118423bf2792d7e/header.jpg?t=1773676780",
-        release_date: "24 апр. 2025 г.",
-        price_uah: 1499,
-        discount_percent: 20,
-        playtime: "29",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
         progress: 0
     },
     {
