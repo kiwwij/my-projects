@@ -536,6 +536,13 @@
     "url": "",
     "date": "2026-07-01"
   },
+  "your-personal-anime-lists.html": {
+    "image": "bx bx-book-heart",
+    "description": "Track, rank, and share your favorite anime collections with friends easily.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-07-04"
+  },
   ".html": {
     "image": "",
     "description": "",

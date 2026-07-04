@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="A strict, professional personal anime tracking and tier-list creator.">
+    <title>Anime Hub & Tier List</title>
+    <link rel="icon" id="dynamic-favicon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzI1NjNlYiIgcng9IjIwIi8+PHBhdGggZD0iTTUwIDE1IEw2MCA0MCBMODUgNDAgTDY1IDU1IEw3NSA4MCBMNTAgNjUgTDI1IDgwIEwzNSA1NSBMMTUgNDAgTDQwIDQwIFoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/your-personal-anime-lists.css">
+</head>
+<body>
+    <header class="header strict-container">
+        <div class="header-top">
+            <div class="logo">
+                <i class='bx bxs-layer'></i>
+                <h1 data-i18n="title">Anime Hub</h1>
+            </div>
+            <div class="controls">
+                <input type="text" id="author-name" class="strict-input" data-i18n-placeholder="authorName" data-i18n-title="hintAuthor" placeholder="Your Name">
+                <button id="theme-toggle" class="btn-icon"><i class='bx bx-moon'></i></button>
+                <select id="lang-toggle" class="strict-input">
+                    <option value="en">EN</option>
+                    <option value="ru">RU</option>
+                    <option value="uk">UK</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="file-controls" id="file-controls">
+            <button id="btn-export" class="btn"><i class='bx bx-download'></i> <span data-i18n="saveFile">Save</span></button>
+            <label for="file-import" class="btn"><i class='bx bx-upload'></i> <span data-i18n="loadFile">Load</span></label>
+            <input type="file" id="file-import" accept=".json" hidden>
+            <button id="btn-share" class="btn btn-primary" data-i18n-title="hintShare"><i class='bx bx-share-alt'></i> <span data-i18n="share">Share</span></button>
+        </div>
+    </header>
+
+    <div id="readonly-banner" class="hidden strict-container banner-warning">
+        <div>
+            <i class='bx bx-show'></i> <span data-i18n="viewMode">View-only mode. Author: </span> 
+            <strong id="readonly-author"></strong>
+            <span id="readonly-date-span" class="readonly-date"></span>
+        </div>
+    </div>
+
+    <nav class="view-switchers strict-container">
+        <button class="switcher active" data-view="tierlist-view"><i class='bx bx-list-ol'></i> <span data-i18n="tierList">Tier List</span></button>
+        <button class="switcher" data-view="lists-view"><i class='bx bx-collection'></i> <span data-i18n="lists">Lists</span></button>
+    </nav>
+
+    <main class="main-content strict-container">
+        <section id="search-section" class="search-container">
+            <div class="search-bar">
+                <i class='bx bx-search search-icon'></i>
+                <select id="search-type" class="strict-input">
+                    <option value="all" data-i18n="filterAll">All Formats</option>
+                    <option value="TV" data-i18n="filterTV">TV Series</option>
+                    <option value="movie" data-i18n="filterMovie">Movies</option>
+                    <option value="OVA" data-i18n="filterOVA">OVA</option>
+                </select>
+                <input type="text" id="search-input" class="strict-input" data-i18n-placeholder="searchPlaceholder" placeholder="Search anime...">
+                <button id="clear-search" class="btn-icon hidden"><i class='bx bx-x'></i></button>
+            </div>
+            <div id="search-results" class="results-grid"></div>
+        </section>
+
+        <section id="tierlist-view" class="view-section active">
+            <div class="tierlist-controls">
+                <button id="reset-tiers" class="btn btn-small"><i class='bx bx-reset'></i> <span data-i18n="resetTiers">Reset Labels</span></button>
+            </div>
+            <div id="tiers-container"></div>
+        </section>
+
+        <section id="lists-view" class="view-section hidden">
+            <div class="lists-controls" id="list-creation-tools">
+                <input type="text" id="new-list-name" class="strict-input" data-i18n-placeholder="listName" data-i18n-title="hintListName" placeholder="List name...">
+                
+                <div class="emoji-picker-container">
+                    <input type="text" id="new-list-emoji" class="strict-input emoji-input" placeholder="📁" readonly data-i18n-title="hintEmoji">
+                    <div id="emoji-popup" class="emoji-popup hidden"></div>
+                </div>
+
+                <input type="color" id="new-list-color" class="color-picker" value="#4a90e2" data-i18n-title="hintColor">
+                <button id="btn-create-list" class="btn btn-primary"><i class='bx bx-plus'></i> <span data-i18n="create">Create</span></button>
+            </div>
+            <div id="custom-lists-container"></div>
+        </section>
+    </main>
+
+    <footer class="socials-section strict-container">
+        <h3 data-i18n="socialsTitle">Creator's Socials</h3>
+        <div id="socials-display" class="socials-links hidden"></div>
+        <div id="socials-edit" class="socials-inputs">
+            <div class="input-group" data-i18n-title="hintYT"><i class='bx bxl-youtube'></i><input type="text" id="soc-yt" data-i18n-placeholder="phYT" placeholder="YouTube Handle"></div>
+            <div class="input-group" data-i18n-title="hintTW"><i class='bx bxl-twitch'></i><input type="text" id="soc-tw" data-i18n-placeholder="phTW" placeholder="Twitch Username"></div>
+            <div class="input-group" data-i18n-title="hintTT"><i class='bx bxl-tiktok'></i><input type="text" id="soc-tt" data-i18n-placeholder="phTT" placeholder="TikTok Username"></div>
+            <div class="input-group" data-i18n-title="hintIG"><i class='bx bxl-instagram'></i><input type="text" id="soc-ig" data-i18n-placeholder="phIG" placeholder="Instagram Username"></div>
+            <div class="input-group" data-i18n-title="hintTG"><i class='bx bxl-telegram'></i><input type="text" id="soc-tg" data-i18n-placeholder="phTG" placeholder="Telegram Username"></div>
+            <div class="input-group" data-i18n-title="hintSteam"><i class='bx bxl-steam'></i><input type="text" id="soc-steam" data-i18n-placeholder="phSteam" placeholder="Steam Custom ID"></div>
+            <button id="save-socials" class="btn btn-primary"><i class='bx bx-check'></i> <span data-i18n="save">Save</span></button>
+        </div>
+    </footer>
+
+    <div id="action-modal" class="modal hidden">
+        <div class="modal-content strict-modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Anime Title</h3>
+                <button id="modal-close" class="btn-icon"><i class='bx bx-x'></i></button>
+            </div>
+            <div id="modal-details" class="modal-details"></div>
+            
+            <div class="rating-container">
+                <label for="modal-rating-input"><i class='bx bxs-star'></i> <span data-i18n="ratingLabel">Rating (0-10):</span></label>
+                <input type="number" id="modal-rating-input" class="strict-input" min="0" max="10" step="0.1" placeholder="—">
+            </div>
+
+            <div id="modal-actions-container">
+                <div class="modal-divider"></div>
+                <p class="modal-subtitle" data-i18n="selectTier">Select 1 Tier:</p>
+                <div class="modal-buttons tiers-buttons" id="modal-tiers-actions"></div>
+                
+                <p class="modal-subtitle" data-i18n="selectLists" style="margin-top: 15px;">Add to Lists (multiple):</p>
+                <div class="modal-buttons lists-buttons" id="modal-lists-actions"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/your-personal-anime-lists.js"></script>
+</body>
+</html>
