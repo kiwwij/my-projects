@@ -138,7 +138,14 @@ function checkURLForSharedData() {
     const sharedData = params.get('share');
     if (sharedData) {
         try {
-            state = JSON.parse(decodeURIComponent(atob(sharedData)));
+            let decodedStr;
+            if (sharedData.startsWith('JTd')) { 
+                decodedStr = decodeURIComponent(atob(sharedData));
+            } else {
+                decodedStr = LZString.decompressFromEncodedURIComponent(sharedData);
+            }
+
+            state = JSON.parse(decodedStr);
             isReadOnly = true;
             generateUserFavicon(state.author);
             document.getElementById('readonly-banner').classList.remove('hidden');
@@ -148,8 +155,13 @@ function checkURLForSharedData() {
             ['file-controls', 'search-section', 'socials-edit', 'list-creation-tools', 'reset-tiers', 'author-name'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('modal-rating-input').disabled = true;
             document.getElementById('socials-display').classList.remove('hidden');
-        } catch (e) { loadState(); }
-    } else { loadState(); }
+        } catch (e) { 
+            console.error("Link decode error", e);
+            loadState(); 
+        }
+    } else { 
+        loadState(); 
+    }
 }
 
 function setupSwitchers() {
@@ -344,8 +356,21 @@ function setupEventListeners() {
 
     document.getElementById('btn-share').addEventListener('click', () => {
         state.shareDate = new Date().toLocaleDateString();
-        saveState(); const str = btoa(encodeURIComponent(JSON.stringify(state)));
-        const url = window.location.origin + window.location.pathname + '?share=' + str;
+        
+        const activeIds = new Set();
+        Object.keys(state.tiers).forEach(id => activeIds.add(id));
+        Object.values(state.lists).forEach(arr => arr.forEach(id => activeIds.add(id)));
+        
+        const cleanData = {};
+        activeIds.forEach(id => { 
+            if (state.data[id]) cleanData[id] = state.data[id]; 
+        });
+        state.data = cleanData; 
+
+        saveState(); 
+        const compressedStr = LZString.compressToEncodedURIComponent(JSON.stringify(state));
+        const url = window.location.origin + window.location.pathname + '?share=' + compressedStr;
+        
         navigator.clipboard.writeText(url).then(() => showToast('msgLinkCopied'));
     });
 
