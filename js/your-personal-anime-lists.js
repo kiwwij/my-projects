@@ -59,15 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAll();
 });
 
-function generateUserFavicon(name) {
-    const authorStr = name || "A";
-    let hash = 0; for (let i = 0; i < authorStr.length; i++) hash = authorStr.charCodeAt(i) + ((hash << 5) - hash);
-    const color = `hsl(${Math.abs(hash) % 360}, 70%, 50%)`;
-    const initial = authorStr.charAt(0).toUpperCase();
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="${color}"/><text x="50" y="55" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="sans-serif" font-weight="800" font-size="50">${initial}</text></svg>`;
-    document.getElementById('dynamic-favicon').href = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
-}
-
 function showToast(messageKey, actionText = null, actionCallback = null) {
     const msg = i18n[currentLang][messageKey] || messageKey;
     const container = document.getElementById('toast-container');
@@ -120,7 +111,31 @@ function applyTranslations() {
 function saveState() {
     if (isReadOnly) return;
     state.author = document.getElementById('author-name').value.trim();
-    localStorage.setItem('animeHubStateStrictV2', JSON.stringify(state));
+
+    const activeIds = new Set([
+        ...Object.keys(state.tiers),
+        ...Object.values(state.lists).flat()
+    ]);
+
+    const cleanData = {};
+    activeIds.forEach(id => {
+        if (state.data[id]) {
+            cleanData[id] = {
+                id: state.data[id].id,
+                title: state.data[id].title,
+                image: state.data[id].image
+            };
+        }
+    });
+    
+    state.data = cleanData;
+
+    try {
+        localStorage.setItem('animeHubStateStrictV2', JSON.stringify(state));
+    } catch (e) {
+        console.error("Ошибка сохранения: превышен лимит localStorage", e);
+        showToast('msgErrorLoad');
+    }
 }
 
 function loadState() {
@@ -135,28 +150,46 @@ function loadState() {
 
 function checkURLForSharedData() {
     const params = new URLSearchParams(window.location.search);
-    const sharedData = params.get('share');
+    const sharedData = params.get('s') || params.get('share');
+
     if (sharedData) {
         try {
-            let decodedStr;
-            if (sharedData.startsWith('JTd')) { 
-                decodedStr = decodeURIComponent(atob(sharedData));
+            let decodedStr = sharedData.startsWith('JTd') ? 
+                decodeURIComponent(atob(sharedData)) : 
+                LZString.decompressFromEncodedURIComponent(sharedData);
+
+            let parsed = JSON.parse(decodedStr);
+
+            if (params.has('s')) {
+                const fullData = {};
+                for (const [id, arr] of Object.entries(parsed.d || {})) {
+                    let imgUrl = arr[1];
+                    if (imgUrl.startsWith('/system/') || imgUrl.startsWith('/assets/')) imgUrl = 'https://shikimori.one' + imgUrl;
+                    else if (imgUrl.match(/^[0-9]+/)) imgUrl = 'https://media.kitsu.io/anime/poster_images/' + imgUrl;
+                    
+                    fullData[id] = { id: id, title: arr[0], image: imgUrl };
+                }
+                
+                state = {
+                    author: parsed.a || "", shareDate: parsed.shareDate || "",
+                    tiers: parsed.t || {}, lists: parsed.l || {}, ratings: parsed.r || {}, data: fullData,
+                    customLists: (parsed.c || []).map(cl => ({ id: cl[0], name: cl[1], emoji: cl[2], color: cl[3], isFolded: false })),
+                    tierLabels: { S: 'S', A: 'A', B: 'B', C: 'C', D: 'D', E: 'E', F: 'F' },
+                    socials: state.socials
+                };
             } else {
-                decodedStr = LZString.decompressFromEncodedURIComponent(sharedData);
+                state = parsed;
             }
 
-            state = JSON.parse(decodedStr);
             isReadOnly = true;
-            generateUserFavicon(state.author);
             document.getElementById('readonly-banner').classList.remove('hidden');
             document.getElementById('readonly-author').textContent = state.author || "Anonymous";
-            if (state.shareDate) document.getElementById('readonly-date-span').textContent = `(${state.shareDate})`;
             
             ['file-controls', 'search-section', 'socials-edit', 'list-creation-tools', 'reset-tiers', 'author-name'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('modal-rating-input').disabled = true;
             document.getElementById('socials-display').classList.remove('hidden');
         } catch (e) { 
-            console.error("Link decode error", e);
+            console.error("Ошибка расшифровки ссылки", e);
             loadState(); 
         }
     } else { 
@@ -187,19 +220,72 @@ searchType.addEventListener('change', () => { if (searchInput.value.trim().lengt
 clearSearchBtn.addEventListener('click', () => { searchInput.value = ''; clearSearchBtn.classList.add('hidden'); document.getElementById('search-results').innerHTML = ''; });
 
 async function searchAnime(query) {
+    const type = searchType.value;
+    const resultsContainer = document.getElementById('search-results');
+    resultsContainer.innerHTML = '';
+
     try {
-        const type = searchType.value; let url = `https://kitsu.io/api/edge/anime?filter[text]=${encodeURIComponent(query)}&page[limit]=20&sort=startDate`;
+        let url = `https://kitsu.io/api/edge/anime?filter[text]=${encodeURIComponent(query)}&page[limit]=20&sort=startDate`;
         if (type !== 'all') url += `&filter[subtype]=${type}`;
-        const res = await fetch(url); const json = await res.json();
-        const resultsContainer = document.getElementById('search-results'); resultsContainer.innerHTML = '';
+        
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Kitsu network error');
+        
+        const json = await res.json();
+        
+        if (!json.data || json.data.length === 0) {
+            throw new Error('Kitsu returned empty array');
+        }
+        
         json.data.forEach(item => {
             const attr = item.attributes;
             resultsContainer.appendChild(createAnimeCard({
-                id: item.id, title: attr.canonicalTitle, image: attr.posterImage ? attr.posterImage.small : PLACEHOLDER_IMG,
-                type: attr.subtype, year: attr.startDate ? attr.startDate.substring(0,4) : '?', eps: attr.episodeCount || '?', status: attr.status
+                id: 'k_' + item.id,
+                title: attr.canonicalTitle,
+                image: attr.posterImage ? attr.posterImage.small : PLACEHOLDER_IMG,
+                type: attr.subtype,
+                year: attr.startDate ? attr.startDate.substring(0,4) : '?',
+                eps: attr.episodeCount || '?',
+                status: attr.status
             }));
         });
-    } catch(err) {}
+
+    } catch(err) {
+        try {
+            const shikiUrl = `https://shikimori.one/api/animes?search=${encodeURIComponent(query)}&limit=20`;
+            const res = await fetch(shikiUrl);
+            if (!res.ok) throw new Error('Shikimori network error');
+            
+            const json = await res.json();
+            
+            if (!json || json.length === 0) {
+                resultsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">Ничего не найдено</div>';
+                return;
+            }
+            
+            json.forEach(item => {
+                resultsContainer.appendChild(createAnimeCard({
+                    id: 's_' + item.id,
+                    title: item.name,
+                    image: `https://shikimori.one${item.image.original}`,
+                    type: item.kind,
+                    year: item.aired_on ? item.aired_on.substring(0,4) : '?',
+                    eps: item.episodes || '?',
+                    status: item.status
+                }));
+            });
+            
+        } catch(shikiErr) {
+            resultsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--danger); padding: 20px;">Ошибка загрузки данных с серверов</div>';
+        }
+    }
+}
+
+function renderSearchResults(dataArray) {
+    const resultsContainer = document.getElementById('search-results');
+    dataArray.forEach(anime => {
+        resultsContainer.appendChild(createAnimeCard(anime));
+    });
 }
 
 let draggedAnimeId = null;
@@ -228,7 +314,7 @@ function createAnimeCard(anime) {
     if (state.ratings && state.ratings[anime.id] !== undefined) {
         ratingHTML = `<div class="anime-rating-badge"><i class='bx bxs-star'></i> ${state.ratings[anime.id]}</div>`;
     }
-    div.innerHTML = `<div class="anime-img-wrap">${ratingHTML}<img src="${PLACEHOLDER_IMG}" data-src="${anime.image}" alt="poster" onload="this.src=this.getAttribute('data-src')"></div><div class="anime-info"><div class="anime-title" title="${anime.title}">${anime.title}</div></div>`;
+    div.innerHTML = `<div class="anime-img-wrap">${ratingHTML}<img src="${PLACEHOLDER_IMG}" data-src="${anime.image}" alt="poster" onload="this.onload=null; this.src=this.getAttribute('data-src')"></div><div class="anime-info"><div class="anime-title" title="${anime.title}">${anime.title}</div></div>`;
     if (!isReadOnly) div.addEventListener('dragstart', (e) => handleDragStart(e, anime));
     div.addEventListener('click', () => openActionModal(anime)); return div;
 }
@@ -356,22 +442,36 @@ function setupEventListeners() {
 
     document.getElementById('btn-share').addEventListener('click', () => {
         state.shareDate = new Date().toLocaleDateString();
-        
-        const activeIds = new Set();
-        Object.keys(state.tiers).forEach(id => activeIds.add(id));
-        Object.values(state.lists).forEach(arr => arr.forEach(id => activeIds.add(id)));
-        
-        const cleanData = {};
-        activeIds.forEach(id => { 
-            if (state.data[id]) cleanData[id] = state.data[id]; 
-        });
-        state.data = cleanData; 
 
-        saveState(); 
-        const compressedStr = LZString.compressToEncodedURIComponent(JSON.stringify(state));
-        const url = window.location.origin + window.location.pathname + '?share=' + compressedStr;
+        const activeIds = new Set([...Object.keys(state.tiers), ...Object.values(state.lists).flat()]);
+        const minimalData = {};
+
+        activeIds.forEach(id => {
+            if (state.data[id]) {
+                let img = state.data[id].image.replace('https://shikimori.one', '').replace('https://media.kitsu.io/anime/poster_images/', '');
+                minimalData[id] = [state.data[id].title, img]; 
+            }
+        });
+
+        const microState = {
+            a: state.author,
+            t: state.tiers,
+            l: state.lists,
+            r: state.ratings,
+            d: minimalData,
+            c: state.customLists.map(cl => [cl.id, cl.name, cl.emoji, cl.color])
+        };
+
+        const compressedStr = LZString.compressToEncodedURIComponent(JSON.stringify(microState));
+        const url = window.location.origin + window.location.pathname + '?s=' + compressedStr;
         
-        navigator.clipboard.writeText(url).then(() => showToast('msgLinkCopied'));
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(url).then(() => showToast('msgLinkCopied')).catch(() => {
+                prompt("Скопируйте ссылку:", url);
+            });
+        } else {
+            prompt("Ваш браузер блокирует авто-копирование. Скопируйте ссылку вручную:", url);
+        }
     });
 
     document.getElementById('author-name').addEventListener('blur', saveState);

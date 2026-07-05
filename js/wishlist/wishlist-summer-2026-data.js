@@ -455,9 +455,9 @@ const gamesData = [
         playtime: "1",
         rating: "",
 
-        play_status: "unplanned_completed",
+        play_status: "unplanned_dropped",
         review_link:"",
-        progress: 100
+        progress: 80
     },
     {
         title: "Clair Obscur: Expedition 33",
@@ -471,7 +471,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "",
-        progress: 15
+        progress: 35
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
