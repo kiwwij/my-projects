@@ -3,13 +3,16 @@ const repo = 'my-projects';
 const folder = 'html';
 const configUrl = 'projects.json';
 
-const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', 'secret-facts-about-me.html', /* '' */];
+const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', 'secret-facts-about-me.html'];
 const SECRET_CODE = 'hentaif';
 let inputBuffer = '';
 
 const container = document.getElementById('projects-grid');
 const searchInput = document.getElementById('search-input');
 const clearSearchBtn = document.getElementById('clear-search');
+const resetFiltersBtn = document.getElementById('reset-filters-btn');
+const emptyStateContainer = document.getElementById('empty-state');
+const emptyStateRandomBtn = document.getElementById('empty-state-random-btn');
 
 let allProjects = [];
 let inputTimeout;
@@ -167,6 +170,10 @@ async function loadProjects() {
         updateProjectCount();
         updatePinnedOrder();
 
+        updateProjectCount();
+        updatePinnedOrder();
+        applyAllFilters();
+
     } catch (error) {
         container.innerHTML = `<p style="color:red; text-align:center;">Error loading projects.</p>`;
     }
@@ -275,6 +282,7 @@ function initTheme() {
         document.documentElement.setAttribute('data-theme', 'dark');
         toggle.checked = true;
     }
+    toggle.checked = saved === 'dark';
     toggle.addEventListener('change', (e) => {
         const theme = e.target.checked ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', e.target.checked ? 'dark' : null);
@@ -287,6 +295,7 @@ function applyAllFilters() {
     const val = typeof processSearchQuery === 'function' ? processSearchQuery(rawVal) : rawVal.toLowerCase();
 
     let openedProjects = JSON.parse(localStorage.getItem('opened_projects')) || [];
+    let visibleCount = 0;
 
     allProjects.forEach(card => {
         const name = card.getAttribute('data-name') || '';
@@ -304,11 +313,62 @@ function applyAllFilters() {
 
         if (matchesSearch && matchesTech && matchesNew && matchesUnseen) {
             card.style.display = 'flex';
+            // Принудительно показываем карточку с небольшой задержкой для красивой анимации
+            setTimeout(() => card.classList.add('visible'), 50);
+            visibleCount++;
         } else {
             card.style.display = 'none';
+            card.classList.remove('visible'); // Скрываем, если не прошла фильтр
         }
     });
+
+    if (visibleCount === 0) {
+        emptyStateContainer.classList.add('active');
+    } else {
+        emptyStateContainer.classList.remove('active');
+    }
+
+    if (val !== '' || currentFilter !== null || showNewOnly || showUnseenOnly) {
+        resetFiltersBtn.classList.add('visible');
+    } else {
+        resetFiltersBtn.classList.remove('visible');
+    }
+
     updateProjectCount();
+}
+
+function resetAllFilters() {
+    searchInput.value = '';
+    clearSearchBtn.style.display = 'none';
+    currentFilter = null;
+    showNewOnly = false;
+    showUnseenOnly = false;
+
+    const statsContainer = document.getElementById('tech-stats');
+    const cloudContainer = document.getElementById('tech-cloud');
+    if (statsContainer) statsContainer.classList.remove('has-active-filter');
+    if (cloudContainer) cloudContainer.classList.remove('has-active-filter');
+
+    document.querySelectorAll('.stat-bar').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tech-tag').forEach(el => el.classList.remove('active'));
+
+    if (filterNewBtn) filterNewBtn.classList.remove('active');
+    if (filterUnseenBtn) {
+        filterUnseenBtn.classList.remove('active');
+        const icon = filterUnseenBtn.querySelector('i');
+        if (icon) icon.className = 'bx bx-hide';
+        filterUnseenBtn.title = "Show only unviewed projects";
+    }
+
+    applyAllFilters();
+}
+
+if (resetFiltersBtn) {
+    resetFiltersBtn.addEventListener('click', resetAllFilters);
+}
+
+if (emptyStateRandomBtn) {
+    emptyStateRandomBtn.addEventListener('click', openRandomProject);
 }
 
 const filterNewBtn = document.getElementById('filter-new-btn');
@@ -527,7 +587,7 @@ window.addEventListener("scroll", () => {
             if (scrollTopBtn) scrollTopBtn.classList.add("show");
             if (scrollBottomBtn) scrollBottomBtn.classList.remove("show");
         } else {
-            if (scrollTopBtn) scrollTopBtn.classList.remove("show");
+            if (scrollTopBtn) scrollBottomBtn.classList.remove("show");
         }
     }
 
@@ -616,7 +676,6 @@ function injectDragStyles() {
 
 function initDragAndDrop() {
     let draggedElement = null;
-
     let touchDropTarget = null;
     let touchTimer = null;
     let isDragging = false;

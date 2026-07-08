@@ -83,6 +83,12 @@ const ACHIEVEMENTS = {
         icon: "bxs-flame",
         hint: "Visit the site 17 days in a row."
     },
+    hundred_days: {
+        title: "MAD MAX",
+        desc: "100 days in a row! You really like it here.",
+        icon: "bxs-flame",
+        isHidden: true
+    },
     platinum_trophy: {
         title: "Platinum Trophy",
         desc: "You have opened every single project. A true completionist!",
@@ -95,6 +101,36 @@ const ACHIEVEMENTS = {
         icon: "bx-folder-open",
         isHidden: true // клик по my-projects
     },
+    ach_42: {
+        title: "42 братуха",
+        desc: "Ответ на главный вопрос жизни, вселенной и всего такого.",
+        icon: "bx-planet",
+        isHidden: true
+    },
+    ach_43: {
+        title: "43 амиго",
+        desc: "Сиквел.",
+        icon: "bx-rocket",
+        isHidden: true
+    },
+    ach_67: {
+        title: "six seven",
+        desc: "You have 67 chromosomes.",
+        icon: "bx-dice-6",
+        isHidden: true
+    },
+    ach_69: {
+        title: "69",
+        desc: "Nice.",
+        icon: "bx-smile",
+        isHidden: true
+    },
+    terminal_found: { 
+        title: "I'm in", 
+        desc: "You found the hidden system terminal.", 
+        icon: "bx-terminal", 
+        isHidden: true // найти консоль на кнопку "~""
+    }
 };
 
 const TOTAL_ACHIEVEMENTS = Object.keys(ACHIEVEMENTS).length;
@@ -206,6 +242,10 @@ function initStreakCounter() {
     if (streakData.count >= 17) {
         unlockAchievement('dedicated_visitor');
     }
+    
+    if (streakData.count >= 100) {
+        unlockAchievement('hundred_days');
+    }
 
     const footer = document.querySelector('footer');
     if (footer) {
@@ -265,6 +305,12 @@ if (sInput) {
         if (val === 'qa') unlockAchievement('qa_tester');
         if (val === 'vntu') unlockAchievement('survivor');
         if (val === 'hentaif') unlockAchievement('hacker'); 
+        
+        // Новые пасхалки через поиск
+        if (val === '42') unlockAchievement('ach_42');
+        if (val === '43') unlockAchievement('ach_43');
+        if (val === '67' || val === 'six seven') unlockAchievement('ach_67');
+        if (val === '69') unlockAchievement('ach_69');
 
         const rezeroPool = [
             'emilia', 'эмилия', 'rem', 'рем', 'ram', 'рам', 'subaru', 'субару', 'shaula', 'шаула', 'beatrice', 'беатрис',  'otto', 'отто', 'vincent', 'винсент', 'al', 'ал', 'roswaal', 'echidna', 'puck', 'розвааль', 'эхидна', 'пак', 'crusch', 'круш', 'priscilla', 'присцилла', 'lilia', 'лилия', 'anastasia', 'анастасия', 'felt', 'фелт', 'regulus', 'регулус', 'minerva', 'минерва', 'garfiel', 'гарфиэль'

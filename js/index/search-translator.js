@@ -1,4 +1,5 @@
 const techTranslations = {
+    'аниме': 'anime',
     'хтмл': 'html',
     'цсс': 'css',
     'жс': 'js',
@@ -26,7 +27,6 @@ const techTranslations = {
     'руби': 'ruby',
     'го': 'go',
     'раст': 'rust',
-    
     'база': 'sql',
     'бд': 'sql',
     'скюэль': 'sql',
@@ -34,23 +34,19 @@ const techTranslations = {
     'майскюэль': 'mysql',
     'постгрес': 'postgresql',
     'монго': 'mongodb',
-    
-    'гит': 'git',
     'гитхаб': 'github',
+    'гит': 'git',
     'докер': 'docker',
     'фигма': 'figma',
     'блендер': 'blender',
     'апи': 'api',
-    
     'тейлвинд': 'tailwind',
     'бутстрап': 'bootstrap',
     'джейквери': 'jquery',
     'чарт': 'chart.js',
     'лифлет': 'leaflet.js',
-    
     'игра': 'game',
     'игры': 'games',
-    'аниме': 'anime',
     'тайтл': 'anime',
     'карта': 'map',
     'карты': 'map',
@@ -63,18 +59,51 @@ const techTranslations = {
     'лаба': 'lab',
     'бот': 'bot',
     'дизайн': 'design',
-    'портфолио': 'portfolio'
+    'портфолио': 'portfolio',
+    'дота': 'dota',
+    'финалка': 'final',
+    'нир': 'nier',
+    'октопас': 'octopath',
+    'стим': 'steam',
+    'змейка': 'snake',
+    'резеро': 'rezero',
+    'хигураши': 'higurashi',
+    'цикады': 'higurashi',
+    'вайолет': 'violet',
+    'тирлист': 'tier',
+    'новелла': 'novel',
+    'новеллы': 'novel',
+    'манга': 'manga',
+    'бзвп': 'bzvp',
+    'опи': 'opi',
+    'пз': 'pz',
+    'осбб': 'homeowners',
+    'расписание': 'timetable',
+    'пк': 'pc',
+    'винда': 'windows',
+    'виндовс': 'windows',
+    'тикток': 'tiktok',
+    'тт': 'tt',
+    'телега': 'tg',
+    'телеграм': 'tg',
+    'ии': 'ai',
+    'мопс': 'pug',
+    'мопсы': 'pugs',
+    'англ': 'eng',
+    'английский': 'eng',
+    'календарь': 'holidays'
 };
 
 const ruKeys = "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";
 const enKeys = "qwertyuiop[]asdfghjkl;'zxcvbnm,.`QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>~";
 
 function processSearchQuery(input) {
-    const lowerInput = input.toLowerCase();
-    
+    const lowerInput = input.toLowerCase().trim();
+    if (!lowerInput) return '';
+
     for (const [ru, en] of Object.entries(techTranslations)) {
-        if (lowerInput.includes(ru)) {
-            return lowerInput.replace(new RegExp(ru, 'g'), en);
+        if (ru.startsWith(lowerInput) || lowerInput.includes(ru)) {
+            return en;
         }
     }
 

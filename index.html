@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/index/achievements.css">
     <link rel="stylesheet" href="css/index/recommended.css">
+    <link rel="stylesheet" href="css/index/small-features.css">
 </head>
 <body>
     <button id="secret-facts-btn" title=""></button>
@@ -57,10 +58,13 @@
                 </h2>
                 
                 <div class="actions-wrapper">
+                    <button id="reset-filters-btn" class="icon-btn reset-btn" title="Reset all filters">
+                        <i class='bx bx-refresh'></i>
+                    </button>
+
                     <button id="filter-new-btn" class="icon-btn" title="Show only new projects">
-                        <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
-                        fill="currentColor" viewBox="0 0 24 24" >
-                        <path d="M20 4h-8.59L10 2.59C9.62 2.21 9.12 2 8.59 2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 14H4V6h16z"></path><path d="M11 8v3H8v2h3v3h2v-3h3v-2h-3V8z"></path>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 4h-8.59L10 2.59C9.62 2.21 9.12 2 8.59 2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 14H4V6h16z"></path><path d="M11 8v3H8v2h3v3h2v-3h3v-2h-3V8z"></path>
                         </svg>
                     </button>
 
@@ -81,6 +85,18 @@
 
                 <div id="tech-stats" class="tech-stats"></div>
             </div>
+            
+            <div id="empty-state" class="empty-state-container">
+                <div class="empty-state-content">
+                    <i class='bx bx-search-alt empty-state-icon'></i>
+                    <h3>No projects found</h3>
+                    <p>We couldn't find anything matching your current filters or search query.</p>
+                    <button id="empty-state-random-btn" class="empty-state-btn">
+                        <i class='bx bx-dice-5'></i> Try Random Project
+                    </button>
+                </div>
+            </div>
+
             <div id="projects-grid" class="grid">
                 <div class="skeleton-card">
                     <div class="skeleton-image"></div>
@@ -116,10 +132,12 @@
     </button>
 
     <div id="toast-container"></div>
+
     <script src="js/index/search-translator.js"></script>
     <script src="js/index.js"></script>
     <script src="js/index/achievements.js"></script>
     <script src="js/index/recommended.js"></script>
     <script src="js/index/search-translator.js"></script>
+    <script src="js/index/small-features.js"></script>
 </body>
 </html>
