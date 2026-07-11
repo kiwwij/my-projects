@@ -427,13 +427,12 @@ clearSearchBtn.addEventListener('click', () => {
 });
 
 function openRandomProject() {
-    const visibleProjects = allProjects.filter(card => card.style.display !== 'none');
-    if (visibleProjects.length > 0) {
-        const randomIndex = Math.floor(Math.random() * visibleProjects.length);
-        const randomProject = visibleProjects[randomIndex];
+    if (allProjects.length > 0) {
+        const randomIndex = Math.floor(Math.random() * allProjects.length);
+        const randomProject = allProjects[randomIndex];
         window.open(randomProject.href, '_blank');
     } else {
-        showToast('<i class="bx bx-error"></i> No projects found!');
+        showToast('<i class="bx bx-error"></i> No projects available!');
     }
 }
 

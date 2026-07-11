@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('a');
             card.href = data.url || `html/${key}`; 
             card.target = "_blank";
-            card.className = 'project-card';
+            card.className = 'project-card visible';
             card.setAttribute('data-name', key);
 
             const newBadgeHTML = (key === newestKey) 

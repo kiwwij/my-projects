@@ -81,13 +81,15 @@ const ACHIEVEMENTS = {
         title: "True Dedication",
         desc: "17 days in a row! You really like it here.",
         icon: "bxs-flame",
-        hint: "Visit the site 17 days in a row."
+        hint: "Visit the site 17 days in a row.",
+        requiredStreak: 17
     },
     hundred_days: {
         title: "MAD MAX",
         desc: "100 days in a row! You really like it here.",
         icon: "bxs-flame",
-        isHidden: true
+        isHidden: true,
+        requiredStreak: 100
     },
     platinum_trophy: {
         title: "Platinum Trophy",
@@ -105,25 +107,29 @@ const ACHIEVEMENTS = {
         title: "42 братуха",
         desc: "Ответ на главный вопрос жизни, вселенной и всего такого.",
         icon: "bx-planet",
-        isHidden: true
+        isHidden: true,
+        requiredStreak: 42
     },
     ach_43: {
         title: "43 амиго",
         desc: "Сиквел.",
         icon: "bx-rocket",
-        isHidden: true
+        isHidden: true,
+        requiredStreak: 43
     },
     ach_67: {
         title: "six seven",
         desc: "You have 67 chromosomes.",
         icon: "bx-dice-6",
-        isHidden: true
+        isHidden: true,
+        requiredStreak: 67
     },
     ach_69: {
         title: "69",
         desc: "Nice.",
         icon: "bx-smile",
-        isHidden: true
+        isHidden: true,
+        requiredStreak: 69
     },
     terminal_found: { 
         title: "I'm in", 
@@ -239,13 +245,12 @@ function initStreakCounter() {
 
     localStorage.setItem('daily_streak', JSON.stringify(streakData));
     
-    if (streakData.count >= 17) {
-        unlockAchievement('dedicated_visitor');
-    }
-    
-    if (streakData.count >= 100) {
-        unlockAchievement('hundred_days');
-    }
+    Object.keys(ACHIEVEMENTS).forEach(id => {
+        const ach = ACHIEVEMENTS[id];
+        if (ach.requiredStreak && streakData.count >= ach.requiredStreak) {
+            unlockAchievement(id);
+        }
+    });
 
     const footer = document.querySelector('footer');
     if (footer) {

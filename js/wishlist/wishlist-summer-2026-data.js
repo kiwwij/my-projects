@@ -287,7 +287,7 @@ const gamesData = [
         price_uah: 0,
         discount_percent: 0,
         playtime: "3.5",
-        rating: "",
+        rating: "60",
 
         play_status: "dropped",
         review_link: "",
@@ -303,7 +303,7 @@ const gamesData = [
         discount_percent: 0,
         release_date: "10 июл. 2026 г.",
         play_status: "changed_mind",
-        rating: "",
+        rating: "60",
         progress: 0
     },
     {
@@ -471,7 +471,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "",
-        progress: 42
+        progress: 57
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",

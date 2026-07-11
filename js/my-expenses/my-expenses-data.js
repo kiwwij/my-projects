@@ -473,7 +473,7 @@ const database = {
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,
 /* Жильё */     rent: 0,
-/* Услуги */    services: 199,
+/* Услуги */    services: 99,
 /* Здоровье */  health: 0,
 /* Барбершоп */ barber: 0,
 /* Одежда */    clothes: 0,
