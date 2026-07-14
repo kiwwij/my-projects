@@ -286,19 +286,19 @@ const gamesData = [
         release_date: "15 июн. 2026 г.",
         price_uah: 0,
         discount_percent: 0,
-        playtime: "3.5",
+        playtime: "7",
         rating: "60",
 
         play_status: "dropped",
         review_link: "",
-        progress: 43
+        progress: 27
     },
     {
         title: "Echoes of Aincrad",
         poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2244210/7f0745382bc945351cc3334c7f0b947c8a22b896/header.jpg?t=1773426830",
         steam_link: "https://store.steampowered.com/app/2244210/Echoes_of_Aincrad/",
         review_link: "",
-        playtime: "",
+        playtime: "35",
         price_uah: 1999,
         discount_percent: 0,
         release_date: "10 июл. 2026 г.",
@@ -460,6 +460,34 @@ const gamesData = [
         progress: 80
     },
     {
+        title: "Cult of the Lamb",
+        steam_link: "https://store.steampowered.com/app/1313140/Cult_of_the_Lamb/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1313140/19f32bb477a6e9d058e05193b4e282149bd70644/header.jpg?t=1769836674",
+        release_date: "11 авг. 2022 г.",
+        price_uah: 499,
+        discount_percent: 60,
+        playtime: "14",
+        rating: "",
+
+        play_status: "unplanned_dropped",
+        review_link: "",
+        progress: 3
+    },
+    {
+        title: "Hades II",
+        steam_link: "https://store.steampowered.com/app/1145350/Hades_II/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1145350/91ac334a2c137d08968ccc0bc474a02579602100/header.jpg?t=1779901265",
+        release_date: "25 сен. 2025 г.",
+        price_uah: 460,
+        discount_percent: 30,
+        playtime: "30",
+        rating: "",
+
+        play_status: "unplanned_dropped",
+        review_link: "",
+        progress: 1
+    },
+    {
         title: "Clair Obscur: Expedition 33",
         steam_link: "https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/?l=russian",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1903340/be3305b02d4db0dffa3458537118423bf2792d7e/header.jpg?t=1773676780",
@@ -471,7 +499,7 @@ const gamesData = [
 
         play_status: "playing",
         review_link: "",
-        progress: 57
+        progress: 67
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",

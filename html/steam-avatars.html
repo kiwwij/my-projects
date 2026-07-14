@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <title>Сообщество Steam :: kiwwij</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg">
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        @font-face {
+            font-family: 'Motiva Sans';
+            font-style: normal; font-weight: 300;
+            src: url('https://community.cloudflare.steamstatic.com/public/shared/fonts/motiva-sans-light.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Motiva Sans';
+            font-style: normal; font-weight: 400;
+            src: url('https://community.cloudflare.steamstatic.com/public/shared/fonts/motiva-sans-regular.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Motiva Sans';
+            font-style: normal; font-weight: 700;
+            src: url('https://community.cloudflare.steamstatic.com/public/shared/fonts/motiva-sans-bold.woff2') format('woff2');
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: #000000;
+            background-image: url('https://shared.fastly.steamstatic.com/community_assets/images/items/400740/7c6eccf699397b15c127f5a3c3f98ede89aad0c2.jpg');
+            background-position: center 104px;
+            background-repeat: no-repeat;
+            background-size: 100% auto;
+            font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+            color: #8f98a0;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: #ebebeb; cursor: pointer; }
+        a:hover { color: #66c0f4; }
+
+        .steam-header {
+            background-color: #171a21; height: 104px;
+            display: flex; justify-content: center; align-items: center;
+            position: relative; z-index: 10;
+        }
+        .header-content {
+            width: 940px; max-width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; box-sizing: border-box;
+        }
+        
+        .hamburger-menu { display: none; color: #dcdedf; font-size: 32px; cursor: pointer; margin-right: 15px; }
+        
+        .header-left-group { display: flex; align-items: center; }
+
+        .header-nav {
+            display: flex; align-items: center; gap: 15px;
+            text-transform: uppercase; font-size: 14px;
+            font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+            margin-left: 30px;
+        }
+        .header-nav a { color: #dcdedf; font-weight: 400; padding-bottom: 3px; }
+        .header-nav a:hover { color: #ffffff; }
+        .header-nav a.active { color: #1a9fff; border-bottom: 3px solid #1a9fff; }
+        
+        .header-right {
+            display: flex; align-items: center; gap: 15px;
+        }
+        .install-btn {
+            background-color: #5c7e10; color: #e5e4dc;
+            padding: 4px 12px; font-size: 12px;
+            display: flex; align-items: center; gap: 8px;
+            text-transform: none; transition: background-color 0.2s;
+        }
+        .install-btn:hover { background-color: #799905; color: #fff; }
+        .install-btn i { font-size: 16px; }
+
+        .header-bell {
+            color: #8f98a0; font-size: 18px; cursor: pointer; transition: color 0.2s;
+        }
+        .header-bell:hover { color: #dcdedf; }
+
+        .user-menu {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .user-info-text {
+            display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;
+        }
+        .user-name {
+            color: #dcdedf; font-size: 13px; font-weight: 700;
+            display: flex; align-items: center; gap: 4px; cursor: pointer;
+        }
+        .user-name:hover { color: #fff; }
+        .user-balance { color: #8f98a0; font-size: 11px; margin-right: 12px; } 
+        .mini-avatar { width: 34px; height: 34px; border: 1px solid #4d4d4d; object-fit: cover; border-radius: 2px; }
+
+        .profile-wrapper {
+            max-width: 976px; margin: 0 auto; padding-top: 40px;
+            background: rgba(0, 0, 0, 0.4); padding: 40px 20px;
+            box-sizing: border-box; min-height: 100vh;
+        }
+
+        .profile-header {
+            display: flex; justify-content: space-between; margin-bottom: 40px;
+        }
+        .profile-header-left { display: flex; gap: 25px; }
+        
+        .main-avatar-container {
+            width: 164px; height: 164px;
+            position: relative; cursor: pointer; 
+        }
+        .main-avatar-container img#mainAvatar { 
+            width: 100%; height: 100%; object-fit: cover; border-radius: 2px;
+            position: relative; z-index: 1;
+        }
+        .avatar-frame {
+            position: absolute;
+            top: -20px; left: -20px;
+            width: 204px; height: 204px;
+            pointer-events: none; 
+            z-index: 2;
+        }
+        .main-avatar-container::after {
+            content: "Изменить"; position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.7); color: white; font-size: 12px;
+            text-align: center; padding: 4px 0; opacity: 0; transition: opacity 0.2s;
+            z-index: 3; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px;
+        }
+        .main-avatar-container:hover::after { opacity: 1; }
+        
+        .profile-info { padding-top: 10px; }
+        .profile-name {
+            font-size: 24px; color: #ffffff; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .profile-name i { font-size: 12px; color: #8f98a0; cursor: pointer; }
+        .profile-name i:hover { color: #fff; }
+        
+        .profile-bio { font-size: 13px; line-height: 1.5; color: #8f98a0; display: flex; flex-direction: column; gap: 2px; }
+        .social-link:hover, .showcase-title:hover { text-decoration: underline !important; }
+
+        .profile-level-box { width: 280px; }
+        .level-header {
+            font-size: 20px; color: #ffffff; display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+        }
+        .level-badge {
+            width: 32px; height: 32px; border-radius: 50%; border: 2px solid #4a773c;
+            display: flex; justify-content: center; align-items: center; font-size: 16px; color: #ffffff;
+        }
+        .level-desc { font-size: 12px; color: #8f98a0; line-height: 1.4; margin-bottom: 15px; }
+        .edit-profile-btn { font-size: 13px; color: #ebebeb; cursor: pointer; display: inline-block; }
+
+        .profile-content { display: flex; gap: 20px; }
+        .main-column { flex: 1; }
+        .sidebar { width: 280px; }
+
+        .showcase { display: flex; gap: 5px; margin-bottom: 10px; }
+        
+        .custom-showcase {
+            cursor: pointer;
+            position: relative;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            background-color: #111;
+        }
+        .custom-showcase::after {
+            content: "Изменить";
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.7); color: white; font-size: 12px;
+            text-align: center; padding: 4px 0; opacity: 0; transition: opacity 0.2s;
+        }
+        .custom-showcase:hover::after { opacity: 1; }
+
+        .showcase-main {
+            width: 100%; max-width: 506px; aspect-ratio: 1;
+        }
+        .showcase-side { display: flex; flex-direction: column; gap: 5px; }
+        .showcase-side .custom-showcase {
+            width: 100px; height: 100px;
+        }
+        .showcase-side .more-items {
+            width: 100px; height: 100px; background: #222; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 14px;
+        }
+        .showcase-text { font-size: 12px; color: #8f98a0; margin-bottom: 30px; }
+
+        .in-game { font-size: 18px; margin-bottom: 5px; }
+        .in-game-title { color: #8f98a0; font-size: 13px; margin-bottom: 25px; min-height: 18px; }
+        
+        .sidebar-stats-wrapper { display: flex; flex-direction: column; }
+
+        .badges-section { margin-bottom: 30px; }
+        .stats-header { color: #ffffff; font-size: 14px; margin-bottom: 10px; }
+        .stats-header span { color: #8f98a0; font-size: 16px; margin-left: 5px; }
+        .badges-grid { display: flex; gap: 5px; }
+        .badge {
+            width: 54px; height: 54px; background: #222; border-radius: 4px;
+            background-size: contain; background-position: center; background-repeat: no-repeat;
+        }
+
+        .stat-link { display: block; color: #ebebeb; font-size: 14px; margin-bottom: 15px; }
+        .stat-link span { color: #8f98a0; font-size: 20px; margin-left: 5px; font-weight: 300; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            z-index: 1000; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content {
+            background-color: #212329; width: 700px; max-width: 90%;
+            border-radius: 2px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); position: relative;
+        }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px; color: #8f98a0; font-size: 24px; cursor: pointer; transition: color 0.2s;
+        }
+        .modal-close:hover { color: #fff; }
+        .modal-title { color: #ffffff; font-size: 24px; font-weight: 700; margin-top: 0; margin-bottom: 5px; }
+        .modal-subtitle { color: #8f98a0; font-size: 15px; margin-bottom: 30px; }
+        
+        .modal-body { display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 30px; }
+        .avatar-previews { display: flex; align-items: flex-end; gap: 15px; }
+        .preview-box { display: flex; flex-direction: column; gap: 8px; color: #8f98a0; font-size: 11px; }
+        .preview-box img { border: 2px solid #000; background: #000; object-fit: cover; }
+        .upload-section { flex: 1; min-width: 200px; }
+        
+        .steam-btn {
+            display: inline-block; background: linear-gradient(to right, #475466, #3b4654);
+            color: #ffffff; padding: 8px 20px; border-radius: 2px;
+            cursor: pointer; font-size: 14px; text-align: center; transition: filter 0.2s; width: 100%; box-sizing: border-box; border: none;
+        }
+        .steam-btn:hover { filter: brightness(1.2); }
+        .upload-hint { color: #7b818a; font-size: 13px; line-height: 1.4; margin-top: 15px; }
+
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #3a3a3a; padding-top: 20px; }
+        .btn-save { background: linear-gradient(to right, #66c0f4, #2a81b3); color: white; border: none; padding: 8px 24px; border-radius: 2px; cursor: pointer; font-family: inherit; }
+        .btn-save:hover { background: linear-gradient(to right, #79d0f7, #3b91c3); }
+        .btn-reset { background: transparent; color: #8f98a0; border: 1px solid #8f98a0; padding: 8px 24px; border-radius: 2px; cursor: pointer; font-family: inherit; }
+        .btn-reset:hover { color: #fff; border-color: #fff; }
+
+        @media (max-width: 768px) {
+            .header-nav, .header-right { display: none; }
+            .header-left-group { width: 100%; justify-content: center; position: relative; }
+            .hamburger-menu { display: block; position: absolute; left: 0; }
+            
+            .profile-header { flex-direction: column; align-items: flex-start; text-align: left; margin-bottom: 20px; }
+            .profile-header-left { flex-direction: row; align-items: flex-start; gap: 20px; width: 100%; }
+            
+            .main-avatar-container { width: 120px; height: 120px; flex-shrink: 0; }
+            .avatar-frame { top: -14px; left: -14px; width: 148px; height: 148px; }
+            
+            .profile-info { padding-top: 0; }
+            .profile-name { font-size: 22px; margin-bottom: 10px; }
+            
+            .profile-level-box { 
+                display: flex; flex-direction: column; 
+                margin-top: 25px; width: 100%; gap: 15px; 
+            }
+            .edit-profile-btn { order: 1; font-size: 15px; margin-bottom: 5px; }
+            .level-desc { order: 2; display: block; font-size: 13px; line-height: 1.5; margin-bottom: 0; }
+            .level-header { order: 3; font-size: 24px; margin-bottom: 0; }
+
+            .profile-content { flex-direction: column; }
+            .sidebar { width: 100%; order: -1; margin-bottom: 10px; }
+            
+            #profileStatus { font-size: 22px; margin-bottom: 25px; }
+            .in-game-title { display: none; } 
+
+            .sidebar-stats-wrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+            .badges-section { grid-column: 1; margin-bottom: 0; }
+            .stat-workshop { grid-column: 1; }
+            .stat-illustrations { grid-column: 1; }
+            
+            .stat-games { grid-column: 2; }
+            .stat-inventory { grid-column: 2; }
+            .stat-screenshots { grid-column: 2; }
+            .stat-videos { grid-column: 2; }
+            .stat-reviews { grid-column: 2; }
+            .stat-guides { grid-column: 2; }
+
+            .stat-link { margin-bottom: 0; }
+            
+            .modal-body { flex-direction: column; }
+            .avatar-previews { flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="steam-header">
+        <div class="header-content">
+            <div class="header-left-group">
+                <i class='bx bx-menu hamburger-menu'></i>
+                <img src="https://store.cloudflare.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016" alt="Steam" height="36">
+                <div class="header-nav">
+                    <a href="https://store.steampowered.com/">Магазин</a>
+                    <a href="https://steamcommunity.com/">Сообщество</a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/" class="active">KIWWIJ</a>
+                    <a href="https://steamcommunity.com/chat/">Чат</a>
+                    <a href="https://help.steampowered.com/ru/">Поддержка</a>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="https://store.steampowered.com/about/" target="_blank" class="install-btn">
+                    <i class='bx bxs-download'></i> Установить Steam
+                </a>
+                <div class="header-bell"><i class='bx bxs-bell'></i></div>
+                <div class="user-menu">
+                    <div class="user-info-text">
+                        <span class="user-name">kiwwij <i class='bx bxs-down-arrow' style="font-size: 8px;"></i></span>
+                        <span class="user-balance">14,10₴</span>
+                    </div>
+                    <img src="https://placehold.co/32x32/111/444?text=IMG" alt="mini" class="mini-avatar" id="miniAvatar">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-wrapper">
+        <div class="profile-header">
+            <div class="profile-header-left">
+                <div class="main-avatar-container" onclick="openModal()">
+                    <img src="https://placehold.co/164x164/111/444?text=Avatar" alt="Avatar" id="mainAvatar">
+                    <img src="https://shared.fastly.steamstatic.com/community_assets/images/items/251110/6e7e7168dc57947b87333038e60b397af824b0bf.png" class="avatar-frame" alt="Frame">
+                </div>
+                
+                <div class="profile-info">
+                    <div class="profile-name">kiwwij <i class='bx bxs-down-arrow'></i></div>
+                    <div class="profile-bio">
+                        <span>永遠の夜に沈みながらも、まだ光を信じている</span>
+                        <span>
+                            <a href="https://kiwwij.github.io/my-projects/html/kiwwij's-social-media-links.html" target="_blank" class="social-link" style="font-weight: bold; color: #ebebeb;">𝖘𝖔𝖈𝖎𝖆𝖑 𝖒𝖊𝖉𝖎𝖆</a> [kiwwij.github.io] 
+                            <img src="https://i.pinimg.com/originals/f2/58/99/f258997a921c7f6c2ebf19ebcd25cfa7.gif" alt="sticker" style="width: 20px; vertical-align: middle;">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-level-box">
+                <div class="level-header">
+                    Уровень <div class="level-badge">41</div>
+                </div>
+                <div class="level-desc">
+                    Вы можете отобразить один из ваших<br>значков здесь. Выберите его на странице<br>
+                    <a href="#" onclick="openModal(); return false;">редактирования профиля</a>.
+                </div>
+                <a href="#" class="edit-profile-btn" onclick="openModal(); return false;">Редактировать профиль</a>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <div class="main-column">
+                <div class="showcase">
+                    <div class="showcase-main custom-showcase" 
+                         style="background-image: url('https://images.steamusercontent.com/ugc/52461413732538358/46E338DF317276C65961F63EB16DED958A3E2806/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');" 
+                         onclick="changeShowcaseImage(this)">
+                    </div>
+                    
+                    <div class="showcase-side">
+                        <div class="custom-showcase" 
+                             style="background-image: url('https://images.steamusercontent.com/ugc/52461413732584026/D23DC75DB4912233F363B3FD8EFA601A4571B980/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');" 
+                             onclick="changeShowcaseImage(this)">
+                        </div>
+                        <div class="custom-showcase" 
+                             style="background-image: url('https://images.steamusercontent.com/ugc/52461413732587884/214A6BAC8B67DFBA7C04B00D758B47AD52E020D1/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');" 
+                             onclick="changeShowcaseImage(this)">
+                        </div>
+                        <div class="custom-showcase" 
+                             style="background-image: url('https://images.steamusercontent.com/ugc/52461413732588512/F7156EEFD20C73BB50D540581AF1302284B47706/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');" 
+                             onclick="changeShowcaseImage(this)">
+                        </div>
+                        <div class="more-items">+ 5</div>
+                    </div>
+                </div>
+                <div class="showcase-text">
+                    主なことは、内部に暗闇があっても、光を保つことです
+                </div>
+                <a href="https://kiwwij.github.io/my-projects/html/a-perfectionist's-showcase.html" target="_blank" class="showcase-title" style="font-size: 18px; color: #fff; margin-top: 30px; display: block; width: fit-content;">Витрина перфекциониста</a>
+            </div>
+
+            <div class="sidebar">
+                <div class="in-game" id="profileStatus">Загрузка...</div>
+                <div class="in-game-title" id="profileGame" style="visibility: hidden;"></div>
+
+                <div class="sidebar-stats-wrapper">
+                    <div class="badges-section">
+                        <div class="stats-header">Значки <span>54</span></div>
+                        <div class="badges-grid">
+                            <div class="badge" style="background-image: url('https://community.fastly.steamstatic.com/public/images/badges/13_gamecollector/100_80.png?v=4');"></div>
+                            <div class="badge" style="background-image: url('https://community.fastly.steamstatic.com/public/images/badges/02_years/steamyears6_80.png');"></div>
+                            <div class="badge" style="background-image: url('https://community.fastly.steamstatic.com/public/images/badges/generic/YIR2025_80.png');"></div>
+                            <div class="badge" style="background-image: url('https://community.fastly.steamstatic.com/public/images/badges/70_steamawardnominations/level_04.webp');"></div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://steamcommunity.com/id/serhiosergey/games/?tab=all" class="stat-link stat-games">Игры <span>211</span></a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/inventory/" class="stat-link stat-inventory">Инвентарь</a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/screenshots/" class="stat-link stat-screenshots">Скриншоты <span>8 492</span></a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/videos/" class="stat-link stat-videos">Видео <span>6</span></a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/myworkshopfiles/" class="stat-link stat-workshop">Работы в мастерской <span>3</span></a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/recommended/" class="stat-link stat-reviews">Обзоры <span>54</span></a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/myworkshopfiles/?section=guides" class="stat-link stat-guides">Руководства <span>12</span></a>
+                    <a href="https://steamcommunity.com/id/serhiosergey/images/" class="stat-link stat-illustrations">Иллюстрации <span>9</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="avatarModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title">Аватар</h2>
+            <p class="modal-subtitle">Выберите изображение и рамку аватара.</p>
+            
+            <div class="modal-body">
+                <div class="avatar-previews">
+                    <div class="preview-box">
+                        <img id="preview184" src="https://placehold.co/184x184/111/444?text=184px" width="184" height="184">
+                        <span>184px</span>
+                    </div>
+                    <div class="preview-box">
+                        <img id="preview64" src="https://placehold.co/64x64/111/444?text=64px" width="64" height="64">
+                        <span>64px</span>
+                    </div>
+                    <div class="preview-box">
+                        <img id="preview32" src="https://placehold.co/32x32/111/444?text=32px" width="32" height="32">
+                        <span>32px</span>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <label class="steam-btn">
+                        Загрузите свой аватар
+                        <input type="file" id="modalAvatarInput" accept="image/*" style="display: none;">
+                    </label>
+                    <p class="upload-hint">
+                        Загрузите файл со своего устройства. Нужно квадратное изображение размером хотя бы 184 на 184 пикселя.
+                    </p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-reset" onclick="resetAvatar()">Сбросить</button>
+                <button class="btn-save" onclick="confirmAvatar()">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const statuses = [
+            { text: 'В игре', color: '#90ba3c', showGame: true },
+            { text: 'В сети', color: '#57cbde', showGame: false },
+            { text: 'Спит', color: '#898989', showGame: false },
+            { text: 'Не в сети', color: '#898989', showGame: false }
+        ];
+
+        const gamesList = [
+            'Dota 2', 'Elden Ring', 'FINAL FANTASY VII REMAKE INTERGRADE', 'FINAL FANTASY VII REBIRTH', 'FINAL FANTASY VII REVELATION', 'Clair Obscur: Expedition 33', 
+            'Wallpaper Engine', 'The Elder Scrolls V: Skyrim Special Edition', 'Tiny Bunny', 'OBS Studio', 
+            'Baldur\'s Gate 3', 'DARK SOULS™: REMASTERED', 'DARK SOULS™ II: Scholar of the First Sin', 'Dark Souls III', 'Lies of P', 'Terraria'
+        ];
+
+        function setInitialStatus() {
+            const statusElement = document.getElementById('profileStatus');
+            const gameElement = document.getElementById('profileGame');
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            statusElement.textContent = randomStatus.text;
+            statusElement.style.color = randomStatus.color;
+
+            if (randomStatus.showGame) {
+                const randomGame = gamesList[Math.floor(Math.random() * gamesList.length)];
+                gameElement.textContent = randomGame;
+                gameElement.style.visibility = 'visible'; 
+            } else {
+                gameElement.style.visibility = 'hidden'; 
+            }
+        }
+
+        let originalSteamAvatar = 'https://placehold.co/184x184/111/444?text=Avatar';
+        let confirmedAvatarSrc = originalSteamAvatar;
+        let temporaryAvatarSrc = confirmedAvatarSrc;
+
+        async function fetchSteamAvatar() {
+            const dataUrl = 'https://kiwwij.github.io/kiwwij-anime-tier-list/data/steam-profile-data.js';
+            try {
+                const response = await fetch(dataUrl);
+                if (response.ok) {
+                    const scriptContent = await response.text();
+                    const match = scriptContent.match(/["']avatar["']\s*:\s*["']([^"']+)["']/);
+                    if (match && match[1]) {
+                        originalSteamAvatar = match[1]; 
+                        confirmedAvatarSrc = originalSteamAvatar;
+                        temporaryAvatarSrc = confirmedAvatarSrc;
+                        applyAvatarToAll(confirmedAvatarSrc);
+                    }
+                }
+            } catch (err) {
+                console.error('Не удалось загрузить аватарку по ссылке', err);
+            }
+        }
+
+        function applyAvatarToAll(src) {
+            document.getElementById('mainAvatar').src = src;
+            document.getElementById('miniAvatar').src = src;
+            updateModalPreviews(src);
+        }
+
+        function updateModalPreviews(src) {
+            document.getElementById('preview184').src = src;
+            document.getElementById('preview64').src = src;
+            document.getElementById('preview32').src = src;
+        }
+
+        const modal = document.getElementById('avatarModal');
+        const modalAvatarInput = document.getElementById('modalAvatarInput');
+        
+        function openModal() { 
+            temporaryAvatarSrc = confirmedAvatarSrc; 
+            updateModalPreviews(temporaryAvatarSrc);
+            modal.classList.add('active'); 
+        }
+        
+        function closeModal() { 
+            modal.classList.remove('active');
+            modalAvatarInput.value = ''; 
+        }
+
+        modalAvatarInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    temporaryAvatarSrc = e.target.result;
+                    updateModalPreviews(temporaryAvatarSrc);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function resetAvatar() {
+            confirmedAvatarSrc = originalSteamAvatar;
+            temporaryAvatarSrc = originalSteamAvatar;
+            applyAvatarToAll(originalSteamAvatar);
+            modalAvatarInput.value = ''; 
+            closeModal();
+        }
+
+        function confirmAvatar() {
+            confirmedAvatarSrc = temporaryAvatarSrc;
+            applyAvatarToAll(confirmedAvatarSrc);
+            closeModal();
+        }
+
+        function changeShowcaseImage(element) {
+            const url = prompt('Введите прямую ссылку на картинку или гифку (URL):');
+            if (url) {
+                element.style.backgroundImage = `url('${url}')`;
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) closeModal();
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setInitialStatus();
+            fetchSteamAvatar();
+        });
+    </script>
+</body>
+</html>
