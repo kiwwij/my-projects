@@ -115,6 +115,12 @@ function updateMonthLabel() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     currentMonthLabel.innerText = `${monthNames[month]} ${year}`;
+    
+    if (year <= 2026 && month <= 0) {
+        prevMonthBtn.disabled = true;
+    } else {
+        prevMonthBtn.disabled = false;
+    }
 }
 
 function render() {
@@ -281,7 +287,12 @@ weekBtns.forEach(btn => {
     });
 });
 
-prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); init(); });
+prevMonthBtn.addEventListener('click', () => {
+    if (currentDate.getFullYear() <= 2026 && currentDate.getMonth() <= 0) return;
+    
+    currentDate.setMonth(currentDate.getMonth() - 1); 
+    init(); 
+});
 nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); init(); });
 
 if (localStorage.getItem('theme') === 'dark') {
@@ -299,6 +310,64 @@ themeToggle.addEventListener('click', () => {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     
     themeToggle.innerHTML = isDark ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+});
+
+const openCalendarBtn = document.getElementById('open-calendar-btn');
+const closeCalendarBtn = document.getElementById('close-calendar-btn');
+const calendarModal = document.getElementById('calendar-modal');
+const calendarGrid = document.getElementById('calendar-grid');
+
+const shortMonthNames = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
+
+function populateCalendar() {
+    calendarGrid.innerHTML = '';
+    
+    const availableKeys = Object.keys(database).sort();
+    const realNow = new Date();
+    const realYear = realNow.getFullYear();
+    const realMonth = realNow.getMonth();
+
+    availableKeys.forEach(key => {
+        const [yearStr, monthStr] = key.split('-');
+        const year = parseInt(yearStr);
+        const monthIndex = parseInt(monthStr) - 1; 
+
+        const btn = document.createElement('button');
+        btn.className = 'week-btn'; 
+        btn.innerText = `${shortMonthNames[monthIndex]} ${year}`;
+        
+        if (currentDate.getFullYear() === year && currentDate.getMonth() === monthIndex) {
+            btn.classList.add('active');
+        }
+
+        if (year === realYear && monthIndex === realMonth) {
+            btn.classList.add('real-current-month');
+            btn.title = "Текущий месяц";
+        }
+
+        btn.addEventListener('click', () => {
+            currentDate = new Date(year, monthIndex, 1);
+            init();
+            calendarModal.style.display = 'none';
+        });
+
+        calendarGrid.appendChild(btn);
+    });
+}
+
+openCalendarBtn.addEventListener('click', () => {
+    populateCalendar();
+    calendarModal.style.display = 'flex';
+});
+
+closeCalendarBtn.addEventListener('click', () => {
+    calendarModal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+    if (e.target === calendarModal) {
+        calendarModal.style.display = 'none';
+    }
 });
 
 init();

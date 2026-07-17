@@ -109,7 +109,7 @@ const gamesData = [
         rating: "94",
 
         play_status: "changed_mind",
-        review_link: "https://telegra.ph/ELDEN-RING-Shadow-of-the-Erdtree-Edition-04-26",
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/2778580?snr=1_5_9__402",
         progress: 0
     },
     {
@@ -428,7 +428,7 @@ const gamesData = [
         rating: "77",
 
         play_status: "unplanned_dropped",
-        review_link: "",
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/2622380?snr=1_5_9__402",
         progress: 0
     },
     {
@@ -442,7 +442,7 @@ const gamesData = [
         rating: "",
 
         play_status: "unplanned_completed",
-        review_link:"",
+        review_link: "",
         progress: 100
     },
     {
@@ -456,7 +456,7 @@ const gamesData = [
         rating: "",
 
         play_status: "unplanned_dropped",
-        review_link:"",
+        review_link: "",
         progress: 80
     },
     {
@@ -494,12 +494,26 @@ const gamesData = [
         release_date: "24 апр. 2025 г.",
         price_uah: 1499,
         discount_percent: 20,
-        playtime: "29",
+        playtime: "17",
         rating: "",
 
         play_status: "playing",
         review_link: "",
-        progress: 67
+        progress: 90
+    },
+    {
+        title: "ELDEN RING",
+        steam_link: "https://store.steampowered.com/app/1245620/ELDEN_RING/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg?t=1767883716",
+        release_date: "25 фев. 2022 г.",
+        price_uah: 1799,
+        discount_percent: 40,
+        playtime: "20",
+        rating: "",
+
+        play_status: "playing",
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/1245620/",
+        progress: 5
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",

@@ -6,6 +6,12 @@ if (localStorage.getItem('finance_unlocked') !== 'true') {
     wrapper.style.display = 'block';
 }
 
+const MY_GOALS = [
+    { name: 'Новый ПК', target: 70000 },
+    { name: 'Поездка в Японию', target: 300000 },
+    { name: 'Финансовая подушка', target: 100000 }
+];
+
 const themeToggle = document.getElementById('theme-toggle');
 if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark-mode');
@@ -45,29 +51,57 @@ const monthNames = {
     "09": "Сен", "10": "Окт", "11": "Ноя", "12": "Дек"
 };
 
-let mainBarChart, hBarChart, trendChart;
-
+let mainBarChart, doughnutChart, trendChart;
 let yearlyChartData = {};
-let allTimeChartData = { 
-    labels: [], income: [], expense: [], 
-    cumulativeData: [], categoryTotals: {} 
-};
+let allTimeChartData = { labels: [], income: [], expense: [], cumulativeData: [], categoryTotals: {} };
 let availableYears = [];
 let currentDisplayYear;
+let isHidden = false;
 
-function initStatistics() {
+function animateValue(obj, start, end, duration, prefix = '', suffix = '') {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const current = Math.floor(progress * (end - start) + start);
+        if(!isHidden) obj.innerText = `${prefix}${current}${suffix}`;
+        if (progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+}
+
+function getMedian(arr) {
+    if (arr.length === 0) return 0;
+    const sorted = [...arr].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+async function getExchangeRate() {
+    const cachedRate = localStorage.getItem('nbu_rate');
+    const cachedTime = localStorage.getItem('nbu_rate_time');
+    const now = new Date().getTime();
+    if (cachedRate && cachedTime && (now - cachedTime < 86400000)) return parseFloat(cachedRate);
+    try {
+        const response = await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json');
+        const data = await response.json();
+        const rate = data[0].rate;
+        localStorage.setItem('nbu_rate', rate);
+        localStorage.setItem('nbu_rate_time', now);
+        return rate;
+    } catch (e) {
+        return 41.0; 
+    }
+}
+
+async function initStatistics() {
     let globalIncome = 0;
     let globalExpense = 0;
-    let monthsCount = 0;
-    
-    let globalFixIncome = 0;
-    let globalExtraIncome = 0;
-
+    let allIncomes = [];
+    let allExpenses = [];
     let maxExpenseMonthVal = 0;
     let maxExpenseMonthName = "—";
-
     let currentCumulative = 0;
-
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
@@ -80,22 +114,13 @@ function initStatistics() {
         if (year > currentYear || (year === currentYear && month > currentMonth)) continue;
         if (year < 2026) continue;
 
-        monthsCount++;
         const monthData = database[key];
         const labelFull = `${monthNames[monthStr]} ${yearStr.slice(-2)}`;
-
         const mIncome = (monthData.income.fix || 0) + (monthData.income.extra || 0);
-        
-        globalFixIncome += (monthData.income.fix || 0);
-        globalExtraIncome += (monthData.income.extra || 0);
-
         let mExpense = 0;
 
         if (!yearlyChartData[year]) {
-            yearlyChartData[year] = { 
-                labels: [], income: [], expense: [], 
-                cumulativeData: [], categoryTotals: {} 
-            };
+            yearlyChartData[year] = { labels: [], income: [], expense: [], cumulativeData: [], categoryTotals: {} };
             if (!availableYears.includes(year)) availableYears.push(year);
         }
 
@@ -104,10 +129,8 @@ function initStatistics() {
                 Object.entries(week).forEach(([cat, amount]) => {
                     if (amount > 0) {
                         mExpense += amount;
-                        
                         if (!allTimeChartData.categoryTotals[cat]) allTimeChartData.categoryTotals[cat] = 0;
                         allTimeChartData.categoryTotals[cat] += amount;
-
                         if (!yearlyChartData[year].categoryTotals[cat]) yearlyChartData[year].categoryTotals[cat] = 0;
                         yearlyChartData[year].categoryTotals[cat] += amount;
                     }
@@ -118,6 +141,11 @@ function initStatistics() {
         if (mExpense > maxExpenseMonthVal) {
             maxExpenseMonthVal = mExpense;
             maxExpenseMonthName = labelFull;
+        }
+
+        if(mIncome > 0 || mExpense > 0) {
+            allIncomes.push(mIncome);
+            allExpenses.push(mExpense);
         }
 
         currentCumulative += (mIncome - mExpense);
@@ -135,47 +163,59 @@ function initStatistics() {
         yearlyChartData[year].cumulativeData.push(currentCumulative);
     }
 
-    const avgIncome = monthsCount > 0 ? (globalIncome / monthsCount) : 0;
-    const avgExpense = monthsCount > 0 ? (globalExpense / monthsCount) : 0;
+    const avgIncome = allIncomes.length > 0 ? (globalIncome / allIncomes.length) : 0;
+    const avgExpense = allExpenses.length > 0 ? (globalExpense / allExpenses.length) : 0;
+    const medIncome = getMedian(allIncomes);
+    const medExpense = getMedian(allExpenses);
     const totalSaved = globalIncome - globalExpense;
     const saveRate = globalIncome > 0 ? ((totalSaved / globalIncome) * 100) : 0;
 
-    const baseUAH = 48500;
-    const dollarsAmount = 500;
-    const absSavedEl = document.getElementById('absolute-total-saved');
-    const usdAmountEl = document.getElementById('usd-amount');
+    const lastMonthIncome = allIncomes[allIncomes.length - 1] || 0;
+    const lastMonthExpense = allExpenses[allExpenses.length - 1] || 0;
+    
+    const incDiff = lastMonthIncome - avgIncome;
+    const incTrendEl = document.getElementById('trend-income');
+    if (allIncomes.length > 1) {
+        const absIncDiff = Math.abs(Math.round(incDiff));
+        if(incDiff > 0) { 
+            incTrendEl.innerHTML = `<i class='bx bx-trending-up'></i> Доход выше среднего на <span class="money-value" data-real-value="${absIncDiff}">${absIncDiff}</span> ₴`; 
+            incTrendEl.className = 'trend-badge trend-up good'; 
+        } else { 
+            incTrendEl.innerHTML = `<i class='bx bx-trending-down'></i> Доход ниже среднего на <span class="money-value" data-real-value="${absIncDiff}">${absIncDiff}</span> ₴`; 
+            incTrendEl.className = 'trend-badge trend-down bad'; 
+        }
+    }
 
-    fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json')
-        .then(response => response.json())
-        .then(data => {
-            const usdRate = data[0].rate;
-            const absoluteTotal = baseUAH + (dollarsAmount * usdRate) + totalSaved;
-            
-            if (absSavedEl) {
-                absSavedEl.innerText = `Общий капитал: ~${absoluteTotal.toFixed(0)} ₴`;
-            }
-            
-            if (usdAmountEl) {
-                usdAmountEl.title = `Курс НБУ: ${usdRate.toFixed(2)} ₴ / $`;
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка загрузки курса валют:', error);
-            const fallbackRate = 41.0; 
-            const absoluteTotal = baseUAH + (dollarsAmount * fallbackRate) + totalSaved;
-            
-            if (absSavedEl) {
-                absSavedEl.innerText = `Общий капитал: ~${absoluteTotal.toFixed(0)} ₴ (без учета нового курса)`;
-            }
-            
-            if (usdAmountEl) {
-                usdAmountEl.title = `Курс (запасной): ${fallbackRate.toFixed(2)} ₴ / $`;
-            }
-        });
+    const expDiff = lastMonthExpense - avgExpense;
+    const expTrendEl = document.getElementById('trend-expense');
+    if (allExpenses.length > 1) {
+        const absExpDiff = Math.abs(Math.round(expDiff));
+        if(expDiff < 0) { 
+            expTrendEl.innerHTML = `<i class='bx bx-trending-down'></i> Траты ниже среднего на <span class="money-value" data-real-value="${absExpDiff}">${absExpDiff}</span> ₴`; 
+            expTrendEl.className = 'trend-badge trend-down good'; 
+        } else { 
+            expTrendEl.innerHTML = `<i class='bx bx-trending-up'></i> Траты выше среднего на <span class="money-value" data-real-value="${absExpDiff}">${absExpDiff}</span> ₴`; 
+            expTrendEl.className = 'trend-badge trend-up bad'; 
+        }
+    }
 
-    let topCatName = "—";
-    let topCatVal = 0;
-    let topCatColor = "var(--text-color)";
+    animateValue(document.getElementById('m-total-income'), 0, globalIncome, 1000, '+', ' ₴');
+    document.querySelector('#m-avg-income span').innerText = Math.round(avgIncome);
+    document.querySelector('#m-median-income span').innerText = Math.round(medIncome);
+
+    animateValue(document.getElementById('m-total-expense'), 0, globalExpense, 1000, '-', ' ₴');
+    document.querySelector('#m-avg-expense span').innerText = Math.round(avgExpense);
+    document.querySelector('#m-median-expense span').innerText = Math.round(medExpense);
+    
+    const savedEl = document.getElementById('m-total-saved');
+    animateValue(savedEl, 0, totalSaved, 1000, '', ' ₴');
+    savedEl.style.color = totalSaved >= 0 ? 'var(--success)' : 'var(--danger)';
+    document.getElementById('m-save-rate').innerText = `Сохранено: ${saveRate.toFixed(1)}% от дохода`;
+
+    document.getElementById('m-top-month').innerText = maxExpenseMonthName;
+    document.getElementById('m-top-month-val').innerText = maxExpenseMonthVal.toFixed(0);
+
+    let topCatName = "—", topCatVal = 0, topCatColor = "var(--text-color)";
     for (const [cat, val] of Object.entries(allTimeChartData.categoryTotals)) {
         if (val > topCatVal) {
             topCatVal = val;
@@ -184,46 +224,68 @@ function initStatistics() {
         }
     }
     const topCatPct = globalExpense > 0 ? ((topCatVal / globalExpense) * 100) : 0;
-
-    document.getElementById('m-total-income').innerText = `+${globalIncome.toFixed(0)} ₴`;
-    document.getElementById('m-avg-income').innerText = `В среднем: ${avgIncome.toFixed(0)} ₴/мес`;
-
-    if (document.getElementById('m-fix-income')) {
-        document.getElementById('m-fix-income').innerText = globalFixIncome.toFixed(0);
-        document.getElementById('m-extra-income').innerText = globalExtraIncome.toFixed(0);
-    }
-
-    document.getElementById('m-total-expense').innerText = `-${globalExpense.toFixed(0)} ₴`;
-    document.getElementById('m-avg-expense').innerText = `В среднем: ${avgExpense.toFixed(0)} ₴/мес`;
     
-    const savedEl = document.getElementById('m-total-saved');
-    savedEl.innerText = `${totalSaved.toFixed(0)} ₴`;
-    savedEl.style.color = totalSaved >= 0 ? 'var(--success)' : 'var(--danger)';
-    document.getElementById('m-save-rate').innerText = `Сбережения: ${saveRate.toFixed(1)}% от дохода`;
-
-    document.getElementById('m-top-month').innerText = maxExpenseMonthName;
-    document.getElementById('m-top-month-val').innerText = `Сумма: -${maxExpenseMonthVal.toFixed(0)} ₴`;
-
-    const tcEl = document.getElementById('m-top-category');
-    tcEl.innerText = topCatName;
-    tcEl.style.color = topCatColor;
-    document.getElementById('m-top-category-val').innerText = `-${topCatVal.toFixed(0)} ₴`;
+    document.getElementById('m-top-category').innerText = topCatName;
+    document.getElementById('m-top-category').style.color = topCatColor;
+    animateValue(document.getElementById('m-top-category-val'), 0, topCatVal, 1000, '-', ' ₴');
     document.getElementById('m-top-category-pct').innerText = `${topCatPct.toFixed(1)}% от всех трат`;
+
+    const baseUAH = 48500;
+    const dollarsAmount = 500;
+    const usdRate = await getExchangeRate();
+    
+    const uahTotal = Math.max(0, baseUAH + totalSaved);
+    const absoluteTotal = uahTotal + (dollarsAmount * usdRate);
+    
+    document.querySelector('#absolute-total-saved span').innerText = absoluteTotal.toFixed(0);
+    document.getElementById('usd-amount').title = `Курс НБУ: ${usdRate.toFixed(2)} ₴ / $`;
+
+    renderGoals(totalSaved, absoluteTotal);
 
     availableYears.sort((a, b) => a - b);
     currentDisplayYear = availableYears.length > 0 ? availableYears[availableYears.length - 1] : now.getFullYear();
-    
-    if(availableYears.length === 0) {
-        availableYears.push(currentDisplayYear);
-        yearlyChartData[currentDisplayYear] = { 
-            labels: [], income: [], expense: [], 
-            cumulativeData: [], categoryTotals: {} 
-        };
-    }
+    if(availableYears.length === 0) availableYears.push(currentDisplayYear);
 
     drawCharts(allTimeChartData);
     setupChartControls();
     updateDashboard(currentDisplayYear);
+    
+    if(isHidden) hideAllSums(true);
+}
+
+function renderGoals(savedUAH, absoluteTotal) {
+    const container = document.getElementById('goals-container');
+    container.innerHTML = '';
+    
+    let totalTarget = 0;
+    let currentSavings = savedUAH > 0 ? savedUAH : 0;
+
+    MY_GOALS.forEach(goal => {
+        totalTarget += goal.target;
+        
+        let isCushion = goal.name === 'Финансовая подушка';
+        let pool = isCushion ? absoluteTotal : currentSavings;
+        
+        let allocated = Math.min(pool, goal.target);
+        let pct = (allocated / goal.target) * 100;
+
+        container.innerHTML += `
+            <div class="goal-item">
+                <div class="goal-header">
+                    <span>${goal.name}</span>
+                    <span><span class="money-value">${allocated.toFixed(0)}</span> / ~${goal.target} ₴</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill ${pct >= 100 ? 'cat-saved' : 'cat-primary'}" 
+                         style="width: ${pct}%; background: ${pct >= 100 ? 'var(--success)' : 'var(--primary-color)'}"></div>
+                </div>
+            </div>
+        `;
+    });
+
+    const overallPct = totalTarget > 0 ? Math.min((currentSavings / totalTarget) * 100, 100) : 0;
+    document.getElementById('overall-goal-text').innerText = `${overallPct.toFixed(1)}%`;
+    document.getElementById('overall-goal-fill').style.width = `${overallPct}%`;
 }
 
 function drawCharts(data) {
@@ -250,18 +312,27 @@ function drawCharts(data) {
         }
     });
 
-    const ctxHBar = document.getElementById('hBarChart').getContext('2d');
-    hBarChart = new Chart(ctxHBar, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [{ label: 'Потрачено', data: [], backgroundColor: [], borderRadius: 4 }]
-        },
+    const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+    doughnutChart = new Chart(ctxDoughnut, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderWidth: 2 }] },
         options: {
-            indexAxis: 'y',
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { x: { grid: { color: gridColor }, beginAtZero: true }, y: { grid: { display: false } } }
+            plugins: { 
+                legend: { position: 'right', labels: { boxWidth: 12 } },
+                tooltip: { 
+                    callbacks: { 
+                        label: function(context) {
+                            let label = context.label || '';
+                            let value = context.raw || 0;
+                            let total = context.chart._metasets[context.datasetIndex].total;
+                            let percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                            return ` ${label}: ${value} ₴ (${percentage}%)`;
+                        }
+                    } 
+                }
+            },
+            cutout: '65%'
         }
     });
 
@@ -287,15 +358,17 @@ function drawCharts(data) {
                         label: function(context) {
                             return `Баланс: ${context.parsed.y.toFixed(0)} ₴`;
                         },
+                        // Вот эта функция возвращает изменение суммы относительно прошлого месяца
                         afterLabel: function(context) {
                             const index = context.dataIndex;
-                            const income = mainBarChart.data.datasets[0].data[index] || 0;
-                            const expense = mainBarChart.data.datasets[1].data[index] || 0;
-                            
-                            const diff = income - expense;
+                            if (index === 0) {
+                                const val = context.parsed.y;
+                                return `Изменение: ${val > 0 ? '+' : ''}${val.toFixed(0)} ₴`;
+                            }
+                            const prev = context.chart.data.datasets[0].data[index - 1];
+                            const diff = context.parsed.y - prev;
                             const sign = diff > 0 ? '+' : '';
-                            
-                            return `За месяц: ${sign}${diff.toFixed(0)} ₴`;
+                            return `Изменение: ${sign}${diff.toFixed(0)} ₴`;
                         }
                     }
                 }
@@ -306,93 +379,121 @@ function drawCharts(data) {
 }
 
 function updateChartsColors() {
-    if (!mainBarChart || !hBarChart || !trendChart) return;
-    
+    if (!mainBarChart || !doughnutChart || !trendChart) return;
     const gridColor = document.body.classList.contains('dark-mode') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
     Chart.defaults.color = document.body.classList.contains('dark-mode') ? '#e4e6eb' : '#333333';
     
     mainBarChart.options.scales.y.grid.color = gridColor;
-    hBarChart.options.scales.x.grid.color = gridColor;
     trendChart.options.scales.y.grid.color = gridColor;
     
-    mainBarChart.update(); hBarChart.update(); trendChart.update();
-}
-
-function setupChartControls() {
-    document.getElementById('prev-year-btn').addEventListener('click', () => {
-        if (currentDisplayYear === 'all') currentDisplayYear = availableYears[availableYears.length - 1];
-        let idx = availableYears.indexOf(currentDisplayYear);
-        if (idx > 0) {
-            currentDisplayYear = availableYears[idx - 1];
-            updateDashboard(currentDisplayYear);
-        }
-    });
-
-    document.getElementById('next-year-btn').addEventListener('click', () => {
-        if (currentDisplayYear === 'all') return;
-        let idx = availableYears.indexOf(currentDisplayYear);
-        if (idx !== -1 && idx < availableYears.length - 1) {
-            currentDisplayYear = availableYears[idx + 1];
-            updateDashboard(currentDisplayYear);
-        }
-    });
-
-    document.getElementById('all-time-btn').addEventListener('click', () => {
-        currentDisplayYear = 'all';
-        updateDashboard('all');
-    });
+    if(document.body.classList.contains('dark-mode')){
+        doughnutChart.data.datasets[0].borderColor = '#1e1e1e';
+    } else {
+        doughnutChart.data.datasets[0].borderColor = '#ffffff';
+    }
+    
+    mainBarChart.update(); doughnutChart.update(); trendChart.update();
 }
 
 function updateDashboard(year) {
-    if (!mainBarChart || !hBarChart || !trendChart) return;
+    if (!mainBarChart || !doughnutChart || !trendChart) return;
 
-    const prevBtn = document.getElementById('prev-year-btn');
-    const nextBtn = document.getElementById('next-year-btn');
     const displayYear = document.getElementById('current-year-display');
-    const allTimeBtn = document.getElementById('all-time-btn');
-
     let targetData = year === 'all' ? allTimeChartData : yearlyChartData[year];
     if (!targetData) return;
 
     mainBarChart.data.labels = targetData.labels;
     mainBarChart.data.datasets[0].data = targetData.income;
     mainBarChart.data.datasets[1].data = targetData.expense;
-
     trendChart.data.labels = targetData.labels;
     trendChart.data.datasets[0].data = targetData.cumulativeData;
 
     const cats = targetData.categoryTotals;
     const sortedCats = Object.keys(cats).sort((a, b) => cats[b] - cats[a]);
-    const catLabels = [];
-    const catData = [];
-    const catColors = [];
+    const catLabels = [], catData = [], catColors = [];
 
-    sortedCats.forEach(cat => {
+    sortedCats.forEach((cat) => {
         catLabels.push(categoryConfig[cat]?.label || 'Другое');
         catData.push(cats[cat].toFixed(2));
         catColors.push(categoryConfig[cat]?.color || '#95a5a6');
     });
 
-    hBarChart.data.labels = catLabels;
-    hBarChart.data.datasets[0].data = catData;
-    hBarChart.data.datasets[0].backgroundColor = catColors;
+    doughnutChart.data.labels = catLabels;
+    doughnutChart.data.datasets[0].data = catData;
+    doughnutChart.data.datasets[0].backgroundColor = catColors;
 
+    displayYear.innerText = year === 'all' ? 'Все время' : year;
+    
+    const allTimeBtn = document.getElementById('all-time-btn');
     if (year === 'all') {
-        displayYear.innerText = 'Все время';
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
+        allTimeBtn.innerText = 'Текущий год';
         allTimeBtn.classList.add('active');
+        document.getElementById('prev-year-btn').disabled = true;
+        document.getElementById('next-year-btn').disabled = true;
     } else {
-        displayYear.innerText = year;
-        const currentIndex = availableYears.indexOf(year);
-        prevBtn.disabled = currentIndex <= 0;
-        nextBtn.disabled = currentIndex >= availableYears.length - 1;
+        allTimeBtn.innerText = 'За всё время';
         allTimeBtn.classList.remove('active');
+        const currentIndex = availableYears.indexOf(year);
+        document.getElementById('prev-year-btn').disabled = currentIndex <= 0;
+        document.getElementById('next-year-btn').disabled = currentIndex >= availableYears.length - 1;
     }
 
-    mainBarChart.update();
-    hBarChart.update();
-    trendChart.update();
+    mainBarChart.update(); doughnutChart.update(); trendChart.update();
+}
+
+function hideAllSums(hide) {
+    const moneyEls = document.querySelectorAll('.money-value');
+    moneyEls.forEach(el => {
+        if(hide) {
+            if(!el.dataset.realValue) el.dataset.realValue = el.innerText;
+            el.innerText = '***';
+            el.classList.add('money-hidden');
+        } else {
+            if(el.dataset.realValue) el.innerText = el.dataset.realValue;
+            el.classList.remove('money-hidden');
+        }
+    });
+    document.getElementById('hide-sums-btn').innerHTML = hide ? "<i class='bx bx-show'></i>" : "<i class='bx bx-hide'></i>";
+}
+
+function setupChartControls() {
+    document.getElementById('prev-year-btn').addEventListener('click', () => {
+        if (currentDisplayYear === 'all') currentDisplayYear = availableYears[availableYears.length - 1];
+        let idx = availableYears.indexOf(currentDisplayYear);
+        if (idx > 0) { currentDisplayYear = availableYears[idx - 1]; updateDashboard(currentDisplayYear); }
+    });
+    
+    document.getElementById('next-year-btn').addEventListener('click', () => {
+        if (currentDisplayYear === 'all') return;
+        let idx = availableYears.indexOf(currentDisplayYear);
+        if (idx !== -1 && idx < availableYears.length - 1) {
+            currentDisplayYear = availableYears[idx + 1]; updateDashboard(currentDisplayYear);
+        }
+    });
+    
+    document.getElementById('all-time-btn').addEventListener('click', () => {
+        if (currentDisplayYear === 'all') {
+            const nowYear = new Date().getFullYear();
+            currentDisplayYear = availableYears.includes(nowYear) ? nowYear : availableYears[availableYears.length - 1];
+            updateDashboard(currentDisplayYear);
+        } else {
+            currentDisplayYear = 'all'; 
+            updateDashboard('all');
+        }
+    });
+
+    document.getElementById('hide-sums-btn').addEventListener('click', () => {
+        isHidden = !isHidden;
+        hideAllSums(isHidden);
+    });
+
+    document.getElementById('export-pdf-btn').addEventListener('click', () => {
+        if (typeof generateFinancialPDF === 'function') {
+            generateFinancialPDF();
+        } else {
+            alert('Скрипт генерации PDF не загружен!');
+        }
+    });
 }
 
 initStatistics();

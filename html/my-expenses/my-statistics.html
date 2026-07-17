@@ -24,40 +24,37 @@
                     <h1>Ежемесячная аналитика</h1>
                 </a>
             </div>
-            <button id="theme-toggle" class="icon-btn" title="Сменить тему">
-                <i class='bx bx-moon'></i>
-            </button>
+            <div class="header-actions">
+                <button id="export-pdf-btn" class="icon-btn" title="Сохранить PDF"><i class='bx bxs-file-pdf'></i></button>
+                <button id="hide-sums-btn" class="icon-btn" title="Скрыть/Показать суммы"><i class='bx bx-hide'></i></button>
+                <button id="theme-toggle" class="icon-btn" title="Сменить тему"><i class='bx bx-moon'></i></button>
+            </div>
         </header>
 
         <div class="analytics-grid">
             <div class="card metric-card">
                 <h3><i class='bx bx-wallet'></i> Всего заработано</h3>
-                <h2 id="m-total-income" class="plus">0 ₴</h2>
-                <div class="sub-text" id="m-avg-income">В среднем: 0 ₴/мес</div>
-                
-                <div class="sub-text" style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-                    <span style="color: #3498db; background: rgba(52, 152, 219, 0.1); padding: 2px 6px; border-radius: 4px; font-weight: 600;">
-                        Фиксированные: <span id="m-fix-income">0</span> ₴
-                    </span>
-                    <span style="color: #9b59b6; background: rgba(155, 89, 182, 0.1); padding: 2px 6px; border-radius: 4px; font-weight: 600;">
-                        Дополнительно: <span id="m-extra-income">0</span> ₴
-                    </span>
-                </div>
+                <h2 id="m-total-income" class="plus money-value">0 ₴</h2>
+                <div class="sub-text" id="m-avg-income">В среднем: <span class="money-value">0</span> ₴/мес</div>
+                <div class="sub-text" id="m-median-income" style="opacity:0.4;">Медиана: <span class="money-value">0</span> ₴/мес</div>
+                <div id="trend-income" class="trend-badge"></div>
             </div>
             <div class="card metric-card">
                 <h3><i class='bx bx-credit-card'></i> Всего потрачено</h3>
-                <h2 id="m-total-expense" class="minus">0 ₴</h2>
-                <div class="sub-text" id="m-avg-expense">В среднем: 0 ₴/мес</div>
+                <h2 id="m-total-expense" class="minus money-value">0 ₴</h2>
+                <div class="sub-text" id="m-avg-expense">В среднем: <span class="money-value">0</span> ₴/мес</div>
+                <div class="sub-text" id="m-median-expense" style="opacity:0.4;">Медиана: <span class="money-value">0</span> ₴/мес</div>
+                <div id="trend-expense" class="trend-badge"></div>
             </div>
             <div class="card metric-card">
-                <h3><svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" viewBox="0 0 24 24" style="vertical-align: text-bottom;"> <path d="M21 7h-1.4L18 5.4V3c0-.55-.45-1-1-1h-1c-1.44 0-2.75.78-3.45 2H9c-3.86 0-7 3.14-7 7 0 .25.02 6.28 2.11 10.45A1 1 0 0 0 5 22h4c.55 0 1-.45 1-1v-3h2v3c0 .55.45 1 1 1h4c.33 0 .65-.17.83-.45 1.54-2.31 2.08-5.11 2.27-6.55h.9c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1m-1 6h-.81c-.53 0-.97.42-1 .95 0 .04-.19 3.38-1.75 6.05h-2.45v-3c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v3H5.63c-1.61-3.73-1.64-8.95-1.64-9 0-2.76 2.24-5 5-5h4.18c.42 0 .8-.27.94-.67A1.99 1.99 0 0 1 15.98 4v1.81c0 .27.11.52.29.71l2.19 2.19c.19.19.44.29.71.29h.81v4Z"></path><path d="M16 9a1 1 0 1 0 0 2 1 1 0 1 0 0-2M7 8h6v2H7z"></path></svg> Отложено</h3>
-                <h2 id="m-total-saved">0 ₴</h2>
+                <h3><i class='bx bx-piggy-bank'></i> Отложено (Копилка)</h3>
+                <h2 id="m-total-saved" class="money-value">0 ₴</h2>
                 <div class="sub-text" id="m-save-rate">Сохранено: 0% от дохода</div>
             </div>
             <div class="card metric-card">
                 <h3><i class='bx bx-calendar-exclamation'></i> Самый затратный месяц</h3>
                 <h2 id="m-top-month" class="neutral-text">—</h2>
-                <div class="sub-text" id="m-top-month-val">Сумма: 0 ₴</div>
+                <div class="sub-text">Сумма: <span id="m-top-month-val" class="money-value">0</span> ₴</div>
             </div>
             
             <div class="card metric-card top-category-card">
@@ -66,7 +63,7 @@
                     <h2 id="m-top-category" class="neutral-text">—</h2>
                 </div>
                 <div class="top-cat-value">
-                    <div id="m-top-category-val" class="top-cat-num">0 ₴</div>
+                    <div class="top-cat-num money-value" id="m-top-category-val">0 ₴</div>
                     <div class="sub-text" id="m-top-category-pct">0% от всех трат</div>
                 </div>
             </div>
@@ -77,7 +74,7 @@
                 <div class="chart-header-controls">
                     <div>
                         <h3 class="chart-title">Доходы & Расходы</h3>
-                        <p class="chart-subtitle">Сравнение денежных доходов и расходов по годам</p>
+                        <p class="chart-subtitle">Сравнение денежных потоков</p>
                     </div>
                     <div class="year-controls">
                         <button id="prev-year-btn" class="icon-btn" title="Предыдущий год"><i class='bx bx-chevron-left'></i></button>
@@ -93,9 +90,9 @@
 
             <div class="card">
                 <h3 class="chart-title">Топ категорий трат</h3>
-                <p class="chart-subtitle">На что уходит больше всего денег</p>
+                <p class="chart-subtitle">Структура расходов</p>
                 <div class="chart-container tall-chart">
-                    <canvas id="hBarChart"></canvas>
+                    <canvas id="doughnutChart"></canvas>
                 </div>
             </div>
 
@@ -108,19 +105,38 @@
             </div>
         </div>
 
+        <div class="card" style="margin-top: 15px;">
+            <h3 class="chart-title"><i class='bx bx-target-lock'></i> Мои Финансовые Цели</h3>
+            <p class="chart-subtitle" style="margin-bottom: 15px;">Учитываются только сбережения</p>
+            
+            <div id="goals-container">
+            </div>
+            
+            <div class="overall-goal" style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--input-bg);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: 600;">
+                    <span>Общий прогресс всех целей</span>
+                    <span id="overall-goal-text">0%</span>
+                </div>
+                <div class="progress-bar-bg" style="height: 12px;">
+                    <div id="overall-goal-fill" class="progress-bar-fill" style="background: var(--primary-color); width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
         <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-size: 0.75rem; opacity: 0.4; color: var(--text-color);">
             <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="display: inline-flex; align-items: center; gap: 4px; align-self: center; margin-bottom: 4.7px;">💳</span> На карте: ~48 000 ₴</span>
+                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="margin-bottom: 4.7px;">💳</span> На карте: ~<span class="money-value">48000</span> ₴</span>
                 <span>|</span>
-                <span style="display: inline-flex; align-items: center; gap: 4px; align-self: center; margin-bottom: 4px;">💵</span> 
-                В долларах: <span id="usd-amount" style="cursor: help; border-bottom: 1px dashed var(--text-color); opacity: 0.9;">500 $</span>
-            </span>
+                <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="margin-bottom: 4px;">💵</span> 
+                В долларах: <span id="usd-amount" class="money-value" style="cursor: help; border-bottom: 1px dashed var(--text-color); opacity: 0.9;">500</span> $</span>
             </div>
-            <span id="absolute-total-saved">Общий капитал: ~69 000 ₴</span>
+            <span id="absolute-total-saved">Общий капитал: ~<span class="money-value">0</span> ₴</span>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="../../js/my-expenses/my-expenses-data.js"></script>
     <script src="../../js/my-expenses/my-statistics.js"></script>
+    <script src="../../js/my-expenses/pdf-generator.js"></script>
 </body>
 </html>

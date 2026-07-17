@@ -208,3 +208,48 @@
         align-self: center;
     }
 }
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.trend-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 8px;
+    width: fit-content;
+}
+.trend-up.good { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+.trend-up.bad { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+.trend-down.good { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+.trend-down.bad { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+.trend-neutral { background: rgba(149, 165, 166, 0.15); color: #95a5a6; }
+
+.goal-item {
+    margin-bottom: 15px;
+}
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.money-hidden {
+    filter: blur(4px);
+    user-select: none;
+    transition: filter 0.3s;
+}
+
+@media print {
+    body { background: white; color: black; }
+    .header-actions, .year-controls, .back-link i { display: none !important; }
+    .card { box-shadow: none; border: 1px solid #eee; margin-bottom: 20px; break-inside: avoid; }
+    .charts-layout { display: block; }
+    .chart-container { height: 250px !important; }
+}
