@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Удобный конвертер валют с умным поиском, разделением тысяч и поддержкой резервных API.">
+    <title>Конвертер Валют</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💱</text></svg>">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #12141c;
+            --panel-bg: #1e2230;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --border-color: #2d3248;
+            --input-bg: #181b26;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --panel-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --accent-color: #4f46e5;
+            --accent-hover: #4338ca;
+            --border-color: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --shadow: rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 25px -5px var(--shadow);
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h1 i {
+            color: var(--accent-color);
+            font-size: 1.6rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button.icon-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        button.icon-btn:hover {
+            background-color: var(--input-bg);
+            border-color: var(--accent-color);
+        }
+
+        .converter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 16px;
+            padding-right: 45px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .currency-symbol {
+            position: absolute;
+            right: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .select-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .select-box:hover {
+            border-color: var(--accent-color);
+        }
+
+        .flag-img {
+            width: 28px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: var(--border-color);
+        }
+
+        .currency-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .currency-code {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .country-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .select-box i.chevron {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .swap-container {
+            display: flex;
+            justify-content: center;
+            margin: -5px 0;
+        }
+
+        .swap-btn {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 6px -1px var(--shadow);
+            z-index: 2;
+        }
+
+        .swap-btn:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+            transform: rotate(180deg);
+            transition: transform 0.4s ease, background-color 0.2s;
+        }
+
+        .rate-info {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            min-height: 18px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 440px;
+            max-height: 80vh;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .modal-header i.search-icon {
+            position: absolute;
+            left: 35px;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+
+        .currency-list {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding: 10px;
+            max-height: 350px;
+            will-change: transform; 
+        }
+
+        .list-divider {
+            padding: 10px 12px 5px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .currency-item:hover {
+            background-color: var(--input-bg);
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 20px; border-radius: 16px; }
+            .select-box, .input-wrapper input { padding: 14px; }
+            .currency-list { max-height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1 id="title-app"><i class='bx bx-transfer'></i> <span id="main-title">Конвертер Валют</span></h1>
+            <div class="controls">
+                <button class="icon-btn" id="lang-toggle" data-tip="Сменить язык / Change language">
+                    <i class='bx bx-globe'></i>
+                </button>
+                <button class="icon-btn" id="theme-toggle" data-tip="Переключить тему">
+                    <i class='bx bx-moon'></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="converter-form">
+            <div class="input-group">
+                <label id="label-from" for="amount-from">Отдаю:</label>
+                <div class="select-box" id="select-from" data-tip="Выберите валюту">
+                    <img src="https://flagcdn.com/w40/us.png" alt="USA" class="flag-img" id="flag-from">
+                    <div class="currency-info">
+                        <span class="currency-code" id="code-from">USD</span>
+                        <span class="country-name" id="country-from">США</span>
+                    </div>
+                    <i class='bx bx-chevron-down chevron'></i>
+                </div>
+                <div class="input-wrapper">
+                    <input type="text" id="amount-from" value="1" placeholder="0" data-tip="Введите сумму">
+                    <span class="currency-symbol" id="symbol-from">$</span>
+                </div>
+            </div>
+
+            <div class="swap-container">
+                <button class="swap-btn" id="swap-currencies" data-tip="Поменять валюты местами">
+                    <i class='bx bx-transfer-alt bx-rotate-90'></i>
+                </button>
+            </div>
+
+            <div class="input-group">
+                <label id="label-to" for="amount-to">Получаю:</label>
+                <div class="select-box" id="select-to" data-tip="Выберите валюту">
+                    <img src="https://flagcdn.com/w40/ua.png" alt="Ukraine" class="flag-img" id="flag-to">
+                    <div class="currency-info">
+                        <span class="currency-code" id="code-to">UAH</span>
+                        <span class="country-name" id="country-to">Украина</span>
+                    </div>
+                    <i class='bx bx-chevron-down chevron'></i>
+                </div>
+                <div class="input-wrapper">
+                    <input type="text" id="amount-to" placeholder="0" data-tip="Результат">
+                    <span class="currency-symbol" id="symbol-to">₴</span>
+                </div>
+            </div>
+
+            <div class="rate-info" id="rate-text">Загрузка курсов...</div>
+        </div>
+    </div>
+
+    <div class="modal" id="search-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class='bx bx-search search-icon'></i>
+                <input type="text" class="search-input" id="search-bar" placeholder="Поиск по стране или валюте...">
+                <button class="close-modal" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="currency-list" id="modal-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const currencyData = [
+            { code: "USD", symbol: "$", countryRu: "США", countryEn: "United States", flag: "us", keywords: "доллар бакс зелень dollar usa сша" },
+            { code: "UAH", symbol: "₴", countryRu: "Украина", countryEn: "Ukraine", flag: "ua", keywords: "гривна грівна uah ukraine украина" },
+            { code: "RUB", symbol: "₽", countryRu: "Россия", countryEn: "Russia", flag: "ru", keywords: "рубль rub russia россия рф" },
+            { code: "EUR", symbol: "€", countryRu: "Евросоюз", countryEn: "Eurozone", flag: "eu", keywords: "евро еуро eur euro европа" },
+            { code: "JPY", symbol: "¥", countryRu: "Япония", countryEn: "Japan", flag: "jp", keywords: "иена йена jpy japan япония" },
+            { code: "VND", symbol: "₫", countryRu: "Вьетнам", countryEn: "Vietnam", flag: "vn", keywords: "донг vnd vietnam вьетнам" },
+            { code: "BYN", symbol: "Br", countryRu: "Беларусь", countryEn: "Belarus", flag: "by", keywords: "белорусский рубль зайчик byn belarus беларусь" },
+            { code: "GBP", symbol: "£", countryRu: "Великобритания", countryEn: "United Kingdom", flag: "gb", keywords: "фунт стерлингов gbp uk англия" },
+            { code: "PLN", symbol: "zł", countryRu: "Польша", countryEn: "Poland", flag: "pl", keywords: "злотый pln poland польша" },
+            { code: "CAD", symbol: "C$", countryRu: "Канада", countryEn: "Canada", flag: "ca", keywords: "канадский доллар cad canada канада" },
+            { code: "AUD", symbol: "A$", countryRu: "Австралия", countryEn: "Australia", flag: "au", keywords: "австралийский aud australia" },
+            { code: "CHF", symbol: "₣", countryRu: "Швейцария", countryEn: "Switzerland", flag: "ch", keywords: "франк chf switzerland швейцария" },
+            { code: "CZK", symbol: "Kč", countryRu: "Чехия", countryEn: "Czech Republic", flag: "cz", keywords: "крона czk czech чехия" },
+            { code: "CNY", symbol: "¥", countryRu: "Китай", countryEn: "China", flag: "cn", keywords: "юань cny china китай" },
+            { code: "INR", symbol: "₹", countryRu: "Индия", countryEn: "India", flag: "in", keywords: "рупия inr india индия" },
+            { code: "TRY", symbol: "₺", countryRu: "Турция", countryEn: "Turkey", flag: "tr", keywords: "лира try turkey турция" },
+            { code: "KZT", symbol: "₸", countryRu: "Казахстан", countryEn: "Kazakhstan", flag: "kz", keywords: "тенге kzt kazakhstan казахстан" }
+        ];
+
+        const favorites = ["UAH", "RUB", "USD", "EUR", "JPY", "VND"];
+
+        const i18n = {
+            ru: {
+                title: "Конвертер Валют",
+                from: "Отдаю:",
+                to: "Получаю:",
+                search: "Поиск валюты...",
+                rateText: "1 {from} = {rate} {to}",
+                loading: "Подключение...",
+                favs: "⭐ Избранное",
+                all: "🌍 Все валюты"
+            },
+            en: {
+                title: "Currency Converter",
+                from: "You Send:",
+                to: "You Get:",
+                search: "Search currency...",
+                rateText: "1 {from} = {rate} {to}",
+                loading: "Connecting...",
+                favs: "⭐ Favorites",
+                all: "🌍 All Currencies"
+            }
+        };
+
+        let currentLang = localStorage.getItem("kiwwij-ex-lang") || "ru";
+        let currentTheme = localStorage.getItem("kiwwij-ex-theme") || "dark";
+        let fromCurrency = currencyData.find(c => c.code === "USD");
+        let toCurrency = currencyData.find(c => c.code === "UAH");
+        let exchangeRates = null;
+        let activeSelectionTarget = null;
+
+        const amountFrom = document.getElementById("amount-from");
+        const amountTo = document.getElementById("amount-to");
+        const rateText = document.getElementById("rate-text");
+        const searchBar = document.getElementById("search-bar");
+        const modalList = document.getElementById("modal-list");
+        const modal = document.getElementById("search-modal");
+
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        document.getElementById("theme-toggle").innerHTML = currentTheme === "dark" ? "<i class='bx bx-moon'></i>" : "<i class='bx bx-sun'></i>";
+
+        const apiEndpoints = [
+            "https://open.er-api.com/v6/latest/USD",
+            "https://api.exchangerate-api.com/v4/latest/USD",
+            "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json"
+        ];
+
+        async function fetchRates() {
+            const cacheKey = "kiwwij-rates-v2";
+            const cacheTimeKey = "kiwwij-rates-time-v2";
+            if (localStorage.getItem(cacheKey) && Date.now() - localStorage.getItem(cacheTimeKey) < 3600000) {
+                exchangeRates = JSON.parse(localStorage.getItem(cacheKey));
+                convert();
+                return;
+            }
+
+            for (const url of apiEndpoints) {
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    let rates = data.rates || data.usd;
+                    if (rates) {
+                        exchangeRates = Object.keys(rates).reduce((acc, key) => { acc[key.toUpperCase()] = rates[key]; return acc; }, {});
+                        localStorage.setItem(cacheKey, JSON.stringify(exchangeRates));
+                        localStorage.setItem(cacheTimeKey, Date.now());
+                        convert();
+                        break;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        function parseFormattedNumber(val) {
+            if (!val) return 0;
+            return parseFloat(val.replace(/\s/g, '')) || 0;
+        }
+
+        function formatNumberWithSpaces(num) {
+            if (isNaN(num)) return "";
+            let parts = num.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            return parts.join(".");
+        }
+
+        function handleInput(e) {
+            let el = e.target;ю
+            let raw = el.value.replace(/,/g, '.').replace(/[^\d.]/g, '');
+            
+            let parts = raw.split('.');
+            if (parts.length > 2) raw = parts[0] + '.' + parts.slice(1).join('');
+            
+            let cursor = el.selectionStart;
+            let oldLen = el.value.length;
+
+            let formatted = raw;
+            if (raw) {
+                let [intPart, decPart] = raw.split('.');
+                intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                formatted = decPart !== undefined ? intPart + '.' + decPart : intPart;
+            }
+
+            el.value = formatted;
+            
+            let newLen = el.value.length;
+            cursor = cursor + (newLen - oldLen);
+            el.setSelectionRange(cursor, cursor);
+
+            convert(el.id === 'amount-from' ? 'from' : 'to');
+        }
+
+        amountFrom.addEventListener("input", handleInput);
+        amountTo.addEventListener("input", handleInput);
+
+        function convert(direction = 'from') {
+            if (!exchangeRates) return;
+
+            const usdToFrom = exchangeRates[fromCurrency.code];
+            const usdToTo = exchangeRates[toCurrency.code];
+            if (!usdToFrom || !usdToTo) return;
+
+            const directRate = (usdToTo / usdToFrom);
+
+            if (direction === 'from') {
+                const val = parseFormattedNumber(amountFrom.value);
+                if (!val) amountTo.value = "";
+                else amountTo.value = formatNumberWithSpaces((val * directRate).toFixed(2));
+            } else {
+                const val = parseFormattedNumber(amountTo.value);
+                if (!val) amountFrom.value = "";
+                else amountFrom.value = formatNumberWithSpaces((val / directRate).toFixed(2));
+            }
+
+            rateText.textContent = i18n[currentLang].rateText
+                .replace("{from}", fromCurrency.code)
+                .replace("{rate}", directRate.toFixed(4))
+                .replace("{to}", toCurrency.code);
+        }
+
+        function updateUI() {
+            const t = i18n[currentLang];
+            document.getElementById("main-title").textContent = t.title;
+            document.getElementById("label-from").textContent = t.from;
+            document.getElementById("label-to").textContent = t.to;
+            searchBar.placeholder = t.search;
+            
+            document.getElementById("flag-from").src = `https://flagcdn.com/w40/${fromCurrency.flag}.png`;
+            document.getElementById("code-from").textContent = fromCurrency.code;
+            document.getElementById("country-from").textContent = currentLang === "ru" ? fromCurrency.countryRu : fromCurrency.countryEn;
+            document.getElementById("symbol-from").textContent = fromCurrency.symbol;
+
+            document.getElementById("flag-to").src = `https://flagcdn.com/w40/${toCurrency.flag}.png`;
+            document.getElementById("code-to").textContent = toCurrency.code;
+            document.getElementById("country-to").textContent = currentLang === "ru" ? toCurrency.countryRu : toCurrency.countryEn;
+            document.getElementById("symbol-to").textContent = toCurrency.symbol;
+
+            if (exchangeRates) convert();
+        }
+
+        function fuzzyMatch(pattern, str) {
+            pattern = pattern.toLowerCase().replace(/\s/g, '').split('').join('.*?');
+            return new RegExp(pattern, 'i').test(str.toLowerCase());
+        }
+
+        function renderModalList(filterText = "") {
+            modalList.innerHTML = "";
+            const search = filterText.trim();
+            const t = i18n[currentLang];
+
+            const filtered = currencyData.filter(item => {
+                if(!search) return true;
+                const searchScope = item.keywords + " " + item.code + " " + item.countryRu + " " + item.countryEn;
+                return fuzzyMatch(search, searchScope);
+            });
+
+            const favItems = filtered.filter(item => favorites.includes(item.code));
+            const otherItems = filtered.filter(item => !favorites.includes(item.code));
+
+            const fragment = document.createDocumentFragment();
+
+            const createItem = (item) => {
+                const div = document.createElement("div");
+                div.className = "currency-item";
+                const countryName = currentLang === "ru" ? item.countryRu : item.countryEn;
+                div.innerHTML = `
+                    <img src="https://flagcdn.com/w40/${item.flag}.png" alt="${countryName}" class="flag-img" loading="lazy">
+                    <div class="currency-info">
+                        <span class="currency-code">${item.code} (${item.symbol})</span>
+                        <span class="country-name">${countryName}</span>
+                    </div>
+                `;
+                div.addEventListener("click", () => {
+                    if (activeSelectionTarget === "from") fromCurrency = item;
+                    else toCurrency = item;
+                    updateUI();
+                    modal.classList.remove("active");
+                });
+                return div;
+            };
+
+            if (favItems.length > 0) {
+                const favTitle = document.createElement("div");
+                favTitle.className = "list-divider";
+                favTitle.textContent = t.favs;
+                fragment.appendChild(favTitle);
+                favItems.forEach(item => fragment.appendChild(createItem(item)));
+            }
+
+            if (otherItems.length > 0) {
+                if (favItems.length > 0) {
+                    const allTitle = document.createElement("div");
+                    allTitle.className = "list-divider";
+                    allTitle.textContent = t.all;
+                    fragment.appendChild(allTitle);
+                }
+                otherItems.forEach(item => fragment.appendChild(createItem(item)));
+            }
+
+            modalList.appendChild(fragment);
+        }
+
+        document.getElementById("theme-toggle").addEventListener("click", () => {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", currentTheme);
+            localStorage.setItem("kiwwij-ex-theme", currentTheme);
+            document.getElementById("theme-toggle").innerHTML = currentTheme === "dark" ? "<i class='bx bx-moon'></i>" : "<i class='bx bx-sun'></i>";
+        });
+
+        document.getElementById("lang-toggle").addEventListener("click", () => {
+            currentLang = currentLang === "ru" ? "en" : "ru";
+            localStorage.setItem("kiwwij-ex-lang", currentLang);
+            updateUI();
+            if(modal.classList.contains("active")) renderModalList(searchBar.value);
+        });
+
+        document.getElementById("swap-currencies").addEventListener("click", () => {
+            const temp = fromCurrency;
+            fromCurrency = toCurrency;
+            toCurrency = temp;
+            updateUI();
+        });
+
+        document.getElementById("select-from").addEventListener("click", () => {
+            activeSelectionTarget = "from";
+            searchBar.value = "";
+            renderModalList();
+            modal.classList.add("active");
+            searchBar.focus();
+        });
+
+        document.getElementById("select-to").addEventListener("click", () => {
+            activeSelectionTarget = "to";
+            searchBar.value = "";
+            renderModalList();
+            modal.classList.add("active");
+            searchBar.focus();
+        });
+
+        document.getElementById("close-modal-btn").addEventListener("click", () => modal.classList.remove("active"));
+        
+        window.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("active"); });
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.classList.remove("active"); });
+
+        searchBar.addEventListener("input", (e) => renderModalList(e.target.value));
+
+        updateUI();
+        fetchRates();
+    </script>
+</body>
+</html>

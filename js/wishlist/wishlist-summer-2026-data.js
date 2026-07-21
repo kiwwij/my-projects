@@ -488,32 +488,46 @@ const gamesData = [
         progress: 1
     },
     {
+        title: "ELDEN VINS",
+        steam_link: "https://www.nexusmods.com/eldenring/mods/4709",
+        poster: "https://staticdelivery.nexusmods.com/mods/4333/images/4709/4709-1753168052-1592421421.png",
+        release_date: "7 дек. 2024 г.",
+        price_uah: 1799,
+        discount_percent: 40,
+        playtime: "18",
+        rating: "94",
+
+        play_status: "completed",
+        review_link: "https://telegra.ph/ELDEN-VINS-review-07-20",
+        progress: 100
+    },
+    {
         title: "Clair Obscur: Expedition 33",
         steam_link: "https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/?l=russian",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1903340/be3305b02d4db0dffa3458537118423bf2792d7e/header.jpg?t=1773676780",
         release_date: "24 апр. 2025 г.",
         price_uah: 1499,
         discount_percent: 20,
-        playtime: "17",
+        playtime: "18",
         rating: "",
+
+        play_status: "completed",
+        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/1903340/",
+        progress: 100
+    },
+    {
+        title: "ATRI -My Dear Moments- Demo",
+        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1263470/header.jpg?t=1588321271",
+        release_date: "1 май. 2020",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "2",
+        rating: "80",
 
         play_status: "playing",
         review_link: "",
-        progress: 90
-    },
-    {
-        title: "ELDEN RING",
-        steam_link: "https://store.steampowered.com/app/1245620/ELDEN_RING/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg?t=1767883716",
-        release_date: "25 фев. 2022 г.",
-        price_uah: 1799,
-        discount_percent: 40,
-        playtime: "20",
-        rating: "",
-
-        play_status: "playing",
-        review_link: "https://steamcommunity.com/id/serhiosergey/recommended/1245620/",
-        progress: 5
+        progress: 25
     },
     {
         title: "CRISIS CORE –FINAL FANTASY VII– REUNION",
@@ -528,20 +542,6 @@ const gamesData = [
         play_status: "paused",
         review_link: "https://www.thesignmaker.co.nz/wp-content/smush-webp/2019/04/C16_Work-In-Progress.png.webp",
         progress: 30
-    },
-    {
-        title: "ATRI -My Dear Moments- Demo",
-        steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1263470/header.jpg?t=1588321271",
-        release_date: "1 май. 2020",
-        price_uah: 0,
-        discount_percent: 0,
-        playtime: "2",
-        rating: "80",
-
-        play_status: "paused",
-        review_link: "",
-        progress: 25
     },
     {
         title: "Re:ZERO -Starting Life in Another World- The Prophecy of the Throne",
@@ -620,6 +620,20 @@ const gamesData = [
         price_uah: "",
         discount_percent: 0,
         playtime: "",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "Detroit: Become Human",
+        steam_link: "https://store.steampowered.com/app/1222140/Detroit_Become_Human/?l=russian",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1222140/header.jpg?t=1667468479",
+        release_date: "18 июн. 2020 г.",
+        price_uah: "1299",
+        discount_percent: 90,
+        playtime: "12",
         rating: "",
 
         play_status: "planned",
