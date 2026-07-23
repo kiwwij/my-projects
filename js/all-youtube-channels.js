@@ -1,43 +1,38 @@
-// Список каналов
 const channels = [
-    { handle: '@serhiosergey', name: 'kiwwij', subs: '824', videos: '33', url: 'https://www.youtube.com/@serhiosergey', img: 'https://yt3.googleusercontent.com/PV8SXLHJUz0hEYxldBbwxbhC9M4tQp4--cE5mv5KhLiw3gHd8F7Gfr183TJ8PSDNBpyH3Xc1sw=s160-c-k-c0x00ffffff-no-rj', hidden: false },
+    { handle: '@serhiosergey', name: 'kiwwij', subs: '1.11К', videos: '35', url: 'https://www.youtube.com/@serhiosergey', img: 'https://yt3.googleusercontent.com/9D_XQRh5NEw5mkDokFttcZlcqVm1oJ1s7Oo-qFWxVlkbPiYqw7upWNr9HdyE6UmpJFNret76=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@otto5109', name: 'otto', subs: '12', videos: '7', url: 'https://www.youtube.com/@otto5109', img: 'https://yt3.googleusercontent.com/ytc/AIdro_nlYFVD5kwdgDZoDDkFE7RzGax-mrU-ngtioTf6u5PSjg=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@mad_sergey5206', name: 'Mad_Sergey', subs: '22', videos: '8', url: 'https://www.youtube.com/@mad_sergey5206', img: 'https://yt3.googleusercontent.com/ytc/AIdro_l03gajdZneeKjF4-CVA3n0uhV-PSlZu5UgstlIG2a1BJA=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@aniclips1307', name: 'AniClips', subs: '11', videos: '0', url: 'https://www.youtube.com/@aniclips1307', img: 'https://yt3.googleusercontent.com/HXGO00HqHT7zeTHUw1z0Y0WzxgLHNszJ8VPKq6zurN-xt3KrRUar0L-wfD0XQqEWCO4vdeo_RA=s160-c-k-c0x00ffffff-no-rj', hidden: false },
-    { handle: '@intworld14', name: 'Интересный Мирок', subs: '1K', videos: '106', url: 'https://www.youtube.com/@intworld14', img: 'https://yt3.googleusercontent.com/ytc/AIdro_k2saDyk5623NnmOKb5y5O8N_DmDj6eKeEyPB2z15Lr_5M=s160-c-k-c0x00ffffff-no-rj', hidden: false },
+    { handle: '@intworld14', name: 'Интересный Мирок', subs: '1.06K', videos: '106', url: 'https://www.youtube.com/@intworld14', img: 'https://yt3.googleusercontent.com/ytc/AIdro_k2saDyk5623NnmOKb5y5O8N_DmDj6eKeEyPB2z15Lr_5M=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@mrGlory', name: 'mrGlory', subs: '10', videos: '2', url: 'https://www.youtube.com/@mrGlory', img: 'https://yt3.googleusercontent.com/NnRNhW_4ZTUhMYBTLLU3qPyP_HmnKcdVaTGadGx1Vc9Nm1wcP7U3u6iEgCTqKuJqRjG6cTlk6xY=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@alexsandrrt5656', name: 'Alexsandrr T', subs: '22', videos: '50', url: 'https://www.youtube.com/@alexsandrrt5656', img: 'https://yt3.googleusercontent.com/ytc/AIdro_ngWVG9_Noe4oq3nEtbY0YQlPcG0kP-efAajzPyadbUrE4=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@serhi00games32', name: 'SerHi00 Games', subs: '33', videos: '15', url: 'https://www.youtube.com/@serhi00games32', img: 'https://yt3.googleusercontent.com/ytc/AIdro_mXnLZeULr-ttEDmqMvKo0dZwwKchbdT8MWivxh5Lw0Yuc=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@testfast8926', name: 'Игровой канал TestFast', subs: '15', videos: '38', url: 'https://www.youtube.com/@testfast8926', img: 'https://yt3.googleusercontent.com/ytc/AIdro_lcHCIGNF1OUgyuwQ_lIJ2dMTTfw41F75jJDnKxxINfRA=s160-c-k-c0x00ffffff-no-rj', hidden: false },
-    { handle: '@filin-', name: 'Филин - Нарезки Пятёрки', subs: '51', videos: '2', url: 'https://www.youtube.com/@filin-', img: 'https://yt3.googleusercontent.com/OLXf5GQDEQ_MMiRmT-nqLA2GNwOoFqHgixnNxddnP1CmiWQqwsvw17HfHdzR4udgmCFFPMNNCyo=s160-c-k-c0x00ffffff-no-rj', hidden: false },
-    { handle: '@eiyuki.s', name: 'E. Yuki | 永雪', subs: '9', videos: '10', url: 'https://www.youtube.com/@eiyuki.s', img: 'https://yt3.googleusercontent.com/dRvX_p_TZRdaKcSoNCepy2JA3dadEwVz91mFYtk7iQRqoZ1CecZIoGU79I9yx0vaV2C8IWzNIw=s160-c-k-c0x00ffffff-no-rj', hidden: false },
+    { handle: '@filin-', name: 'Филин - Нарезки Пятёрки', subs: '62', videos: '2', url: 'https://www.youtube.com/@filin-', img: 'https://yt3.googleusercontent.com/OLXf5GQDEQ_MMiRmT-nqLA2GNwOoFqHgixnNxddnP1CmiWQqwsvw17HfHdzR4udgmCFFPMNNCyo=s160-c-k-c0x00ffffff-no-rj', hidden: false },
+    { handle: '@slvt14', name: 'slvt', subs: '9', videos: '11', url: 'https://www.youtube.com/@slvt14', img: 'https://i.pinimg.com/736x/95/4a/ab/954aab530a5381b6460de202524cdb63.jpg', hidden: false },
     { handle: '@krippitravka9314', name: 'krippi travka', subs: '4', videos: '0', url: 'https://www.youtube.com/@krippitravka9314', img: 'https://yt3.googleusercontent.com/ytc/AIdro_nCdzv3BGPQr4KJYDu22DOAxgQtKupXYRIm_i4XPpEQ6w=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@xle6259', name: 'Xle6', subs: '4', videos: '0', url: 'https://www.youtube.com/@xle6259', img: 'https://yt3.googleusercontent.com/ytc/AIdro_kYbOiAj5XTx9JFHTIbcCeWIO6cquRx2g_c4FO3PDaLoA=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@МультПродакшн', name: 'Мульт Продакшн', subs: '13', videos: '2', url: 'https://www.youtube.com/@%D0%9C%D1%83%D0%BB%D1%8C%D1%82%D0%9F%D1%80%D0%BE%D0%B4%D0%B0%D0%BA%D1%88%D0%BD', img: 'https://yt3.googleusercontent.com/ytc/AIdro_nPIIo6WJNeU-8DLecz7UeJQWglHZtOsNGWmrRBwSASgog=s160-c-k-c0x00ffffff-no-rj', hidden: false },
     { handle: '@КаналСатурна-е3м', name: 'Канал Сатурна', subs: '12', videos: '2', url: 'https://www.youtube.com/@%D0%9A%D0%B0%D0%BD%D0%B0%D0%BB%D0%A1%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0-%D0%B53%D0%BC', img: 'https://yt3.googleusercontent.com/ytc/AIdro_k9qfe7K-zYEg8civTEIXgYmkOR5QeCuKzBa0mnSimgYg=s160-c-k-c0x00ffffff-no-rj', hidden: false },
 
     // Скрытый канал
-    { handle: '@hilli15', name: 'Hilli', subs: '2.5K', videos: '5', url: 'https://www.youtube.com/@hilli15', img: 'https://yt3.googleusercontent.com/4aD9SRx9TR_WfgHodJNShmVrnt2ow_3Mzg49kmNSp_1GChUB8k0WvDtesD7MjZWlxwuD6Snf_Jo=s160-c-k-c0x00ffffff-no-rj', hidden: true }
+    { handle: '@hilli15', name: 'Hilli', subs: '2.46K', videos: '5', url: 'https://www.youtube.com/@hilli15', img: 'https://yt3.googleusercontent.com/4aD9SRx9TR_WfgHodJNShmVrnt2ow_3Mzg49kmNSp_1GChUB8k0WvDtesD7MjZWlxwuD6Snf_Jo=s160-c-k-c0x00ffffff-no-rj', hidden: true }
 ];
 
 const grid = document.getElementById('grid');
 const themeBtn = document.getElementById('theme-btn');
 
-// Элементы модального окна
 const modal = document.getElementById('custom-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalText = document.getElementById('modal-text');
 const modalClose = document.getElementById('modal-close');
 
 let isUnlocked = false; 
-
-// Переменные для мини-игры "Взлом"
 let hackProgress = 0;
 let decayRate = 0.25; 
 let clickPower = 4;
 let animationFrameId;
 
-// === ГЕНЕРАТОР СЛУЧАЙНЫХ СИМВОЛОВ ===
 function generateGlitchText(length) {
     const chars = '!@#$%^&*()_+-=[]{}|;:",./<>?0123456789XXYYZZ';
     let result = '';
@@ -47,7 +42,6 @@ function generateGlitchText(length) {
     return result;
 }
 
-// === ФУНКЦИЯ ПОКАЗА МОДАЛЬНОГО ОКНА ===
 function showModal(title, text) {
     modalTitle.textContent = title;
     modalText.textContent = text;
@@ -113,7 +107,6 @@ function createUnlockedCard(channel) {
     card.className = 'channel-card';
     card.style.borderColor = '#ff0000'; 
     
-    // Генерируем случайное имя (10-15 символов)
     const randomName = generateGlitchText(Math.floor(Math.random() * 5) + 10);
 
     card.innerHTML = `

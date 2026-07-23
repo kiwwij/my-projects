@@ -516,6 +516,34 @@ const gamesData = [
         progress: 100
     },
     {
+        title: "The Convergence",
+        steam_link: "https://www.nexusmods.com/eldenring/mods/3419",
+        poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MAsm6QpkcaCv7Nl9pNvPAhaA5_ekwqBBPrCSkICnwA80OsDit3Pw7eM&s=10",
+        release_date: "6 мар. 2024 г.",
+        price_uah: 1799,
+        discount_percent: 40,
+        playtime: "18",
+        rating: "94",
+
+        play_status: "unplanned_dropped",
+        review_link: "",
+        progress: 1
+    },
+    {
+        title: "Detroit: Become Human",
+        steam_link: "https://store.steampowered.com/app/1222140/Detroit_Become_Human/?l=russian",
+        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1222140/header.jpg?t=1667468479",
+        release_date: "18 июн. 2020 г.",
+        price_uah: "1299",
+        discount_percent: 90,
+        playtime: "12",
+        rating: "",
+
+        play_status: "unplanned_dropped",
+        review_link: "https://kiwwij.github.io/kiwwij-anime-tier-list/",
+        progress: 35
+    },
+    {
         title: "ATRI -My Dear Moments- Demo",
         steam_link: "https://store.steampowered.com/app/1230140/ATRI_My_Dear_Moments/",
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1263470/header.jpg?t=1588321271",
@@ -620,20 +648,6 @@ const gamesData = [
         price_uah: "",
         discount_percent: 0,
         playtime: "",
-        rating: "",
-
-        play_status: "planned",
-        review_link: "",
-        progress: 0
-    },
-    {
-        title: "Detroit: Become Human",
-        steam_link: "https://store.steampowered.com/app/1222140/Detroit_Become_Human/?l=russian",
-        poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1222140/header.jpg?t=1667468479",
-        release_date: "18 июн. 2020 г.",
-        price_uah: "1299",
-        discount_percent: 90,
-        playtime: "12",
         rating: "",
 
         play_status: "planned",
