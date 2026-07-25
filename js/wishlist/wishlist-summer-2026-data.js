@@ -298,7 +298,7 @@ const gamesData = [
         poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2244210/7f0745382bc945351cc3334c7f0b947c8a22b896/header.jpg?t=1773426830",
         steam_link: "https://store.steampowered.com/app/2244210/Echoes_of_Aincrad/",
         review_link: "",
-        playtime: "35",
+        playtime: "19",
         price_uah: 1999,
         discount_percent: 0,
         release_date: "10 июл. 2026 г.",
@@ -494,12 +494,12 @@ const gamesData = [
         release_date: "7 дек. 2024 г.",
         price_uah: 1799,
         discount_percent: 40,
-        playtime: "18",
+        playtime: "11",
         rating: "94",
 
         play_status: "completed",
         review_link: "https://telegra.ph/ELDEN-VINS-review-07-20",
-        progress: 100
+        progress: 200
     },
     {
         title: "Clair Obscur: Expedition 33",
@@ -542,6 +542,20 @@ const gamesData = [
         play_status: "unplanned_dropped",
         review_link: "https://kiwwij.github.io/kiwwij-anime-tier-list/",
         progress: 35
+    },
+    {
+        title: "Dragon's Dogma 2 Редактор и хранилище персонажа",
+        steam_link: "https://store.steampowered.com/app/2674810/Dragons_Dogma_2_Redaktor_i_xranilishhe_personazha/",
+        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2674810/header.jpg?t=1718588219",
+        release_date: "8 мар. 2024 г.",
+        price_uah: 0,
+        discount_percent: 0,
+        playtime: "0.5",
+        rating: "86",
+
+        play_status: "completed",
+        review_link: "",
+        progress: 100
     },
     {
         title: "ATRI -My Dear Moments- Demo",
@@ -604,7 +618,7 @@ const gamesData = [
         poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2362060/955e8f3fce6d832c286ac8013657ed6fc51f1f85/header.jpg?t=1770242240",
         release_date: "30 янв. 2026 г.",
         price_uah: 1999,
-        discount_percent: 25,
+        discount_percent: 34,
         playtime: "33",
         rating: "70",
 
@@ -648,6 +662,20 @@ const gamesData = [
         price_uah: "",
         discount_percent: 0,
         playtime: "",
+        rating: "",
+
+        play_status: "planned",
+        review_link: "",
+        progress: 0
+    },
+    {
+        title: "WUCHANG: Fallen Feathers",
+        steam_link: "https://store.steampowered.com/app/2277560/WUCHANG_Fallen_Feathers/",
+        poster: "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2277560/7dbbe47ac51463eb1627581f5c048b94ef856d5c/header.jpg?t=1784888019",
+        release_date: "24 июл. 2025 г.",
+        price_uah: "1499",
+        discount_percent: 30,
+        playtime: "31",
         rating: "",
 
         play_status: "planned",

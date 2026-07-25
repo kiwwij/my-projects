@@ -439,6 +439,15 @@
                     <div style="height: 350px; width: 100%; background: #000;">
                         <img id="imageToCrop" src="" style="display: block; max-width: 100%;">
                     </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: center;">
+                        <button class="btn-reset" onclick="flipHorizontal()" type="button" style="display: flex; align-items: center; gap: 5px;">
+                            <i class='bx bx-reflect-vertical'></i> По горизонтали
+                        </button>
+                        <button class="btn-reset" onclick="flipVertical()" type="button" style="display: flex; align-items: center; gap: 5px;">
+                            <i class='bx bx-reflect-horizontal'></i> По вертикали
+                        </button>
+                    </div>
                 </div>
 
                 <div class="modal-flex-body">
@@ -558,7 +567,10 @@
 
         const avatarModal = document.getElementById('avatarModal');
         const modalAvatarInput = document.getElementById('modalAvatarInput');
+        
         let cropper = null;
+        let scaleX = 1;
+        let scaleY = 1;
 
         function openAvatarModal() { 
             applyAvatarToAll(confirmedAvatarSrc);
@@ -570,11 +582,30 @@
             modalAvatarInput.value = ''; 
             if (cropper) { cropper.destroy(); cropper = null; }
             document.getElementById('cropWorkspace').style.display = 'none';
+            scaleX = 1;
+            scaleY = 1;
+        }
+
+        function flipHorizontal() {
+            if (cropper) {
+                scaleX = scaleX === 1 ? -1 : 1;
+                cropper.scaleX(scaleX);
+            }
+        }
+
+        function flipVertical() {
+            if (cropper) {
+                scaleY = scaleY === 1 ? -1 : 1;
+                cropper.scaleY(scaleY);
+            }
         }
 
         modalAvatarInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
+                scaleX = 1;
+                scaleY = 1;
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const cropWorkspace = document.getElementById('cropWorkspace');
