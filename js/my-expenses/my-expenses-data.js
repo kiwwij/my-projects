@@ -449,7 +449,7 @@ const database = {
         }
     },
     "2026-07": {
-        income: { fix: 2000, extra: 0 },
+        income: { fix: 2000, extra: 135.65 },
 
         weeks: {
             1: {
@@ -513,12 +513,12 @@ const database = {
 /* Другое */    other: 0,
             },
             5: {
-/* Продукты */  food: 0,
-/* Вкусняшки */ snacks: 0,
+/* Продукты */  food: 20,
+/* Вкусняшки */ snacks: 196.30,
 /* Рестораны */ dining: 0,
 /* Проезд */    transport: 0,
 /* Жильё */     rent: 0,
-/* Услуги */    services: 150,
+/* Услуги */    services: 410,
 /* Здоровье */  health: 0,
 /* Барбершоп */ barber: 0,
 /* Одежда */    clothes: 0,
