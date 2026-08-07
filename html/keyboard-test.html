@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1200">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="A sleek, full 100% layout keyboard tester with instant visual and audio feedback.">
+    <title>Keyboard Tester (100%)</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/816/816282.png" type="image/png">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/keyboard-test.css">
+</head>
+<body data-theme="dark">
+    <div id="preloader">
+        <i class='bx bx-loader-alt bx-spin'></i>
+    </div>
+
+    <header>
+        <h1 class="logo"><i class='bx bx-keyboard'></i> Keyboard Tester</h1>
+        <div class="controls">
+            <select id="soundSelect" class="btn" title="Select Sound Profile">
+                <option value="mechanical">Mechanical</option>
+                <option value="membrane">Membrane</option>
+                <option value="typewriter">Typewriter</option>
+                <option value="none">Muted</option>
+            </select>
+
+            <button id="themeToggle" class="btn" title="Toggle Light/Dark Theme">
+                <i class='bx bx-sun'></i> <span>Light</span>
+            </button>
+            <button id="infoBtn" class="btn btn-icon" title="Important Warnings">
+                <i class='bx bx-error-circle'></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <p class="subtitle">Press any key to test its functionality.</p>
+        
+        <div class="keyboard-board">
+            
+            <div class="keyboard-main">
+                <div class="row row-fn">
+                    <div class="key esc" data-code="Escape" title="Escape">Esc</div>
+                    <div class="spacer"></div>
+                    <div class="key fn" data-code="F1" title="F1">F1</div>
+                    <div class="key fn" data-code="F2" title="F2">F2</div>
+                    <div class="key fn" data-code="F3" title="F3">F3</div>
+                    <div class="key fn" data-code="F4" title="F4">F4</div>
+                    <div class="spacer-half"></div>
+                    <div class="key fn" data-code="F5" title="F5 (Will Reload Page)">F5</div>
+                    <div class="key fn" data-code="F6" title="F6">F6</div>
+                    <div class="key fn" data-code="F7" title="F7">F7</div>
+                    <div class="key fn" data-code="F8" title="F8">F8</div>
+                    <div class="spacer-half"></div>
+                    <div class="key fn" data-code="F9" title="F9">F9</div>
+                    <div class="key fn" data-code="F10" title="F10">F10</div>
+                    <div class="key fn" data-code="F11" title="F11">F11</div>
+                    <div class="key fn" data-code="F12" title="F12">F12</div>
+                </div>
+                <div class="row">
+                    <div class="key" data-code="Backquote" title="Tilde/Backquote">`</div>
+                    <div class="key" data-code="Digit1" title="Digit 1">1</div>
+                    <div class="key" data-code="Digit2" title="Digit 2">2</div>
+                    <div class="key" data-code="Digit3" title="Digit 3">3</div>
+                    <div class="key" data-code="Digit4" title="Digit 4">4</div>
+                    <div class="key" data-code="Digit5" title="Digit 5">5</div>
+                    <div class="key" data-code="Digit6" title="Digit 6">6</div>
+                    <div class="key" data-code="Digit7" title="Digit 7">7</div>
+                    <div class="key" data-code="Digit8" title="Digit 8">8</div>
+                    <div class="key" data-code="Digit9" title="Digit 9">9</div>
+                    <div class="key" data-code="Digit0" title="Digit 0">0</div>
+                    <div class="key" data-code="Minus" title="Minus">-</div>
+                    <div class="key" data-code="Equal" title="Equal">=</div>
+                    <div class="key backspace" data-code="Backspace" title="Backspace">Backspace</div>
+                </div>
+                <div class="row">
+                    <div class="key tab" data-code="Tab" title="Tab">Tab</div>
+                    <div class="key" data-code="KeyQ" title="Q">Q</div>
+                    <div class="key" data-code="KeyW" title="W">W</div>
+                    <div class="key" data-code="KeyE" title="E">E</div>
+                    <div class="key" data-code="KeyR" title="R">R</div>
+                    <div class="key" data-code="KeyT" title="T">T</div>
+                    <div class="key" data-code="KeyY" title="Y">Y</div>
+                    <div class="key" data-code="KeyU" title="U">U</div>
+                    <div class="key" data-code="KeyI" title="I">I</div>
+                    <div class="key" data-code="KeyO" title="O">O</div>
+                    <div class="key" data-code="KeyP" title="P">P</div>
+                    <div class="key" data-code="BracketLeft" title="Left Bracket">[</div>
+                    <div class="key" data-code="BracketRight" title="Right Bracket">]</div>
+                    <div class="key backslash" data-code="Backslash" title="Backslash">\</div>
+                </div>
+                <div class="row">
+                    <div class="key capslock" data-code="CapsLock" title="Caps Lock">Caps</div>
+                    <div class="key" data-code="KeyA" title="A">A</div>
+                    <div class="key" data-code="KeyS" title="S">S</div>
+                    <div class="key" data-code="KeyD" title="D">D</div>
+                    <div class="key" data-code="KeyF" title="F">F</div>
+                    <div class="key" data-code="KeyG" title="G">G</div>
+                    <div class="key" data-code="KeyH" title="H">H</div>
+                    <div class="key" data-code="KeyJ" title="J">J</div>
+                    <div class="key" data-code="KeyK" title="K">K</div>
+                    <div class="key" data-code="KeyL" title="L">L</div>
+                    <div class="key" data-code="Semicolon" title="Semicolon">;</div>
+                    <div class="key" data-code="Quote" title="Quote">'</div>
+                    <div class="key enter" data-code="Enter" title="Enter">Enter</div>
+                </div>
+                <div class="row">
+                    <div class="key shift-left" data-code="ShiftLeft" title="Left Shift">Shift</div>
+                    <div class="key" data-code="KeyZ" title="Z">Z</div>
+                    <div class="key" data-code="KeyX" title="X">X</div>
+                    <div class="key" data-code="KeyC" title="C">C</div>
+                    <div class="key" data-code="KeyV" title="V">V</div>
+                    <div class="key" data-code="KeyB" title="B">B</div>
+                    <div class="key" data-code="KeyN" title="N">N</div>
+                    <div class="key" data-code="KeyM" title="M">M</div>
+                    <div class="key" data-code="Comma" title="Comma">,</div>
+                    <div class="key" data-code="Period" title="Period">.</div>
+                    <div class="key" data-code="Slash" title="Slash">/</div>
+                    <div class="key shift-right" data-code="ShiftRight" title="Right Shift">Shift</div>
+                </div>
+                <div class="row">
+                    <div class="key ctrl" data-code="ControlLeft" title="Left Ctrl">Ctrl</div>
+                    <div class="key meta" data-code="MetaLeft" title="Windows/Command">Win</div>
+                    <div class="key alt" data-code="AltLeft" title="Left Alt">Alt</div>
+                    <div class="key space" data-code="Space" title="Spacebar"></div>
+                    <div class="key alt" data-code="AltRight" title="Right Alt">Alt</div>
+                    <div class="key meta" data-code="MetaRight" title="Windows/Command">Win</div>
+                    <div class="key menu" data-code="ContextMenu" title="Context Menu"><i class='bx bx-menu'></i></div>
+                    <div class="key ctrl" data-code="ControlRight" title="Right Ctrl">Ctrl</div>
+                </div>
+            </div>
+
+            <div class="keyboard-nav">
+                <div class="row row-fn">
+                    <div class="key nav-key" data-code="PrintScreen" title="Print Screen (May not register)">PrtSc</div>
+                    <div class="key nav-key" data-code="ScrollLock" title="Scroll Lock">ScrLk</div>
+                    <div class="key nav-key" data-code="Pause" title="Pause / Break">Pause</div>
+                </div>
+                <div class="nav-cluster">
+                    <div class="row">
+                        <div class="key nav-key" data-code="Insert" title="Insert">Ins</div>
+                        <div class="key nav-key" data-code="Home" title="Home">Home</div>
+                        <div class="key nav-key" data-code="PageUp" title="Page Up">PgUp</div>
+                    </div>
+                    <div class="row">
+                        <div class="key nav-key" data-code="Delete" title="Delete">Del</div>
+                        <div class="key nav-key" data-code="End" title="End">End</div>
+                        <div class="key nav-key" data-code="PageDown" title="Page Down">PgDn</div>
+                    </div>
+                </div>
+                <div class="arrows-cluster">
+                    <div class="row" style="justify-content: center;">
+                        <div class="key arrow" data-code="ArrowUp" title="Arrow Up"><i class='bx bx-up-arrow-alt'></i></div>
+                    </div>
+                    <div class="row">
+                        <div class="key arrow" data-code="ArrowLeft" title="Arrow Left"><i class='bx bx-left-arrow-alt'></i></div>
+                        <div class="key arrow" data-code="ArrowDown" title="Arrow Down"><i class='bx bx-down-arrow-alt'></i></div>
+                        <div class="key arrow" data-code="ArrowRight" title="Arrow Right"><i class='bx bx-right-arrow-alt'></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="keyboard-numpad">
+                <div class="row row-fn" style="visibility: hidden;">
+                    <div class="key nav-key"></div>
+                </div>
+                <div class="numpad-grid">
+                    <div class="key num-key" data-code="NumLock" title="Num Lock">Num</div>
+                    <div class="key num-key" data-code="NumpadDivide" title="Numpad Divide">/</div>
+                    <div class="key num-key" data-code="NumpadMultiply" title="Numpad Multiply">*</div>
+                    <div class="key num-key" data-code="NumpadSubtract" title="Numpad Subtract">-</div>
+
+                    <div class="key num-key" data-code="Numpad7" title="Numpad 7">7</div>
+                    <div class="key num-key" data-code="Numpad8" title="Numpad 8">8</div>
+                    <div class="key num-key" data-code="Numpad9" title="Numpad 9">9</div>
+                    <div class="key num-key num-tall" data-code="NumpadAdd" title="Numpad Add">+</div>
+
+                    <div class="key num-key" data-code="Numpad4" title="Numpad 4">4</div>
+                    <div class="key num-key" data-code="Numpad5" title="Numpad 5">5</div>
+                    <div class="key num-key" data-code="Numpad6" title="Numpad 6">6</div>
+
+                    <div class="key num-key" data-code="Numpad1" title="Numpad 1">1</div>
+                    <div class="key num-key" data-code="Numpad2" title="Numpad 2">2</div>
+                    <div class="key num-key" data-code="Numpad3" title="Numpad 3">3</div>
+                    <div class="key num-key num-tall" data-code="NumpadEnter" title="Numpad Enter">Ent</div>
+
+                    <div class="key num-key num-wide" data-code="Numpad0" title="Numpad 0">0</div>
+                    <div class="key num-key" data-code="NumpadDecimal" title="Numpad Decimal">.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+        <div class="modal">
+            <button class="modal-close" id="modalClose"><i class='bx bx-x'></i></button>
+            <h2>System Limitations</h2>
+            <ul class="warning-list">
+                <li><b>F5 Key:</b> Pressing this will reload your browser page and reset your tester progress.</li>
+                <li><b>PrintScreen (PrtSc):</b> This key often will not light up because your Operating System or snipping tool intercepts the signal before the browser can see it.</li>
+                <li><b>Windows/Meta Key:</b> Might open your start menu while testing.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="../js/keyboard-test.js"></script>
+</body>
+</html>

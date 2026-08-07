@@ -558,11 +558,25 @@
     "date": "2026-07-18"
   },
   "currency-converter.html": {
-    "image": "bx bx-transfer",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNkou1JRRu6tzy1T8snk-IN8CjDKaHoH3ye1lfAN76xvK-D2xCwEmiKJUG&s=10",
     "description": "Online currency converter.",
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-07-20"
+  },
+  "QA-checklist-generator.html": {
+    "image": "bx bx-check-shield",
+    "description": "A tool to generate custom quality assurance checklists for software projects (abandoned).",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-08-03"
+  },
+  "keyboard-test.html": {
+    "image": "",
+    "description": "A simple keyboard test page.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-08-05"
   },
   ".html": {
     "image": "",

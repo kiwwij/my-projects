@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="A modern, responsive, and intuitive QA checklist generator designed for effortless test reporting and exporting.">
+    <title data-i18n="pageTitle">QA Checklist Generator</title>
+    
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/QA-checklist-generator.css">
+    <script src="../js/QA-checklist-generator.js" defer></script>
+</head>
+<body class="dark-theme">
+    <header>
+        <div class="logo">
+            <i class='bx bx-check-shield'></i>
+            <span data-i18n="headerTitle">QA Checklists</span>
+            <span class="project-desc" data-i18n="projDesc">Structured testing utility</span>
+        </div>
+        <div class="controls">
+            <button id="btnHelp" title="Показати підказки / Show hints"><i class='bx bx-info-circle'></i> <span data-i18n="helpBtn">Довідка</span></button>
+            <button id="btnExportJson" title="Зберегти стан у файл JSON"><i class='bx bx-save'></i> JSON</button>
+            <button id="btnImportJson" title="Завантажити готовий чек-лист з JSON"><i class='bx bx-upload'></i> <span data-i18n="importBtn">Імпорт</span></button>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+            <button id="btnExportTxt" title="Завантажити у форматі TXT"><i class='bx bx-download'></i> TXT</button>
+            <button id="btnReset" class="btn-danger" title="Очистити весь чек-лист"><i class='bx bx-refresh'></i> <span data-i18n="resetBtn">Скинути</span></button>
+            
+            <div class="select-wrapper">
+                <i class='bx bx-globe'></i>
+                <select id="langSelect" title="Вибір мови інтерфейсу">
+                    <option value="uk">UK</option>
+                    <option value="en">EN</option>
+                    <option value="ru">RU</option>
+                </select>
+            </div>
+            <button id="themeToggle" title="Змінити тему оформлення"><i class='bx bx-moon'></i></button>
+        </div>
+    </header>
+
+    <main>
+        <section class="project-header" title="Вкажіть основні мета-дані вашої тестової сесії">
+            <div class="input-group">
+                <label data-i18n="lblDate"><i class='bx bx-calendar'></i> Date:</label>
+                <input type="date" id="testDate" title="Дата тестування">
+            </div>
+            <div class="input-group">
+                <label data-i18n="lblBuild"><i class='bx bx-code-block'></i> Build:</label>
+                <input type="text" id="buildVersion" placeholder="v1.0.0" data-i18n-placeholder="phBuild" title="Версія збірки (наприклад, v2.4.1)">
+            </div>
+            <div class="input-group">
+                <label data-i18n="lblTester"><i class='bx bx-user'></i> Tester Name:</label>
+                <input type="text" id="testerName" placeholder="Tester..." data-i18n-placeholder="phTester" title="Ім'я тестувальника">
+            </div>
+            <div class="input-group">
+                <label data-i18n="lblEnv"><i class='bx bx-devices'></i> Environment:</label>
+                <input type="text" id="environmentStr" placeholder="Win 11, Chrome 103" data-i18n-placeholder="phEnv" title="Оточення (Браузери, ОС, деталі)">
+            </div>
+        </section>
+
+        <section class="table-container">
+            <table id="checklistTable">
+                <thead>
+                    <tr>
+                        <th title="Модуль системи (напр. 'Авторизація')"><i class='bx bx-category'></i> Module</th>
+                        <th title="Субмодуль (напр. 'Відновлення пароля')"><i class='bx bx-folder-open'></i> Submodule</th>
+                        <th title="Елемент або функція (напр. 'Кнопка Відправити')"><i class='bx bx-target-lock'></i> Element/function</th>
+                        <th title="Суть перевірки (напр. 'Натискання надсилає лист')"><i class='bx bx-text'></i> Summary</th>
+                        <th title="Статус тестування" style="width: 140px;"><i class='bx bx-flag'></i> Status</th>
+                        <th title="Швидке додавання блоків та видалення" style="width: 180px;"><i class='bx bx-plus-circle'></i> Add / Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+            <button id="addRowBtnMain" title="Створити повністю новий модуль з нуля" data-i18n-title="addRowTooltip">
+                <i class='bx bx-plus'></i> <span data-i18n="addRowBtn">Add New Module</span>
+            </button>
+        </section>
+    </main>
+
+    <div id="modalHelp" class="modal">
+        <div class="modal-content">
+            <span class="close-modal"><i class='bx bx-x'></i></span>
+            <h2 data-i18n="modalHelpTitle">Як створювати чек-листи</h2>
+            <div class="help-grid" data-i18n="modalHelpContent">
+                <p><b>Швидке додавання елементів:</b> У стовпці <i>Add / Actions</i> використовуйте відповідні кнопки, щоб додавати нові рядки з автоматичним копіюванням контексту:
+                    <br>• <b>+Sub</b> — копіює тільки Module.
+                    <br>• <b>+Elem</b> — копіює Module і Submodule.
+                    <br>• <b>+Sum</b> — копіює Module, Submodule та Element.
+                </p>
+                <p><b>Автозбереження:</b> Будь-які зміни одразу зберігаються локально. При перезавантаженні сторінки дані залишаться.</p>
+                <p><b>Збереження та Завантаження (JSON):</b> Кнопка <b>JSON</b> дозволяє скачати чек-лист та завантажити його знову (кнопка <b>Імпорт</b>) на іншому пристрої.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
