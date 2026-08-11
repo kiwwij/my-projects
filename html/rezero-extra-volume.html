@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re:Zero EX — Пересказ</title>
+    <link rel="icon" href="https://rule34xyz.b-cdn.net/posts/4592/4592428/4592428.pic.jpg">
+    <!-- https://rule34xyz.b-cdn.net/posts/4592/4592582/4592582.pic.jpg -->
+    <!-- https://rule34.xyz/posts/4699/4699413/4699413.pic.jpg -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/rezero-extra-volume.css">
+</head>
+<body>
+    <header class="top-nav fade-in" style="justify-content: flex-end;">
+        <div class="top-nav-controls">
+            <button id="downloadAllBtn" class="nav-btn action-btn">
+                <i class='bx bx-download'></i> <span class="hide-mobile">Скачать все</span>
+            </button>
+            <button id="themeToggle" class="theme-toggle">
+                <i class='bx bx-sun'></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <article class="reader-container">
+            
+            <div id="initialState" class="initial-state fade-in">
+                <h2 class="intro-title">Побочные истории EX</h2>
+                <p class="intro-desc">Выберите том для прочтения пересказа</p>
+                <div id="volumesGridState" class="volumes-grid">
+                </div>
+            </div>
+
+            <div id="volumeContentState" style="display: none;">
+                <button id="backToGridBtn" class="nav-btn prev-chapter-btn mb-20 fade-in">
+                    <i class='bx bx-left-arrow-alt'></i> Назад к выбору
+                </button>
+                
+                <header class="volume-header fade-in">
+                    <div class="volume-poster-container">
+                        <div class="skeleton poster-skeleton"></div>
+                        <img src="" alt="Обложка" class="volume-poster" id="exVolumePoster" style="opacity: 0;">
+                    </div>
+                    
+                    <div class="volume-info">
+                        <h1 id="exTitleRu"></h1>
+                        <h2 id="exTitleEn"></h2>
+                        
+                        <div class="volume-links">
+                            <a id="exRanobeLink" href="#" target="_blank" class="nav-btn action-btn solid">
+                                <i class='bx bx-book-open'></i> Читать
+                            </a>
+                            <a href="https://drive.google.com/drive/folders/16AuQsRBF16hHv-Kco7VNheXWX56jyIpl" target="_blank" class="nav-btn action-btn">
+                                <i class='bx bx-folder'></i> Гайд
+                            </a>
+                            <button id="downloadSingleBtn" class="nav-btn action-btn highlight">
+                                <i class='bx bx-download'></i> Скачать
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="chapter-body fade-in" id="exVolumeText"></div>
+            </div>
+        </article>
+    </main>
+
+    <script src="../js/rezero-extra-volume.js"></script>
+</body>
+</html>
