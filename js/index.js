@@ -75,7 +75,15 @@ async function loadProjects() {
             });
         }
 
-        htmlFiles.sort((a, b) => a.name.localeCompare(b.name));
+        htmlFiles.sort((a, b) => {
+            const rawA = a.name.replace('.html', '');
+            const rawB = b.name.replace('.html', '');
+            
+            const nameA = getCustomProjectName(rawA);
+            const nameB = getCustomProjectName(rawB);
+            
+            return nameA.localeCompare(nameB, undefined, { numeric: true });
+        });
 
         renderTechStats(htmlFiles, projectsConfig);
 
@@ -87,8 +95,16 @@ async function loadProjects() {
             return;
         }
 
+        function getCustomProjectName(name) {
+            const customNames = {
+                'if': 'rezero-if'
+            };
+            return customNames[name] || name;
+        }
+
         htmlFiles.forEach(project => {
-            const rawName = project.name.replace('.html', '');
+            let rawName = project.name.replace('.html', '');
+            rawName = getCustomProjectName(rawName);
             const displayName = rawName
                 .replace(/[-_]/g, ' ')
                 .replace(/\b\w/g, l => l.toUpperCase());

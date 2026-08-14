@@ -138,7 +138,7 @@
   },
   "rezero-arc-8.html": {
     "image": "html/rezero-arc-8/rezero-arc-8.jpg",
-    "description": "The most detailed retelling of the 8th arc of Re: Zero.",
+    "description": "The most detailed retelling of the 8th arc of “Re: Zero”.",
     "stack": ["html", "css", "js", "github"]
   },
   "dota2-match-analyzer.html": {
@@ -419,7 +419,7 @@
   },
   "if.html": {
     "image": "html/if/if.jpg",
-    "description": "A retelling of all the alternative stories of Re:Zero.",
+    "description": "A retelling of all the alternative stories of “Re: Zero”.",
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-04-26"

@@ -69,7 +69,7 @@ https://ranobelib.me/uploads/ranobe/94231/chapters/3949933/021f3c3c-db3f-49ea-be
             titleEn: "The Tale of the Scarlet Princess",
             poster: "https://cover.cdnlibs.org/uploads/cover/rezero-kara-hajimeru-isekai-seikatsu-ex4/cover/84965368-b5fe-4386-96d1-aabb66af2e13_orig.jpg",
             ranobeLink: "https://ranobelib.me/ru/book/48302--rezero-kara-hajimeru-isekai-seikatsu-ex4",
-            ranobeInfo: "глава ...",
+            ranobeInfo: "Нет перевода",
             summary: placeholderText
         },
         {

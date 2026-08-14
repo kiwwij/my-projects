@@ -91,7 +91,13 @@ const techTranslations = {
     'мопсы': 'pugs',
     'англ': 'eng',
     'английский': 'eng',
-    'календарь': 'holidays'
+    'календарь': 'holidays',
+    're: zero': 'rezero',
+    're:zero': 'rezero',
+    're zero': 'rezero',
+    'резеро': 'rezero',
+    'ре зеро': 'rezero',
+    'ре: зеро': 'rezero',
 };
 
 const ruKeys = "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";

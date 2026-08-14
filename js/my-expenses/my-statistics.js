@@ -230,15 +230,28 @@ async function initStatistics() {
     animateValue(document.getElementById('m-top-category-val'), 0, topCatVal, 1000, '-', ' ₴');
     document.getElementById('m-top-category-pct').innerText = `${topCatPct.toFixed(1)}% от всех трат`;
 
-    const baseUAH = 48500;
-    const dollarsAmount = 500;
+    const cardUAH = 46660;              // на карте
+    const cashUAH = 1800;               // В гривнах
+    const dollarsAmount = 500;          // В долларах
+
     const usdRate = await getExchangeRate();
-    
-    const uahTotal = Math.max(0, baseUAH + totalSaved);
-    const absoluteTotal = uahTotal + (dollarsAmount * usdRate);
-    
-    document.querySelector('#absolute-total-saved span').innerText = absoluteTotal.toFixed(0);
-    document.getElementById('usd-amount').title = `Курс НБУ: ${usdRate.toFixed(2)} ₴ / $`;
+    const totalUAH = Math.max(0, cardUAH + cashUAH + totalSaved);
+    const dollarsInUAH = dollarsAmount * usdRate;
+    const absoluteTotal = totalUAH + dollarsInUAH;
+
+    const cardEl = document.getElementById('card-amount');
+    const cashEl = document.getElementById('cash-uah-amount');
+    const usdEl = document.getElementById('usd-amount');
+
+    if (cardEl) cardEl.innerText = cardUAH.toLocaleString('ru-RU');
+    if (cashEl) cashEl.innerText = cashUAH.toLocaleString('ru-RU');
+    if (usdEl) {
+        usdEl.innerText = dollarsAmount;
+        usdEl.title = `Курс НБУ: ${usdRate.toFixed(2)} ₴ / $ (~${Math.round(dollarsInUAH).toLocaleString('ru-RU')} ₴)`;
+    }
+
+    // Общий капитал
+    document.querySelector('#absolute-total-saved span').innerText = Math.round(absoluteTotal).toLocaleString('ru-RU');
 
     renderGoals(totalSaved, absoluteTotal);
 
@@ -266,8 +279,8 @@ function renderGoals(savedUAH, absoluteTotal) {
         let isCushion = goal.name === 'Финансовая подушка';
         let pool = isCushion ? absoluteTotal : currentSavings;
         
-        let allocated = Math.min(pool, goal.target);
-        let pct = (allocated / goal.target) * 100;
+        let allocated = pool;
+        let pct = Math.min((allocated / goal.target) * 100, 100);
 
         container.innerHTML += `
             <div class="goal-item">
@@ -358,7 +371,6 @@ function drawCharts(data) {
                         label: function(context) {
                             return `Баланс: ${context.parsed.y.toFixed(0)} ₴`;
                         },
-                        // Вот эта функция возвращает изменение суммы относительно прошлого месяца
                         afterLabel: function(context) {
                             const index = context.dataIndex;
                             if (index === 0) {
