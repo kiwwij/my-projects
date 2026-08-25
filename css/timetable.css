@@ -520,3 +520,32 @@ details[open] .details-content {
         transform: translateY(0);
     }
 }
+
+.period-tabs {
+    display: flex;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid #333;
+}
+
+.period-tab {
+    flex: 1;
+    padding: 8px 12px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.period-tab.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}

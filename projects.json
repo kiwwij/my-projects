@@ -585,6 +585,20 @@
     "url": "",
     "date": "2026-08-08"
   },
+  "razer-gaming-headset.html": {
+    "image": "https://cdn.wccftech.com/wp-content/uploads/2017/10/Razer-logo.jpg",
+    "description": "My future PC headset.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-08-18"
+  },
+  "watermark-input.html": {
+    "image": "bx bx-image-alt",
+    "description": "Page for adding watermark to photos.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-08-23"
+  },
   ".html": {
     "image": "",
     "description": "",

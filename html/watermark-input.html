@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Инструмент для автоматической конвертации фото в PNG и точного позиционирования водяных знаков по сетке.">
+    
+    <title>Photo Watermark</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --surface-color: #1a1a1a;
+            --text-color: #9e9e9e;
+            --text-strong: #ffffff;
+            --accent-color: #333333;
+            --accent-hover: #4d4d4d;
+            --border-color: #2b2b2b;
+            --shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            --grid-step: 20px;
+            --card-width: 100%; 
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f5f9;
+            --surface-color: #ffffff;
+            --text-color: #565a6e;
+            --text-strong: #2b2c34;
+            --accent-color: #6993ff;
+            --accent-hover: #5578d6;
+            --border-color: #d1d5db;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            color: var(--text-strong);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-strong);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            padding: 2rem;
+            gap: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .controls {
+            flex: 0 0 320px;
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--text-strong);
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text-strong);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        input[type="file"] {
+            background-color: var(--bg-color);
+            border: 1px dashed var(--border-color);
+            padding: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-color);
+            width: 100%;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--text-strong);
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: var(--text-strong);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        button:hover { background-color: var(--accent-hover); }
+        button:active { transform: scale(0.98); }
+
+        .preview-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .image-card {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            
+            width: var(--card-width); 
+            max-width: 100%;
+        }
+
+        .resizer-tr {
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            width: 35px;
+            height: 35px;
+            cursor: ne-resize;
+            background: linear-gradient(225deg, var(--text-color) 50%, transparent 50%);
+            border-top-right-radius: 8px;
+            z-index: 100;
+            transition: background 0.2s;
+        }
+        .resizer-tr:hover {
+            background: linear-gradient(225deg, var(--text-strong) 50%, transparent 50%);
+        }
+
+        .header-card {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-strong);
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-right: 25px;
+        }
+
+        .work-area {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            touch-action: none;
+        }
+
+        .work-area.show-grid::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+            background-size: var(--grid-step) var(--grid-step);
+            pointer-events: none;
+            z-index: 20;
+            mix-blend-mode: difference;
+        }
+
+        .bg-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            pointer-events: none;
+        }
+
+        .wm-image {
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-drag: none;
+            z-index: 10;
+        }
+
+        .wm-image:active {
+            cursor: grabbing;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border-color);
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 900px) {
+            main { flex-direction: column; }
+            .controls { flex: none; width: 100%; position: relative; top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class='bx bx-image-alt'></i> Photo Watermark</h1>
+        <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+            <i class='bx bx-moon'></i>
+        </button>
+    </header>
+
+    <main>
+        <aside class="controls">
+            <div class="control-group" title="Автоматически отобразятся при загрузке">
+                <label for="photoInput"><i class='bx bx-images'></i> Исходные фото</label>
+                <input type="file" id="photoInput" accept="image/*" multiple>
+            </div>
+
+            <div class="control-group">
+                <label for="watermarkInput"><i class='bx bx-water'></i> Водяной знак</label>
+                <input type="file" id="watermarkInput" accept="image/*">
+            </div>
+            
+            <hr>
+
+            <div class="control-group">
+                <label for="wmSize"><i class='bx bx-expand'></i> Размер: <span id="sizeValue">30</span>%</label>
+                <input type="range" id="wmSize" min="5" max="100" value="30">
+            </div>
+
+            <div class="control-group">
+                <label for="wmOpacity"><i class='bx bx-slider-alt'></i> Прозрачность: <span id="opacityValue">50</span>%</label>
+                <input type="range" id="wmOpacity" min="1" max="100" value="50">
+            </div>
+            
+            <hr>
+
+            <label class="control-group checkbox-group" title="Включает сетку, по которой выравнивается вотермарка">
+                <input type="checkbox" id="gridToggle"> 
+                <span><i class='bx bx-grid'></i> Сетка</span>
+            </label>
+
+            <div class="control-group" id="gridSettings" style="display: none;">
+                <label for="gridSize"><i class='bx bx-grid'></i> Шаг сетки: <span id="gridSizeVal">20</span>px</label>
+                <input type="range" id="gridSize" min="5" max="100" value="20" step="5">
+            </div>
+        </aside>
+
+        <section class="preview-area" id="previewArea">
+            <div class="image-card" style="text-align: center; color: var(--text-color); width: 100%; border: none; background: none; box-shadow: none;">
+                <i class='bx bx-image-add' style="font-size: 4rem; opacity: 0.3;"></i>
+                <p>Загрузите фото и вотермарку слева.<br>Они появятся здесь автоматически.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const root = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        root.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'dark' ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'dark' ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+        });
+
+        const savedCardWidth = localStorage.getItem('cardWidth') || '100%';
+        root.style.setProperty('--card-width', savedCardWidth);
+
+        let isResizingCard = false;
+        let startX_res, startWidth_res;
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isResizingCard) return;
+            const dx = e.clientX - startX_res;
+            let newWidth = startWidth_res + (dx * 2);
+            
+            const previewArea = document.getElementById('previewArea');
+            const maxWidth = previewArea.offsetWidth;
+            
+            if (newWidth < 300) newWidth = 300; 
+            if (newWidth > maxWidth) newWidth = maxWidth; 
+            
+            root.style.setProperty('--card-width', `${newWidth}px`);
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isResizingCard) return;
+            const dx = e.touches[0].clientX - startX_res;
+            let newWidth = startWidth_res + (dx * 2);
+            const maxWidth = document.getElementById('previewArea').offsetWidth;
+            
+            if (newWidth < 300) newWidth = 300;
+            if (newWidth > maxWidth) newWidth = maxWidth;
+            
+            root.style.setProperty('--card-width', `${newWidth}px`);
+        }, { passive: false });
+
+        const endResize = () => {
+            if (isResizingCard) {
+                isResizingCard = false;
+                localStorage.setItem('cardWidth', root.style.getPropertyValue('--card-width'));
+            }
+        };
+        window.addEventListener('mouseup', endResize);
+        window.addEventListener('touchend', endResize);
+
+        const gridToggle = document.getElementById('gridToggle');
+        const gridSizeInput = document.getElementById('gridSize');
+        const gridSizeVal = document.getElementById('gridSizeVal');
+
+        gridToggle.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            document.getElementById('gridSettings').style.display = isChecked ? 'flex' : 'none';
+            document.querySelectorAll('.work-area').forEach(wa => {
+                if (isChecked) wa.classList.add('show-grid');
+                else wa.classList.remove('show-grid');
+            });
+        });
+
+        gridSizeInput.addEventListener('input', (e) => {
+            gridSizeVal.textContent = e.target.value;
+            root.style.setProperty('--grid-step', e.target.value + 'px');
+        });
+
+        const sizeInput = document.getElementById('wmSize');
+        const opacityInput = document.getElementById('wmOpacity');
+        
+        sizeInput.addEventListener('input', (e) => {
+            document.getElementById('sizeValue').textContent = e.target.value;
+            document.querySelectorAll('.wm-image').forEach(wm => {
+                wm.style.width = e.target.value + '%';
+            });
+        });
+
+        opacityInput.addEventListener('input', (e) => {
+            document.getElementById('opacityValue').textContent = e.target.value;
+            document.querySelectorAll('.wm-image').forEach(wm => {
+                wm.style.opacity = e.target.value / 100;
+            });
+        });
+
+        const photoInput = document.getElementById('photoInput');
+        const watermarkInput = document.getElementById('watermarkInput');
+        const previewArea = document.getElementById('previewArea');
+        let watermarkDataUrl = null;
+
+        function tryGenerateCards() {
+            if (photoInput.files.length === 0 || !watermarkDataUrl) return;
+
+            previewArea.innerHTML = ''; 
+            
+            Array.from(photoInput.files).forEach(file => {
+                const objUrl = URL.createObjectURL(file);
+                createInteractiveCard(file, objUrl);
+            });
+        }
+
+        watermarkInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => { 
+                    watermarkDataUrl = event.target.result; 
+                    tryGenerateCards(); 
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        photoInput.addEventListener('change', tryGenerateCards);
+
+        function createInteractiveCard(file, bgUrl) {
+            const card = document.createElement('div');
+            card.className = 'image-card';
+            
+            const resizer = document.createElement('div');
+            resizer.className = 'resizer-tr';
+            resizer.title = "Потяните, чтобы изменить размер всех окон";
+            
+            const startCardResize = (e) => {
+                isResizingCard = true;
+                startX_res = e.touches ? e.touches[0].clientX : e.clientX;
+                startWidth_res = card.offsetWidth;
+                e.preventDefault();
+            };
+            resizer.addEventListener('mousedown', startCardResize);
+            resizer.addEventListener('touchstart', startCardResize, { passive: false });
+            
+            const finalFileName = file.name.replace(/\.[^/.]+$/, "") + ".png";
+            
+            const header = document.createElement('div');
+            header.className = 'header-card';
+            header.innerHTML = `<span><i class='bx bx-file'></i> ${finalFileName}</span>`;
+
+            const downloadBtn = document.createElement('button');
+            downloadBtn.innerHTML = "<i class='bx bx-download'></i> Скачать PNG";
+            header.appendChild(downloadBtn);
+
+            const workArea = document.createElement('div');
+            workArea.className = 'work-area';
+            if (gridToggle.checked) workArea.classList.add('show-grid');
+
+            const bgImg = new Image();
+            bgImg.className = 'bg-image';
+            bgImg.src = bgUrl;
+
+            const wmImg = new Image();
+            wmImg.className = 'wm-image';
+            wmImg.src = watermarkDataUrl;
+            
+            wmImg.style.width = sizeInput.value + '%';
+            wmImg.style.opacity = opacityInput.value / 100;
+
+            bgImg.onload = () => {
+                wmImg.style.left = `calc(50% - ${wmImg.offsetWidth / 2}px)`;
+                wmImg.style.top = `calc(50% - ${wmImg.offsetHeight / 2}px)`;
+            };
+
+            workArea.appendChild(bgImg);
+            workArea.appendChild(wmImg);
+            
+            card.appendChild(resizer);
+            card.appendChild(header);
+            card.appendChild(workArea);
+            previewArea.appendChild(card);
+
+            makeDraggable(wmImg, workArea);
+
+            downloadBtn.addEventListener('click', () => {
+                exportCanvasToPNG(bgImg, wmImg, workArea, finalFileName);
+            });
+        }
+
+        function makeDraggable(element, container) {
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            const startDrag = (e) => {
+                isDragging = true;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                startX = clientX;
+                startY = clientY;
+                initialLeft = element.offsetLeft;
+                initialTop = element.offsetTop;
+                e.preventDefault();
+            };
+
+            const onDrag = (e) => {
+                if (!isDragging) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                let newLeft = initialLeft + (clientX - startX);
+                let newTop = initialTop + (clientY - startY);
+
+                if (gridToggle.checked) {
+                    const step = parseInt(gridSizeInput.value);
+                    newLeft = Math.round(newLeft / step) * step;
+                    newTop = Math.round(newTop / step) * step;
+                }
+                
+                element.style.left = `${newLeft}px`;
+                element.style.top = `${newTop}px`;
+            };
+
+            const endDrag = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const rect = container.getBoundingClientRect();
+                const leftPercent = (element.offsetLeft / rect.width) * 100;
+                const topPercent = (element.offsetTop / rect.height) * 100;
+                
+                element.style.left = `${leftPercent}%`;
+                element.style.top = `${topPercent}%`;
+            };
+
+            element.addEventListener('mousedown', startDrag);
+            element.addEventListener('touchstart', startDrag, { passive: false });
+            window.addEventListener('mousemove', onDrag);
+            window.addEventListener('touchmove', onDrag, { passive: false });
+            window.addEventListener('mouseup', endDrag);
+            window.addEventListener('touchend', endDrag);
+        }
+
+        function exportCanvasToPNG(bgImg, wmImg, workArea, fileName) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = bgImg.naturalWidth;
+            canvas.height = bgImg.naturalHeight;
+
+            ctx.drawImage(bgImg, 0, 0);
+
+            const displayRect = workArea.getBoundingClientRect();
+            const scale = bgImg.naturalWidth / displayRect.width;
+
+            const wmDisplayRect = wmImg.getBoundingClientRect();
+            const relativeLeft = wmDisplayRect.left - displayRect.left;
+            const relativeTop = wmDisplayRect.top - displayRect.top;
+
+            const renderX = relativeLeft * scale;
+            const renderY = relativeTop * scale;
+            const renderWidth = wmDisplayRect.width * scale;
+            const renderHeight = wmDisplayRect.height * scale;
+
+            ctx.globalAlpha = parseFloat(window.getComputedStyle(wmImg).opacity);
+            ctx.drawImage(wmImg, renderX, renderY, renderWidth, renderHeight);
+            ctx.globalAlpha = 1.0;
+
+            const dataUrl = canvas.toDataURL('image/png', 1.0);
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = fileName;
+            a.click();
+        }
+    </script>
+</body>
+</html>

@@ -19,13 +19,17 @@
         <div class="date-display" style="font-size: 1.3rem;">Статистика навчання</div>
     </div>
 
-    <div class="settings-bar" style="margin-bottom: 20px;">
-        <select id="stats-period-select" class="settings-select">
-            </select>
-        <div class="settings-select" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); pointer-events: none; border-color: transparent;">
-            <i class='bx bx-group' style="margin-right: 5px; color: var(--accent);"></i>
-            <span id="current-subgroup-display">Підгрупа</span>
+    <div class="settings-bar" style="margin-bottom: 20px; flex-direction: column; gap: 15px;">
+        <div class="period-tabs" id="stats-tabs">
+            <button class="period-tab" data-period="course-2">2 курс</button>
+            <button class="period-tab" data-period="course-3">3 курс</button>
+            <button class="period-tab" data-period="all">За весь час</button>
         </div>
+
+        <select id="stats-subgroup-select" class="settings-select" style="text-align: center;">
+            <option value="1">1 підгрупа</option>
+            <option value="2">2 підгрупа</option>
+        </select>
     </div>
 
     <div id="stats-content"></div>

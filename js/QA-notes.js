@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('qaSearch');
     const searchResults = document.getElementById('searchResults');
     
-    const searchableLessons = ['lesson13', 'lesson14', 'lesson15', 'lesson16', 'lesson17', 'lesson18', 'lesson19', 'lesson20', 'lesson21', 'lesson22', 'lesson23', 'lesson24', 'lesson25', 'lesson26', 'lesson27', 'lesson28', 'lesson29', 'lesson30', 'lesson31', 'lesson32', 'lesson33', 'lesson34'];
+    const searchableLessons = ['lesson13', 'lesson14', 'lesson15', 'lesson16', 'lesson17', 'lesson18', 'lesson19', 'lesson20', 'lesson21', 'lesson22', 'lesson23', 'lesson24', 'lesson25', 'lesson26', 'lesson27', 'lesson28', 'lesson29', 'lesson30', 'lesson31', 'lesson32', 'lesson33', 'lesson34', 'lesson35', 'lesson36', 'lesson37', 'lesson38', 'lesson39', 'lesson40', 'lesson41', 'lesson42'];
 
     const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

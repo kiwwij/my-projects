@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Интерактивная витрина игрового сетапа Razer с подсчётом общей стоимости, характеристиками и галереей.">
+    <title>Razer Gaming Headset</title>
+    <link rel="icon" type="image/svg+xml" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlkoCLP-xRo0gznivcTAlUGVYfoY24VOMMyLekYh2DaxtinXZ8RPv2usZo&s=10">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/razer-gaming-headset.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo-group">
+                <div class="brand-icon" aria-hidden="true">
+                    <i class='bx bxs-mouse'></i>
+                </div>
+                <h1 class="logo-title">Razer <span>Gaming Headset</span></h1>
+            </div>
+            
+            <div class="header-actions">
+                <div class="tier-switcher" role="group" aria-label="Выбор конфигурации">
+                    <button class="tier-btn active" id="tierPrimaryBtn" data-tooltip="Показать основной комплект устройств">
+                        <i class='bx bx-star'></i> Основной сет
+                    </button>
+                    <button class="tier-btn" id="tierAltBtn" data-tooltip="Показать альтернативный комплект устройств">
+                        <i class='bx bx-refresh'></i> Запасной сет
+                    </button>
+                </div>
+                
+                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Сменить тему оформления" data-tooltip="Переключить светлую / тёмную тему">
+                    <i class='bx bx-sun theme-icon-sun'></i>
+                    <i class='bx bx-moon theme-icon-moon'></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <section class="summary-card" aria-label="Общая стоимость сетапа">
+            <div class="summary-info">
+                <div class="summary-label">
+                    <i class='bx bx-wallet-alt'></i>
+                    <span>Итоговая стоимость (<span id="currentTierLabel">Основной комплект</span>):</span>
+                </div>
+                <div class="summary-price" id="totalPriceDisplay">0 ₴</div>
+            </div>
+            <div class="summary-breakdown">
+                <div class="breakdown-item" data-tooltip="Стоимость основного набора">
+                    <span class="breakdown-tag">Основной:</span>
+                    <strong>29 996 ₴</strong>
+                </div>
+                <div class="breakdown-item" data-tooltip="Стоимость запасного набора">
+                    <span class="breakdown-tag">Запасной:</span>
+                    <strong>22 996 ₴</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid-container" id="productsGrid" aria-label="Список девайсов"></section>
+    </main>
+
+    <div class="modal" id="specsModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-window">
+            <header class="modal-header">
+                <div class="modal-title-wrap">
+                    <i class='bx bx-slider-alt modal-title-icon'></i>
+                    <h2 class="modal-title" id="modalTitle">Характеристики</h2>
+                </div>
+                <button class="modal-close-btn" id="modalCloseBtn" aria-label="Закрыть модальное окно" data-tooltip="Закрыть (Esc)">
+                    <i class='bx bx-x'></i>
+                </button>
+            </header>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <div class="zoom-modal" id="zoomModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="zoom-backdrop" id="zoomBackdrop"></div>
+        <div class="zoom-content">
+            <button class="modal-close-btn zoom-close-btn" id="zoomCloseBtn" aria-label="Закрыть просмотр" data-tooltip="Закрыть (Esc)">
+                <i class='bx bx-x'></i>
+            </button>
+            <img class="zoom-img" id="zoomImg" src="" alt="Увеличенное изображение товара">
+        </div>
+    </div>
+
+    <div class="custom-tooltip" id="customTooltip" role="tooltip" aria-hidden="true"></div>
+
+    <script src="../js/razer-gaming-headset.js"></script>
+</body>
+</html>
