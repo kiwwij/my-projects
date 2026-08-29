@@ -101,7 +101,12 @@ const allSchedules = {
     // 5-й семестр (3 курс, осінь-зима 2026/27)
     5: {
         1: {
-            1: [], // Понеділок поки пустий
+            1: [
+                { num: 3, start: "10:15", end: "11:00", subj: "Комп`ютерна графіка", type: "LK", room: "5128", teacher: "Романюк О.Н." },
+                { num: 4, start: "11:15", end: "12:00", subj: "Комп`ютерна графіка", type: "LK", room: "5128", teacher: "Романюк О.Н." },
+                { num: 5, start: "12:15", end: "13:00", subj: "Спеціальні розділи математики", type: "LK", room: "1318", teacher: "Бондаренко З.В." },
+                { num: 6, start: "13:15", end: "14:00", subj: "Спеціальні розділи математики", type: "LK", room: "1318", teacher: "Бондаренко З.В." }
+            ],
             2: [
                 { num: 1, start: "08:15", end: "09:00", subj: "Комп`ютерна графіка", type: "LR", room: "2104", teacher: "Романюк О.Н.", subgroup: 1 },
                 { num: 2, start: "09:15", end: "10:00", subj: "Комп`ютерна графіка", type: "LR", room: "2104", teacher: "Романюк О.Н.", subgroup: 1 },
@@ -521,6 +526,16 @@ function renderSchedule() {
         return;
     }
 
+    if (year === 2027 && month === 0 && date >= 18 && date <= 31) {
+        container.innerHTML = `
+            <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
+                <i class="bx bx-snowflake" style="font-size: 4rem; margin-bottom: 10px;"></i>
+                <br><span style="font-size: 1.2rem; font-weight: bold;">Зимові канікули!</span>
+                <br><span style="font-size: 0.9rem; opacity: 0.8;">Кінець 5-го семестру</span>
+            </div>`;
+        return;
+    }
+
     const semInfo = getSemesterInfo(displayDate);
     const currentWeekType = getWeekType(displayDate);
     const semesterData = allSchedules[semInfo.id];
@@ -629,6 +644,13 @@ function updateStatus() {
         document.getElementById('status-title').innerText = "Літні канікули!";
         document.getElementById('main-timer').innerText = "☀️🏖️";
         document.getElementById('time-left-desc').innerText = "Насолоджуйся відпочинком";
+        return;
+    }
+
+    if (year === 2027 && month === 0 && date >= 18 && date <= 31) {
+        document.getElementById('status-title').innerText = "Зимові канікули!";
+        document.getElementById('main-timer').innerText = "❄️⛄";
+        document.getElementById('time-left-desc').innerText = "Кінець 5-го семестру";
         return;
     }
 

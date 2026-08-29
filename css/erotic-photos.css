@@ -1,0 +1,62 @@
+:root {
+    --bg-color: #f7f5f2;
+    --text-color: #333333;
+    --accent-color: #d1b8a4;
+    --card-bg: #ffffff;
+    --placeholder: #e0dedc;
+    --overlay: rgba(247, 245, 242, 0.9);
+    --folder-bg: #eceae7;
+}
+
+body.dark-theme {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --accent-color: #8c7a6b;
+    --card-bg: #1e1e1e;
+    --placeholder: #2a2a2a;
+    --overlay: rgba(18, 18, 18, 0.95);
+    --folder-bg: #222222;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+body { font-family: 'Outfit', sans-serif; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; }
+
+.header { padding: 1.5rem 5%; position: sticky; top: 0; background-color: var(--bg-color); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.header-content { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;}
+h1 { font-weight: 600; letter-spacing: 1px; }
+
+.header-controls { display: flex; align-items: center; gap: 1rem; }
+.divider { width: 1px; height: 24px; background-color: var(--placeholder); }
+
+.source-filters { display: flex; gap: 0.5rem; }
+.source-btn { background: var(--folder-bg); border: 1px solid transparent; color: var(--text-color); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
+.source-btn:hover, .source-btn.active { background: var(--accent-color); color: #fff; }
+
+.header-actions { display: flex; gap: 1rem; align-items: center; }
+.icon-link, .icon-btn { color: var(--text-color); font-size: 1.5rem; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+.icon-link:hover, .icon-btn:hover { color: var(--accent-color); }
+
+.folders-container { display: flex; gap: 1rem; flex-wrap: wrap; overflow-x: auto; padding-bottom: 0.5rem; }
+.folders-container::-webkit-scrollbar { height: 4px; }
+.folders-container::-webkit-scrollbar-thumb { background: var(--placeholder); border-radius: 4px; }
+
+.folder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; background-color: var(--folder-bg); padding: 1rem; border-radius: 12px; min-width: 80px; cursor: pointer; border: 1px solid transparent; user-select: none; }
+.folder i { font-size: 1.8rem; }
+.folder span { font-size: 0.85rem; font-weight: 600; }
+.folder:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.folder.active { background-color: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; padding: 2rem 5%; }
+@media (min-width: 768px) { .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
+.media-card { position: relative; background-color: var(--placeholder); border-radius: 12px; overflow: hidden; aspect-ratio: 1/1; cursor: pointer; animation: fadeIn 0.5s ease-in-out; }
+.media-card img, .media-card video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
+.media-card.loaded img, .media-card.loaded video { opacity: 1; }
+.media-number { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 8px; border-radius: 8px; font-size: 0.8rem; z-index: 2; }
+.media-icon { position: absolute; top: 8px; right: 8px; color: #fff; background: rgba(0,0,0,0.4); border-radius: 50%; padding: 4px; display: flex; z-index: 2; }
+
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--overlay); z-index: 1000; justify-content: center; align-items: center; }
+.modal.active { display: flex; }
+.close-modal { position: absolute; top: 20px; right: 30px; background: none; border: none; color: var(--text-color); font-size: 2.5rem; cursor: pointer; z-index: 1001; }
+.modal-content { max-width: 90%; max-height: 90%; display: flex; justify-content: center; align-items: center; }
+.modal-body img, .modal-body video { max-width: 100%; max-height: 85vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

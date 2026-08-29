@@ -19,11 +19,9 @@ function initPeriodTabs() {
     const tabsContainer = document.getElementById('stats-tabs');
     if (!tabsContainer) return;
 
-    // Автоопределение периода по дате
     const now = new Date();
     let defaultPeriod = 'all';
 
-    // Если сейчас до августа 2026 - это 2 курс. С августа 2026 - 3 курс.
     if (now < new Date('2026-08-01')) {
         defaultPeriod = 'course-2';
     } else if (now < new Date('2027-08-01')) {
@@ -69,14 +67,18 @@ function getLessonsForSpecificDate(date) {
     
     let isHoliday = false;
     
-    // Літо
     if ((month === 5 && d > 19) || month === 6 || month === 7) {
         isHoliday = true;
     }
-    // Січень
     if (month === 0) {
         if (year === 2026 && d >= 26) {
-            isHoliday = false; // Початок семестру
+            isHoliday = false;
+        } else if (year === 2027) {
+            if (d >= 18 && d <= 31) {
+                isHoliday = true; 
+            } else {
+                isHoliday = false; 
+            }
         } else {
             isHoliday = true;
         }
@@ -115,17 +117,14 @@ function timeToMinutes(timeStr) {
     return h * 60 + m;
 }
 
-function calculateGlobalHolidays() {
+function calculateHolidaysForPeriod(start, end) {
     let count = 0;
-    let start = new Date('2026-01-26T00:00:00');
-    let end = new Date('2027-06-30T23:59:59'); // <--- ИЗМЕНИТЬ ДАТУ ТУТ ДЛЯ 3-го КУРСА
-    
     let current = new Date(start);
     current.setHours(0,0,0,0);
     while (current <= end) {
-        if (current.getDay() !== 0 && current.getDay() !== 6) { 
-            const { isHoliday } = getLessonsForSpecificDate(current);
-            if (isHoliday) count++;
+        const { isHoliday } = getLessonsForSpecificDate(current);
+        if (isHoliday) {
+            count++;
         }
         current.setDate(current.getDate() + 1);
         current.setHours(0,0,0,0);
@@ -144,13 +143,13 @@ function renderStatistics() {
     
     if (period === 'course-2') {
         startDate = new Date('2026-01-26T00:00:00'); 
-        endDate = new Date('2026-06-30T23:59:59');
+        endDate = new Date('2026-08-31T23:59:59');
     } else if (period === 'course-3') {
-        startDate = new Date('2026-09-01T00:00:00');
-        endDate = new Date('2027-06-30T23:59:59'); // <--- ИЗМЕНИТЬ ДАТУ ТУТ ДЛЯ ОКОНЧАНИЯ 3-го КУРСА
-    } else { // all
+        startDate = new Date('2026-08-31T00:00:00');
+        endDate = new Date('2027-06-30T23:59:59'); 
+    } else {
         startDate = new Date('2026-01-26T00:00:00');
-        endDate = new Date('2027-06-30T23:59:59'); // <--- И ТУТ (для всего времени)
+        endDate = new Date('2027-06-31T23:59:59');
     }
 
     let subjectCounts = {};
@@ -162,7 +161,7 @@ function renderStatistics() {
 
     let daysCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 };
 
-    const globalHolidays = calculateGlobalHolidays();
+    const periodHolidays = calculateHolidaysForPeriod(startDate, endDate);
 
     let currentDate = new Date(startDate);
     currentDate.setHours(0,0,0,0); 
@@ -238,7 +237,7 @@ function renderStatistics() {
             totalPairs: totalPairsCount,
             breaks: (totalBreakMinutes / 60).toFixed(1),
             windows: windowsCount,
-            holidays: globalHolidays,
+            holidays: periodHolidays,
             subjects: subjectCounts,
             types: typeCounts,
             heaviestDay: heaviestDay,

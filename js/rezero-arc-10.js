@@ -1343,6 +1343,10 @@ https://ranobelib.me/uploads/ranobe/94231/chapters/4352355/40b1addf-e17f-4549-87
 
         `;
 
+        chaptersContent["34"] = `
+
+        `;
+
 
 
         const downloadBtn = document.getElementById('downloadTxtBtn');

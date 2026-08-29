@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Личный медиа-архив kiwwij">
+    <title>kiwwij | Media Vault</title>
+    
+    <link rel="icon" href="../img/favicon.ico" type="image/x-icon">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/erotic-photos.css">
+</head>
+<body class="dark-theme">
+    
+    <header class="header">
+        <div class="header-content">
+            <h1 title="Личный архив">kiwwij vault</h1>
+            
+            <div class="header-controls">
+                <div class="source-filters" title="Фильтр по соцсетям">
+                    <button class="source-btn active" data-source="all" title="Показать всё"><i class='bx bx-collection'></i></button>
+                    <button class="source-btn" data-source="inst" title="Только Instagram"><i class='bx bxl-instagram'></i></button>
+                    <button class="source-btn" data-source="tg" title="Только Telegram"><i class='bx bxl-telegram'></i></button>
+                </div>
+                <div class="divider"></div>
+                <div class="header-actions">
+                    <a href="https://www.instagram.com/k1wwij" target="_blank" class="icon-link" title="Мой Instagram">
+                        <i class='bx bxl-instagram'></i>
+                    </a>
+                    <a href="https://t.me/kiwwijs" target="_blank" class="icon-link" title="Мой Telegram">
+                        <i class='bx bxl-telegram'></i>
+                    </a>
+                    <button id="theme-toggle" class="icon-btn" title="Сменить тему">
+                        <i class='bx bx-moon'></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="folders-container" title="Выберите категорию (папку)">
+            <div class="folder active" data-category="all">
+                <i class='bx bx-folder-open'></i>
+                <span>Всё</span>
+            </div>
+            <div class="folder" data-category="boobs">
+                <i class='bx bx-spa'></i>
+                <span>Boobs</span>
+            </div>
+            <div class="folder" data-category="ass">
+                <i class='bx bx-heart'></i>
+                <span>Ass</span>
+            </div>
+            <div class="folder" data-category="thighs">
+                <i class='bx bx-body'></i>
+                <span>Things</span>
+            </div>
+            <div class="folder" data-category="height">
+                <i class='bx bx-ruler'></i>
+                <span>Height</span>
+            </div>
+            <div class="folder" data-category="digital">
+                <i class='bx bx-game'></i>
+                <span>Digital</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="gallery-grid" id="gallery"></div>
+    </main>
+
+    <div id="modal" class="modal" title="Закрыть">
+        <button class="close-modal"><i class='bx bx-x'></i></button>
+        <div class="modal-content">
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+    <script defer src="../js/erotic-photos/data.js"></script>
+    <script defer src="../js/erotic-photos.js"></script>
+</body>
+</html>

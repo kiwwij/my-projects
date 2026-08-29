@@ -599,6 +599,13 @@
     "url": "",
     "date": "2026-08-23"
   },
+  "erotic-photos.html": {
+    "image": "https://png.pngtree.com/png-vector/20191022/ourmid/pngtree-trash-icon-for-your-project-png-image_1843308.jpg",
+    "description": "A new page for saved posts from Instagram and Telegram, but it’s been abandoned due to difficulties.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-08-29"
+  },
   ".html": {
     "image": "",
     "description": "",

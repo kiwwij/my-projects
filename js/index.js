@@ -3,7 +3,7 @@ const repo = 'my-projects';
 const folder = 'html';
 const configUrl = 'projects.json';
 
-const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', 'secret-facts-about-me.html'];
+const HIDDEN_FILES = ['manga.html', 'girls-inst.html', 'tg-alt.html', 'secret-facts-about-me.html', 'erotic-photos.html'];
 const SECRET_CODE = 'hentaif';
 let inputBuffer = '';
 
