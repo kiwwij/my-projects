@@ -606,6 +606,13 @@
     "url": "",
     "date": "2026-08-29"
   },
+  "pinterest-gallery.html": {
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZshGoeNIJwGNTgYxfqdMHqzBWQkZTxg3i266Q2IWcgX2IAonHKwLC3IE&s=10",
+    "description": "Pinterest boards. Some might become unavailable, as I’ll be setting them to private without adding new photos and there won't be any new ones, either.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-09-03"
+  },
   ".html": {
     "image": "",
     "description": "",

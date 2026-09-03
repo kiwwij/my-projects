@@ -1,0 +1,139 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Эстетичная галерея Pinterest-досок.">
+    
+    <title>Pinterest Галерея | kiwwij</title>
+    
+    <link rel="icon" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e60023'%3E%3Cpath d='M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.163 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.367 18.592 0 12.017 0z'/%3E%3C/svg%3E">
+    
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pinterest-gallery.css">
+</head>
+<body>
+    <button id="theme-toggle" class="theme-btn" title="Переключить тему">
+        <i class='bx bx-moon'></i>
+    </button>
+
+    <main class="container">
+        <header>
+            <a href="https://ru.pinterest.com/k1wwij/" target="_blank" class="profile-link" title="Перейти в Pinterest">
+                <img src="https://i.pinimg.com/736x/73/86/40/73864001ccc5080e56b86a6eee554883.jpg" alt="Аватар kiwwij" class="profile-avatar">
+                <h1>kiwwij</h1>
+                <p class="profile-username">@k1wwij</p>
+            </a>
+            <p class="profile-desc">Нажмите на карточку доски для просмотра пинов</p>
+        </header>
+
+        <div class="board-grid">
+            <!-- ОТКРЫТЫЕ ДОСКИ -->
+            <div class="card" data-url="https://ru.pinterest.com/k1wwij/%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%D0%BA%D0%B8-2026/" data-type="embedBoard">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-image-alt'></i>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>аватарки 2026</h3>
+                    <p>85 пинов</p>
+                </div>
+            </div>
+            
+            <div class="card" data-url="https://ru.pinterest.com/k1wwij/3d-%D1%82%D1%8F%D0%BD%D0%BE%D1%87%D0%BA%D0%B8/" data-type="embedBoard">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-cube-alt'></i>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>3D тяночки</h3>
+                    <p>28 пинов</p>
+                </div>
+            </div>
+
+            <!-- ЗАКРЫТЫЕ ДОСКИ -->
+            <div class="card custom-board" data-id="goodPictures" data-type="customGallery">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-images'></i>
+                    <div class="badge"><i class='bx bxs-lock-alt'></i></div>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>good pictures</h3>
+                    <p><i class='bx bxs-lock-alt'></i> <span class="pin-count">0</span> пинов</p>
+                </div>
+            </div>
+
+            <div class="card custom-board" data-id="tattoo" data-type="customGallery">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-pen'></i>
+                    <div class="badge"><i class='bx bxs-lock-alt'></i></div>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>tattoo</h3>
+                    <p><i class='bx bxs-lock-alt'></i> <span class="pin-count">0</span> пинов</p>
+                </div>
+            </div>
+
+            <div class="card custom-board" data-id="animeGifs" data-type="customGallery">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-movie-play'></i>
+                    <div class="badge"><i class='bx bxs-lock-alt'></i></div>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>Anime gifs for discord...</h3>
+                    <p><i class='bx bxs-lock-alt'></i> <span class="pin-count">0</span> пинов</p>
+                </div>
+            </div>
+
+            <!-- АРХИВИРОВАННЫЕ ДОСКИ -->
+            <div class="card custom-board" data-id="avatars2025" data-type="customGallery">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-user-circle'></i>
+                    <div class="badge"><i class='bx bxs-archive-in'></i></div>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>аватарки 2025</h3>
+                    <p><i class='bx bxs-archive-in'></i> <span class="pin-count">0</span> пинов</p>
+                </div>
+            </div>
+
+            <div class="card custom-board" data-id="avatars202526" data-type="customGallery">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-user-circle'></i>
+                    <div class="badge"><i class='bx bxs-archive-in'></i></div>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>аватарки 2025/26</h3>
+                    <p><i class='bx bxs-archive-in'></i> <span class="pin-count">0</span> пинов</p>
+                </div>
+            </div>
+
+            <div class="card custom-board" data-id="avatars202425" data-type="customGallery">
+                <div class="card-image-wrapper icon-placeholder">
+                    <i class='bx bx-user-circle'></i>
+                    <div class="badge"><i class='bx bxs-archive-in'></i></div>
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-info">
+                    <h3>аватарки 2024/25</h3>
+                    <p><i class='bx bxs-archive-in'></i> <span class="pin-count">0</span> пинов</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal" class="modal" title="Нажмите вне окна, чтобы закрыть">
+        <div class="modal-content">
+            <button class="close-btn" title="Закрыть (или нажмите Esc)"><i class='bx bx-x'></i></button>
+            <div id="widget-container" class="widget-container"></div>
+        </div>
+    </div>
+
+    <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+    <script src="../js/pinterest-gallery.js"></script>
+</body>
+</html>

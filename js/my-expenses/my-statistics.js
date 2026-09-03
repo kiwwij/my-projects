@@ -231,7 +231,7 @@ async function initStatistics() {
     document.getElementById('m-top-category-pct').innerText = `${topCatPct.toFixed(1)}% от всех трат`;
 
     const cardUAH = 46470;              // на карте
-    const cashUAH = 2980;               // В гривнах
+    const cashUAH = 2770;               // В гривнах
     const dollarsAmount = 500;          // В долларах
 
     const usdRate = await getExchangeRate();
