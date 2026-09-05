@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Строгий трекер завдань 5 семестру">
+    
+    <title>Трекер лабораторних робіт | ВНТУ | Семестр 5</title>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        :root {
+            --bg-light: #f5f5f5;
+            --surface-light: #ffffff;
+            --text-light: #1a1a1a;
+            --text-muted-light: #666666;
+            --border-light: #cccccc;
+            --status-0-light: #525252;
+            --status-1-light: #b45309;
+            --status-2-light: #15803d;
+        }
+
+        .dark {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-muted-color: #a0a0a0;
+            --border-color: #333333;
+            --status-0: #555555;
+            --status-1: #fbbf24;
+            --status-2: #4ade80;
+        }
+
+        body:not(.dark) {
+            --bg-color: var(--bg-light);
+            --surface-color: var(--surface-light);
+            --text-color: var(--text-light);
+            --text-muted-color: var(--text-muted-light);
+            --border-color: var(--border-light);
+            --status-0: var(--status-0-light);
+            --status-1: var(--status-1-light);
+            --status-2: var(--status-2-light);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: var(--surface-color);
+            padding: 15px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--border-color);
+        }
+
+        .header-progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .header-progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted-color);
+            text-transform: uppercase;
+        }
+
+        .progress-track {
+            height: 3px;
+            background: var(--border-color);
+            width: 100%;
+        }
+
+        .progress-track.overall {
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--status-2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 15px;
+            min-height: 0;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-stats {
+            font-size: 0.8rem;
+            color: var(--text-muted-color);
+            font-weight: bold;
+        }
+
+        .task-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 5px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-bottom: 1px dashed var(--border-color);
+            user-select: none;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:hover {
+            background: rgba(128, 128, 128, 0.1);
+        }
+
+        .task-item.locked {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .task-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .s-0 { color: var(--status-0); }
+        .s-1 { color: var(--status-1); }
+        .s-2 { color: var(--status-2); }
+
+        #importInput { display: none; }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="dark">
+
+    <header>
+        <div class="header-top">
+            <div class="header-title">Трекер лабораторних | Семестр 5</div>
+            <div class="controls">
+                <button onclick="exportData()" title="Зберегти дані у файл .json">
+                    <i class='bx bx-export'></i> Експорт
+                </button>
+                <button onclick="document.getElementById('importInput').click()" title="Завантажити дані з файлу .json">
+                    <i class='bx bx-import'></i> Імпорт
+                </button>
+                <input type="file" id="importInput" accept=".json" onchange="importData(event)">
+                <button id="themeToggle" title="Перемикач теми">
+                    <i class='bx bx-moon'></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="header-progress-container">
+            <div class="header-progress-info">
+                <span>Загальний прогрес</span>
+                <span id="overallProgressText">0 / 0 (0%)</span>
+            </div>
+            <div class="progress-track overall">
+                <div class="progress-fill overall" id="overallProgressBar"></div>
+            </div>
+        </div>
+    </header>
+
+    <main id="grid"></main>
+
+    <script>
+        /* =====================================================================
+           БЛОК ДЛЯ КІНЦЯ СЕМЕСТРУ (ФІКСАЦІЯ ЗНАЧЕНЬ НАЗАВЖДИ)
+        ===================================================================== */
+        const LOCKED_TASKS = {
+            // Розкоментуй та додай сюди значення під кінець семестру
+            // 'os': { 0: 2, 1: 2, 2: 2, 3: 2, 4: 2, 5: 2, 6: 2, 7: 2 },
+            // 'coursework': { 10: 2 } 
+        };
+
+        const subjects = [
+            { id: 'cg', name: 'Комп. графіка', count: 7 },
+            { id: 'eco', name: 'Екологія', count: 9 },
+            { id: 'qa', name: 'Якість ПЗ та тестування', count: 8 },
+            { id: 'math', name: 'Спец. розділи математики', count: 6 },
+            { id: 'os', name: 'Операційні системи', count: 8 },
+            { id: 'coursework', name: 'Курсова робота', custom: ['Зобр. 1', 'Зобр. 2', 'Зобр. 3', 'Зобр. 4', 'Зобр. 5', 'Зобр. 6', 'Зобр. 7', 'Зобр. 8', 'Зобр. 9', 'Зобр. 10', 'Сайт', 'Програма', 'Звіт. Розділ 1', 'Звіт. Розділ 2', 'Звіт. Розділ 3', 'Звіт. Розділ 4', 'Звіт. Розділ ...', 'Звіт. Висновки'] }
+        ];
+
+        const statusConfig = {
+            0: { icon: 'bx-minus', text: 'Не розпочата', class: 's-0' },
+            1: { icon: 'bx-loader-circle bx-spin', text: 'В процесі', class: 's-1' },
+            2: { icon: 'bx-check', text: 'Захищено', class: 's-2' }
+        };
+
+        let appData = JSON.parse(localStorage.getItem('strictTrackerData')) || {};
+
+        subjects.forEach(sub => {
+            const total = sub.custom ? sub.custom.length : sub.count;
+            if (!appData[sub.id]) {
+                appData[sub.id] = Array(total).fill(0);
+            } else if (appData[sub.id].length < total) {
+                const diff = total - appData[sub.id].length;
+                appData[sub.id] = appData[sub.id].concat(Array(diff).fill(0));
+            }
+        });
+
+        function render() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            let overallTotal = 0;
+            let overallDone = 0;
+
+            subjects.forEach(sub => {
+                const total = sub.custom ? sub.custom.length : sub.count;
+                let doneCount = 0;
+                let tasksHTML = '';
+                
+                overallTotal += total;
+
+                for (let i = 0; i < total; i++) {
+                    const isLocked = LOCKED_TASKS[sub.id] && LOCKED_TASKS[sub.id][i] !== undefined;
+                    const status = isLocked ? LOCKED_TASKS[sub.id][i] : appData[sub.id][i];
+                    
+                    if (status === 2) {
+                        doneCount++;
+                        overallDone++;
+                    }
+
+                    const conf = statusConfig[status];
+                    const taskName = sub.custom ? sub.custom[i] : `Лабораторна ${i + 1}`;
+                    const lockIcon = isLocked ? "<i class='bx bxs-lock-alt' style='margin-right:4px;'></i>" : "";
+
+                    tasksHTML += `
+                        <li class="task-item ${isLocked ? 'locked' : ''}" 
+                            onclick="toggle('${sub.id}', ${i})" 
+                            title="${isLocked ? 'Зафіксовано в коді' : 'Змінити статус'}">
+                            <span>${taskName}</span>
+                            <div class="task-status ${conf.class}">
+                                ${lockIcon}
+                                <span>${conf.text}</span>
+                                <i class='bx ${conf.icon}'></i>
+                            </div>
+                        </li>
+                    `;
+                }
+
+                const progress = Math.round((doneCount / total) * 100);
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-header" title="${sub.name}">
+                        <span class="card-title">${sub.name}</span>
+                        <span class="card-stats">${doneCount} / ${total}</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <ul class="task-list">
+                        ${tasksHTML}
+                    </ul>
+                `;
+                grid.appendChild(card);
+            });
+
+            const overallPercent = overallTotal > 0 ? Math.round((overallDone / overallTotal) * 100) : 0;
+            document.getElementById('overallProgressText').innerText = `${overallDone} / ${overallTotal} (${overallPercent}%)`;
+            document.getElementById('overallProgressBar').style.width = `${overallPercent}%`;
+        }
+
+        window.toggle = (subj, index) => {
+            if (LOCKED_TASKS[subj] && LOCKED_TASKS[subj][index] !== undefined) return;
+            
+            appData[subj][index] = (appData[subj][index] + 1) % 3;
+            localStorage.setItem('strictTrackerData', JSON.stringify(appData));
+            render();
+        };
+
+        window.exportData = () => {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `tracker_data_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        window.importData = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    appData = { ...appData, ...imported };
+                    localStorage.setItem('strictTrackerData', JSON.stringify(appData));
+                    render();
+                    alert("Дані успішно завантажено!");
+                } catch (err) {
+                    alert("Помилка читання файлу. Переконайтеся, що це правильний .json");
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        };
+
+        const btn = document.getElementById('themeToggle');
+        let isDark = localStorage.getItem('strictTheme') !== 'light';
+        if (!isDark) document.body.classList.remove('dark');
+        
+        btn.onclick = () => {
+            document.body.classList.toggle('dark');
+            isDark = document.body.classList.contains('dark');
+            localStorage.setItem('strictTheme', isDark ? 'dark' : 'light');
+        };
+
+        render();
+    </script>
+</body>
+</html>

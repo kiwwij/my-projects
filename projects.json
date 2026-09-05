@@ -613,6 +613,13 @@
     "url": "",
     "date": "2026-09-03"
   },
+  "vntu-5-semester-tracker.html": {
+    "image": "5s",
+    "description": "Laboratory Work Tracker. VNTU. Semester 5.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-09-05"
+  },
   ".html": {
     "image": "",
     "description": "",
