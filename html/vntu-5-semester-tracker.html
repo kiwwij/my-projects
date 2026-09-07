@@ -248,6 +248,12 @@
         <div class="header-top">
             <div class="header-title">Трекер лабораторних | Семестр 5</div>
             <div class="controls">
+                <button id="sync-github-up-btn" title="Зберегти в хмару (GitHub)">
+                    <i class='bx bx-cloud-upload'></i> У хмару
+                </button>
+                <button id="sync-github-down-btn" title="Завантажити з хмари (GitHub)">
+                    <i class='bx bx-cloud-download'></i> З хмари
+                </button>
                 <button onclick="exportData()" title="Зберегти дані у файл .json">
                     <i class='bx bx-export'></i> Експорт
                 </button>
@@ -275,13 +281,8 @@
     <main id="grid"></main>
 
     <script>
-        /* =====================================================================
-           БЛОК ДЛЯ КІНЦЯ СЕМЕСТРУ (ФІКСАЦІЯ ЗНАЧЕНЬ НАЗАВЖДИ)
-        ===================================================================== */
         const LOCKED_TASKS = {
-            // Розкоментуй та додай сюди значення під кінець семестру
-            // 'os': { 0: 2, 1: 2, 2: 2, 3: 2, 4: 2, 5: 2, 6: 2, 7: 2 },
-            // 'coursework': { 10: 2 } 
+            // сюди всавити експорт з сайту
         };
 
         const subjects = [
@@ -290,7 +291,7 @@
             { id: 'qa', name: 'Якість ПЗ та тестування', count: 8 },
             { id: 'math', name: 'Спец. розділи математики', count: 6 },
             { id: 'os', name: 'Операційні системи', count: 8 },
-            { id: 'coursework', name: 'Курсова робота', custom: ['Зобр. 1', 'Зобр. 2', 'Зобр. 3', 'Зобр. 4', 'Зобр. 5', 'Зобр. 6', 'Зобр. 7', 'Зобр. 8', 'Зобр. 9', 'Зобр. 10', 'Сайт', 'Програма', 'Звіт. Розділ 1', 'Звіт. Розділ 2', 'Звіт. Розділ 3', 'Звіт. Розділ 4', 'Звіт. Розділ ...', 'Звіт. Висновки'] }
+            { id: 'coursework', name: 'Курсова робота', custom: ['Зображення 1', 'Зображення 2', 'Зображення 3', 'Зображення 4', 'Зображення 5', 'Зображення 6', 'Зображення 7', 'Зображення 8', 'Зображення 9', 'Зображення 10', 'Сайт', 'Програма', 'Записка: Розділ 1', 'Записка: Розділ 2', 'Записка: Розділ 3', 'Записка: Розділ 4', 'Записка: Розділ 5', 'Записка: Розділ 6', 'Записка: Розділ 7', 'Записка: Розділ 8', 'Записка: Посилання + Висновки'] }
         ];
 
         const statusConfig = {
@@ -424,6 +425,100 @@
             localStorage.setItem('strictTheme', isDark ? 'dark' : 'light');
         };
 
+        const GIST_FILENAME = 'kiwwij-tracker-sync.json';
+        async function githubRequest(url, method, body, token) {
+            const options = { method, headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } };
+            if (body) options.body = JSON.stringify(body);
+            const res = await fetch(`https://api.github.com${url}`, options); 
+            if (!res.ok) throw new Error(await res.text()); 
+            return res.json();
+        }
+
+        async function findGistId(token) {
+            let cachedId = localStorage.getItem('github_tracker_gist_id'); 
+            if (cachedId) return cachedId; 
+            const gists = await githubRequest('/gists', 'GET', null, token);
+            const found = gists.find(g => g.files[GIST_FILENAME]);
+            if (found) { 
+                localStorage.setItem('github_tracker_gist_id', found.id); 
+                return found.id; 
+            } 
+            return null;
+        }
+
+        function checkToken(callback) {
+            let token = localStorage.getItem('github_token');
+            if (!token) { 
+                const inputToken = prompt("Введи GitHub Personal Access Token для синхронізації:");
+                if (inputToken) { 
+                    localStorage.setItem('github_token', inputToken); 
+                    callback(inputToken); 
+                } 
+            } else { 
+                callback(token); 
+            }
+        }
+
+        document.getElementById('sync-github-up-btn').onclick = () => {
+            checkToken(async (token) => {
+                try {
+                    const btn = document.getElementById('sync-github-up-btn');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = "<i class='bx bx-loader-circle bx-spin'></i> Зберігаємо...";
+                    
+                    const gistId = await findGistId(token);
+                    const payload = { 
+                        description: "Бек-ап трекера ВНТУ", 
+                        public: false, 
+                        files: { [GIST_FILENAME]: { content: JSON.stringify(appData, null, 2) } } 
+                    };
+                    
+                    if (gistId) {
+                        await githubRequest(`/gists/${gistId}`, 'PATCH', payload, token); 
+                    } else { 
+                        const newGist = await githubRequest('/gists', 'POST', payload, token); 
+                        localStorage.setItem('github_tracker_gist_id', newGist.id); 
+                    }
+                    
+                    btn.innerHTML = originalText;
+                    alert("Дані успішно збережено в GitHub!");
+                } catch (e) { 
+                    console.error(e);
+                    alert("Помилка збереження. Перевір токен."); 
+                    document.getElementById('sync-github-up-btn').innerHTML = "<i class='bx bx-cloud-upload'></i> У хмару";
+                }
+            });
+        };
+
+        document.getElementById('sync-github-down-btn').onclick = () => {
+            if(!confirm("Увага! Поточні локальні дані будуть замінені даними з хмари. Продовжити?")) return;
+            
+            checkToken(async (token) => {
+                try {
+                    const btn = document.getElementById('sync-github-down-btn');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = "<i class='bx bx-loader-circle bx-spin'></i> Завантаження...";
+
+                    const gistId = await findGistId(token); 
+                    if (!gistId) throw new Error("No backup");
+                    
+                    const gist = await githubRequest(`/gists/${gistId}`, 'GET', null, token);
+                    const parsed = JSON.parse(gist.files[GIST_FILENAME].content);
+                    
+                    appData = { ...appData, ...parsed };
+                    localStorage.setItem('strictTrackerData', JSON.stringify(appData));
+                    render();
+                    
+                    btn.innerHTML = originalText;
+                    alert("Дані успішно завантажено з хмари!");
+                } catch (e) { 
+                    console.error(e);
+                    alert("Бекап у хмарі не знайдено або сталася помилка."); 
+                    document.getElementById('sync-github-down-btn').innerHTML = "<i class='bx bx-cloud-download'></i> З хмари";
+                }
+            });
+        };
+        
         render();
     </script>
 </body>

@@ -390,7 +390,41 @@ function init() {
     renderTabs();
     renderSchedule();
     updateStatus();
+    setCurrentYear();
+    updateDailyStreak();
     setInterval(updateStatus, 1000);
+}
+
+function setCurrentYear() {
+    const yearEl = document.getElementById('current-year');
+    if (yearEl) {
+        yearEl.innerText = new Date().getFullYear();
+    }
+}
+
+function updateDailyStreak() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    let streakData = JSON.parse(localStorage.getItem('daily_streak')) || { count: 0, best: 0, lastVisit: 0 };
+    
+    const msInDay = 86400000; 
+    const diffDays = Math.round((todayTime - streakData.lastVisit) / msInDay); 
+    
+    if (streakData.lastVisit === 0 || diffDays > 3) {
+        streakData.count = 1;
+        streakData.lastVisit = todayTime;
+    } else if (diffDays > 0 && diffDays <= 3) {
+        streakData.count += 1;
+        streakData.lastVisit = todayTime;
+    }
+    
+    if (streakData.count > streakData.best) {
+        streakData.best = streakData.count;
+    }
+
+    localStorage.setItem('daily_streak', JSON.stringify(streakData));
 }
 
 function initSwipeGestures() {

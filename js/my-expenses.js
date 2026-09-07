@@ -370,4 +370,44 @@ window.addEventListener('click', (e) => {
     }
 });
 
+function initSwipeGestures() {
+    let touchStartX = 0; 
+    let touchStartY = 0; 
+    let touchEndX = 0; 
+    let touchEndY = 0;
+
+    document.addEventListener('touchstart', e => {
+        if (calendarModal.style.display === 'flex' || e.target.closest('.week-selector')) return;
+        
+        touchStartX = e.changedTouches[0].screenX; 
+        touchStartY = e.changedTouches[0].screenY;
+    }, {passive: true});
+
+    document.addEventListener('touchend', e => {
+        if (calendarModal.style.display === 'flex' || e.target.closest('.week-selector')) return;
+        
+        touchEndX = e.changedTouches[0].screenX; 
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+    }, {passive: true});
+
+    function handleSwipe() {
+        const diffX = touchEndX - touchStartX; 
+        const diffY = touchEndY - touchStartY;
+        
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
+            if (diffX < 0) {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                init();
+            } else {
+                if (currentDate.getFullYear() <= 2026 && currentDate.getMonth() <= 0) return;
+                currentDate.setMonth(currentDate.getMonth() - 1); 
+                init(); 
+            }
+        }
+    }
+}
+
+initSwipeGestures();
+
 init();

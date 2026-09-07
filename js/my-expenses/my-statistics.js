@@ -250,7 +250,6 @@ async function initStatistics() {
         usdEl.title = `Курс НБУ: ${usdRate.toFixed(2)} ₴ / $ (~${Math.round(dollarsInUAH).toLocaleString('ru-RU')} ₴)`;
     }
 
-    // Общий капитал
     document.querySelector('#absolute-total-saved span').innerText = Math.round(absoluteTotal).toLocaleString('ru-RU');
 
     renderGoals(totalSaved, absoluteTotal);
@@ -320,8 +319,34 @@ function drawCharts(data) {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            scales: { x: { grid: { display: false } }, y: { grid: { color: gridColor }, beginAtZero: true } },
-            plugins: { tooltip: { mode: 'index', intersect: false } }
+            scales: { 
+                x: { grid: { display: false } }, 
+                y: { 
+                    grid: { color: gridColor }, 
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return isHidden ? '***' : value;
+                        }
+                    }
+                } 
+            },
+            plugins: { 
+                tooltip: { 
+                    mode: 'index', 
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) {
+                                label += isHidden ? '***' : context.parsed.y + ' ₴';
+                            }
+                            return label;
+                        }
+                    }
+                } 
+            }
         }
     });
 
@@ -340,7 +365,8 @@ function drawCharts(data) {
                             let value = context.raw || 0;
                             let total = context.chart._metasets[context.datasetIndex].total;
                             let percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                            return ` ${label}: ${value} ₴ (${percentage}%)`;
+                            let displayValue = isHidden ? '***' : value;
+                            return ` ${label}: ${displayValue} ₴ (${percentage}%)`;
                         }
                     } 
                 }
@@ -369,9 +395,11 @@ function drawCharts(data) {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return `Баланс: ${context.parsed.y.toFixed(0)} ₴`;
+                            return `Баланс: ${isHidden ? '***' : context.parsed.y.toFixed(0) + ' ₴'}`;
                         },
                         afterLabel: function(context) {
+                            if (isHidden) return `Изменение: ***`;
+                            
                             const index = context.dataIndex;
                             if (index === 0) {
                                 const val = context.parsed.y;
@@ -385,7 +413,17 @@ function drawCharts(data) {
                     }
                 }
             },
-            scales: { x: { grid: { display: false } }, y: { grid: { color: gridColor } } }
+            scales: { 
+                x: { grid: { display: false } }, 
+                y: { 
+                    grid: { color: gridColor },
+                    ticks: {
+                        callback: function(value) {
+                            return isHidden ? '***' : value;
+                        }
+                    }
+                } 
+            }
         }
     });
 }
@@ -465,7 +503,12 @@ function hideAllSums(hide) {
             el.classList.remove('money-hidden');
         }
     });
+    
     document.getElementById('hide-sums-btn').innerHTML = hide ? "<i class='bx bx-show'></i>" : "<i class='bx bx-hide'></i>";
+
+    if (mainBarChart) mainBarChart.update();
+    if (doughnutChart) doughnutChart.update();
+    if (trendChart) trendChart.update();
 }
 
 function setupChartControls() {
