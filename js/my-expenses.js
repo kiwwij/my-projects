@@ -287,14 +287,6 @@ weekBtns.forEach(btn => {
     });
 });
 
-prevMonthBtn.addEventListener('click', () => {
-    if (currentDate.getFullYear() <= 2026 && currentDate.getMonth() <= 0) return;
-    
-    currentDate.setMonth(currentDate.getMonth() - 1); 
-    init(); 
-});
-nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); init(); });
-
 if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark-mode');
     themeToggle.innerHTML = "<i class='bx bx-sun'></i>";
@@ -346,9 +338,20 @@ function populateCalendar() {
         }
 
         btn.addEventListener('click', () => {
-            currentDate = new Date(year, monthIndex, 1);
-            init();
+            const targetDate = new Date(year, monthIndex, 1);
+            const currentMs = currentDate.getTime();
+            const targetMs = targetDate.getTime();
+            
+            const direction = targetMs > currentMs ? 1 : (targetMs < currentMs ? -1 : 0);
+        
             calendarModal.style.display = 'none';
+        
+            if (direction !== 0) {
+                animateMonthChange(direction, () => {
+                    currentDate = targetDate;
+                    init();
+                });
+            }
         });
 
         calendarGrid.appendChild(btn);
@@ -368,6 +371,47 @@ window.addEventListener('click', (e) => {
     if (e.target === calendarModal) {
         calendarModal.style.display = 'none';
     }
+});
+
+function animateMonthChange(direction, updateCallback) {
+    const container = document.querySelector('.content-grid');
+    if (!container) { 
+        updateCallback(); 
+        return; 
+    }
+
+    const outClass = direction === 1 ? 'slide-out-left' : 'slide-out-right';
+    const inClass = direction === 1 ? 'slide-in-right' : 'slide-in-left';
+
+    container.classList.remove('slide-out-left', 'slide-out-right', 'slide-in-left', 'slide-in-right');
+    container.classList.add(outClass);
+
+    setTimeout(() => {
+        updateCallback(); 
+
+        container.classList.remove(outClass);
+        container.classList.add(inClass);
+
+        setTimeout(() => {
+            container.classList.remove(inClass);
+        }, 300);
+    }, 250);
+}
+
+prevMonthBtn.addEventListener('click', () => {
+    if (currentDate.getFullYear() <= 2026 && currentDate.getMonth() <= 0) return;
+    
+    animateMonthChange(-1, () => {
+        currentDate.setMonth(currentDate.getMonth() - 1); 
+        init(); 
+    });
+});
+
+nextMonthBtn.addEventListener('click', () => { 
+    animateMonthChange(1, () => {
+        currentDate.setMonth(currentDate.getMonth() + 1); 
+        init(); 
+    });
 });
 
 function initSwipeGestures() {
@@ -397,17 +441,20 @@ function initSwipeGestures() {
         
         if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
             if (diffX < 0) {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                init();
+                animateMonthChange(1, () => {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    init();
+                });
             } else {
                 if (currentDate.getFullYear() <= 2026 && currentDate.getMonth() <= 0) return;
-                currentDate.setMonth(currentDate.getMonth() - 1); 
-                init(); 
+                animateMonthChange(-1, () => {
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    init();
+                });
             }
         }
     }
 }
 
 initSwipeGestures();
-
 init();

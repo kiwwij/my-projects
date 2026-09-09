@@ -165,8 +165,8 @@ const allSchedules = {
                 { num: 6, start: "13:15", end: "14:00", subj: "Фізична культура", type: "PZ", room: "Спортзал", teacher: "Тихонова С.В." }
             ],
             3: [
-                { num: 1, start: "08:15", end: "09:00", subj: "Комп`ютерна графіка", type: "LR", room: "2108", teacher: "Романюк О.Н.", subgroup: 1 },
-                { num: 2, start: "09:15", end: "10:00", subj: "Комп`ютерна графіка", type: "LR", room: "2108", teacher: "Романюк О.Н.", subgroup: 1 },
+                { num: 1, start: "08:15", end: "09:00", subj: "Комп`ютерна графіка", type: "LR", room: "2433", teacher: "Романюк О.Н.", subgroup: 1 },
+                { num: 2, start: "09:15", end: "10:00", subj: "Комп`ютерна графіка", type: "LR", room: "2433", teacher: "Романюк О.Н.", subgroup: 1 },
 
                 { num: 1, start: "08:15", end: "09:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Романюк О.В.", subgroup: 2 },
                 { num: 2, start: "09:15", end: "10:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Романюк О.В.", subgroup: 2 },
@@ -324,7 +324,6 @@ function formatDateString(date) {
     return `${y}-${m}-${d}`;
 }
 
-// Фільтр на кінець травня для 4 семестру
 function applyLateMayFilter(lessons, targetDate) {
     const filterStart = new Date('2026-05-18T00:00:00');
     const filterEnd = new Date('2026-06-07T23:59:59'); 
