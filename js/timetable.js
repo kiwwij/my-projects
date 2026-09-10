@@ -131,15 +131,15 @@ const allSchedules = {
                 { num: 5, start: "12:15", end: "13:00", subj: "Організація програмних систем", type: "PZ", room: "2104", teacher: "Бабюк Н.П." }
             ],
             4: [
-                { num: 2, start: "09:15", end: "10:00", subj: "Управління експ. та функц. характ. ПЗ", type: "PZ", room: "1318", teacher: "Гавенко О.В." }, // Управління експлуатаційними та функціональними характеристиками програмного забезпечення
+                { num: 2, start: "09:15", end: "10:00", subj: "Управління експ. та функц. характ. ПЗ", type: "PZ", room: "1318", teacher: "Гавенко О.В." },
                 { num: 3, start: "10:15", end: "11:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 4, start: "11:15", end: "12:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 5, start: "12:15", end: "13:00", subj: "Екологія та основи біобезпеки і біоетики", type: "PZ", room: "1311", teacher: "Сакалова Г.В." },
-                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2259", teacher: "Сідлецька Т.І." }
+                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2364", teacher: "Сідлецька Т.І." }
             ],
             5: [
-                { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем", type: "LK", room: "5128", teacher: "Бабюк Н.П." },
-                { num: 2, start: "09:15", end: "10:00", subj: "Організація програмних систем", type: "LK", room: "5128", teacher: "Бабюк Н.П." },
+                { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем", type: "LK", room: "2428", teacher: "Бабюк Н.П." },
+                { num: 2, start: "09:15", end: "10:00", subj: "Організація програмних систем", type: "LK", room: "2428", teacher: "Бабюк Н.П." },
                 { num: 3, start: "10:15", end: "11:00", subj: "Якість програмного забезпечення", type: "LK", room: "5128", teacher: "Романюк О.В." },
                 { num: 4, start: "11:15", end: "12:00", subj: "Якість програмного забезпечення", type: "LK", room: "5128", teacher: "Романюк О.В." },
                 { num: 5, start: "12:15", end: "13:00", subj: "Політологія", type: "LK", room: "5128", teacher: "Корнієнко В.О." },
@@ -180,11 +180,11 @@ const allSchedules = {
                 { num: 3, start: "10:15", end: "11:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 4, start: "11:15", end: "12:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 5, start: "12:15", end: "13:00", subj: "Екологія та основи біобезпеки і біоетики", type: "PZ", room: "1311", teacher: "Сакалова Г.В." },
-                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2259", teacher: "Сідлецька Т.І." }
+                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2364", teacher: "Сідлецька Т.І." }
             ],
             5: [
-                { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем", type: "LK", room: "5128", teacher: "Бабюк Н.П." },
-                { num: 2, start: "09:15", end: "10:00", subj: "Організація програмних систем", type: "LK", room: "5128", teacher: "Бабюк Н.П." },
+                { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем", type: "LK", room: "2428", teacher: "Бабюк Н.П." },
+                { num: 2, start: "09:15", end: "10:00", subj: "Організація програмних систем", type: "LK", room: "2428", teacher: "Бабюк Н.П." },
                 { num: 3, start: "10:15", end: "11:00", subj: "Якість програмного забезпечення", type: "LK", room: "5128", teacher: "Романюк О.В." },
                 { num: 4, start: "11:15", end: "12:00", subj: "Якість програмного забезпечення", type: "LK", room: "5128", teacher: "Романюк О.В." },
                 { num: 5, start: "12:15", end: "13:00", subj: "Політологія", type: "LK", room: "5128", teacher: "Корнієнко В.О." },
@@ -246,6 +246,13 @@ const dateOverrides = {
         { num: 3, start: "09:00", end: "10:00", subj: "Іноземна мова", type: "ZALIK", room: "3416", teacher: "Кухарчук Г.В.", subgroup: 1 },
         { num: 3, start: "09:00", end: "10:00", subj: "Іноземна мова", type: "ZALIK", room: "3433", teacher: "Чопляк В.В.", subgroup: 2 }
     ] },
+
+    "2026-09-03": {
+        remove: [6],
+        add: [
+            { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2259", teacher: "Сідлецька Т.І." }
+        ]
+    },
 };
 
 let viewDate = new Date(); 
@@ -546,7 +553,7 @@ function renderSchedule() {
 
     const displayDate = getViewedDate();
     const year = displayDate.getFullYear();
-    const month = displayDate.getMonth(); // 0-11
+    const month = displayDate.getMonth();
     const date = displayDate.getDate();
 
     if ((month === 5 && date > 19) || month === 6 || month === 7) {
@@ -559,12 +566,12 @@ function renderSchedule() {
         return;
     }
 
-    if (year === 2027 && month === 0 && date >= 18 && date <= 31) {
+    if (year === 2027 && month === 0 && date > 15 && date <= 31) {
         container.innerHTML = `
             <div class="empty-day" style="color: var(--accent); padding: 50px 0;">
                 <i class="bx bx-snowflake" style="font-size: 4rem; margin-bottom: 10px;"></i>
                 <br><span style="font-size: 1.2rem; font-weight: bold;">Зимові канікули!</span>
-                <br><span style="font-size: 0.9rem; opacity: 0.8;">Кінець 5-го семестру</span>
+                <br><span style="font-size: 0.9rem; opacity: 0.8;">Час відпочивати</span>
             </div>`;
         return;
     }
@@ -588,7 +595,8 @@ function renderSchedule() {
         allLessons = semesterData[currentWeekType][selectedDay];
     }
     
-    const isSessionPeriod = displayDate >= new Date('2026-06-08T00:00:00') && displayDate <= new Date('2026-06-19T23:59:59');
+    const isSessionPeriod = (displayDate >= new Date('2026-06-08T00:00:00') && displayDate <= new Date('2026-06-19T23:59:59')) ||
+                            (displayDate >= new Date('2027-01-01T00:00:00') && displayDate <= new Date('2027-01-15T23:59:59'));
     
     let lessons = [];
     if (!isSessionPeriod) {
@@ -680,10 +688,10 @@ function updateStatus() {
         return;
     }
 
-    if (year === 2027 && month === 0 && date >= 18 && date <= 31) {
+    if (year === 2027 && month === 0 && date > 15 && date <= 31) {
         document.getElementById('status-title').innerText = "Зимові канікули!";
         document.getElementById('main-timer').innerText = "❄️⛄";
-        document.getElementById('time-left-desc').innerText = "Кінець 5-го семестру";
+        document.getElementById('time-left-desc').innerText = "Сесія завершена (Кінець 5-го семестру)";
         return;
     }
 
@@ -699,7 +707,8 @@ function updateStatus() {
     const currentWeekType = getWeekType(now);
     const semesterData = allSchedules[semInfo.id];
     
-    const isSessionPeriod = now >= new Date('2026-06-08T00:00:00') && now <= new Date('2026-06-19T23:59:59');
+    const isSessionPeriod = (now >= new Date('2026-06-08T00:00:00') && now <= new Date('2026-06-19T23:59:59')) ||
+                            (now >= new Date('2027-01-01T00:00:00') && now <= new Date('2027-01-15T23:59:59'));
     
     let lessons = [];
     if (!isSessionPeriod && semesterData && semesterData[currentWeekType] && semesterData[currentWeekType][dayOfWeek]) {
