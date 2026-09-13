@@ -620,6 +620,13 @@
     "url": "",
     "date": "2026-09-05"
   },
+  "mushrooms.html": {
+    "image": "html/mushrooms/logo.webp",
+    "description": "Coursework (5th semester). VNTU. + \"Lissajous Figure Generation\" program in Python.",
+    "stack": ["html", "css", "js", "python", "github"],
+    "url": "",
+    "date": "2026-09-12"
+  },
   ".html": {
     "image": "",
     "description": "",
