@@ -244,3 +244,10 @@ footer {
         display: inline-block;
     }
 }
+
+.hero-gif {
+    max-width: 300px;
+    width: 100%;
+    margin-top: 20px;
+    mix-blend-mode: multiply;
+}

@@ -7,6 +7,7 @@ if (localStorage.getItem('finance_unlocked') !== 'true') {
 }
 
 const MY_GOALS = [
+    { name: 'Новый телефон', target: 20000 },
     { name: 'Новый ПК', target: 70000 },
     { name: 'Поездка в Японию', target: 300000 },
     { name: 'Финансовая подушка', target: 100000 }

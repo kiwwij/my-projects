@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гриби Вінниччини - Фігура Ліссажу</title>
+    <link rel="icon" type="image/webp" href="img/logo.webp">
+    <link rel="stylesheet" href="../../css/mushrooms.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .lissajous-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 500;
+        }
+
+        .control-group input[type="number"] {
+            width: 70px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .control-group input[type="color"] {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: transparent;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        canvas {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 700px;
+            height: 500px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        [data-theme="dark"] canvas {
+            background-color: #e0e0e0; 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="img/logo.webp" alt="Логотип">
+            <h1>Гриби Вінниччини</h1>
+        </div>
+        <nav>
+            <a href="../mushrooms.html"><i class='bx bx-home'></i> Головна</a>
+            <a href="popular.html"><i class='bx bx-basket'></i> Популярні</a>
+            <a href="other.html"><i class='bx bx-leaf'></i> Пластинчасті</a>
+            <a href="poisonous.html"><i class='bx bx-error-circle'></i> Небезпечні</a>
+            <a href="lissajous.html" style="color: #c8e6c9;"><i class='bx bx-math'></i> Фігура Ліссажу</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="hero-section" style="margin-bottom: 20px;">
+            <h2>Побудова Фігури Ліссажу</h2>
+            <p>Ця сторінка миттєво генерує фігуру Ліссажу без анімації, що запобігає зависанням. Кількість точок обчислення достатньо велика, щоб лінія виглядала ідеально гладкою.</p>
+        </div>
+        
+        <div class="lissajous-container">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="freqX">a (Частота X):</label>
+                    <input type="number" id="freqX" value="3" step="0.1">
+                </div>
+                
+                <div class="control-group">
+                    <label for="freqY">b (Частота Y):</label>
+                    <input type="number" id="freqY" value="2" step="0.1">
+                </div>
+                
+                <div class="control-group">
+                    <label for="phase">Фаза (рад):</label>
+                    <input type="number" id="phase" value="1.57" step="0.01">
+                </div>
+                
+                <div class="control-group">
+                    <label for="colorPicker">Колір:</label>
+                    <input type="color" id="colorPicker" value="#4CAF50">
+                </div>
+                
+                <button id="drawBtn">Малювати</button>
+            </div>
+            
+            <canvas id="lissajousCanvas" width="700" height="500"></canvas>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Проєкт «Гриби Вінниччини»</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const canvas = document.getElementById("lissajousCanvas");
+            const ctx = canvas.getContext("2d");
+            const drawBtn = document.getElementById("drawBtn");
+            
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            
+            let animationId = null;
+            let isDrawing = false;
+
+            function startDrawing() {
+                if (isDrawing) {
+                    cancelAnimationFrame(animationId);
+                }
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const a = parseFloat(document.getElementById("freqX").value);
+                const b = parseFloat(document.getElementById("freqY").value);
+                const delta = parseFloat(document.getElementById("phase").value);
+                const color = document.getElementById("colorPicker").value;
+                
+                if (isNaN(a) || isNaN(b) || isNaN(delta)) return;
+                
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const A = cx - 20; 
+                const B = cy - 20; 
+                
+                let t = 0;
+                const dt = 0.01;
+                const maxT = Math.PI * 2 * 100;
+                const batchSize = 100;
+                
+                let prevX = cx + A * Math.sin(a * t + delta);
+                let prevY = cy + B * Math.sin(b * t);
+                
+                isDrawing = true;
+                
+                function animate() {
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevY);
+                    
+                    for(let i = 0; i < batchSize; i++) {
+                        t += dt;
+                        if (t > maxT) {
+                            isDrawing = false;
+                            break;
+                        }
+                        const x = cx + A * Math.sin(a * t + delta);
+                        const y = cy + B * Math.sin(b * t);
+                        ctx.lineTo(x, y);
+                        
+                        prevX = x;
+                        prevY = y;
+                    }
+                    
+                    ctx.stroke();
+                    
+                    if (isDrawing) {
+                        animationId = requestAnimationFrame(animate);
+                    }
+                }
+                
+                animate();
+            }
+            
+            startDrawing();
+            drawBtn.addEventListener("click", startDrawing);
+        });
+    </script>
+</body>
+</html>
