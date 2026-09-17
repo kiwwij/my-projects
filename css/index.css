@@ -256,7 +256,7 @@ h2 {
 /* .project-card[data-name=""], */
 /* .project-card[data-name=""], */
 /* .project-card[data-name=""], */
-/* .project-card[data-name=""], */
+.project-card[data-name="cursor heatmap"],
 .project-card[data-name="pinterest gallery"],
 .project-card[data-name="erotic photos"],
 .project-card[data-name="qa notes"],
@@ -286,7 +286,7 @@ h2 {
 /* .project-card[data-name=""]:hover, */
 /* .project-card[data-name=""]:hover, */
 /* .project-card[data-name=""]:hover, */
-/* .project-card[data-name=""]:hover, */
+.project-card[data-name="cursor heatmap"]:hover,
 .project-card[data-name="pinterest gallery"]:hover,
 .project-card[data-name="erotic photos"]:hover,
 .project-card[data-name="qa notes"]:hover,

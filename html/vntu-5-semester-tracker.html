@@ -234,6 +234,39 @@
 
         #importInput { display: none; }
 
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 1; transition: opacity 0.2s;
+        }
+        .modal-overlay.hidden, .hidden { display: none !important; opacity: 0; pointer-events: none; }
+        .modal-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px; padding: 20px;
+            width: 90%; max-width: 380px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .modal-message { font-size: 0.95rem; line-height: 1.4; word-break: break-word; }
+        .modal-input {
+            background: var(--bg-color); color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 12px; border-radius: 4px; outline: none;
+            width: 100%; font-size: 0.9rem;
+        }
+        .modal-input:focus { border-color: var(--status-2); }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
+        .modal-btn { 
+            padding: 8px 16px; border-radius: 4px; cursor: pointer; 
+            font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
+        }
+        .modal-btn-ok { background: var(--status-2); color: #fff; border: 1px solid var(--status-2); }
+        .modal-btn-ok:hover { filter: brightness(1.1); }
+        .modal-btn-cancel { background: transparent; color: var(--text-color); border: 1px solid var(--border-color); }
+        .modal-btn-cancel:hover { background: var(--border-color); }
+
         @media (max-width: 1024px) {
             main {
                 grid-template-columns: repeat(2, 1fr);
@@ -312,6 +345,17 @@
 </head>
 <body class="dark">
 
+    <div id="custom-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div id="modal-message" class="modal-message"></div>
+            <input type="text" id="modal-input" class="modal-input hidden" autocomplete="off" />
+            <div class="modal-actions">
+                <button id="modal-btn-cancel" class="modal-btn modal-btn-cancel hidden">Скасувати</button>
+                <button id="modal-btn-ok" class="modal-btn modal-btn-ok">ОК</button>
+            </div>
+        </div>
+    </div>
+
     <header>
         <div class="header-top">
             <div class="header-title">Трекер лабораторних | Семестр 5</div>
@@ -379,6 +423,44 @@
                 appData[sub.id] = appData[sub.id].concat(Array(diff).fill(0));
             }
         });
+
+        function customModal(type, message) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('custom-modal');
+                const msgEl = document.getElementById('modal-message');
+                const inputEl = document.getElementById('modal-input');
+                const btnOk = document.getElementById('modal-btn-ok');
+                const btnCancel = document.getElementById('modal-btn-cancel');
+
+                msgEl.innerText = message;
+                inputEl.value = '';
+                inputEl.classList.add('hidden');
+                btnCancel.classList.add('hidden');
+
+                if (type === 'prompt') {
+                    inputEl.classList.remove('hidden');
+                    btnCancel.classList.remove('hidden');
+                    inputEl.focus();
+                } else if (type === 'confirm') {
+                    btnCancel.classList.remove('hidden');
+                }
+
+                overlay.classList.remove('hidden');
+
+                const closeModal = (result) => {
+                    overlay.classList.add('hidden');
+                    btnOk.onclick = null;
+                    btnCancel.onclick = null;
+                    resolve(result);
+                }
+
+                btnOk.onclick = () => {
+                    if (type === 'prompt') closeModal(inputEl.value);
+                    else closeModal(true);
+                };
+                btnCancel.onclick = () => closeModal(false);
+            });
+        }
 
         function render() {
             const grid = document.getElementById('grid');
@@ -471,15 +553,15 @@
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 try {
                     const imported = JSON.parse(e.target.result);
                     appData = { ...appData, ...imported };
                     localStorage.setItem('strictTrackerData', JSON.stringify(appData));
                     render();
-                    alert("Дані успішно завантажено!");
+                    await customModal('alert', "Дані успішно завантажено!");
                 } catch (err) {
-                    alert("Помилка читання файлу. Переконайтеся, що це правильний .json");
+                    await customModal('alert', "Помилка читання файлу. Переконайтеся, що це правильний .json");
                 }
                 event.target.value = '';
             };
@@ -517,77 +599,78 @@
             return null;
         }
 
-        function checkToken(callback) {
+        async function checkToken() {
             let token = localStorage.getItem('github_token');
             if (!token) { 
-                const inputToken = prompt("Введи GitHub Personal Access Token для синхронізації:");
-                if (inputToken) { 
-                    localStorage.setItem('github_token', inputToken); 
-                    callback(inputToken); 
+                token = await customModal('prompt', "Введи GitHub Personal Access Token для синхронізації:");
+                if (token) { 
+                    localStorage.setItem('github_token', token); 
                 } 
-            } else { 
-                callback(token); 
             }
+            return token;
         }
 
-        document.getElementById('sync-github-up-btn').onclick = () => {
-            checkToken(async (token) => {
-                try {
-                    const btn = document.getElementById('sync-github-up-btn');
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = "<i class='bx bx-loader-circle bx-spin'></i> Зберігаємо...";
-                    
-                    const gistId = await findGistId(token);
-                    const payload = { 
-                        description: "Бек-ап трекера ВНТУ", 
-                        public: false, 
-                        files: { [GIST_FILENAME]: { content: JSON.stringify(appData, null, 2) } } 
-                    };
-                    
-                    if (gistId) {
-                        await githubRequest(`/gists/${gistId}`, 'PATCH', payload, token); 
-                    } else { 
-                        const newGist = await githubRequest('/gists', 'POST', payload, token); 
-                        localStorage.setItem('github_tracker_gist_id', newGist.id); 
-                    }
-                    
-                    btn.innerHTML = originalText;
-                    alert("Дані успішно збережено в GitHub!");
-                } catch (e) { 
-                    console.error(e);
-                    alert("Помилка збереження. Перевір токен."); 
-                    document.getElementById('sync-github-up-btn').innerHTML = "<i class='bx bx-cloud-upload'></i> У хмару";
+        document.getElementById('sync-github-up-btn').onclick = async () => {
+            const token = await checkToken();
+            if (!token) return;
+
+            try {
+                const btn = document.getElementById('sync-github-up-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "<i class='bx bx-loader-circle bx-spin'></i> Зберігаємо...";
+                
+                const gistId = await findGistId(token);
+                const payload = { 
+                    description: "Бек-ап трекера ВНТУ", 
+                    public: false, 
+                    files: { [GIST_FILENAME]: { content: JSON.stringify(appData, null, 2) } } 
+                };
+                
+                if (gistId) {
+                    await githubRequest(`/gists/${gistId}`, 'PATCH', payload, token); 
+                } else { 
+                    const newGist = await githubRequest('/gists', 'POST', payload, token); 
+                    localStorage.setItem('github_tracker_gist_id', newGist.id); 
                 }
-            });
+                
+                btn.innerHTML = originalText;
+                await customModal('alert', "Дані успішно збережено в GitHub!");
+            } catch (e) { 
+                console.error(e);
+                await customModal('alert', "Помилка збереження. Перевір токен."); 
+                document.getElementById('sync-github-up-btn').innerHTML = "<i class='bx bx-cloud-upload'></i> У хмару";
+            }
         };
 
-        document.getElementById('sync-github-down-btn').onclick = () => {
-            if(!confirm("Увага! Поточні локальні дані будуть замінені даними з хмари. Продовжити?")) return;
+        document.getElementById('sync-github-down-btn').onclick = async () => {
+            const isConfirmed = await customModal('confirm', "Увага! Поточні локальні дані будуть замінені даними з хмари. Продовжити?");
+            if (!isConfirmed) return;
             
-            checkToken(async (token) => {
-                try {
-                    const btn = document.getElementById('sync-github-down-btn');
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = "<i class='bx bx-loader-circle bx-spin'></i> Завантаження...";
+            const token = await checkToken();
+            if (!token) return;
+            
+            try {
+                const btn = document.getElementById('sync-github-down-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "<i class='bx bx-loader-circle bx-spin'></i> Завантаження...";
 
-                    const gistId = await findGistId(token); 
-                    if (!gistId) throw new Error("No backup");
-                    
-                    const gist = await githubRequest(`/gists/${gistId}`, 'GET', null, token);
-                    const parsed = JSON.parse(gist.files[GIST_FILENAME].content);
-                    
-                    appData = { ...appData, ...parsed };
-                    localStorage.setItem('strictTrackerData', JSON.stringify(appData));
-                    render();
-                    
-                    btn.innerHTML = originalText;
-                    alert("Дані успішно завантажено з хмари!");
-                } catch (e) { 
-                    console.error(e);
-                    alert("Бекап у хмарі не знайдено або сталася помилка."); 
-                    document.getElementById('sync-github-down-btn').innerHTML = "<i class='bx bx-cloud-download'></i> З хмари";
-                }
-            });
+                const gistId = await findGistId(token); 
+                if (!gistId) throw new Error("No backup");
+                
+                const gist = await githubRequest(`/gists/${gistId}`, 'GET', null, token);
+                const parsed = JSON.parse(gist.files[GIST_FILENAME].content);
+                
+                appData = { ...appData, ...parsed };
+                localStorage.setItem('strictTrackerData', JSON.stringify(appData));
+                render();
+                
+                btn.innerHTML = originalText;
+                await customModal('alert', "Дані успішно завантажено з хмари!");
+            } catch (e) { 
+                console.error(e);
+                await customModal('alert', "Бекап у хмарі не знайдено або сталася помилка."); 
+                document.getElementById('sync-github-down-btn').innerHTML = "<i class='bx bx-cloud-download'></i> З хмари";
+            }
         };
         
         render();

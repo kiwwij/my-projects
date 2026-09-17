@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Интерактивная тепловая карта курсора. Отслеживайте свои движения мышью в фоновом режиме и скачивайте результат в виде изображения.">
+    <title>Тепловая аналитика</title>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/simpleheat@0.2.0/simpleheat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #f4f4f9;
+            --text: #1a1a1a;
+            --text-muted: #666;
+            --card-bg: #ffffff;
+            --panel-bg: rgba(255, 255, 255, 0.7);
+            --border: rgba(0, 0, 0, 0.1);
+            --accent: #ff5722;
+            --accent-hover: #e64a19;
+            --modal-overlay: rgba(255, 255, 255, 0.4);
+            --skeleton: #e0e0e0;
+        }
+
+        .dark {
+            --bg: #121212;
+            --text: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --card-bg: #1e1e1e;
+            --panel-bg: rgba(30, 30, 30, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #ff7043;
+            --accent-hover: #ff8a65;
+            --modal-overlay: rgba(0, 0, 0, 0.6);
+            --skeleton: #2a2a2a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dummy-content {
+            padding: 50px 10% 120px 10%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dummy-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .dummy-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+
+        .dummy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .dummy-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s, border-color 0.2s;
+            cursor: default;
+        }
+
+        .dummy-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .dummy-card i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .dummy-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .dummy-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        #placeholder-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .skeleton-loader {
+            width: 200px;
+            height: 40px;
+            background: var(--skeleton);
+            border-radius: 20px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        #heatmap-canvas {
+            display: none; 
+        }
+
+        .ui-panel {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 100px;
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+            transform: translateY(1px);
+        }
+
+        .btn:hover {
+            background: var(--border);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .modal-wrapper {
+            position: fixed;
+            inset: 0;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+
+        .modal-wrapper.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(0);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-wrapper.hidden .modal {
+            transform: translateY(20px);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-content p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: var(--text);
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .ui-panel {
+                bottom: 15px;
+                width: calc(100% - 30px);
+                flex-wrap: wrap;
+                justify-content: center;
+                border-radius: 20px;
+                padding: 15px;
+                gap: 10px;
+            }
+            .btn {
+                flex: 1 1 calc(50% - 10px);
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+            .dummy-content {
+                padding: 30px 5% 150px 5%;
+            }
+        }
+    </style>
+</head>
+<body class="dark">
+
+    <div id="placeholder-overlay" title="Подождите, идёт загрузка компонентов">
+        <div class="skeleton-loader"></div>
+    </div>
+
+    <div class="dummy-content">
+        <div class="dummy-header">
+            <h1>Фоновая аналитика</h1>
+            <p>Вы не видите тепловую карту, пока работаете с сайтом. Система незаметно записывает координаты курсора (учитывая всю высоту страницы). Когда вы нажмёте «Скачать», скрипт сфотографирует сайт и наложит карту поверх скриншота.</p>
+        </div>
+        <div class="dummy-grid">
+            <div class="dummy-card" title="Имитация карточки статистики">
+                <i class='bx bx-bar-chart-alt-2'></i>
+                <h3>Статистика посещений</h3>
+                <p>Наведите сюда курсор или покружите мышкой, чтобы «нагреть» эту зону.</p>
+            </div>
+            <div class="dummy-card" title="Имитация карточки сообщений">
+                <i class='bx bx-message-square-detail'></i>
+                <h3>Новые сообщения</h3>
+                <p>Оставьте мышку здесь на пару секунд. На финальном фото точка будет ярко-красной.</p>
+            </div>
+            <div class="dummy-card" title="Имитация карточки настроек">
+                <i class='bx bx-cog'></i>
+                <h3>Настройки системы</h3>
+                <p>Здесь можно менять конфигурации и переключать тему оформления.</p>
+            </div>
+            <div class="dummy-card" title="Имитация карточки профиля">
+                <i class='bx bx-user-circle'></i>
+                <h3>Управление профилем</h3>
+                <p>Так как карта рисуется только при скачивании, браузер абсолютно не нагружается в процессе работы.</p>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="heatmap-canvas"></canvas>
+
+    <div class="ui-panel">
+        <button id="theme-btn" class="btn" title="Переключить между тёмной и светлой темами оформления">
+            <i class='bx bx-moon' id="theme-icon"></i>
+            <span id="theme-text">Тёмная</span>
+        </button>
+        <button id="info-btn" class="btn" title="Узнать подробнее о том, как работает тепловая карта">
+            <i class='bx bx-info-circle'></i> Инфо
+        </button>
+        <button id="download-btn" class="btn btn-primary" title="Скачать скриншот сайта с наложенной тепловой картой">
+            <i class='bx bx-download'></i> Скачать фото
+        </button>
+        <button id="clear-btn" class="btn" title="Полностью очистить записанные движения курсора">
+            <i class='bx bx-trash'></i> Очистить
+        </button>
+    </div>
+
+    <div id="info-modal" class="modal-wrapper hidden">
+        <div class="modal">
+            <button class="modal-close" title="Закрыть модальное окно"><i class='bx bx-x'></i></button>
+            <h2 class="modal-title"><i class='bx bxs-flame'></i> Как это работает?</h2>
+            <div class="modal-content">
+                <p>1. <b>Фоновая запись:</b> Все движения вашей мыши сохраняются в массив данных. На экране при этом ничего не происходит.</p>
+                <p>2. <b>Генерация фото:</b> При нажатии на «Скачать» скрипт делает фотографию всего сайта (с помощью html2canvas).</p>
+                <p>3. <b>Наложение:</b> Поверх сфотографированного сайта рисуется собранная тепловая карта, после чего итоговая картинка скачивается на ваше устройство.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let heatPoints = [];
+        const MAX_POINTS = 50000;
+
+        document.addEventListener('mousemove', (e) => {
+            heatPoints.push([e.pageX, e.pageY, 1]);
+            
+            if (heatPoints.length > MAX_POINTS) {
+                heatPoints.shift();
+            }
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            heatPoints = [];
+            const btn = document.getElementById('clear-btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = "<i class='bx bx-check'></i> Очищено";
+            setTimeout(() => btn.innerHTML = originalHTML, 2000);
+        });
+
+        document.getElementById('download-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('download-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Обработка...";
+            btn.style.pointerEvents = 'none';
+
+            try {
+                const siteCanvas = await html2canvas(document.body, {
+                    scrollY: 0,
+                    scrollX: 0,
+                    width: document.documentElement.scrollWidth,
+                    height: document.documentElement.scrollHeight,
+                    useCORS: true,
+                    backgroundColor: getComputedStyle(document.body).backgroundColor
+                });
+
+                const heatCanvas = document.getElementById('heatmap-canvas');
+                heatCanvas.width = document.documentElement.scrollWidth;
+                heatCanvas.height = document.documentElement.scrollHeight;
+                
+                const heat = simpleheat(heatCanvas);
+                heat.data(heatPoints);
+                heat.radius(35, 25);
+                heat.max(30);
+                heat.draw();
+
+                const ctx = siteCanvas.getContext('2d');
+                ctx.drawImage(heatCanvas, 0, 0);
+
+                const link = document.createElement('a');
+                link.download = 'website-heatmap.png';
+                link.href = siteCanvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                console.error("Ошибка при генерации изображения:", error);
+                alert("Произошла ошибка при сохранении изображения.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.style.pointerEvents = 'auto';
+            }
+        });
+
+        const isDark = localStorage.getItem('heatmap-theme') !== 'light';
+        const body = document.body;
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+
+        function updateThemeUI(dark) {
+            if (dark) {
+                body.classList.add('dark');
+                themeIcon.className = 'bx bx-sun';
+                themeText.innerText = 'Светлая';
+            } else {
+                body.classList.remove('dark');
+                themeIcon.className = 'bx bx-moon';
+                themeText.innerText = 'Тёмная';
+            }
+        }
+
+        updateThemeUI(isDark);
+
+        document.getElementById('theme-btn').addEventListener('click', () => {
+            const currentlyDark = body.classList.contains('dark');
+            localStorage.setItem('heatmap-theme', currentlyDark ? 'light' : 'dark');
+            updateThemeUI(!currentlyDark);
+        });
+
+        const modalWrapper = document.getElementById('info-modal');
+        const btnInfo = document.getElementById('info-btn');
+        const btnClose = document.querySelector('.modal-close');
+
+        function openModal() { modalWrapper.classList.remove('hidden'); }
+        function closeModal() { modalWrapper.classList.add('hidden'); }
+
+        btnInfo.addEventListener('click', openModal);
+        btnClose.addEventListener('click', closeModal);
+
+        modalWrapper.addEventListener('click', (e) => {
+            if (e.target === modalWrapper) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modalWrapper.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            const overlay = document.getElementById('placeholder-overlay');
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.visibility = 'hidden', 500);
+            }, 600);
+        });
+    </script>
+</body>
+</html>

@@ -795,7 +795,14 @@ function updateStatus() {
 
     } else {
         titleEl.innerText = isSessionPeriod ? "На сьогодні іспити завершено!" : "Пари на сьогодні все!";
-        timerEl.innerText = "Додому"; subtitleEl.innerText = "Гарного відпочинку";
+        
+        if (now.getHours() >= 15) {
+            timerEl.innerText = "Відпочивайте☕";
+        } else {
+            timerEl.innerText = "Додому"; 
+        }
+        
+        subtitleEl.innerText = "Гарного відпочинку";
     }
 }
 

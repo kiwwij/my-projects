@@ -627,6 +627,13 @@
     "url": "",
     "date": "2026-09-12"
   },
+  "cursor-heatmap.html": {
+    "image": "",
+    "description": "A sleek, interactive canvas that visualizes your cursor's journey across the screen. Watch as your digital footprints seamlessly transform into a glowing, dynamic heat map.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-09-17"
+  },
   ".html": {
     "image": "",
     "description": "",
