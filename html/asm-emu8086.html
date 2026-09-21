@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="Максимально детальний конспект з дисципліни 'Системне програмування' з тестами.">
+    <title>Операційні системи | Детальний конспект і тести</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX7pYJBL9GJ5y-u3wPMLJbLh4-Hx-Ak1nDkPGJIThnk55DZsHw2vUh6LH3&s=10" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <style>
+        :root {
+            --bg-color: #24273a;
+            --text-color: #cad3f5;
+            --primary: #8aadf4;
+            --secondary: #494d64;
+            --card-bg: #363a4f;
+            --hover-bg: #5b6078;
+            --danger: #ed8796;
+            --success: #a6da95;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body.light-theme {
+            --bg-color: #eff1f5;
+            --text-color: #4c4f69;
+            --primary: #1e66f5;
+            --secondary: #bcc0cc;
+            --card-bg: #e6e9ef;
+            --hover-bg: #ccd0da;
+            --danger: #d20f39;
+            --success: #40a02b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color var(--transition), color var(--transition);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        
+        .nav-links { display: flex; gap: 15px; flex-wrap: wrap; }
+        .nav-links button {
+            background: none; border: none; color: var(--text-color);
+            font-family: inherit; font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; gap: 5px; transition: var(--transition);
+            padding: 8px 12px; border-radius: var(--border-radius);
+        }
+        .nav-links button:hover, .nav-links button.active {
+            background-color: var(--hover-bg); color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: none; border: none; font-size: 1.5rem;
+            color: var(--text-color); cursor: pointer; transition: var(--transition);
+        }
+        .theme-toggle:hover { color: var(--primary); }
+
+        main { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
+        
+        .part-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .part-section.active { display: block; }
+
+        h1, h2, h3, h4 { color: var(--primary); margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
+        
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        p, li { margin-bottom: 10px; text-align: justify; }
+        ul { padding-left: 20px; }
+
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px;
+            background-color: var(--bg-color); border-radius: 8px; overflow: hidden;
+        }
+        th, td { padding: 12px; border: 1px solid var(--secondary); text-align: left; }
+        th { background-color: var(--hover-bg); color: var(--primary); }
+
+        code {
+            background-color: var(--hover-bg);
+            padding: 2px 6px; border-radius: 4px; color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        pre {
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid var(--secondary);
+        }
+
+        .test-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background-color: var(--primary); color: var(--bg-color);
+            border: none; padding: 14px 28px; font-size: 1.1rem;
+            border-radius: var(--border-radius); cursor: pointer;
+            font-family: inherit; font-weight: bold; transition: var(--transition);
+            width: 100%; max-width: 350px; margin: 30px auto; display: flex;
+        }
+        .test-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .test-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .placeholder-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 400px; background-color: var(--card-bg); border-radius: var(--border-radius);
+            border: 2px dashed var(--secondary); color: var(--secondary); text-align: center;
+        }
+        .placeholder-box i { font-size: 5rem; margin-bottom: 15px; }
+
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            justify-content: center; align-items: center;
+        }
+        .modal.active { display: flex; animation: fadeIn 0.3s; }
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: auto; padding: 30px;
+            border-radius: var(--border-radius); width: 95%; max-width: 900px;
+            max-height: 90vh; overflow-y: auto; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .close-btn {
+            position: absolute; top: 15px; right: 20px; color: var(--text-color);
+            font-size: 2.5rem; font-weight: bold; cursor: pointer; transition: var(--transition);
+            line-height: 1;
+        }
+        .close-btn:hover { color: var(--danger); transform: scale(1.1); }
+
+        .question-block { margin-bottom: 25px; border-bottom: 1px solid var(--secondary); padding-bottom: 20px; }
+        .question-title { font-weight: bold; margin-bottom: 12px; font-size: 1.1rem; color: var(--primary); }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option-label {
+            display: flex; align-items: center; gap: 12px; padding: 12px;
+            background-color: var(--bg-color); border-radius: 8px; cursor: pointer;
+            transition: var(--transition); border: 1px solid transparent;
+        }
+        .option-label:hover:not(.disabled) { background-color: var(--hover-bg); border-color: var(--secondary); }
+        .option-label input { accent-color: var(--primary); transform: scale(1.2); }
+        
+        .option-label.correct-answer { background-color: rgba(166, 218, 149, 0.2); border-color: var(--success); color: var(--success); font-weight: bold; }
+        .option-label.wrong-answer { background-color: rgba(237, 135, 150, 0.2); border-color: var(--danger); color: var(--danger); text-decoration: line-through; }
+        .option-label.disabled { cursor: not-allowed; opacity: 0.8; }
+
+        .explanation {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background-color: rgba(138, 173, 244, 0.15);
+            border-left: 4px solid var(--primary);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            animation: fadeIn 0.4s;
+        }
+        .explanation i {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-top: 2px;
+        }
+
+        .result-box { display: none; margin-top: 25px; padding: 20px; border-radius: 8px; text-align: center; font-size: 1.3rem; font-weight: bold; }
+        .result-box.pass { background-color: rgba(166, 218, 149, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .result-box.fail { background-color: rgba(237, 135, 150, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .nav-links { flex-direction: column; position: fixed; top: 70px; left: -100%; width: 100%; background-color: var(--card-bg); padding: 20px; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .nav-links.active { left: 0; }
+            .menu-toggle { display: block; background: none; border: none; color: var(--text-color); font-size: 2rem; cursor: pointer; }
+            .theme-toggle { margin-left: auto; margin-right: 15px; }
+        }
+        @media (min-width: 769px) { .menu-toggle { display: none; } }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <header>
+        <div class="logo" title="Логотип та назва сайту">
+            <i class='bx bx-microchip'></i> Assembly notes
+        </div>
+        <button class="menu-toggle" id="mobile-menu-btn" title="Відкрити навігаційне меню"><i class='bx bx-menu'></i></button>
+        <nav class="nav-links" id="nav-links">
+            <button class="tab-btn active" data-target="part1" title="Частина 1: Лабораторна робота 1"><i class='bx bx-book-open'></i> Частина 1</button>
+            <button class="tab-btn" data-target="part2" title="Частина 2: Лекції 1.2 та 1.3"><i class='bx bx-book'></i> Частина 2</button>
+            <button class="tab-btn" data-target="part3" title="Частина 3: Буде додана пізніше"><i class='bx bx-time-five'></i> Частина 3</button>
+        </nav>
+        <button class="theme-toggle" id="theme-btn" title="Змінити тему оформлення (Світла/Темна)"><i class='bx bx-moon'></i></button>
+    </header>
+
+    <main>
+        <section id="part1" class="part-section active">
+            <h1>Частина 1: Лабораторна робота №1</h1>
+            <p><strong>Тема:</strong> Розробка застосунку для обчислення результату математичного виразу на мові Асемблер.</p>
+            <p><strong>Мета і задачі:</strong> вивчити способи адресації даних мікропроцесором i8086 і їх використання при пересиланні даних, арифметичні команди мікропроцесора i8086 і правила їх використання, ознайомитись з основними форматами і правилами роботи з командами множення і ділення мікропроцесора i8086. Вивчити основні відомості і визначення подані у лекції.</p>
+            
+            <div class="card" title="Програмна модель та регістри">
+                <h2>Програмна модель МП 8086</h2>
+                <p>Програмна модель – це засоби які представлені програмісту для реалізації програм. До неї входять регістри загального призначення, сегментні регістри, вказівники, індексні регістри та спеціальні регістри прапорів.</p>
+                
+                <h3>Регістри загального призначення</h3>
+                <table>
+                    <tr><th>Категорія</th><th>Назва</th><th>Структура</th><th>Опис</th></tr>
+                    <tr><td rowspan="4">Загального призначення</td><td>AX (Accumulator)</td><td>AH, AL</td><td>Арифметика, логіка, множення/ділення, ввід-вивід.</td></tr>
+                    <tr><td>BX (Base)</td><td>BH, BL</td><td>Базовий регістр у адресації пам’яті.</td></tr>
+                    <tr><td>CX (Count)</td><td>CH, CL</td><td>Лічильник у циклах, зсуви, ротації.</td></tr>
+                    <tr><td>DX (Data)</td><td>DH, DL</td><td>Старші біти при множенні/діленні, порти вводу-виводу.</td></tr>
+                </table>
+
+                <h3>Сегментні регістри, Вказівники та Індекси</h3>
+                <ul>
+                    <li><strong>CS (Code Segment)</strong>: 16-біт. Базова адреса сегмента коду (разом з IP).</li>
+                    <li><strong>DS (Data Segment)</strong>: 16-біт. Базова адреса сегмента даних.</li>
+                    <li><strong>SS (Stack Segment)</strong>: 16-біт. Базова адреса сегмента стека.</li>
+                    <li><strong>ES (Extra Segment)</strong>: 16-біт. Додатковий сегмент для рядкових/пам’ятних операцій.</li>
+                    <li><strong>SP (Stack Pointer)</strong>: 16-біт. Вказівник вершини стека (разом з SS).</li>
+                    <li><strong>BP (Base Pointer)</strong>: 16-біт. Вказівник бази, доступ до даних у стеку.</li>
+                    <li><strong>SI (Source Index)</strong>: 16-біт. Джерело в рядкових операціях.</li>
+                    <li><strong>DI (Destination Index)</strong>: 16-біт. Приймач у рядкових операціях.</li>
+                </ul>
+
+                <h3>Регістр прапорців (FLAGS)</h3>
+                <p>16-бітний регістр. Прапори стану: <br>CF (перенесення), <br>PF (паритету), <br>AF (додаткове перенесення), <br>ZF (нуля), <br>SF (знака), <br>TF (трасування), <br>IF (переривання), <br>DF (напрямку), <br>OF (переповнення).</p>
+            </div>
+
+            <div class="card" title="Способи адресації даних">
+                <h2>Режими адресації даних</h2>
+                <p>Мікропроцесор i8x86 має 24 режими адресації операндів. Вони розділені на 7 груп:</p>
+                <ul>
+                    <li><strong>Регістровий:</strong> формат <code>регістр</code> (Приклад: <code>MOV AX, BX</code>).</li>
+                    <li><strong>Безпосередній:</strong> формат <code>дані</code> (Приклад: <code>MOV AX, 1234h</code>).</li>
+                    <li><strong>Прямий:</strong> формат <code>зсув/мітка</code> (Приклад: <code>MOV AX, [1234h]</code>).</li>
+                    <li><strong>Непрямий регістровий:</strong> формат <code>[BX], [BP], [DI], [SI]</code> (Приклад: <code>MOV AX, [BX]</code>).</li>
+                    <li><strong>По базі:</strong> формат <code>[BX]+зсув, [BP]+зсув</code> (Приклад: <code>MOV AX, [BX+4]</code>).</li>
+                    <li><strong>Прямий з індексуванням:</strong> формат <code>[DI]+зсув, [SI]+зсув</code> (Приклад: <code>MOV AX, [SI+100h]</code>).</li>
+                    <li><strong>По базі з індексуванням:</strong> формат <code>[BX][SI]+зсув</code> (Приклад: <code>MOV AX, [BX+SI]</code>).</li>
+                </ul>
+            </div>
+
+            <div class="card" title="Арифметичні команди та команди пересилки">
+                <h2>Команди Assembler</h2>
+                <ul>
+                    <li><strong>XCHG</strong>: Обмін значеннями двох операндів (регістр-пам'ять, пам'ять-регістр, регістр-регістр). Приклад: <code>XCHG AL, AH</code>.</li>
+                    <li><strong>MOV</strong>: Копіювати значення з операнд2 в операнд1. Не змінює прапорців. Інструкція MOV не може встановлювати значення CS та IP, копіювати з одного сегментного регістра в інший або копіювати безпосереднє значення в сегментний регістр.</li>
+                    <li><strong>ADC</strong>: Додавання з перенесенням (операнд1 = операнд1 + операнд2 + CF).</li>
+                    <li><strong>ADD</strong>: Додати (операнд1 = операнд1 + операнд2).</li>
+                    <li><strong>SBB</strong>: Відніміть за допомогою позики (операнд1 = операнд1 - операнд2 - CF).</li>
+                    <li><strong>SUB</strong>: Відніміть (операнд1 = операнд1 - операнд2).</li>
+                    <li><strong>MUL</strong>: Беззнакове множення. Якщо операнд байт: AX = AL * операнд. Якщо слово: DX:AX = AX * операнд.</li>
+                    <li><strong>IMUL</strong>: Множення зі знаком.</li>
+                    <li><strong>DIV</strong>: Беззнакове ділення. Якщо операнд байт: AL = AX / операнд, AH = залишок. Якщо слово: AX = (DX:AX) / операнд, DX = залишок.</li>
+                    <li><strong>IDIV</strong>: Ділення зі знаком.</li>
+                </ul>
+            </div>
+
+            <div class="card" title="Допоміжні функції для вводу/виводу">
+                <h2>Допоміжні функції (emu8086.inc)</h2>
+                <ul>
+                    <li><strong>PUTC char</strong>: макрос, виводить ASCII-символ у поточній позиції курсора (наприклад, <code>PUTC 10</code> - новий рядок).</li>
+                    <li><strong>PRINT string</strong>: макрос, виводить рядок.</li>
+                    <li><strong>PRINTN string</strong>: макрос, виводить рядок і автоматично додає "повернення каретки" в кінці.</li>
+                    <li><strong>PRINT_STRING</strong>: процедура для виведення рядка, що закінчується нулем.</li>
+                    <li><strong>SCAN_NUM</strong>: процедура, яка отримує багатозначне число зі знаком з клавіатури та зберігає результат у CX.</li>
+                    <li><strong>PRINT_NUM</strong>: процедура, яка друкує знакове число з регістру AX.</li>
+                </ul>
+            </div>
+
+            <button class="test-btn" onclick="openTest('modal-test1')" title="Відкрити тест до Частини 1">
+                <i class='bx bx-brain'></i> Пройти детальний тест до Частини 1
+            </button>
+        </section>
+
+        <section id="part2" class="part-section">
+            <h1>Частина 2: Лекції 1.2 та 1.3</h1>
+            <p><strong>Лекція 3-4:</strong> Директиви розподілу пам'яті, структури, режими адресації та арифметичні операції.<br>
+               <strong>Лекція 5-6:</strong> Команди передачі керування, умовні/безумовні переходи, цикли.</p>
+
+            <div class="card" title="Директиви та структури">
+                <h2>Директиви розподілу пам’яті (Лекція 3-4)</h2>
+                <p>Синтаксис: <code>ім'я_змінної D* значення</code>.</p>
+                <ul>
+                    <li><strong>DB</strong> — визначити байт.</li>
+                    <li><strong>DW</strong> — визначити слово (2 байти).</li>
+                    <li><strong>DD</strong> — визначити подвійне слово (4 байти).</li>
+                    <li><strong>DF</strong> — визначити 6 байт (16-бітний селектор : 32-бітний зсув).</li>
+                    <li><strong>DQ</strong> — визначити учетверене слово (8 байт).</li>
+                    <li><strong>DT</strong> — визначити 10 байт (80-бітні типи даних FPU).</li>
+                </ul>
+                <p>Якщо потрібно заповнити ділянку пам'яті даними, що повторюються, використовується спеціальний оператор <strong>DUP</strong> (наприклад: <code>table_512w dw 512 dup (?)</code>).</p>
+
+                <h3>Структури</h3>
+                <p>Директива <strong>STRUC</strong> дозволяє визначити структуру даних. Звертання до елементів структури здійснюється через оператор «.» (крапка).</p>
+<pre><code>point struc
+  x dw 0
+  y dw 0
+point ends
+cur_point point &lt;1,1&gt;
+mov ax, cur_point.x
+</code></pre>
+            </div>
+
+            <div class="card" title="Правила обчислень">
+                <h2>Правила проведення обчислення виразу</h2>
+                <ol>
+                    <li>Визначення пріоритетності операції:
+                        <ul>
+                            <li>Дужки () — виконуються першими, від внутрішніх до зовнішніх.</li>
+                            <li>Унарні операції (знак +, -, інкремент/декремент).</li>
+                            <li>Множення і ділення (*, /, DIV, MUL) — зліва направо.</li>
+                            <li>Додавання і віднімання (+, -, ADD, SUB).</li>
+                            <li>Порівняння та логічні операції.</li>
+                        </ul>
+                    </li>
+                    <li>Приведення операндів до максимальної розрядності.</li>
+                    <li>Формування змінних, визначення глибини стека.</li>
+                    <li>Обчислення.</li>
+                </ol>
+            </div>
+
+            <div class="card" title="Команди передачі керування">
+                <h2>Команди передачі керування (Лекція 5-6)</h2>
+                <p>Команди переходів можна розділити на три групи:</p>
+                <ol>
+                    <li>Команди безумовної передачі керування (безумовний перехід, виклик/повернення з процедури, переривання).</li>
+                    <li>Команди умовної передачі керування (по результату порівняння, по стану прапора, по вмісту регістра ecx/cx).</li>
+                    <li>Команди керування циклом (із лічильником cx/ecx та додатковими умовами).</li>
+                </ol>
+
+                <h3>Мітки</h3>
+                <p>Символічне ім’я, що позначає комірку пам’яті. Атрибути: ім’я сегмента, зміщення, тип мітки (near/far). Описується через <code>:</code> або директивою <code>label</code>.</p>
+
+                <h3>Команди безумовного переходу</h3>
+                <p><strong>jmp [модифікатор] адрес_переходу</strong> — перехід без зберігання інформації про точку повернення. Внутрішньосегментний перехід змінює тільки вміст eip/ip і буває: прямий короткий (від –128 до +127 байтів), прямий (до 64 Кбайт), непрямий (через регістр).</p>
+
+                <h3>Умовні переходи та прапори</h3>
+                <p>Перевіряють відношення зі знаком, без знака або стан прапорів. Синтаксис: <code>j(хх) мітка_перехода</code>.</p>
+                <table>
+                    <tr><th>Мнемокод</th><th>Критерій переходу</th><th>Значення прапорів</th></tr>
+                    <tr><td>je / jz</td><td>операнд_1 = операнд_2</td><td>zf=1</td></tr>
+                    <tr><td>jne / jnz</td><td>операнд_1 != операнд_2</td><td>zf=0</td></tr>
+                    <tr><td>jl / jnge</td><td>операнд_1 < операнд_2 (зі знаком)</td><td>sf!=of</td></tr>
+                    <tr><td>jg / jnle</td><td>операнд_1 > операнд_2 (зі знаком)</td><td>sf=of і zf=0</td></tr>
+                    <tr><td>jb / jnae</td><td>операнд_1 < операнд_2 (без знака)</td><td>cf=1</td></tr>
+                    <tr><td>ja / jnbe</td><td>операнд_1 > операнд_2 (без знака)</td><td>cf=0 і zf=0</td></tr>
+                </table>
+                <p>Команда <strong>cmp</strong> віднімає операнди і порівнює прапори: <code>cmp операнд_1, операнд_2</code>.</p>
+
+                <h3>Організація циклів</h3>
+                <p>Використовує три команди (працюють з лічильником cx/ecx):</p>
+                <ul>
+                    <li><strong>loop мітка</strong>: декремент cx; якщо cx > 0, перехід на мітку.</li>
+                    <li><strong>loope/loopz мітка</strong>: повторити цикл, поки cx != 0 АБО zf=1.</li>
+                    <li><strong>loopne/loopnz мітка</strong>: повторити цикл, поки cx != 0 АБО zf=0.</li>
+                </ul>
+                <p>Типи циклів: <strong>Цикл з післяумовою</strong> (тіло виконується хоча б один раз) та <strong>Цикл з передумовою</strong> (якщо умова хибна, тіло не виконається жодного разу).</p>
+            </div>
+
+            <button class="test-btn" onclick="openTest('modal-test2')" title="Відкрити тест до Частини 2">
+                <i class='bx bx-brain'></i> Пройти детальний тест до Частини 2
+            </button>
+        </section>
+
+        <!-- ЧАСТИНА 3: Заглушка -->
+        <section id="part3" class="part-section">
+            <div class="placeholder-box" title="Цей розділ наразі порожній. В майбутньому тут з'явиться третя частина конспекту.">
+                <i class='bx bx-laptop'></i>
+                <h2>Частина 3</h2>
+                <p>Матеріал знаходиться на стадії розробки та буде доданий пізніше.</p>
+                <img src="https://via.placeholder.com/500x100.png?text=Loading+Data..." alt="Заглушка" style="border-radius: 8px; margin-top: 20px; opacity: 0.6; width: 80%; max-width: 400px;">
+            </div>
+        </section>
+    </main>
+
+    <div id="modal-test1" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" title="Закрити (можна також натиснути Esc або клікнути за межами вікна)">&times;</span>
+            <h2>Тест до Частини 1 (Лабораторна робота)</h2>
+            <p>Дайте відповідь на 15 детальних запитань. Усі питання базуються на матеріалах лабораторної роботи.</p>
+            <form id="form-test1"></form>
+            <button type="button" class="test-btn submit-test-btn" onclick="submitTest(1)" title="Завершити тест та побачити результат">Перевірити результат</button>
+            <div id="result-test1" class="result-box"></div>
+        </div>
+    </div>
+
+    <div id="modal-test2" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" title="Закрити (можна також натиснути Esc або клікнути за межами вікна)">&times;</span>
+            <h2>Тест до Частини 2 (Лекції 1.2 та 1.3)</h2>
+            <p>Дайте відповідь на 15 детальних запитань. Усі питання базуються на лекціях про розподіл пам'яті та керування.</p>
+            <form id="form-test2"></form>
+            <button type="button" class="test-btn submit-test-btn" onclick="submitTest(2)" title="Завершити тест та побачити результат">Перевірити результат</button>
+            <div id="result-test2" class="result-box"></div>
+        </div>
+    </div>
+
+    <script>
+        const themeBtn = document.getElementById('theme-btn');
+        const body = document.body;
+        const icon = themeBtn.querySelector('i');
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            body.classList.replace('dark-theme', 'light-theme');
+            icon.classList.replace('bx-moon', 'bx-sun');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            if (body.classList.contains('dark-theme')) {
+                body.classList.replace('dark-theme', 'light-theme');
+                icon.classList.replace('bx-moon', 'bx-sun');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.replace('light-theme', 'dark-theme');
+                icon.classList.replace('bx-sun', 'bx-moon');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.part-section');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
+                
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        const modals = document.querySelectorAll('.modal');
+        const closeBtns = document.querySelectorAll('.close-btn');
+
+        function openTest(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            modals.forEach(m => m.classList.remove('active'));
+            document.body.style.overflow = 'auto';
+        }
+
+        closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) closeModal();
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        const test1Data = [
+            { q: "Який регістр виконує роль акумулятора в мікропроцесорі 8086?", options: ["BX", "EAX/AX", "CX", "DX"], answer: 1, explanation: "AX (Accumulator) – це основний суматор, який використовується для арифметики, логіки та вводу-виводу." },
+            { q: "Який регістр використовується як базовий при адресації пам'яті?", options: ["BX", "CX", "IP", "DX"], answer: 0, explanation: "BX (Base) використовується як базовий регістр у різних режимах адресації пам'яті." },
+            { q: "Який сегментний регістр вказує на додатковий сегмент для рядкових операцій?", options: ["DS", "SS", "CS", "ES"], answer: 3, explanation: "ES (Extra Segment) – це додатковий сегмент, який спеціально призначений для рядкових або пам'ятних операцій як приймач." },
+            { q: "Який прапорець встановлюється в 1, якщо результат нульовий?", options: ["CF", "SF", "ZF", "OF"], answer: 2, explanation: "ZF (Zero Flag) або прапорець нуля встановлюється в 1, якщо результат останньої операції дорівнює нулю." },
+            { q: "Який режим адресації використовується у команді `MOV AX, [1234h]`?", options: ["Регістровий", "Прямий", "По базі", "Безпосередній"], answer: 1, explanation: "Це пряма адресація, оскільки ефективна адреса береться прямо з поля зсуву команди ([1234h])." },
+            { q: "Який формат має адресація по базі з індексуванням?", options: ["[BX]+зсув", "[BX][SI]+зсув", "регістр", "дані"], answer: 1, explanation: "Вона поєднує базовий регістр (BX/BP), індексний регістр (SI/DI) та необов'язковий зсув." },
+            { q: "Що робить команда XCHG?", options: ["Обмін значеннями двох операндів", "Копіювання з операнд2 в операнд1", "Додавання з перенесенням"], answer: 0, explanation: "Команда XCHG здійснює безпосередній обмін значеннями між двома операндами." },
+            { q: "Чи можна за допомогою команди MOV копіювати значення з пам'яті в пам'ять напряму?", options: ["Так", "Ні", "Тільки для рядків"], answer: 1, explanation: "Інструкція MOV не може копіювати безпосередньо з пам'яті в пам'ять, для цього потрібно спочатку скопіювати дані в проміжний регістр." },
+            { q: "Яка інструкція виконує додавання з перенесенням (CF)?", options: ["ADD", "SUB", "ADC", "SBB"], answer: 2, explanation: "ADC (Add with Carry) додає до операндів ще й значення прапорця перенесення CF." },
+            { q: "Що знаходиться в регістрах DX:AX після множення (MUL) 16-бітних слів?", options: ["Тільки залишок", "Завжди нулі", "32-бітний результат"], answer: 2, explanation: "При множенні 16-бітного слова результат завжди має подвійний розмір (32 біти) і записується в регістрову пару DX:AX." },
+            { q: "Де зберігається результат беззнакового ділення (DIV) слова?", options: ["AX - приватне, DX - залишок", "AL - приватне, AH - залишок", "CX - залишок"], answer: 0, explanation: "При діленні слова (DX:AX) на 16-бітний операнд, результат (частка) записується в AX, а залишок в DX." },
+            { q: "Який макрос бібліотеки emu8086.inc виводить рядок?", options: ["PUTC", "PRINT", "SCAN_NUM"], answer: 1, explanation: "Макрос PRINT з 1 параметром використовується для безпосереднього виведення рядка." },
+            { q: "В якому регістрі зберігається результат виклику макросу SCAN_NUM?", options: ["AX", "BX", "CX", "DX"], answer: 2, explanation: "Процедура SCAN_NUM отримує число з клавіатури і зберігає його результат саме у регістрі CX." },
+            { q: "Який прапорець відповідає за переповнення (overflow)?", options: ["TF", "OF", "PF", "IF"], answer: 1, explanation: "OF (Overflow Flag) встановлюється при переповненні розрядної сітки процесора." },
+            { q: "Яка адресація використовується у команді `MOV AX, 1234h`?", options: ["Пряма", "Регістрова", "Безпосередня"], answer: 2, explanation: "Це безпосередня адресація, оскільки дані (константа 1234h) вказані безпосередньо в самій команді." }
+        ];
+
+        const test2Data = [
+            { q: "Яка директива визначає подвійне слово (4 байти)?", options: ["DB", "DW", "DD", "DQ"], answer: 2, explanation: "DD (Define Doubleword) визначає подвійне слово, тобто 4 байти." },
+            { q: "Який оператор використовується для заповнення пам'яті значеннями, що повторюються?", options: ["STRUC", "DUP", "LOOP", "PTR"], answer: 1, explanation: "Оператор DUP має формат `лічильник DUP (значення)` і використовується для дублювання даних." },
+            { q: "За допомогою якої директиви створюються структури?", options: ["RECORD", "MACRO", "STRUC"], answer: 2, explanation: "Директива STRUC дозволяє визначити структуру даних, яка завершується директивою ENDS." },
+            { q: "Який символ використовується для звертання до елемента структури?", options: [", (кома)", ": (двокрапка)", ". (крапка)"], answer: 2, explanation: "Оператор «.» (крапка) використовується для доступу до конкретного поля або елемента структури." },
+            { q: "Який пріоритет операцій є найвищим при обчисленні виразів?", options: ["Додавання", "Множення", "Дужки ()"], answer: 2, explanation: "Круглі дужки () мають найвищий пріоритет (1) при виконанні операторів асемблера." },
+            { q: "Скільки атрибутів присвоює асемблер мітці?", options: ["Один (лише зсув)", "Два (ім'я і тип)", "Три (сегмент, зміщення, тип)"], answer: 2, explanation: "Мітка отримує три атрибути: ім'я сегмента, зміщення (віддаль в байтах) та тип (near або far)." },
+            { q: "Яка команда здійснює безумовний перехід?", options: ["je", "jmp", "loop", "cmp"], answer: 1, explanation: "Команда jmp передає керування на мітку безумовно і без збереження інформації про точку повернення." },
+            { q: "На якій умові базується перехід 'je / jz'?", options: ["zf=0", "cf=1", "zf=1"], answer: 2, explanation: "Перехід je (jump if equal) або jz (jump if zero) спрацьовує, якщо прапор нуля zf дорівнює 1." },
+            { q: "Які прапори перевіряє умовний перехід 'jg' (більше, зі знаком)?", options: ["cf=0 і zf=0", "sf=of і zf=0", "sf!=of"], answer: 1, explanation: "Перехід jg (jump if greater) відбувається, якщо прапор знака дорівнює прапору переповнення (sf=of) і прапор нуля дорівнює 0 (zf=0)." },
+            { q: "Який мнемокод відповідає переходу 'якщо нижче' (без знака)?", options: ["jl", "jb", "js"], answer: 1, explanation: "jb (jump if below) перевіряє умову для беззнакових значень (спрацьовує при cf=1)." },
+            { q: "Що виконує команда 'cmp' перед порівнянням прапорів?", options: ["Додає операнди", "Множить операнди", "Віднімає операнди (без збереження результату)"], answer: 2, explanation: "Команда cmp працює так само як sub, віднімаючи операнди і змінюючи прапори, але не зберігає сам результат віднімання." },
+            { q: "Який регістр декрементується командою 'loop' перед перевіркою?", options: ["ax/eax", "cx/ecx", "dx/edx"], answer: 1, explanation: "Команди циклу автоматично декрементують регістр-лічильник ecx/cx." },
+            { q: "За якої додаткової умови переривається 'loope / loopz' крім обнулення лічильника?", options: ["zf=0", "zf=1", "cf=1"], answer: 0, explanation: "Цикл loope продовжує роботу поки cx!=0 ТА zf=1. Тому він переривається (завершується достроково), як тільки zf стане рівним 0." },
+            { q: "Як називається цикл, у якому тіло виконується хоча б один раз?", options: ["Цикл з передумовою", "Нескінченний цикл", "Цикл з післяумовою"], answer: 2, explanation: "У циклі з післяумовою умова перевіряється після виконання тіла, тому він гарантовано виконується щонайменше 1 раз." },
+            { q: "Які команди відносяться до групи керування циклом?", options: ["je, jne, jmp", "loop, loope, loopne", "call, ret, int"], answer: 1, explanation: "Ці три команди утворюють групу команд керування циклом з використанням регістра-лічильника." }
+        ];
+
+        function renderTest(formId, data) {
+            const form = document.getElementById(formId);
+            form.innerHTML = '';
+            data.forEach((item, index) => {
+                const qBlock = document.createElement('div');
+                qBlock.className = 'question-block';
+                
+                const title = document.createElement('div');
+                title.className = 'question-title';
+                title.textContent = `${index + 1}. ${item.q}`;
+                qBlock.appendChild(title);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+
+                item.options.forEach((opt, optIndex) => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.title = "Оберіть цей варіант відповіді";
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `q_${formId}_${index}`;
+                    radio.value = optIndex;
+
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(opt));
+                    optionsDiv.appendChild(label);
+                });
+
+                qBlock.appendChild(optionsDiv);
+                form.appendChild(qBlock);
+            });
+        }
+
+        renderTest('form-test1', test1Data);
+        renderTest('form-test2', test2Data);
+
+        function submitTest(testNum) {
+            const formId = `form-test${testNum}`;
+            const data = testNum === 1 ? test1Data : test2Data;
+            const resultBox = document.getElementById(`result-test${testNum}`);
+            const submitBtn = document.querySelector(`#modal-test${testNum} .submit-test-btn`);
+            
+            let score = 0;
+            let answered = 0;
+
+            data.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q_${formId}_${index}"]:checked`);
+                if (selected) answered++;
+            });
+
+            if (answered < data.length) {
+                alert(`Будь ласка, дайте відповідь на всі ${data.length} питань. Ви відповіли на ${answered}.`);
+                return;
+            }
+
+            data.forEach((item, index) => {
+                const options = document.querySelectorAll(`input[name="q_${formId}_${index}"]`);
+                let userGotItCorrect = false;
+
+                options.forEach(radio => {
+                    const label = radio.parentElement;
+                    radio.disabled = true;
+                    label.classList.add('disabled');
+                    label.classList.remove('correct-answer', 'wrong-answer');
+                    
+                    const isCorrectChoice = parseInt(radio.value) === item.answer;
+
+                    if (radio.checked) {
+                        if (isCorrectChoice) {
+                            label.classList.add('correct-answer');
+                            score++;
+                            userGotItCorrect = true;
+                        } else {
+                            label.classList.add('wrong-answer');
+                        }
+                    } else if (isCorrectChoice) {
+                        label.classList.add('correct-answer');
+                    }
+                });
+
+                if (!userGotItCorrect) {
+                    const expl = document.createElement('div');
+                    expl.className = 'explanation';
+                    expl.innerHTML = `<i class='bx bx-info-circle'></i> <div><strong>Пояснення:</strong> ${item.explanation}</div>`;
+                    
+                    const qBlock = document.querySelectorAll(`#${formId} .question-block`)[index];
+                    qBlock.appendChild(expl);
+                }
+            });
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Тест завершено";
+
+            resultBox.style.display = 'block';
+            resultBox.textContent = `Ваш результат: ${score} з ${data.length}`;
+            
+            if (score >= 12) {
+                resultBox.className = 'result-box pass';
+                resultBox.textContent += ' 🎉 Відмінна робота! Матеріал засвоєно чудово.';
+            } else if (score >= 8) {
+                resultBox.className = 'result-box pass';
+                resultBox.textContent += ' 👍 Непогано, але варто повторити деякі теми.';
+            } else {
+                resultBox.className = 'result-box fail';
+                resultBox.textContent += ' 😢 Потрібно перечитати конспект уважніше.';
+            }
+            
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+</html>
