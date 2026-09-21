@@ -28,6 +28,27 @@ const techColors = {
     'git': '#F05032', 'mysql': '#4479a1', 'sql': '#4479a1'
 };
 
+function formatProjectDate(dateStr) {
+    if (!dateStr) return "No data saved for this period";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "No data saved for this period";
+    
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const day = d.getDate();
+    
+    const getSuffix = (day) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+            case 1:  return "st";
+            case 2:  return "nd";
+            case 3:  return "rd";
+            default: return "th";
+        }
+    };
+    
+    return `${months[d.getMonth()]} ${day}${getSuffix(day)} ${d.getFullYear()}`;
+}
+
 function isProjectNew(dateString) {
     if (!dateString) return false;
     const projectDate = new Date(dateString);
@@ -163,6 +184,8 @@ async function loadProjects() {
             card.setAttribute('data-id', project.name);
             card.setAttribute('data-is-new', (project.date && isProjectNew(project.date)) ? 'true' : 'false');
 
+            const dateFormatted = formatProjectDate(project.date);
+
             card.innerHTML = `
                 ${badgeHTML}
                 <div class="pin-btn" title="Pin project" onclick="togglePin(event, '${project.name}')">
@@ -172,10 +195,17 @@ async function loadProjects() {
                 <div class="card-content">
                     <div class="card-title">${displayName}</div>
                     ${description ? `<p class="card-description">${description}</p>` : ''}
-                    <div class="card-footer">
-                        <div class="tech-stack">${stackHTML}</div>
-                        <div class="card-arrow"><i class='bx bx-right-arrow-alt'></i></div>
+                    
+                    <div style="margin-top: auto;">
+                        <div class="project-date" style="display: none; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                            <i class='bx bx-calendar-alt'></i> ${dateFormatted}
+                        </div>
+                        <div class="card-footer" style="margin-top: 0;">
+                            <div class="tech-stack">${stackHTML}</div>
+                            <div class="card-arrow"><i class='bx bx-right-arrow-alt'></i></div>
+                        </div>
                     </div>
+
                 </div>
             `;
 
@@ -329,12 +359,11 @@ function applyAllFilters() {
 
         if (matchesSearch && matchesTech && matchesNew && matchesUnseen) {
             card.style.display = 'flex';
-            // Принудительно показываем карточку с небольшой задержкой для красивой анимации
             setTimeout(() => card.classList.add('visible'), 50);
             visibleCount++;
         } else {
             card.style.display = 'none';
-            card.classList.remove('visible'); // Скрываем, если не прошла фильтр
+            card.classList.remove('visible');
         }
     });
 
@@ -472,6 +501,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const toggleDatesBtn = document.getElementById('toggle-dates-btn');
+    let datesVisible = localStorage.getItem('show_dates') === 'true';
+
+    window.updateDatesVisibility = function() {
+        const dateElements = document.querySelectorAll('.project-date');
+        dateElements.forEach(el => el.style.display = datesVisible ? 'block' : 'none');
+        if (toggleDatesBtn) {
+            toggleDatesBtn.style.color = datesVisible ? 'var(--accent)' : 'var(--text-muted)';
+            toggleDatesBtn.style.opacity = datesVisible ? '1' : '0.7';
+        }
+    };
+
+    if (toggleDatesBtn) {
+        toggleDatesBtn.addEventListener('click', () => {
+            datesVisible = !datesVisible;
+            localStorage.setItem('show_dates', datesVisible);
+            window.updateDatesVisibility();
+        });
+    }
+
     const avatarImg = document.querySelector('.avatar');
     if (avatarImg) {
         avatarImg.addEventListener('click', () => {
@@ -565,6 +614,13 @@ function filterByTech(tech) {
         if (activeTag) activeTag.classList.add('active');
     }
 
+    updateProjectCount();
+    updatePinnedOrder();
+    
+    if (typeof window.updateDatesVisibility === 'function') {
+        window.updateDatesVisibility();
+    }
+        
     applyAllFilters();
 }
 

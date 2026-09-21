@@ -12,6 +12,15 @@ const tiersConfig = [
 
 let games = [
     {
+        id: 11,
+        title: "FINAL FANTASY VII REVELATION",
+        img: "ff-tier-list/ff7_ch3.jpg",
+        steam: "https://store.steampowered.com/app/4354570/FINAL_FANTASY_VII_REVELATION/",
+        mc: 0,
+        comment: "Пока не играл, но уже 1 минус - цена. 2к грн на игру, так это ещё и без дополнений!",
+        tier: "S" 
+    },
+    {
         id: 2,
         title: "FINAL FANTASY VII REBIRTH",
         img: "https://m.media-amazon.com/images/M/MV5BMjk2MWI2NTctZjFkZS00ZWY2LWE1ZDQtZTY3MzZmNjRjMzBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",

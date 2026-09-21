@@ -797,7 +797,7 @@ function updateStatus() {
         titleEl.innerText = isSessionPeriod ? "На сьогодні іспити завершено!" : "Пари на сьогодні все!";
         
         if (now.getHours() >= 15) {
-            timerEl.innerText = "Відпочивайте☕";
+            timerEl.innerText = ""; // Відпочивайте☕
         } else {
             timerEl.innerText = "Додому"; 
         }
