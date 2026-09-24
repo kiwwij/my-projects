@@ -255,7 +255,7 @@ h2 {
 /* .project-card[data-name=""], */
 /* .project-card[data-name=""], */
 /* .project-card[data-name=""], */
-/* .project-card[data-name=""], */
+.project-card[data-name="asm emu8086"],
 .project-card[data-name="cursor heatmap"],
 .project-card[data-name="pinterest gallery"],
 .project-card[data-name="erotic photos"],
@@ -285,7 +285,7 @@ h2 {
 /* .project-card[data-name=""]:hover, */
 /* .project-card[data-name=""]:hover, */
 /* .project-card[data-name=""]:hover, */
-/* .project-card[data-name=""]:hover, */
+.project-card[data-name="asm emu8086"]:hover,
 .project-card[data-name="cursor heatmap"]:hover,
 .project-card[data-name="pinterest gallery"]:hover,
 .project-card[data-name="erotic photos"]:hover,

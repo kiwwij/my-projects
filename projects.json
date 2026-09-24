@@ -634,6 +634,13 @@
     "url": "",
     "date": "2026-09-17"
   },
+  "asm-emu8086.html": {
+    "image": "bx bx-microchip",
+    "description": "Notes on Assembly and C++. (I’ll add these two languages ​​to the tags, but no code examples will be published publicly, sorry.)",
+    "stack": ["asm", "c++", "html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-09-21"
+  },
   ".html": {
     "image": "",
     "description": "",

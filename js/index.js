@@ -25,7 +25,8 @@ const techColors = {
     'html': '#e34c26', 'css': '#563d7c', 'js': '#f1e05a', 'javascript': '#f1e05a', 'python': '#3572A5',
     'php': '#4F5D95', 'java': '#b07219', 'c++': '#f34b7d', 'cpp': '#f34b7d', 'c#': '#178600',
     'typescript': '#2b7489', 'ts': '#2b7489', 'vue': '#41b883', 'react': '#61dafb', 'github': '#181717',
-    'git': '#F05032', 'mysql': '#4479a1', 'sql': '#4479a1'
+    'git': '#F05032', 'mysql': '#4479a1', 'sql': '#4479a1',
+    'asm': '#585858', 'assembly': '#585858' 
 };
 
 function formatProjectDate(dateStr) {
@@ -290,6 +291,7 @@ function getTechIcon(tech) {
         'figma': 'bx bxl-figma', 'unity': 'bx bxl-unity', 'blender': 'bx bxl-blender', 'android': 'bx bxl-android',
         'apple': 'bx bxl-apple', 'windows': 'bx bxl-windows', 'database': 'bx bxs-data', 'sql': 'bx bxs-data',
         'mysql': 'bx bxs-data', 'postgresql': 'bx bxl-postgresql', 'mongodb': 'bx bxl-mongodb', 'leaflet.js': 'bx bx-leaf', 'chart.js': 'bx bx-chart',
+        'asm': 'bx bx-microchip', 'assembly': 'bx bx-microchip'
     };
     return map[lowerTech] || 'bx bx-code-alt';
 }
