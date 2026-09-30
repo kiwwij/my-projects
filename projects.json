@@ -55,7 +55,8 @@
     "image": "bx bxs-user-detail",
     "description": "Personal page about me, my interests, and anime tier list.",
     "stack": ["python", "chart.js", "html", "css", "js", "github"],
-    "url": "https://kiwwij.github.io/kiwwij-anime-tier-list/"
+    "url": "https://kiwwij.github.io/kiwwij-anime-tier-list/",
+    "date": "2025-11-07"
   },
   "kiwwij-social-links.html": {
     "image": "bx bxs-id-card",

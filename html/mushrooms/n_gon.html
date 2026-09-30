@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Гриби Вінниччини - Фігура Ліссажу</title>
+    <title>Гриби Вінниччини - Алгоритм (n-кутник)</title>
     <link rel="icon" type="image/webp" href="logo.webp">
     <link rel="stylesheet" href="../../css/mushrooms.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        .lissajous-container {
+        .algorithm-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -107,42 +107,37 @@
             <a href="other.html"><i class='bx bx-leaf'></i> Пластинчасті</a>
             <a href="poisonous.html"><i class='bx bx-error-circle'></i> Небезпечні</a>
             <a href="lissajous_figure.html"><i class='bx bx-math'></i> Фігура Ліссажу</a>
-            <a href="n_gon.html" style="color: #c8e6c9;"><i class='bx bx-shape-polygon'></i> Алгоритм</a>
+            <a href="algorithm.html" style="color: #c8e6c9;"><i class='bx bx-shape-polygon'></i> Алгоритм</a>
         </nav>
     </header>
 
     <main>
         <div class="hero-section" style="margin-bottom: 20px;">
-            <h2>Побудова Фігури Ліссажу</h2>
-            <p>Ця сторінка миттєво генерує фігуру Ліссажу без анімації, що запобігає зависанням. Кількість точок обчислення достатньо велика, щоб лінія виглядала ідеально гладкою.</p>
+            <h2>Побудова заданого n-кутника</h2>
+            <p>Реалізація алгоритму для побудови правильних багатокутників. Виберіть параметри та натисніть кнопку для малювання.</p>
         </div>
         
-        <div class="lissajous-container">
+        <div class="algorithm-container">
             <div class="controls">
                 <div class="control-group">
-                    <label for="freqX">a (Частота X):</label>
-                    <input type="number" id="freqX" value="3" step="0.1">
+                    <label for="entry_n">Кількість кутів (n):</label>
+                    <input type="number" id="entry_n" value="5" min="3">
                 </div>
                 
                 <div class="control-group">
-                    <label for="freqY">b (Частота Y):</label>
-                    <input type="number" id="freqY" value="2" step="0.1">
+                    <label for="entry_r">Радіус (R):</label>
+                    <input type="number" id="entry_r" value="150" min="10">
                 </div>
                 
                 <div class="control-group">
-                    <label for="phase">Фаза (рад):</label>
-                    <input type="number" id="phase" value="1.57" step="0.01">
-                </div>
-                
-                <div class="control-group">
-                    <label for="colorPicker">Колір:</label>
-                    <input type="color" id="colorPicker" value="#4CAF50">
+                    <label for="btn_color">Колір:</label>
+                    <input type="color" id="btn_color" value="#000000">
                 </div>
                 
                 <button id="drawBtn">Малювати</button>
             </div>
             
-            <canvas id="lissajousCanvas" width="700" height="500"></canvas>
+            <canvas id="drawingCanvas" width="700" height="500"></canvas>
         </div>
     </main>
 
@@ -150,81 +145,49 @@
         <p>&copy; 2026 Проєкт «Гриби Вінниччини»</p>
     </footer>
 
-    <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const canvas = document.getElementById("lissajousCanvas");
-            const ctx = canvas.getContext("2d");
+            const canvas = document.getElementById('drawingCanvas');
+            const ctx = canvas.getContext('2d');
             const drawBtn = document.getElementById("drawBtn");
-            
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            
-            let animationId = null;
-            let isDrawing = false;
 
-            function startDrawing() {
-                if (isDrawing) {
-                    cancelAnimationFrame(animationId);
-                }
-                
+            function drawNgon() {
+                const n = parseInt(document.getElementById('entry_n').value);
+                const r = parseFloat(document.getElementById('entry_r').value);
+                const color = document.getElementById('btn_color').value;
+
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                const a = parseFloat(document.getElementById("freqX").value);
-                const b = parseFloat(document.getElementById("freqY").value);
-                const delta = parseFloat(document.getElementById("phase").value);
-                const color = document.getElementById("colorPicker").value;
-                
-                if (isNaN(a) || isNaN(b) || isNaN(delta)) return;
-                
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
-                
+
+                if (isNaN(n) || isNaN(r) || n < 3) {
+                    return; 
+                }
+
                 const cx = canvas.width / 2;
                 const cy = canvas.height / 2;
-                const A = cx - 20; 
-                const B = cy - 20; 
+                const startAngle = -Math.PI / 2; 
+
+                ctx.beginPath();
                 
-                let t = 0;
-                const dt = 0.01;
-                const maxT = Math.PI * 2 * 100;
-                const batchSize = 100;
-                
-                let prevX = cx + A * Math.sin(a * t + delta);
-                let prevY = cy + B * Math.sin(b * t);
-                
-                isDrawing = true;
-                
-                function animate() {
-                    ctx.beginPath();
-                    ctx.moveTo(prevX, prevY);
+                for (let i = 0; i < n; i++) {
+                    const angle = startAngle + (2 * Math.PI * i) / n;
+                    const x = cx + r * Math.cos(angle);
+                    const y = cy + r * Math.sin(angle);
                     
-                    for(let i = 0; i < batchSize; i++) {
-                        t += dt;
-                        if (t > maxT) {
-                            isDrawing = false;
-                            break;
-                        }
-                        const x = cx + A * Math.sin(a * t + delta);
-                        const y = cy + B * Math.sin(b * t);
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
                         ctx.lineTo(x, y);
-                        
-                        prevX = x;
-                        prevY = y;
-                    }
-                    
-                    ctx.stroke();
-                    
-                    if (isDrawing) {
-                        animationId = requestAnimationFrame(animate);
                     }
                 }
                 
-                animate();
+                ctx.closePath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
             }
-            
-            startDrawing();
-            drawBtn.addEventListener("click", startDrawing);
+
+            drawNgon();
+            drawBtn.addEventListener("click", drawNgon);
         });
     </script>
 </body>

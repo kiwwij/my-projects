@@ -128,5 +128,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = LissajousApp(root)
     root.mainloop()
-
-# python lissajous_figure.py
