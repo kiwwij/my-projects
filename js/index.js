@@ -221,6 +221,10 @@ async function loadProjects() {
         updatePinnedOrder();
         applyAllFilters();
 
+        if (typeof window.updateDatesVisibility === 'function') {
+            window.updateDatesVisibility();
+        }
+
     } catch (error) {
         container.innerHTML = `<p style="color:red; text-align:center;">Error loading projects.</p>`;
     }
@@ -521,6 +525,8 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('show_dates', datesVisible);
             window.updateDatesVisibility();
         });
+        
+        window.updateDatesVisibility();
     }
 
     const avatarImg = document.querySelector('.avatar');

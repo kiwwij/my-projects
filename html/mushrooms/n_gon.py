@@ -8,7 +8,6 @@ class NGonApp:
         self.root.title("Побудова заданого n-кутника")
         self.root.geometry("800x650")
 
-        # Панель керування
         control_frame = tk.Frame(root)
         control_frame.pack(side=tk.TOP, pady=10)
 
@@ -29,7 +28,6 @@ class NGonApp:
         self.btn_draw = tk.Button(control_frame, text="Малювати", command=self.draw_ngon)
         self.btn_draw.grid(row=0, column=5, padx=5)
 
-        # Полотно для малювання
         self.canvas = tk.Canvas(root, bg="white")
         self.canvas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -51,7 +49,7 @@ class NGonApp:
             return
             
         if n < 3:
-            return # Фігура повинна мати мінімум 3 кути
+            return
             
         self.canvas.update()
         width = self.canvas.winfo_width()
@@ -64,17 +62,14 @@ class NGonApp:
         cy = height / 2
         
         points = []
-        # Початковий кут -pi/2, щоб перша вершина була зверху
         start_angle = -math.pi / 2
         
-        # Обчислення координат вершин
         for i in range(n):
             angle = start_angle + (2 * math.pi * i) / n
             x = cx + r * math.cos(angle)
             y = cy + r * math.sin(angle)
             points.extend([x, y])
             
-        # Малювання n-кутника
         self.canvas.create_polygon(points, outline=self.color, fill="", width=2)
 
 if __name__ == "__main__":

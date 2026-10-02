@@ -6,14 +6,6 @@ if (localStorage.getItem('finance_unlocked') !== 'true') {
     wrapper.style.display = 'block';
 }
 
-const MY_GOALS = [
-    { name: 'Финансовая подушка', target: 100000 },
-    { name: 'Новый телефон', target: 20000 },
-    { name: 'Новый ПК', target: 70000 },
-    { name: 'Поездка в Японию', target: 300000 },
-    
-];
-
 const themeToggle = document.getElementById('theme-toggle');
 if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark-mode');
@@ -175,28 +167,29 @@ async function initStatistics() {
     const lastMonthIncome = allIncomes[allIncomes.length - 1] || 0;
     const lastMonthExpense = allExpenses[allExpenses.length - 1] || 0;
     
-    const incDiff = lastMonthIncome - avgIncome;
+    // Тренды считаем от медианы, так как она отсеивает аномально большие траты
+    const incDiff = lastMonthIncome - medIncome;
     const incTrendEl = document.getElementById('trend-income');
     if (allIncomes.length > 1) {
         const absIncDiff = Math.abs(Math.round(incDiff));
         if(incDiff > 0) { 
-            incTrendEl.innerHTML = `<i class='bx bx-trending-up'></i> Доход выше среднего на <span class="money-value" data-real-value="${absIncDiff}">${absIncDiff}</span> ₴`; 
+            incTrendEl.innerHTML = `<i class='bx bx-trending-up'></i> Доход выше обычного на <span class="money-value" data-real-value="${absIncDiff}">${absIncDiff}</span> ₴`; 
             incTrendEl.className = 'trend-badge trend-up good'; 
         } else { 
-            incTrendEl.innerHTML = `<i class='bx bx-trending-down'></i> Доход ниже среднего на <span class="money-value" data-real-value="${absIncDiff}">${absIncDiff}</span> ₴`; 
+            incTrendEl.innerHTML = `<i class='bx bx-trending-down'></i> Доход ниже обычного на <span class="money-value" data-real-value="${absIncDiff}">${absIncDiff}</span> ₴`; 
             incTrendEl.className = 'trend-badge trend-down bad'; 
         }
     }
 
-    const expDiff = lastMonthExpense - avgExpense;
+    const expDiff = lastMonthExpense - medExpense;
     const expTrendEl = document.getElementById('trend-expense');
     if (allExpenses.length > 1) {
         const absExpDiff = Math.abs(Math.round(expDiff));
         if(expDiff < 0) { 
-            expTrendEl.innerHTML = `<i class='bx bx-trending-down'></i> Траты ниже среднего на <span class="money-value" data-real-value="${absExpDiff}">${absExpDiff}</span> ₴`; 
+            expTrendEl.innerHTML = `<i class='bx bx-trending-down'></i> Траты ниже обычного на <span class="money-value" data-real-value="${absExpDiff}">${absExpDiff}</span> ₴`; 
             expTrendEl.className = 'trend-badge trend-down good'; 
         } else { 
-            expTrendEl.innerHTML = `<i class='bx bx-trending-up'></i> Траты выше среднего на <span class="money-value" data-real-value="${absExpDiff}">${absExpDiff}</span> ₴`; 
+            expTrendEl.innerHTML = `<i class='bx bx-trending-up'></i> Траты выше обычного на <span class="money-value" data-real-value="${absExpDiff}">${absExpDiff}</span> ₴`; 
             expTrendEl.className = 'trend-badge trend-up bad'; 
         }
     }
@@ -254,7 +247,9 @@ async function initStatistics() {
 
     document.querySelector('#absolute-total-saved span').innerText = Math.round(absoluteTotal).toLocaleString('ru-RU');
 
-    renderGoals(totalSaved, absoluteTotal);
+    if (typeof renderFinancialGoals === 'function') {
+        renderFinancialGoals(totalUAH, absoluteTotal, dollarsInUAH);
+    }
 
     availableYears.sort((a, b) => a - b);
     currentDisplayYear = availableYears.length > 0 ? availableYears[availableYears.length - 1] : now.getFullYear();
@@ -265,41 +260,6 @@ async function initStatistics() {
     updateDashboard(currentDisplayYear);
     
     if(isHidden) hideAllSums(true);
-}
-
-function renderGoals(savedUAH, absoluteTotal) {
-    const container = document.getElementById('goals-container');
-    container.innerHTML = '';
-    
-    let totalTarget = 0;
-    let currentSavings = savedUAH > 0 ? savedUAH : 0;
-
-    MY_GOALS.forEach(goal => {
-        totalTarget += goal.target;
-        
-        let isCushion = goal.name === 'Финансовая подушка';
-        let pool = isCushion ? absoluteTotal : currentSavings;
-        
-        let allocated = pool;
-        let pct = Math.min((allocated / goal.target) * 100, 100);
-
-        container.innerHTML += `
-            <div class="goal-item">
-                <div class="goal-header">
-                    <span>${goal.name}</span>
-                    <span><span class="money-value">${allocated.toFixed(0)}</span> / ~${goal.target} ₴</span>
-                </div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill ${pct >= 100 ? 'cat-saved' : 'cat-primary'}" 
-                         style="width: ${pct}%; background: ${pct >= 100 ? 'var(--success)' : 'var(--primary-color)'}"></div>
-                </div>
-            </div>
-        `;
-    });
-
-    const overallPct = totalTarget > 0 ? Math.min((currentSavings / totalTarget) * 100, 100) : 0;
-    document.getElementById('overall-goal-text').innerText = `${overallPct.toFixed(1)}%`;
-    document.getElementById('overall-goal-fill').style.width = `${overallPct}%`;
 }
 
 function drawCharts(data) {
@@ -432,17 +392,27 @@ function drawCharts(data) {
 
 function updateChartsColors() {
     if (!mainBarChart || !doughnutChart || !trendChart) return;
-    const gridColor = document.body.classList.contains('dark-mode') ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
-    Chart.defaults.color = document.body.classList.contains('dark-mode') ? '#e4e6eb' : '#333333';
+    const isDark = document.body.classList.contains('dark-mode');
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+    const textColor = isDark ? '#e4e6eb' : '#333333';
     
-    mainBarChart.options.scales.y.grid.color = gridColor;
-    trendChart.options.scales.y.grid.color = gridColor;
+    Chart.defaults.color = textColor;
     
-    if(document.body.classList.contains('dark-mode')){
-        doughnutChart.data.datasets[0].borderColor = '#1e1e1e';
-    } else {
-        doughnutChart.data.datasets[0].borderColor = '#ffffff';
+    if(mainBarChart.options.scales.x) mainBarChart.options.scales.x.ticks.color = textColor;
+    if(mainBarChart.options.scales.y) {
+        mainBarChart.options.scales.y.ticks.color = textColor;
+        mainBarChart.options.scales.y.grid.color = gridColor;
     }
+    if(mainBarChart.options.plugins.legend) mainBarChart.options.plugins.legend.labels.color = textColor;
+    
+    if(trendChart.options.scales.x) trendChart.options.scales.x.ticks.color = textColor;
+    if(trendChart.options.scales.y) {
+        trendChart.options.scales.y.ticks.color = textColor;
+        trendChart.options.scales.y.grid.color = gridColor;
+    }
+    
+    if(doughnutChart.options.plugins.legend) doughnutChart.options.plugins.legend.labels.color = textColor;
+    doughnutChart.data.datasets[0].borderColor = isDark ? '#1e1e1e' : '#ffffff';
     
     mainBarChart.update(); doughnutChart.update(); trendChart.update();
 }
