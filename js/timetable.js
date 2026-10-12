@@ -135,7 +135,7 @@ const allSchedules = {
                 { num: 3, start: "10:15", end: "11:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 4, start: "11:15", end: "12:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 5, start: "12:15", end: "13:00", subj: "Екологія та основи біобезпеки і біоетики", type: "PZ", room: "1311", teacher: "Сакалова Г.В." },
-                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2364", teacher: "Сідлецька Т.І." }
+                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2259", teacher: "Сідлецька Т.І." }
             ],
             5: [
                 { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем", type: "LK", room: "2428", teacher: "Бабюк Н.П." },
@@ -180,7 +180,7 @@ const allSchedules = {
                 { num: 3, start: "10:15", end: "11:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 4, start: "11:15", end: "12:00", subj: "Управління експ. та функц. характ. ПЗ", type: "LK", room: "1224", teacher: "Гавенко О.В." },
                 { num: 5, start: "12:15", end: "13:00", subj: "Екологія та основи біобезпеки і біоетики", type: "PZ", room: "1311", teacher: "Сакалова Г.В." },
-                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2364", teacher: "Сідлецька Т.І." }
+                { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2259", teacher: "Сідлецька Т.І." }
             ],
             5: [
                 { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем", type: "LK", room: "2428", teacher: "Бабюк Н.П." },
@@ -247,12 +247,22 @@ const dateOverrides = {
         { num: 3, start: "09:00", end: "10:00", subj: "Іноземна мова", type: "ZALIK", room: "3433", teacher: "Чопляк В.В.", subgroup: 2 }
     ] },
 
-    "2026-09-03": {
-        remove: [6],
+    "2026-10-07": { 
+        remove: [1, 2],
         add: [
-            { num: 6, start: "13:15", end: "14:00", subj: "Політологія", type: "PZ", room: "2259", teacher: "Сідлецька Т.І." }
-        ]
-    },
+        { num: 1, start: "08:15", end: "09:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Миргородський А.В.", subgroup: 2 },
+        { num: 2, start: "09:15", end: "10:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Миргородський А.В.", subgroup: 2 },
+
+        { num: 1, start: "08:15", end: "09:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Романюк О.В.", subgroup: 1 },
+        { num: 2, start: "09:15", end: "10:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Романюк О.В.", subgroup: 1 },
+    ] },
+
+     "2026-10-09": { 
+        remove: [3, 4],
+        add: [
+        { num: 3, start: "10:15", end: "11:00", subj: "Комп'ютерна графіка", type: "LK", room: "5128", teacher: "Романюк О.Н." },
+        { num: 4, start: "11:15", end: "12:00", subj: "Комп'ютерна графіка", type: "LK", room: "5128", teacher: "Романюк О.Н." }
+    ] },
 };
 
 let viewDate = new Date(); 
