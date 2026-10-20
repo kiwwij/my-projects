@@ -89,11 +89,11 @@ function renderStatistics() {
     let startDate, endDate;
     
     if (period === 'course-2') {
-        startDate = new Date('2026-01-26T00:00:00'); endDate = new Date('2026-08-31T23:59:59');
+        startDate = new Date('2026-01-26T00:00:00'); endDate = new Date('2026-08-30T23:59:59');
     } else if (period === 'course-3') {
         startDate = new Date('2026-08-31T00:00:00'); endDate = new Date('2027-06-30T23:59:59'); 
     } else {
-        startDate = new Date('2026-01-26T00:00:00'); endDate = new Date('2027-06-30T23:59:59'); // Баг был тут, исправил 31 на 30 июня
+        startDate = new Date('2026-01-26T00:00:00'); endDate = new Date('2027-06-30T23:59:59');
     }
 
     let subjectCounts = {}; let typeCounts = {}; let totalLessonMinutes = 0;
