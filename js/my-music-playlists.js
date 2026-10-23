@@ -1,6 +1,6 @@
 const playlistsData = [
     {
-        id: "Main",
+        id: "annoying noise",
         link: "https://music.youtube.com/playlist?list=PLov5IgTS5pqlgCtFnLEi7x7uFdu6mQj-C"
     },
     {
@@ -12,12 +12,12 @@ const playlistsData = [
         link: "https://music.youtube.com/playlist?list=PLov5IgTS5pqkDuC__SDej4G0zxH4KKTCJ"
     },
     {
-        id: "Sewerslvt",
+        id: "breakcore",
         link: "https://music.youtube.com/playlist?list=PLov5IgTS5pqnkO9-TBA6AJOF9-2tvdvXk"
     },
     {
-        id: "Dead inside",
-        link: "https://music.youtube.com/playlist?list=PLov5IgTS5pqktJQvn8Qsd9tMlrR1XNnu2"
+        id: "grave 2.0",
+        link: "https://music.youtube.com/playlist?list=PLJEQq6rpQoyE"
     }
 ];
 
@@ -27,11 +27,11 @@ const i18n = {
         desc: "Избранные вайбы и треки под любое настроение. Погрузись в атмосферу звука.",
         btnListen: "Открыть плейлист",
         items: {
-            "Main": { title: "annoying noise", desc: "Подборка треков, которые заслушал до дыр. Примерно все в одном стиле." },
+            "annoying noise": { title: "annoying noise", desc: "Подборка треков, которые в данный момент времени слушаю." },
             "Off Screen": { title: "У ПОНИ НЕТ ПЕН*СОВ!", desc: "Песни из аниме, мультфильмов и других произведений." },
             "Game OSTs": { title: "А Я ЕБ* ЧТО ЛИ", desc: "Оригинальные саундтреки, темы из видеоигр." },
-            "Sewerslvt": { title: "ABSOLUTE SLVTCORE", desc: "Брейккор и драм-н-бейс от sewerslvt'a." },
-            "Dead inside": { title: "GRAVE 🪦", desc: "Архив абсолютно всех композиций, которые мне когда-либо понравились." }
+            "breakcore": { title: "ABSOLUTE SLVTCORE", desc: "Брейккор и драм-н-бейс от sewerslvt'a и ему похожих исполнителей." },
+            "grave 2.0": { title: "grave 2.0", desc: "Архив абсолютно всех композиций, которые мне когда-либо понравились." }
         }
     }
 };

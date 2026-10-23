@@ -4,9 +4,9 @@ window.TimetableData.semesters[5] = {
     id: 5,
     startStudy: "2026-08-31T00:00:00",
     endStudy: "2027-01-01T23:59:59",
-    startSession: "2027-01-02T00:00:00",
-    endSession: "2027-01-15T23:59:59",
-    startHolidays: "2027-01-16T00:00:00",
+    startSession: "2027-01-04T00:00:00",
+    endSession: "2027-01-17T23:59:59",
+    startHolidays: "2027-01-18T00:00:00",
     endHolidays: "2027-01-31T23:59:59"
 };
 
