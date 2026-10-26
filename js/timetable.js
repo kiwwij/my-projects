@@ -522,9 +522,54 @@ function updateStatus() {
         if (now < startDate) { nextLesson = lesson; break; }
     }
 
-    document.querySelectorAll('.lesson-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.lesson-card').forEach(c => {
+        c.classList.remove('active');
+        c.style.background = ''; 
+    });
+
+    if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
+        lessons.forEach(lesson => {
+            const [endH, endM] = lesson.end.split(':').map(Number);
+            const endDate = new Date(); 
+            endDate.setHours(endH, endM, 0);
+            
+            const card = document.getElementById(`lesson-${lesson.num}`);
+            if (card && now > endDate) {
+                card.classList.add('past');
+            }
+        });
+    }
 
     if (activeLesson) {
+        titleEl.innerText = `Зараз: ${activeLesson.subj} (${activeLesson.room})`;
+        
+        const [startH, startM] = activeLesson.start.split(':').map(Number);
+        const [endH, endM] = activeLesson.end.split(':').map(Number);
+        
+        const startDate = new Date(); startDate.setHours(startH, startM, 0);
+        const endDate = new Date(); endDate.setHours(endH, endM, 0);
+        
+        timerEl.innerText = formatTime(endDate - now); 
+        subtitleEl.innerHTML = "<i class='bx bx-timer'></i> до завершення";
+        
+        if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
+            const activeCard = document.getElementById(`lesson-${activeLesson.num}`);
+            if (activeCard) {
+                activeCard.classList.add('active');
+                
+                const totalDuration = endDate - startDate;
+                const elapsed = now - startDate;
+                let progress = (elapsed / totalDuration) * 100;
+                progress = Math.max(0, Math.min(100, progress));
+                
+                const hue = 120 - (progress * 1.2); 
+                
+                activeCard.style.background = `linear-gradient(to right, hsla(${hue}, 80%, 30%, 0.5) ${progress}%, var(--card-bg) ${progress}%)`;
+            }
+        }
+    }
+    
+    else if (nextLesson) {
         titleEl.innerText = `Зараз: ${activeLesson.subj} (${activeLesson.room})`;
         const [endH, endM] = activeLesson.end.split(':').map(Number);
         const endDate = new Date(); endDate.setHours(endH, endM, 0);
@@ -569,18 +614,6 @@ function formatTime(ms) {
 function pad(n) { return n < 10 ? '0' + n : n; }
 
 init();
-
-async function checkAirRaidAlert() {
-    const alertBanner = document.getElementById('air-raid-alert'); if (!alertBanner) return; 
-    try {
-        const response = await fetch(`https://api.codetabs.com/v1/proxy?quest=https://ubilling.net.ua/aerialalerts/`);
-        if (!response.ok) return; const data = await response.json();
-        let isAlert = data.states['Вінниця'] || data.states['м. Вінниця'] || data.states['Вінницька територіальна громада'] || data.states['Вінницька міська територіальна громада']; 
-        if (isAlert) { alertBanner.style.display = 'flex'; document.body.classList.add('alert-mode'); } 
-        else { alertBanner.style.display = 'none'; document.body.classList.remove('alert-mode'); }
-    } catch (e) { console.log(e); }
-}
-checkAirRaidAlert(); setInterval(checkAirRaidAlert, 30000);
 
 async function fetchWeather() {
     try {

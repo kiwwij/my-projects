@@ -108,17 +108,41 @@ function renderStatistics() {
         while (currentDate <= endDate) {
             const { lessons } = getLessonsForSpecificDate(currentDate);
             if (lessons.length > 0) {
-                const currentDayNum = currentDate.getDay() || 7; daysCount[currentDayNum] += lessons.length;
+                const currentDayNum = currentDate.getDay() || 7; 
                 let lastEndMin = null; let lastLessonNum = null;
+                let lastType = null; let lastRoom = null; // Для отслеживания пар подряд
 
                 lessons.forEach(l => {
                     const isPhysEd = l.subj.toLowerCase().includes("фізична культура");
                     const isRegular = !nonRegularTypes.includes(l.type);
-                    if (isPhysEd) { windowsCount++; } 
-                    else {
+                    
+                    // Увеличиваем нагрузку дня только если это не физкультура
+                    if (!isPhysEd) {
+                        // --- СИСТЕМА РАНГОВ (БАЛЛОВ) ---
+                        let weight = 0;
+                        if (l.type === 'LK') {
+                            weight = 1.5;
+                            // Если лекция идет подряд в одном кабинете — добавляем балл за "скуку"
+                            if (lastType === 'LK' && lastRoom === l.room) {
+                                weight += 0.5;
+                            }
+                        }
+                        else if (l.type === 'LR') weight = 2.25;
+                        else if (l.type === 'PZ') weight = 2.5;
+                        else if (['KOL', 'EXAM', 'EX'].includes(l.type)) weight = 4; // Колоквиумы и сдачи
+                        else weight = 1;
+
+                        daysCount[currentDayNum] += weight; 
+                        
+                        lastType = l.type;
+                        lastRoom = l.room;
+                        
                         typeCounts[l.type] = (typeCounts[l.type] || 0) + 1;
                         totalLessonMinutes += (timeToMinutes(l.end) - timeToMinutes(l.start));
+                    } else {
+                        windowsCount++; // Физ-ра идет как окно
                     }
+                    
                     if (isRegular && !isPhysEd) {
                         const cleanSubj = l.subj.replace(/\s*\(.*?\)\s*/g, '').trim();
                         subjectCounts[cleanSubj] = (subjectCounts[cleanSubj] || 0) + 1; totalPairsCount++; 
@@ -187,12 +211,50 @@ function drawStats(container, data) {
             </div>
         </div>
 
+       <style>
+            .info-tooltip { 
+                position: absolute; 
+                top: 12px; 
+                right: 12px; 
+                display: inline-flex; 
+                align-items: center; 
+            }
+            .info-tooltip .tooltip-text {
+                visibility: hidden; width: 230px; background-color: var(--card-bg); 
+                color: var(--text-main); text-align: left; border-radius: 8px; 
+                padding: 10px; position: absolute; z-index: 10; 
+                top: 100%; right: 0; margin-top: 8px; /* Открывается вниз от иконки */
+                opacity: 0; transition: opacity 0.2s; border: 1px solid #333; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5); font-size: 0.75rem; 
+                text-transform: none; letter-spacing: normal; font-weight: normal; line-height: 1.4;
+            }
+            .info-tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+        </style>
+
         <div class="stat-grid">
             <div class="stat-card"><i class='bx bx-book-open stat-icon' style="color: var(--accent)"></i><div class="stat-value">${data.totalPairs}</div><div class="stat-label">Всього пар</div></div>
             <div class="stat-card orange"><i class='bx bx-time-five stat-icon' style="color: #f59e0b"></i><div class="stat-value">${data.hours}</div><div class="stat-label">Годин навчання</div></div>
             <div class="stat-card" style="border-color: #8b5cf6;"><i class='bx bx-coffee stat-icon' style="color: #8b5cf6"></i><div class="stat-value">${data.breaks}</div><div class="stat-label">Годин перерв</div></div>
             <div class="stat-card red"><i class='bx bx-window-alt stat-icon' style="color: #ef4444"></i><div class="stat-value">${data.windows}</div><div class="stat-label">Вікна (+ Фіз-ра)</div></div>
-            <div class="stat-card" style="border-color: #ec4899;"><i class='bx bx-calendar-exclamation stat-icon' style="color: #ec4899"></i><div class="stat-value" style="font-size: 1.35rem;">${data.heaviestDay}</div><div class="stat-label">Найважчий день</div></div>
+            
+            <div class="stat-card" style="border-color: #ec4899; overflow: visible; position: relative;">
+                <div class="info-tooltip">
+                    <i class='bx bx-info-circle' style="cursor: help; font-size: 1.2rem; color: var(--text-muted);"></i>
+                    <div class="tooltip-text">
+                        <b>Формула розрахунку:</b><br>
+                        • Лекція: 1.5 бали<br>
+                        • 2+ лекції підряд в 1 ауд: +0.5 балів<br>
+                        • Лабораторна: 2.25 балів<br>
+                        • Практика: 2.5 балів<br>
+                        • Колоквіум/Іспит: 4 бали<br>
+                        <i style="color: var(--text-muted); margin-top: 4px; display: block;">Фізкультура не враховується. Сумуються всі бали за обраний період.</i>
+                    </div>
+                </div>
+                <i class='bx bx-calendar-exclamation stat-icon' style="color: #ec4899"></i>
+                <div class="stat-value" style="font-size: 1.35rem;">${data.heaviestDay}</div>
+                <div class="stat-label">Найважчий день</div>
+            </div>
+            
             <div class="stat-card green"><i class='bx bx-sun stat-icon' style="color: #10b981"></i><div class="stat-value">${data.holidays}</div><div class="stat-label">Канікули (Днів)</div></div>
         </div>
 
