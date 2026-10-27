@@ -567,17 +567,6 @@ function updateStatus() {
                 activeCard.style.background = `linear-gradient(to right, hsla(${hue}, 80%, 30%, 0.5) ${progress}%, var(--card-bg) ${progress}%)`;
             }
         }
-    }
-    
-    else if (nextLesson) {
-        titleEl.innerText = `Зараз: ${activeLesson.subj} (${activeLesson.room})`;
-        const [endH, endM] = activeLesson.end.split(':').map(Number);
-        const endDate = new Date(); endDate.setHours(endH, endM, 0);
-        timerEl.innerText = formatTime(endDate - now); subtitleEl.innerHTML = "<i class='bx bx-timer'></i> до завершення";
-        if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
-            const activeCard = document.getElementById(`lesson-${activeLesson.num}`);
-            if (activeCard) activeCard.classList.add('active');
-        }
     } else if (nextLesson) {
         const [startH, startM] = nextLesson.start.split(':').map(Number);
         const startDate = new Date(); startDate.setHours(startH, startM, 0);

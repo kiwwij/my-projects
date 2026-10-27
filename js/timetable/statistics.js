@@ -32,7 +32,6 @@ function initPeriodTabs() {
     });
 }
 
-// Теперь функция полностью синхронизирована с глобальными датами семестров
 function getLessonsForSpecificDate(date) {
     const semInfo = getSemesterInfo(date);
     const periodType = getPeriodType(date, semInfo.config);
@@ -110,26 +109,23 @@ function renderStatistics() {
             if (lessons.length > 0) {
                 const currentDayNum = currentDate.getDay() || 7; 
                 let lastEndMin = null; let lastLessonNum = null;
-                let lastType = null; let lastRoom = null; // Для отслеживания пар подряд
+                let lastType = null; let lastRoom = null;
 
                 lessons.forEach(l => {
                     const isPhysEd = l.subj.toLowerCase().includes("фізична культура");
                     const isRegular = !nonRegularTypes.includes(l.type);
                     
-                    // Увеличиваем нагрузку дня только если это не физкультура
                     if (!isPhysEd) {
-                        // --- СИСТЕМА РАНГОВ (БАЛЛОВ) ---
                         let weight = 0;
                         if (l.type === 'LK') {
                             weight = 1.5;
-                            // Если лекция идет подряд в одном кабинете — добавляем балл за "скуку"
                             if (lastType === 'LK' && lastRoom === l.room) {
                                 weight += 0.5;
                             }
                         }
                         else if (l.type === 'LR') weight = 2.25;
                         else if (l.type === 'PZ') weight = 2.5;
-                        else if (['KOL', 'EXAM', 'EX'].includes(l.type)) weight = 4; // Колоквиумы и сдачи
+                        else if (['KOL', 'EXAM', 'EX'].includes(l.type)) weight = 4;
                         else weight = 1;
 
                         daysCount[currentDayNum] += weight; 
@@ -140,7 +136,7 @@ function renderStatistics() {
                         typeCounts[l.type] = (typeCounts[l.type] || 0) + 1;
                         totalLessonMinutes += (timeToMinutes(l.end) - timeToMinutes(l.start));
                     } else {
-                        windowsCount++; // Физ-ра идет как окно
+                        windowsCount++;
                     }
                     
                     if (isRegular && !isPhysEd) {
@@ -223,12 +219,18 @@ function drawStats(container, data) {
                 visibility: hidden; width: 230px; background-color: var(--card-bg); 
                 color: var(--text-main); text-align: left; border-radius: 8px; 
                 padding: 10px; position: absolute; z-index: 10; 
-                top: 100%; right: 0; margin-top: 8px; /* Открывается вниз от иконки */
+                top: 100%; 
+                left: 50%; 
+                transform: translateX(-50%);
+                margin-top: 8px; 
                 opacity: 0; transition: opacity 0.2s; border: 1px solid #333; 
                 box-shadow: 0 4px 15px rgba(0,0,0,0.5); font-size: 0.75rem; 
                 text-transform: none; letter-spacing: normal; font-weight: normal; line-height: 1.4;
             }
-            .info-tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+            .info-tooltip:hover .tooltip-text,
+            .info-tooltip:active .tooltip-text { 
+                visibility: visible; opacity: 1; 
+            }
         </style>
 
         <div class="stat-grid">
