@@ -1,0 +1,126 @@
+.edible-page {
+    background: linear-gradient(135deg, #f4f9f5 0%, #e8f5e9 100%);
+}
+
+.edible-page .hero-section {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin: 20px auto 40px auto;
+    border-top: 5px solid #4caf50;
+}
+
+.edible-page .hero-section h2 {
+    color: #2e7d32;
+    font-size: 2.2rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.edible-page .hero-section p {
+    color: #555555;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.edible-page .card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    background: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edible-page .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.edible-page .card img {
+    background: #fdfdfd;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.edible-page .card:hover img {
+    transform: scale(1.05);
+}
+
+.edible-page .card h3 {
+    color: #1b5e20;
+    font-size: 1.4rem;
+    margin-top: 15px;
+}
+
+.edible-page .card p {
+    color: #666666;
+    padding: 0 10px 10px 10px;
+}
+
+.poisonous-page {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+}
+
+.poisonous-page .hero-section {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(229, 57, 53, 0.1);
+    margin: 20px auto 40px auto;
+    border-top: 5px solid #e53935;
+}
+
+.poisonous-page .hero-section h2 {
+    color: #c62828;
+    font-size: 2.2rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.poisonous-page .hero-section p {
+    color: #555555;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.poisonous-page .card {
+    border: none;
+    border-bottom: 4px solid #e53935;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    background: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poisonous-page .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(229, 57, 53, 0.15);
+}
+
+.poisonous-page .card img {
+    background: #fdfdfd;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.poisonous-page .card:hover img {
+    transform: scale(1.05);
+}
+
+.poisonous-page .card h3 {
+    color: #c62828;
+    font-size: 1.4rem;
+    margin-top: 15px;
+}
+
+.poisonous-page .card p {
+    color: #666666;
+    padding: 0 10px 10px 10px;
+}
