@@ -73,6 +73,11 @@ const dateOverrides = {
             { num: 7, start: "14:30", end: "15:15", subj: "Екологія та основи біобезпеки і біоетики (Відпр.)", type: "EX", room: "1416", teacher: "Сакалова Г.В." }
         ] 
     },
+    "2026-10-28": { 
+        add: [
+            { num: 6, start: "13:15", end: "14:00", subj: "Комп`ютерна графіка (Курсова)", type: "CURS", room: "2104", teacher: "Романюк О.Н." }
+        ]
+    },
 };
 
 let viewDate = new Date(); 
@@ -210,6 +215,7 @@ function injectStyles() {
             .type-EXAM { border-left-color: #e11d48 !important; } 
             .type-CONS { border-left-color: #f59e0b !important; } 
             .type-ZALIK { border-left-color: #10b981 !important; } 
+            .type-CURS { border-left-color: #dc2626 !important; }
         `;
         document.head.appendChild(style);
     }
@@ -417,7 +423,7 @@ function renderSchedule() {
     }
 
     const maxLessonNum = Math.max(...lessons.map(l => l.num));
-    const typeLabels = { 'LK': 'ЛК', 'PZ': 'ПЗ', 'LR': 'ЛР', 'EX': 'СПЕЦ', 'KOL': 'КОЛ', 'EXAM': 'Іспит', 'CONS': 'Конс.', 'ZALIK': 'Залік / ДЗ' }; 
+    const typeLabels = { 'LK': 'ЛК', 'PZ': 'ПЗ', 'LR': 'ЛР', 'EX': 'СПЕЦ', 'KOL': 'КОЛ', 'EXAM': 'Іспит', 'CONS': 'Конс.', 'ZALIK': 'Залік / ДЗ', 'CURS': 'Курсова' };
     const isToday = isSameDate(viewDate, new Date()) && (selectedDay === (new Date().getDay() || 7));
     const now = new Date();
 

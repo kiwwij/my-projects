@@ -101,7 +101,7 @@ function renderStatistics() {
     const periodHolidays = calculateHolidaysForPeriod(startDate, endDate);
 
     let currentDate = new Date(startDate); currentDate.setHours(0,0,0,0); 
-    const nonRegularTypes = ['EX', 'KOL', 'EXAM', 'ZALIK', 'CONS'];
+    const nonRegularTypes = ['EX', 'KOL', 'EXAM', 'ZALIK', 'CONS', 'CURS'];
 
     setTimeout(() => {
         while (currentDate <= endDate) {
@@ -125,7 +125,7 @@ function renderStatistics() {
                         }
                         else if (l.type === 'LR') weight = 2.25;
                         else if (l.type === 'PZ') weight = 2.5;
-                        else if (['KOL', 'EXAM', 'EX'].includes(l.type)) weight = 4;
+                        else if (['KOL', 'EXAM', 'EX', 'CURS'].includes(l.type)) weight = 4;
                         else weight = 1;
 
                         daysCount[currentDayNum] += weight; 
@@ -173,8 +173,8 @@ function renderStatistics() {
     }, 50);
 }
 
-const typeLabelsMap = { 'LK': 'Лекції', 'PZ': 'Практичні', 'LR': 'Лабораторні', 'EX': 'Спец. відпрацювання', 'KOL': 'Колоквіуми', 'EXAM': 'Іспити', 'CONS': 'Консультації', 'ZALIK': 'Заліки' };
-const typeColorsMap = { 'Лекції': '#f59e0b', 'Практичні': '#10b981', 'Лабораторні': '#3b82f6', 'Спец. відпрацювання': '#9333ea', 'Колоквіуми': '#ef4444', 'Іспити': '#e11d48', 'Консультації': '#f59e0b', 'Заліки': '#10b981' };
+const typeLabelsMap = { 'LK': 'Лекції', 'PZ': 'Практичні', 'LR': 'Лабораторні', 'EX': 'Спец. відпрацювання', 'KOL': 'Колоквіуми', 'EXAM': 'Іспити', 'CONS': 'Консультації', 'ZALIK': 'Заліки', 'CURS': 'Курсові' };
+const typeColorsMap = { 'Лекції': '#f59e0b', 'Практичні': '#10b981', 'Лабораторні': '#3b82f6', 'Спец. відпрацювання': '#9333ea', 'Колоквіуми': '#ef4444', 'Іспити': '#e11d48', 'Консультації': '#f59e0b', 'Заліки': '#10b981', 'Курсові': '#dc2626' };
 
 function getPluralWord(number, one, two, five) {
     let n = Math.abs(number) % 100; let n1 = n % 10;
@@ -248,7 +248,7 @@ function drawStats(container, data) {
                         • 2+ лекції підряд в 1 ауд: +0.5 балів<br>
                         • Лабораторна: 2.25 балів<br>
                         • Практика: 2.5 балів<br>
-                        • Колоквіум/Іспит: 4 бали<br>
+                        • Колоквіум/Іспит/Курсова: 4 бали<br>
                         <i style="color: var(--text-muted); margin-top: 4px; display: block;">Фізкультура не враховується. Сумуються всі бали за обраний період.</i>
                     </div>
                 </div>
