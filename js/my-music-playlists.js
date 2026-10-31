@@ -39,6 +39,24 @@ const i18n = {
 const currentLang = 'ru';
 let currentTheme = localStorage.getItem('appTheme') || 'dark';
 
+const localPlaylistsMeta = {
+    "annoying noise": {
+        "poster": "my-music-playlists/annoying noise.jpg"
+    },
+    "Off Screen": {
+        "poster": "my-music-playlists/У ПОНИ НЕТ ПЕНИСОВ!.jpg"
+    },
+    "Game OSTs": {
+        "poster": "my-music-playlists/А Я ЕБУ ЧТО ЛИ.jpg"
+    },
+    "breakcore": {
+        "poster": "my-music-playlists/ABSOLUTE SLVTCORE.jpg"
+    },
+    "grave 2.0": {
+        "poster": "my-music-playlists/grave 2.0.jpg"
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initLang();
@@ -83,6 +101,31 @@ function updateStaticText() {
     });
 }
 
+function createTrackHTML(track) {
+    const searchQuery = encodeURIComponent(`${track.artist} ${track.title}`);
+    const ytMusicLink = `https://music.youtube.com/search?q=${searchQuery}`;
+    return `
+        <a href="${ytMusicLink}" target="_blank" class="track-item" title="Слушать в YouTube Music">
+            <div class="track-play"><i class='bx bx-play'></i></div>
+            <div class="track-info">
+                <span class="track-name">${track.title}</span>
+                <span class="track-artist">${track.artist}</span>
+            </div>
+            <div class="track-duration">${track.duration}</div>
+        </a>
+    `;
+}
+
+window.showAllTracks = function(btn) {
+    const hiddenDiv = btn.previousElementSibling;
+    const container = btn.closest('.track-list-container');
+    
+    hiddenDiv.style.display = 'block';
+    btn.style.display = 'none';
+    
+    container.classList.add('expanded');
+};
+
 function renderPlaylists() {
     const container = document.getElementById('playlistsList');
     if (!container) return;
@@ -101,37 +144,35 @@ function renderPlaylists() {
 
     playlistsData.forEach(pl => {
         const t = i18n[currentLang].items[pl.id];
-        
         const playlistTracks = musicData.filter(track => track.playlist === pl.id);
         
         const row = document.createElement('div');
         row.className = 'playlist-row glass-panel';
         
-        const dynamicPoster = (typeof playlistsMeta !== 'undefined' && playlistsMeta[pl.id]) 
-            ? playlistsMeta[pl.id].poster 
-            : null;
-
+        const dynamicPoster = localPlaylistsMeta[pl.id] ? localPlaylistsMeta[pl.id].poster : null;
         const imageContent = dynamicPoster 
             ? `<img src="${dynamicPoster}" alt="Poster" class="loaded">`
             : `<i class='bx bx-disc'></i>`;
 
         let tracksHTML = '';
         if (playlistTracks.length > 0) {
-            playlistTracks.forEach((track) => {
-                const searchQuery = encodeURIComponent(`${track.artist} ${track.title}`);
-                const ytMusicLink = `https://music.youtube.com/search?q=${searchQuery}`;
+            const initialTracks = playlistTracks.slice(0, 4);
+            const hiddenTracks = playlistTracks.slice(4);
 
+            initialTracks.forEach(track => { tracksHTML += createTrackHTML(track); });
+
+            if (hiddenTracks.length > 0) {
+                let hiddenTracksHTML = '';
+                hiddenTracks.forEach(track => { hiddenTracksHTML += createTrackHTML(track); });
                 tracksHTML += `
-                    <a href="${ytMusicLink}" target="_blank" class="track-item" title="Слушать в YouTube Music">
-                        <div class="track-play"><i class='bx bx-play'></i></div>
-                        <div class="track-info">
-                            <span class="track-name">${track.title}</span>
-                            <span class="track-artist">${track.artist}</span>
-                        </div>
-                        <div class="track-duration">${track.duration}</div>
-                    </a>
+                    <div class="hidden-tracks" style="display: none;">
+                        ${hiddenTracksHTML}
+                    </div>
+                    <button class="load-more-tracks" onclick="showAllTracks(this)">
+                        Показать еще ${hiddenTracks.length} <i class='bx bx-chevron-down'></i>
+                    </button>
                 `;
-            });
+            }
         } else {
             tracksHTML = `<div style="padding: 20px; color: var(--text-secondary); text-align: center;">Треки отсутствуют</div>`;
         }
@@ -139,8 +180,10 @@ function renderPlaylists() {
         row.innerHTML = `
             <div class="playlist-left">
                 <div class="img-placeholder">${imageContent}</div>
-                <h3 class="playlist-title">${t.title}</h3>
-                <p class="playlist-desc">${t.desc}</p>
+                <div class="playlist-text">
+                    <h3 class="playlist-title">${t.title}</h3>
+                    <p class="playlist-desc">${t.desc}</p>
+                </div>
                 <a href="${pl.link}" target="_blank" class="listen-btn">
                     <i class='bx bxl-youtube'></i> ${i18n[currentLang].btnListen}
                 </a>

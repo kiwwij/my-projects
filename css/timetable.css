@@ -508,3 +508,87 @@ details[open] .details-content {
     color: #fff;
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
 }
+
+.days-nav-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.days-nav::-webkit-scrollbar {
+    height: 6px;
+}
+.days-nav::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+.days-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+.days-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.detail-item i {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animated-card {
+    animation: slideUpFade 0.4s ease-out forwards;
+    opacity: 0;
+}
+
+.sort-controls {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 15px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+.sort-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 6px 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sort-btn.active {
+    background: var(--card-bg);
+    color: var(--accent);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.sort-btn i {
+    font-size: 1.2rem;
+}
+
+.rating-diff {
+    font-size: 0.9rem;
+    margin-left: 8px;
+    font-weight: bold;
+}
+.rating-diff.positive { color: #10b981; }
+.rating-diff.negative { color: #ef4444; }
+.rating-diff.neutral { color: var(--text-muted); }
