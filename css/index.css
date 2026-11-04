@@ -254,7 +254,7 @@ h2 {
 
 /* .project-card[data-name=""], */
 /* .project-card[data-name=""], */
-/* .project-card[data-name=""], */
+.project-card[data-name="everyday"],
 .project-card[data-name="asm emu8086"],
 .project-card[data-name="cursor heatmap"],
 .project-card[data-name="pinterest gallery"],
@@ -284,7 +284,7 @@ h2 {
 
 /* .project-card[data-name=""]:hover, */
 /* .project-card[data-name=""]:hover, */
-/* .project-card[data-name=""]:hover, */
+.project-card[data-name="everyday"]:hover,
 .project-card[data-name="asm emu8086"]:hover,
 .project-card[data-name="cursor heatmap"]:hover,
 .project-card[data-name="pinterest gallery"]:hover,

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="kiwwij">
+    <meta name="description" content="ХроноГраф (ChronoGraph) — официальный всемирный реестр государственных, международных (ООН/ЮНЕСКО), профессиональных и культурных праздников на все 366 дней года.">
+    <meta name="keywords" content="реестр праздников, официальные праздники мира, международные дни ООН, календарь дат, kiwwij, ХроноГраф, ChronoGraph">
+    <title>ХроноГраф — Всемирный реестр праздников</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230f141c' stroke='%2338bdf8' stroke-width='3'/%3E%3Cpath d='M12 22h40M22 10v12M42 10v12' stroke='%2338bdf8' stroke-width='3' stroke-linecap='round'/%3E%3Crect x='12' y='14' width='40' height='38' rx='4' fill='none' stroke='%2394a3b8' stroke-width='2.5'/%3E%3Ccircle cx='32' cy='37' r='7' fill='%23eab308'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/everyday.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="everyday.html" class="brand" data-i18n-tooltip="tooltipBrand" title="Обновить и вернуться к сегодняшней дате">
+                <div class="brand-emblem">
+                    <i class="bx bx-globe-alt brand-icon"></i>
+                </div>
+                <div class="brand-titles">
+                    <span class="brand-name" data-i18n="brandName">ХроноГраф</span>
+                    <span class="brand-sub" data-i18n="brandSub">Всемирный реестр дат</span>
+                </div>
+            </a>
+
+            <div class="header-actions">
+                <button type="button" id="openCalendarBtn" class="action-btn" data-i18n-tooltip="tooltipCalendar" title="Выбрать любую дату в календаре (включая 29 февраля)">
+                    <i class="bx bx-calendar"></i>
+                    <span data-i18n="btnPickDate">Календарь дат</span>
+                </button>
+
+                <button type="button" id="addBirthdayBtn" class="action-btn secret-btn hidden" data-i18n-tooltip="tooltipAddBday" title="Управление списком дней рождения знакомых">
+                    <i class="bx bx-cake"></i>
+                    <span data-i18n="btnAddBday">Личный список ДР</span>
+                </button>
+
+                <button type="button" id="langToggleBtn" class="icon-btn" data-i18n-tooltip="tooltipLang" title="Переключить язык интерфейса (RU / EN)">
+                    <i class="bx bx-transfer-alt"></i>
+                    <span id="langLabel">RU</span>
+                </button>
+
+                <button type="button" id="themeToggleBtn" class="icon-btn" data-i18n-tooltip="tooltipTheme" title="Переключить тёмную или светлую тему оформления">
+                    <i class="bx bx-sun" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <section class="date-hero" aria-label="Текущая дата и региональный стандарт">
+            <div class="regional-status-bar" id="regionBadge" data-i18n-tooltip="tooltipRegion" title="Региональные параметры вашего устройства (5 кликов — скрытый фильтр)">
+                <div class="reg-item">
+                    <i class="bx bx-calendar-check"></i>
+                    <span class="reg-label" data-i18n="labelTodayFull">Сегодня в вашем регионе:</span>
+                    <strong id="fullRegionalDateText">--</strong>
+                </div>
+                <span class="reg-sep">|</span>
+                <div class="reg-item">
+                    <i class="bx bx- purchase-tag-alt bx-barcode"></i>
+                    <span class="reg-label" data-i18n="labelDateFormat">Формат:</span>
+                    <code id="regionalShortDate">--</code>
+                    <span class="format-pill" id="regionalFormatPattern">--</span>
+                </div>
+                <span class="reg-sep">|</span>
+                <div class="reg-item">
+                    <i class="bx bx-map-pin"></i>
+                    <span id="userRegionText">--</span>
+                    <span class="clock-mono" id="userClockText">--:--:--</span>
+                </div>
+            </div>
+
+            <div class="date-navigator">
+                <button type="button" id="prevDayBtn" class="nav-arrow" data-i18n-tooltip="tooltipPrevDay" title="Перейти к предыдущему дню">
+                    <i class="bx bx-chevron-left"></i>
+                </button>
+
+                <div class="date-center" id="dateCenterTrigger" data-i18n-tooltip="tooltipDateCenter" title="Нажмите, чтобы выбрать любую дату года">
+                    <div class="date-day-number" id="displayDayNum">--</div>
+                    <div class="date-meta">
+                        <div class="date-meta-top">
+                            <span class="day-of-year-badge" id="dayOfYearBadge">День -- из 366</span>
+                        </div>
+                        <h1 class="date-month-title" id="displayMonthName">Загрузка...</h1>
+                        <p class="date-weekday-sub" id="displayWeekday">---</p>
+                    </div>
+                </div>
+
+                <button type="button" id="nextDayBtn" class="nav-arrow" data-i18n-tooltip="tooltipNextDay" title="Перейти к следующему дню">
+                    <i class="bx bx-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="quick-date-bar">
+                <button type="button" id="todayResetBtn" class="chip-action hidden" data-i18n-tooltip="tooltipToday" title="Вернуться к сегодняшней дате вашего региона">
+                    <i class="bx bx-target-lock"></i>
+                    <span data-i18n="btnToday">Вернуться к сегодня</span>
+                </button>
+                <button type="button" id="leapDayQuickBtn" class="chip-action" data-i18n-tooltip="tooltipLeap" title="Перейти к високосному дню — 29 февраля">
+                    <i class="bx bx-calendar-exclamation"></i>
+                    <span data-i18n="btnLeapDay">29 февраля (Високосный день)</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="controls-bar" aria-label="Фильтры и поиск">
+            <div class="search-wrapper" data-i18n-tooltip="tooltipSearch" title="Введите название праздника, страну или организацию для фильтрации">
+                <i class="bx bx-search search-icon"></i>
+                <input type="search" id="searchInput" class="search-input" placeholder="Поиск по названию, стране или описанию..." autocomplete="off">
+                <button type="button" id="clearSearchBtn" class="clear-search hidden" data-i18n-tooltip="tooltipClearSearch" title="Очистить поле поиска">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+
+            <div class="filter-group" id="filterContainer" role="group" aria-label="Категории праздников">
+                <button type="button" class="filter-chip active" data-category="all" data-i18n-tooltip="tooltipFilterAll" title="Включить или отключить сразу все категории">
+                    <i class="bx bx-layer"></i>
+                    <span data-i18n="catAll">Все категории</span>
+                    <span class="chip-count" id="count-all">0</span>
+                </button>
+                <button type="button" class="filter-chip chip-intl active" data-category="international" data-i18n-tooltip="tooltipFilterIntl" title="Международные дни ООН, ЮНЕСКО и всемирные даты">
+                    <i class="bx bx-globe"></i>
+                    <span data-i18n="catInternational">Международные</span>
+                    <span class="chip-count" id="count-international">0</span>
+                </button>
+                <button type="button" class="filter-chip active" data-category="official" data-i18n-tooltip="tooltipFilterOfficial" title="Государственные и национальные праздники стран мира">
+                    <i class="bx bx-buildings"></i>
+                    <span data-i18n="catOfficial">Государственные</span>
+                    <span class="chip-count" id="count-official">0</span>
+                </button>
+                <button type="button" class="filter-chip active" data-category="professional" data-i18n-tooltip="tooltipFilterProf" title="Официальные и отраслевые профессиональные праздники">
+                    <i class="bx bx-briefcase-alt-2"></i>
+                    <span data-i18n="catProfessional">Профессиональные</span>
+                    <span class="chip-count" id="count-professional">0</span>
+                </button>
+                <button type="button" class="filter-chip active" data-category="fun" data-i18n-tooltip="tooltipFilterFun" title="Неофициальные, народные, культурные и шуточные праздники">
+                    <i class="bx bx-party"></i>
+                    <span data-i18n="catFun">Неофициальные</span>
+                    <span class="chip-count" id="count-fun">0</span>
+                </button>
+                <button type="button" class="filter-chip secret-chip hidden" id="secretBirthdayChip" data-category="birthdays" data-i18n-tooltip="tooltipFilterBday" title="Скрытый фильтр: дни рождения знакомых и друзей">
+                    <i class="bx bx-cake"></i>
+                    <span data-i18n="catBirthdays">Дни рождения</span>
+                    <span class="chip-count" id="count-birthdays">0</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="holidays-section" aria-live="polite">
+            <div class="section-status-bar">
+                <span id="resultsCounterText" class="status-count">Записей в реестре за день: 0</span>
+                <span class="intl-legend">
+                    <i class="bx bxs-star"></i>
+                    <span data-i18n="intlLegendText">Международные праздники выделены приоритетным блоком</span>
+                </span>
+            </div>
+
+            <div id="holidaysGrid" class="holidays-grid"></div>
+
+            <div id="emptyStateBox" class="empty-state hidden">
+                <img id="emptyPlaceholderImg" class="empty-illustration" alt="Заглушка пустого списка" src="" />
+                <h3 data-i18n="emptyTitle">Записи по заданным критериям отсутствуют</h3>
+                <p data-i18n="emptyDesc">Активируйте отключённые категории на панели фильтров выше или измените текст поискового запроса.</p>
+                <button type="button" id="resetFiltersBtn" class="action-btn" data-i18n-tooltip="tooltipResetFilters" title="Восстановить все категории и очистить поиск">
+                    <i class="bx bx-reset"></i>
+                    <span data-i18n="btnResetFilters">Восстановить фильтры</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p class="footer-copy">
+                <i class="bx bx-shield-quarter"></i>
+                <span data-i18n="footerCopy">ХроноГраф • Всемирный справочник праздников (366 дней) • Разработка:</span>
+                <strong>kiwwij</strong>
+            </p>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="calendarModal" role="dialog" aria-modal="true" aria-labelledby="calendarModalTitle">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h2 id="calendarModalTitle" class="modal-title">
+                    <i class="bx bx-calendar"></i>
+                    <span data-i18n="modalCalendarTitle">Навигация по календарю (366 дней)</span>
+                </h2>
+                <button type="button" class="modal-close" data-close-modal="calendarModal" data-i18n-tooltip="tooltipCloseModal" title="Закрыть окно (Esc)">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="month-selector-grid" id="modalMonthGrid"></div>
+                <div class="days-selector-header">
+                    <span id="selectedMonthLabel">Месяц</span>
+                    <span class="leap-hint" data-i18n="leapYearSupportHint">Включён високосный день 29 февраля</span>
+                </div>
+                <div class="days-selector-grid" id="modalDaysGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+        <div class="modal-window modal-detail">
+            <div class="modal-header">
+                <span class="card-category-tag" id="detailCategoryBadge">Категория</span>
+                <button type="button" class="modal-close" data-close-modal="detailModal" data-i18n-tooltip="tooltipCloseModal" title="Закрыть окно (Esc)">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body detail-body">
+                <div class="detail-img-wrap">
+                    <img id="detailModalImg" class="detail-img" src="" alt="Эмблема категории">
+                </div>
+                <h2 id="detailModalTitle" class="detail-title">Название праздника</h2>
+                <div class="detail-meta-row">
+                    <span id="detailDateBadge"><i class="bx bx-calendar-alt"></i> <span>--</span></span>
+                    <span id="detailRegionBadge"><i class="bx bx-map-alt"></i> <span>--</span></span>
+                </div>
+                <p id="detailModalDesc" class="detail-description"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="birthdayModal" role="dialog" aria-modal="true" aria-labelledby="bdayModalTitle">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h2 id="bdayModalTitle" class="modal-title">
+                    <i class="bx bx-cake"></i>
+                    <span data-i18n="modalBdayTitle">Личный реестр дней рождения</span>
+                </h2>
+                <button type="button" class="modal-close" data-close-modal="birthdayModal" data-i18n-tooltip="tooltipCloseModal" title="Закрыть окно (Esc)">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addBirthdayForm" class="bday-form">
+                    <div class="form-row">
+                        <label class="form-field">
+                            <span data-i18n="labelBdayName">Имя / Никнейм</span>
+                            <input type="text" id="bdayNameInput" required placeholder="Имя знакомого" data-i18n-tooltip="tooltipBdayName" title="Введите имя или никнейм человека">
+                        </label>
+                        <label class="form-field">
+                            <span data-i18n="labelBdayDate">Дата (ММ-ДД)</span>
+                            <input type="text" id="bdayDateInput" required pattern="(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])" placeholder="12-02" data-i18n-tooltip="tooltipBdayDate" title="Формат ММ-ДД (например: 12-02 или 02-29)">
+                        </label>
+                    </div>
+                    <label class="form-field">
+                        <span data-i18n="labelBdayNote">Примечание / Подарок</span>
+                        <input type="text" id="bdayNoteInput" placeholder="Заметка или идея подарка" data-i18n-tooltip="tooltipBdayNote" title="Дополнительная заметка">
+                    </label>
+                    <button type="submit" class="action-btn submit-bday-btn" data-i18n-tooltip="tooltipSaveBday" title="Сохранить запись в локальном хранилище">
+                        <i class="bx bx-plus"></i>
+                        <span data-i18n="btnSaveBday">Добавить запись</span>
+                    </button>
+                </form>
+                <div class="custom-bday-list" id="customBdayList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastNotification" class="toast hidden" role="status" aria-live="polite">
+        <i class="bx bx-info-circle"></i>
+        <span id="toastText"></span>
+    </div>
+
+    <script src="../js/everyday/holidays_data.js"></script>
+    <script src="../js/everyday.js"></script>
+</body>
+</html>

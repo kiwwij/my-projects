@@ -642,6 +642,13 @@
     "url": "",
     "date": "2026-09-21"
   },
+  "everyday.html": {
+    "image": "bx bx-calendar-star",
+    "description": "A daily holiday tracker covering all 366 days of the year. (development has been abandoned)",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-11-03"
+  },
   ".html": {
     "image": "",
     "description": "",
