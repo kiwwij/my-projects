@@ -98,3 +98,173 @@ body.matrix-mode h2,
 body.matrix-mode p {
     color: #00ff00 !important;
 }
+
+.retro-prank-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    background: #c0c0c0;
+    color: #000080;
+    font-family: "Courier New", Courier, monospace;
+    font-weight: bold;
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    border-top: 3px solid #ffffff;
+    border-left: 3px solid #ffffff;
+    border-right: 3px solid #000000;
+    border-bottom: 3px solid #000000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 3px 3px 0px #000;
+    animation: retroBlink 1s steps(2, start) infinite;
+}
+
+.retro-prank-btn i {
+    color: #ff0000;
+    font-size: 1.1rem;
+}
+
+.retro-prank-btn:active {
+    border-top: 3px solid #000000;
+    border-left: 3px solid #000000;
+    border-right: 3px solid #ffffff;
+    border-bottom: 3px solid #ffffff;
+    transform: translate(2px, 2px);
+}
+
+@keyframes retroBlink {
+    0% { background-color: #ffff00; color: #ff0000; }
+    50% { background-color: #c0c0c0; color: #000080; }
+}
+
+body.retro-web-mode {
+    background: #008080 !important;
+    color: #000000 !important;
+    font-family: "Times New Roman", Times, serif !important;
+    flex-direction: column;
+    align-items: center;
+}
+
+body.retro-web-mode::before {
+    display: none !important;
+}
+
+.retro-top-bar {
+    width: 100%;
+    background: #000080;
+    color: #ffff00;
+    font-family: "Courier New", monospace;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border-bottom: 3px ridge #c0c0c0;
+    padding: 4px 0;
+}
+
+.retro-sub-bar {
+    background: #c0c0c0;
+    color: #000000;
+    padding: 6px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-top: 2px solid #ffffff;
+    font-size: 0.85rem;
+}
+
+.retro-action-btn {
+    background: #c0c0c0;
+    color: #000;
+    font-family: "Times New Roman", serif;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    cursor: pointer;
+}
+
+.retro-action-btn:active {
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+}
+
+body.retro-web-mode .main-wrapper {
+    background: #c0c0c0 !important;
+    border-top: 3px solid #ffffff !important;
+    border-left: 3px solid #ffffff !important;
+    border-right: 3px solid #000000 !important;
+    border-bottom: 3px solid #000000 !important;
+    margin: 20px 10px;
+    padding: 20px !important;
+}
+
+body.retro-web-mode *,
+body.retro-web-mode .project-card,
+body.retro-web-mode .icon-btn,
+body.retro-web-mode #search-input,
+body.retro-web-mode .tech-tag,
+body.retro-web-mode .recommended-section,
+body.retro-web-mode .avatar {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: none !important;
+    font-family: "Times New Roman", Times, serif !important;
+}
+
+body.retro-web-mode .project-card,
+body.retro-web-mode .recommended-section,
+body.retro-web-mode .icon-btn,
+body.retro-web-mode .tech-tag {
+    background: #d4d0c8 !important;
+    color: #000000 !important;
+    border-top: 2px solid #ffffff !important;
+    border-left: 2px solid #ffffff !important;
+    border-right: 2px solid #404040 !important;
+    border-bottom: 2px solid #404040 !important;
+}
+
+body.retro-web-mode .project-card:hover {
+    transform: none !important;
+    background: #ffffff !important;
+}
+
+body.retro-web-mode .card-title {
+    color: #0000EE !important;
+    text-decoration: underline !important;
+}
+
+body.retro-web-mode .card-description,
+body.retro-web-mode .bio,
+body.retro-web-mode h1,
+body.retro-web-mode h2,
+body.retro-web-mode footer,
+body.retro-web-mode footer a,
+body.retro-web-mode .ach-progress {
+    color: #000000 !important;
+    opacity: 1 !important;
+}
+
+body.retro-web-mode #search-input {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-top: 2px solid #404040 !important;
+    border-left: 2px solid #404040 !important;
+    border-right: 2px solid #ffffff !important;
+    border-bottom: 2px solid #ffffff !important;
+}
+
+body.retro-web-mode .new-badge,
+body.retro-web-mode .newest-badge {
+    background: #ff0000 !important;
+    color: #ffff00 !important;
+    border: 1px solid #000 !important;
+    animation: retroBlink 0.8s steps(2, start) infinite;
+}

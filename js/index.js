@@ -343,6 +343,7 @@ function initTheme() {
 }
 
 function applyAllFilters() {
+    updateFilterButtonsVisibility();
     const rawVal = searchInput.value;
     const val = typeof processSearchQuery === 'function' ? processSearchQuery(rawVal) : rawVal.toLowerCase();
 
@@ -863,3 +864,39 @@ function reorderPinnedItems(draggedId, targetId) {
         showToast('<i class="bx bx-sort"></i> Order saved!');
     }
 }
+
+function updateFilterButtonsVisibility() {
+    if (allProjects.length === 0) return;
+
+    const openedProjects = JSON.parse(localStorage.getItem('opened_projects')) || [];
+
+    const hasNew = allProjects.some(card => card.getAttribute('data-is-new') === 'true');
+    const hasUnseen = allProjects.some(card => !openedProjects.includes(card.getAttribute('data-id')));
+
+    if (filterNewBtn) {
+        filterNewBtn.style.display = hasNew ? 'flex' : 'none';
+        if (!hasNew && showNewOnly) {
+            showNewOnly = false;
+            filterNewBtn.classList.remove('active');
+        }
+    }
+
+    if (filterUnseenBtn) {
+        filterUnseenBtn.style.display = hasUnseen ? 'flex' : 'none';
+        if (!hasUnseen && showUnseenOnly) {
+            showUnseenOnly = false;
+            filterUnseenBtn.classList.remove('active');
+            const icon = filterUnseenBtn.querySelector('i');
+            if (icon) icon.className = 'bx bx-hide';
+            filterUnseenBtn.title = "Show only unviewed projects";
+        }
+    }
+}
+
+container.addEventListener('click', (e) => {
+    if (e.target.closest('.project-card') && !e.target.closest('.pin-btn') && !e.target.closest('.tech-icon')) {
+        setTimeout(() => {
+            applyAllFilters();
+        }, 50);
+    }
+});

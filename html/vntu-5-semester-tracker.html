@@ -148,10 +148,15 @@
         main {
             flex: 1;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            grid-template-columns: minmax(320px, 1.2fr) repeat(2, 1fr); 
+            grid-template-rows: repeat(3, 1fr);
             gap: 15px;
             min-height: 0;
+        }
+
+        .card[data-id="coursework"] {
+            order: -1; 
+            grid-row: 1 / span 3; 
         }
 
         .card {
@@ -270,7 +275,11 @@
         @media (max-width: 1024px) {
             main {
                 grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: auto;
+                grid-auto-rows: minmax(200px, 1fr);
+            }
+            .card[data-id="coursework"] {
+                grid-column: 1 / -1;
+                grid-row: span 2;
             }
         }
 
@@ -281,50 +290,49 @@
                 overflow-y: auto;
                 padding: 10px;
             }
+            
+            main {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 240px;
+                gap: 10px;
+            }
+
+            .card[data-id="coursework"] {
+                grid-column: 1 / -1; 
+                grid-row: span 2;
+            }
 
             .header-top {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 15px;
-            }
-
-            .header-title {
-                text-align: center;
+                gap: 10px;
             }
 
             .controls {
                 flex-wrap: wrap;
-                justify-content: space-between;
             }
 
             .controls button {
                 flex: 1 1 calc(50% - 5px);
-                justify-content: center;
-                padding: 10px 12px;
+                padding: 10px;
+            }
+
+            .task-item {
+                padding: 8px 10px; 
+                font-size: 0.75rem; 
+            }
+            
+            .card-header {
+                padding: 8px 10px;
+            }
+            
+            .card-title {
                 font-size: 0.8rem;
             }
 
-            #themeToggle {
-                flex: 1 1 100%;
-            }
-
-            main {
-                display: flex;
-                flex-direction: column;
-                min-height: auto;
-            }
-
-            .card {
-                overflow: visible;
-            }
-
-            .task-list {
-                overflow-y: visible;
-                padding: 5px 0;
-            }
-            
-            .task-item {
-                padding: 12px 15px; 
+            .task-status span {
+                display: none;
             }
         }
 
@@ -398,12 +406,13 @@
         };
 
         const subjects = [
-            { id: 'cg', name: 'Комп. графіка', count: 7 },
-            { id: 'eco', name: 'Екологія', count: 9 },
-            { id: 'qa', name: 'Якість ПЗ та тестування', count: 8 },
-            { id: 'math', name: 'Спец. розділи математики', count: 6 },
+            { id: 'cg', name: 'Комп\'ютерна графіка', count: 7 },
             { id: 'os', name: 'Операційні системи', count: 8 },
-            { id: 'coursework', name: 'Курсова робота', custom: ['Зображення 1', 'Зображення 2', 'Зображення 3', 'Зображення 4', 'Зображення 5', 'Зображення 6', 'Зображення 7', 'Зображення 8', 'Зображення 9', 'Зображення 10', 'Логотип', 'Анімація', 'Сайт', 'Програма', 'Записка: Розділ 1', 'Записка: Розділ 2', 'Записка: Розділ 3', 'Записка: Розділ 4', 'Записка: Розділ 5', 'Записка: Розділ 6', 'Записка: Розділ 7', 'Записка: Розділ 8', 'Записка: Посилання + Висновки'] }
+            { id: 'qa', name: 'Якість ПЗ та тестування', count: 8 },
+            { id: 'ops', name: 'Організація програмних систем', count: 6 },
+            { id: 'eco', name: 'Екологія', count: 8 },
+            { id: 'math', name: 'Спеціальні розділи математики', count: 6 },
+            { id: 'coursework', name: 'Курсова робота з комп\'ютерної графіки', custom: ['Зображення 1', 'Зображення 2', 'Зображення 3', 'Зображення 4', 'Зображення 5', 'Зображення 6', 'Зображення 7', 'Зображення 8', 'Зображення 9', 'Зображення 10', 'Логотип', 'Анімація', 'Сайт', 'Програма', 'Записка: Розділ 1', 'Записка: Розділ 2', 'Записка: Розділ 3', 'Записка: Розділ 4', 'Записка: Розділ 5', 'Записка: Розділ 6', 'Записка: Розділ 7', 'Записка: Розділ 8', 'Записка: Посилання + Висновки'] }
         ];
 
         const statusConfig = {
@@ -462,8 +471,20 @@
             });
         }
 
+        let scrollPositions = {};
+        let isFirstRender = true;
+
         function render() {
             const grid = document.getElementById('grid');
+            
+            if (!isFirstRender) {
+                document.querySelectorAll('.card').forEach(card => {
+                    const id = card.getAttribute('data-id');
+                    const list = card.querySelector('.task-list');
+                    if (id && list) scrollPositions[id] = list.scrollTop;
+                });
+            }
+
             grid.innerHTML = '';
             
             let overallTotal = 0;
@@ -510,6 +531,7 @@
 
                 const card = document.createElement('div');
                 card.className = 'card';
+                card.setAttribute('data-id', sub.id);
                 card.innerHTML = `
                     <div class="card-header" title="${sub.name}">
                         <span class="card-title">${sub.name}</span>
@@ -518,12 +540,33 @@
                     <div class="progress-track">
                         <div class="progress-fill" style="width: ${progress}%"></div>
                     </div>
-                    <ul class="task-list">
+                    <ul class="task-list" style="position: relative;">
                         ${tasksHTML}
                     </ul>
                 `;
                 grid.appendChild(card);
             });
+
+            document.querySelectorAll('.card').forEach(card => {
+                const id = card.getAttribute('data-id');
+                const list = card.querySelector('.task-list');
+                
+                if (list) {
+                    if (!isFirstRender && scrollPositions[id] !== undefined) {
+                        list.scrollTop = scrollPositions[id];
+                    } else if (isFirstRender) {
+                        const firstUnfinished = list.querySelector('.s-0, .s-1');
+                        if (firstUnfinished) {
+                            const itemElement = firstUnfinished.closest('.task-item');
+                            if (itemElement) {
+                                list.scrollTop = Math.max(0, itemElement.offsetTop - list.offsetTop - 40);
+                            }
+                        }
+                    }
+                }
+            });
+
+            isFirstRender = false;
 
             const overallPercent = overallTotal > 0 ? Math.round((overallDone / overallTotal) * 100) : 0;
             document.getElementById('overallProgressText').innerText = `${overallDone} / ${overallTotal} (${overallPercent}%)`;

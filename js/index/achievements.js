@@ -136,6 +136,42 @@ const ACHIEVEMENTS = {
         desc: "You found the hidden system terminal.", 
         icon: "bx-terminal", 
         isHidden: true // найти консоль на кнопку "~""
+    },
+    retro_web: {
+        title: "Back to 1999",
+        desc: "Welcome to Web 1.0! Don't pick up the phone, I'm on the internet.",
+        icon: "bx-window-alt",
+        isHidden: true
+    },
+    time_10m: {
+        title: "Just Looking Around",
+        desc: "10 minutes on the hub. Found anything interesting?",
+        icon: "bx-time",
+        hint: "Spend 10 minutes on the website."
+    },
+    time_1h: {
+        title: "Make Yourself at Home",
+        desc: "1 full hour spent here. Do you want some tea or coffee?",
+        icon: "bx-coffee",
+        hint: "Spend 1 hour on the website."
+    },
+    time_10h: {
+        title: "Touch Some Grass",
+        desc: "10 hours on the hub... Seriously, why is this tab still open?",
+        icon: "bx-sun",
+        hint: "Spend 10 hours on the website."
+    },
+    time_42h: {
+        title: "42 часа, братуха",
+        desc: "Ты провёл в хабе 42 часа. Главный вопрос жизни и вселенной официально познан.",
+        icon: "bx-planet",
+        isHidden: true
+    },
+    time_100h: {
+        title: "Living in the Mainframe",
+        desc: "100 hours! You now officially pay rent for this domain.",
+        icon: "bxs-hourglass",
+        isHidden: true
     }
 };
 
@@ -256,16 +292,29 @@ function initStreakCounter() {
     if (footer) {
         const separator = document.createElement('span');
         separator.textContent = '•';
-        
-        const streakSpan = document.createElement('span');
-        streakSpan.className = 'ach-progress'; 
-        streakSpan.title = `Best streak: ${streakData.best} days`;
-        streakSpan.innerHTML = `🔥 ${streakData.count}`;
 
-        if (streakData.count >= 3) {
-            streakSpan.style.color = '#e17055'; 
-        }
-        
+        let tier = 1;
+        if (streakData.count >= 100) tier = 6;
+        else if (streakData.count >= 42) tier = 5;
+        else if (streakData.count >= 17) tier = 4;
+        else if (streakData.count >= 7) tier = 3;
+        else if (streakData.count >= 3) tier = 2;
+
+        const scale = Math.min(0.83 + (streakData.count * 0.012), 1.85).toFixed(2);
+
+        const streakSpan = document.createElement('span');
+        streakSpan.className = `ach-progress streak-badge streak-tier-${tier}`;
+        streakSpan.style.setProperty('--flame-scale', scale);
+        streakSpan.title = `Current streak: ${streakData.count}d | Best streak: ${streakData.best}d`;
+
+        streakSpan.innerHTML = `
+            <span class="css-flame">
+                <span class="flame-main"></span>
+                <span class="flame-core"></span>
+            </span>
+            <span class="streak-count">${streakData.count}</span>
+        `;
+
         footer.appendChild(separator);
         footer.appendChild(streakSpan);
     }
@@ -309,9 +358,7 @@ if (sInput) {
         
         if (val === 'qa') unlockAchievement('qa_tester');
         if (val === 'vntu') unlockAchievement('survivor');
-        if (val === 'hentaif') unlockAchievement('hacker'); 
-        
-        // Новые пасхалки через поиск
+        if (val === 'hentaif') unlockAchievement('hacker');
         if (val === '42') unlockAchievement('ach_42');
         if (val === '43') unlockAchievement('ach_43');
         if (val === '67' || val === 'six seven') unlockAchievement('ach_67');
