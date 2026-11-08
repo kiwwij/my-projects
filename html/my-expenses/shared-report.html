@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансовая выжимка | Временный доступ</title>
+    <link rel="stylesheet" href="../../css/my-expenses.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .shared-wrapper {
+            width: 100%;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .back-link {
+            color: var(--text-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.75;
+        }
+
+        .back-link h1 {
+            font-size: 1.35rem;
+            margin: 0;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .session-banner {
+            background: var(--card-bg);
+            border: 1px solid rgba(78, 84, 200, 0.35);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .mode-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: rgba(78, 84, 200, 0.15);
+            color: var(--accent-color);
+        }
+
+        .mode-pill.mode-brief {
+            background: rgba(0, 206, 201, 0.15);
+            color: #00cec9;
+        }
+
+        .timer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-color);
+            background: var(--input-bg);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-pill i {
+            color: #f1c40f;
+            font-size: 1.1rem;
+        }
+
+        .session-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+            opacity: 0.92;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+
+        .setup-container {
+            max-width: 820px;
+            margin: 10px auto 0;
+        }
+
+        .setup-intro {
+            margin-bottom: 20px;
+            line-height: 1.55;
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        .modes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (min-width: 680px) {
+            .modes-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .mode-card {
+            background: var(--input-bg);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .mode-card:hover {
+            border-color: rgba(78, 84, 200, 0.4);
+        }
+
+        .mode-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(78, 84, 200, 0.08);
+        }
+
+        .mode-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .mode-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(78, 84, 200, 0.15);
+            color: var(--primary-color);
+        }
+
+        .mode-card[data-mode="brief"] .mode-icon {
+            background: rgba(0, 206, 201, 0.15);
+            color: #00cec9;
+        }
+
+        .mode-check {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .mode-card.selected .mode-check {
+            opacity: 1;
+        }
+
+        .mode-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .mode-card p {
+            font-size: 0.85rem;
+            opacity: 0.75;
+            line-height: 1.45;
+            margin-bottom: 14px;
+        }
+
+        .mode-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.82rem;
+            border-top: 1px solid rgba(150, 150, 150, 0.15);
+            padding-top: 12px;
+        }
+
+        .mode-features li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-features i.bx-check {
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        .mode-features i.bx-x {
+            color: var(--danger);
+            font-size: 1.1rem;
+        }
+
+        .settings-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        @media (min-width: 680px) {
+            .settings-row {
+                grid-template-columns: 1fr 1.6fr;
+            }
+        }
+
+        .setting-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.85;
+        }
+
+        .pills-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .option-pill {
+            padding: 9px 14px;
+            border-radius: 10px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid transparent;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-pill:hover {
+            border-color: rgba(78, 84, 200, 0.4);
+        }
+
+        .option-pill.active {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .create-btn-wrap {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 16px;
+            border-top: 1px solid var(--input-bg);
+        }
+
+        .btn-generate {
+            width: 100%;
+            justify-content: center;
+            padding: 13px 24px;
+            font-size: 0.95rem;
+            border-radius: 12px;
+        }
+
+        @media (min-width: 576px) {
+            .btn-generate {
+                width: auto;
+            }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .stat-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 600;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-top i {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .stat-card-val {
+            font-size: 1.55rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .stat-card-meta {
+            font-size: 0.78rem;
+            opacity: 0.65;
+            line-height: 1.4;
+        }
+
+        .assets-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .asset-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .asset-box i {
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            background: var(--input-bg);
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .asset-label {
+            font-size: 0.76rem;
+            opacity: 0.65;
+            display: block;
+        }
+
+        .asset-val {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 860px) {
+            .charts-grid.two-cols {
+                grid-template-columns: 1.3fr 1fr;
+            }
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .section-head h3 {
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-sub {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .chart-box {
+            position: relative;
+            height: 290px;
+            width: 100%;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 720px) {
+            .categories-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .cat-row-card {
+            background: var(--input-bg);
+            padding: 12px 15px;
+            border-radius: 12px;
+        }
+
+        .cat-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .cat-dot-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .cat-row-sub {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            opacity: 0.65;
+            margin-top: 6px;
+        }
+
+        .months-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .month-item {
+            background: var(--input-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .month-summary {
+            padding: 13px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .month-summary:hover {
+            background: rgba(150, 150, 150, 0.1);
+        }
+
+        .month-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .month-Write-nums {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+
+        .month-details {
+            display: none;
+            padding: 0 16px 16px;
+            border-top: 1px solid rgba(150, 150, 150, 0.12);
+        }
+
+        .month-item.open .month-details {
+            display: block;
+        }
+
+        .month-item.open .bx-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .weeks-breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .week-box {
+            background: var(--card-bg);
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .week-box-head {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed var(--input-bg);
+        }
+
+        .week-cat-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            opacity: 0.85;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 700px) {
+            .goals-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .goal-box {
+            background: var(--input-bg);
+            padding: 12px 15px;
+            border-radius: 12px;
+        }
+
+        .goal-box-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.86rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .expired-screen {
+            max-width: 520px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 40px 28px;
+        }
+
+        .expired-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(231, 76, 60, 0.12);
+            color: var(--danger);
+            font-size: 2.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+        }
+
+        .expired-screen h2 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .expired-screen p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.25s ease;
+            z-index: 9999;
+        }
+
+        .toast-msg.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="shared-wrapper">
+        <div class="top-bar">
+            <a href="my-statistics.html" class="back-link" id="back-to-stats-link">
+                <i class='bx bx-arrow-back' style="font-size: 1.5rem;"></i>
+                <h1 id="page-main-title">Поделиться статистикой</h1>
+            </a>
+            <div class="top-actions">
+                <button id="theme-toggle" class="icon-btn" title="Сменить тему"><i class='bx bx-moon'></i></button>
+            </div>
+        </div>
+
+        <div id="setup-view" class="setup-container" style="display: none;">
+            <div class="card">
+                <h2 style="font-size: 1.25rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                    <i class='bx bx-slider-alt' style="color: var(--primary-color);"></i>
+                    Создание временной страницы отчёта
+                </h2>
+                <p class="setup-intro">
+                    Выбери формат отчёта и время его жизни. После создания ты получишь готовую страницу и временную ссылку: пока таймер активен, человек сможет посмотреть статистику в выбранном режиме, а по истечении времени доступ автоматически закроется.
+                </p>
+
+                <div class="modes-grid">
+                    <div class="mode-card selected" data-mode="brief">
+                        <div>
+                            <div class="mode-card-header">
+                                <div class="mode-icon"><i class='bx bx-pie-chart-alt-2'></i></div>
+                                <i class='bx bxs-check-circle mode-check'></i>
+                            </div>
+                            <h3>Для знакомых (Выжимка по тратам)</h3>
+                            <p>Идеально, когда нужно показать только структуру и культуру своих расходов без раскрытия доходов и накоплений.</p>
+                        </div>
+                        <ul class="mode-features">
+                            <li><i class='bx bx-check'></i> Общие, средние и медианные траты</li>
+                            <li><i class='bx bx-check'></i> Рейтинг всех категорий с % и средним чеком</li>
+                            <li><i class='bx bx-check'></i> Графики динамики трат и разбивка по неделям</li>
+                            <li><i class='bx bx-x'></i> <strong>Скрыты:</strong> доходы, копилка, карта, доллары и цели</li>
+                        </ul>
+                    </div>
+
+                    <div class="mode-card" data-mode="close">
+                        <div>
+                            <div class="mode-card-header">
+                                <div class="mode-icon"><i class='bx bx-shield-quarter'></i></div>
+                                <i class='bx bxs-check-circle mode-check'></i>
+                            </div>
+                            <h3>Для близких (Полный отчёт)</h3>
+                            <p>Максимально подробная аналитика всех денежных потоков, сбережений, резервов и прогресса по финансовым целям.</p>
+                        </div>
+                        <ul class="mode-features">
+                            <li><i class='bx bx-check'></i> Доходы, расходы, медиана и норма сбережений</li>
+                            <li><i class='bx bx-check'></i> Активы на карте, наличными и в долларах (НБУ)</li>
+                            <li><i class='bx bx-check'></i> Прогресс всех финансовых целей и подушки</li>
+                            <li><i class='bx bx-check'></i> Все 3 графика + помесячный баланс и недели</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="settings-row">
+                    <div class="setting-group">
+                        <label><i class='bx bx-calendar'></i> Период статистики</label>
+                        <div class="pills-selector" id="period-selector">
+                            <button type="button" class="option-pill active" data-period="2026">2026 год</button>
+                            <button type="button" class="option-pill" data-period="all">За всё время</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label><i class='bx bx-time-five'></i> Время существования страницы</label>
+                        <div class="pills-selector" id="duration-selector">
+                            <button type="button" class="option-pill" data-minutes="15">15 мин</button>
+                            <button type="button" class="option-pill active" data-minutes="60">1 час</button>
+                            <button type="button" class="option-pill" data-minutes="360">6 часов</button>
+                            <button type="button" class="option-pill" data-minutes="1440">24 часа</button>
+                            <button type="button" class="option-pill" data-minutes="10080">7 дней</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="create-btn-wrap">
+                    <button type="button" id="create-session-btn" class="btn-action btn-primary btn-generate">
+                        <i class='bx bx-bolt-circle' style="font-size: 1.2rem;"></i>
+                        Сформировать временную страницу
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="report-view" style="display: none;">
+            <div class="session-banner">
+                <div class="session-info">
+                    <span id="active-mode-badge" class="mode-pill">
+                        <i class='bx bx-pie-chart-alt-2'></i> Выжимка по тратам
+                    </span>
+                    <span class="timer-pill">
+                        <i class='bx bx-timer'></i>
+                        <span>Осталось: <strong id="countdown-text">00:59:59</strong></span>
+                    </span>
+                    <span style="font-size: 0.8rem; opacity: 0.65;" id="report-period-label">Период: 2026</span>
+                </div>
+                <div class="session-controls" id="owner-controls">
+                    <button type="button" id="copy-link-btn" class="btn-action btn-primary">
+                        <i class='bx bx-link'></i> Скопировать ссылку
+                    </button>
+                    <button type="button" id="reconfigure-btn" class="btn-action">
+                        <i class='bx bx-cog'></i> Сменить режим
+                    </button>
+                    <button type="button" id="destroy-session-btn" class="btn-action btn-danger" title="Закрыть доступ сейчас">
+                        <i class='bx bx-trash'></i> Завершить
+                    </button>
+                </div>
+            </div>
+
+            <div class="metrics-grid" id="report-metrics-grid"></div>
+
+            <div id="report-assets-strip" class="assets-strip" style="display: none;"></div>
+
+            <div class="charts-grid two-cols" id="report-charts-primary">
+                <div class="card">
+                    <div class="section-head">
+                        <div>
+                            <h3 id="main-chart-title"><i class='bx bx-bar-chart-alt-2'></i> Динамика по месяцам</h3>
+                            <p class="section-sub" id="main-chart-sub">Помесячное распределение</p>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="sharedMainChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-head">
+                        <div>
+                            <h3><i class='bx bx-doughnut-chart'></i> Структура расходов</h3>
+                            <p class="section-sub">Доля каждой категории в общих тратах</p>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="sharedDoughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="close-trend-card" style="display: none; margin-bottom: 20px;">
+                <div class="section-head">
+                    <div>
+                        <h3><i class='bx bx-trending-up'></i> Динамика роста сбережений</h3>
+                        <p class="section-sub">Накопительный баланс копилки по месяцам</p>
+                    </div>
+                </div>
+                <div class="chart-box" style="height: 240px;">
+                    <canvas id="sharedTrendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="section-head">
+                    <div>
+                        <h3><i class='bx bx-list-ol'></i> Детальная выжимка по категориям трат</h3>
+                        <p class="section-sub">Точные суммы, доля от бюджета и среднемесячный расход по каждой статье</p>
+                    </div>
+                </div>
+                <div class="categories-grid" id="report-categories-list"></div>
+            </div>
+
+            <div class="card" id="close-goals-card" style="display: none; margin-bottom: 20px;">
+                <div class="section-head">
+                    <div>
+                        <h3><i class='bx bx-target-lock'></i> Прогресс финансовых целей</h3>
+                        <p class="section-sub">Распределение сбережений по приоритетным целям</p>
+                    </div>
+                    <span id="shared-overall-goal-badge" class="mode-pill">Общий прогресс: 0%</span>
+                </div>
+                <div class="goals-grid" id="report-goals-list"></div>
+            </div>
+
+            <div class="card">
+                <div class="section-head">
+                    <div>
+                        <h3><i class='bx bx-calendar-week'></i> Хронология по месяцам и неделям</h3>
+                        <p class="section-sub">Нажми на любой месяц, чтобы раскрыть подробные траты по неделям (1–6)</p>
+                    </div>
+                </div>
+                <div class="months-list" id="report-months-accordion"></div>
+            </div>
+        </div>
+
+        <div id="expired-view" class="card expired-screen" style="display: none;">
+            <div class="expired-icon">
+                <i class='bx bx-time-five'></i>
+            </div>
+            <h2>Время жизни страницы истекло</h2>
+            <p>
+                Срок действия этой временной финансовой выжимки завершился, либо доступ был закрыт владельцем. Все данные страницы очищены.
+            </p>
+            <a href="my-statistics.html" id="expired-back-btn" class="btn-action btn-primary" style="text-decoration: none; display: none;">
+                <i class='bx bx-refresh'></i> Создать новую страницу
+            </a>
+        </div>
+    </div>
+
+    <div id="toast-notification" class="toast-msg">
+        <i class='bx bx-check-circle' style="font-size: 1.2rem;"></i>
+        <span id="toast-text">Ссылка скопирована в буфер обмена</span>
+    </div>
+
+    <script src="../../js/my-expenses/my-expenses-data.js"></script>
+    <script src="../../js/my-expenses/my-goals.js"></script>
+    <script src="../../js/my-expenses/shared-report.js"></script>
+</body>
+</html>

@@ -514,12 +514,8 @@ function setupChartControls() {
         hideAllSums(isHidden);
     });
 
-    document.getElementById('export-pdf-btn').addEventListener('click', () => {
-        if (typeof generateFinancialPDF === 'function') {
-            generateFinancialPDF();
-        } else {
-            alert('Скрипт генерации PDF не загружен!');
-        }
+    document.getElementById('share-report-btn').addEventListener('click', () => {
+        window.location.href = 'shared-report.html';
     });
 }
 
