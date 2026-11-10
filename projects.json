@@ -64,11 +64,11 @@
     "stack": ["html", "css", "js", "github"],
     "date": "2025-10-12"
   },
-  "online-library": {
-    "image": "https://kiwwij.github.io/online-library/img/librium_logo.png",
+  "online-library.html": {
+    "image": "https://kiwwij.github.io/my-projects/html/online-library/img/librium_logo.png",
     "description": "University coursework project. An online library system.",
     "stack": ["html", "css", "js", "github"],
-    "url": "https://kiwwij.github.io/online-library/"
+    "url": ""
   },
   "Caterpillar-game": {
     "image": "https://i.ibb.co/SX79Fkm6/icon.jpg",
