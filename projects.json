@@ -68,7 +68,8 @@
     "image": "https://kiwwij.github.io/my-projects/html/online-library/img/librium_logo.png",
     "description": "University coursework project. An online library system.",
     "stack": ["html", "css", "js", "github"],
-    "url": ""
+    "url": "",
+    "date": "2025-09-09"
   },
   "Caterpillar-game": {
     "image": "https://i.ibb.co/SX79Fkm6/icon.jpg",
@@ -115,7 +116,8 @@
     "image": "bx bx-extension",
     "description": "Firefox extension for OCR and translation using AI.",
     "stack": ["js", "github"],
-    "url": "https://github.com/kiwwij/image-translator-ai"
+    "url": "https://github.com/kiwwij/image-translator-ai",
+    "date": "2026-01-24"
   },
   "girls-inst.html": {
     "image": "html/girls-inst/boobs/16.jpeg",
@@ -648,6 +650,13 @@
     "stack": ["html", "css", "js", "github"],
     "url": "",
     "date": "2026-11-03"
+  },
+  "steam-auto-achiever": {
+    "image": "https://raw.githubusercontent.com/kiwwij/steam-auto-achiever/refs/heads/main/assets/app_icon.png?token=GHSAT0AAAAAAD4QEYABGGX27LZFSR2AP6MY2XTWX3A",
+    "description": "Sorry, this project has no description.",
+    "stack": ["python", "github"],
+    "url": "https://github.com/kiwwij/steam-auto-achiever",
+    "date": "2026-11-11"
   },
   ".html": {
     "image": "",

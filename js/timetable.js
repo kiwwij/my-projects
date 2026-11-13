@@ -38,44 +38,96 @@ const dateOverrides = {
     "2026-10-07": { remove: [1, 2], add: [{ num: 1, start: "08:15", end: "09:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Миргородський А.В.", subgroup: 2 }, { num: 2, start: "09:15", end: "10:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Миргородський А.В.", subgroup: 2 }, { num: 1, start: "08:15", end: "09:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Романюк О.В.", subgroup: 1 }, { num: 2, start: "09:15", end: "10:00", subj: "Якість програмного забезпечення", type: "LR", room: "2431", teacher: "Романюк О.В.", subgroup: 1 }] },
     "2026-10-09": { remove: [3, 4], add: [{ num: 3, start: "10:15", end: "11:00", subj: "Комп`ютерна графіка", type: "LK", room: "5128", teacher: "Романюк О.Н." }, { num: 4, start: "11:15", end: "12:00", subj: "Комп`ютерна графіка", type: "LK", room: "5128", teacher: "Романюк О.Н." }] },
 
-    "2026-10-12": { 
-        remove: [3], 
-        add: [{ num: 3, start: "10:15", end: "11:00", subj: "Комп`ютерна графіка (Кол.)", type: "KOL", room: "5128", teacher: "Романюк О.Н." }] 
+    "2026-10-12": {
+        remove: [3],
+        add: [{ num: 3, start: "10:15", end: "11:00", subj: "Комп`ютерна графіка (Кол.)", type: "KOL", room: "5128", teacher: "Романюк О.Н." }]
     },
-    "2026-10-22": { 
-        remove: [1, 5], 
-        add: [{ num: 1, start: "08:15", end: "09:00", subj: "Управління експ. та функц. характ. ПЗ (Кол.)", type: "KOL", room: "1318", teacher: "Гавенко О.В." }] 
+    "2026-10-22": {
+        remove: [1, 5],
+        add: [{ num: 1, start: "08:15", end: "09:00", subj: "Управління експ. та функц. характ. ПЗ (Кол.)", type: "KOL", room: "1318", teacher: "Гавенко О.В." }]
     },
-    "2026-10-20": { 
-        remove: [3, 4], 
+    "2026-10-20": {
+        remove: [3, 4],
         add: [
             { num: 3, start: "10:15", end: "11:00", subj: "Операційні системи (Кол.)", type: "KOL", room: "5128", teacher: "Рейда О.М." },
             { num: 4, start: "11:15", end: "12:00", subj: "Операційні системи (Кол.)", type: "KOL", room: "5128", teacher: "Рейда О.М." }
-        ] 
+        ]
     },
-    "2026-10-23": { 
-        remove: [6] 
+    "2026-10-23": {
+        remove: [6]
     },
-    "2026-11-03": { 
+    "2026-11-03": {
         add: [
             { num: 7, start: "14:30", end: "15:15", subj: "Екологія та основи біобезпеки і біоетики (Відпр.)", type: "EX", room: "1416", teacher: "Сакалова Г.В." }
-        ] 
+        ]
     },
-    "2026-10-28": { 
+    "2026-10-28": {
         add: [
             { num: 6, start: "13:15", end: "13:30", subj: "Комп`ютерна графіка (Курсова)", type: "CURS", room: "2104", teacher: "Романюк О.Н." }
         ]
     },
-    "2026-11-06": { 
-        remove: [1, 2, 6], 
+    "2026-11-06": {
+        remove: [1, 2, 6],
         add: [
             { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем (Кол.)", type: "KOL", room: "2428", teacher: "Бабюк Н.П." },
             { num: 2, start: "09:15", end: "10:00", subj: "Організація програмних систем (Кол.)", type: "KOL", room: "2428", teacher: "Бабюк Н.П." },
         ]
     },
+    "2026-11-17": {
+        remove: [3, 4],
+        add: [
+            { num: 3, start: "10:15", end: "11:00", subj: "Операційні системи (КР)", type: "LK", room: "5128", teacher: "Рейда О.М." },
+            { num: 4, start: "11:15", end: "12:00", subj: "Операційні системи (КР)", type: "LK", room: "5128", teacher: "Рейда О.М." }
+        ]
+    },
+    "2026-11-20": {
+        remove: [6],
+        add: [
+            { num: 6, start: "13:15", end: "14:00", subj: "Екологія та основи біобезпеки і біоетики (КР)", type: "LK", room: "5128", teacher: "Сакалова Г.В." }
+        ]
+    },
+    "2026-12-18": {
+        remove: [1, 2],
+        add: [
+            { num: 1, start: "08:15", end: "09:00", subj: "Організація програмних систем (Кол.)", type: "KOL", room: "2428", teacher: "Бабюк Н.П." },
+            { num: 2, start: "09:15", end: "10:00", subj: "Організація програмних систем (Кол.)", type: "KOL", room: "2428", teacher: "Бабюк Н.П." }
+        ]
+    },
+
+    // сессія 5 семестр
+    "2027-01-04": { 
+        add: [{ num: 1, start: "08:15", end: "09:15", subj: "Якість програмного забезпечення", type: "CONS", room: "--", teacher: "Романюк О.В." }] 
+    },
+    "2027-01-05": { 
+        add: [{ num: 3, start: "10:00", end: "11:20", subj: "Якість програмного забезпечення", type: "EXAM", room: "--", teacher: "Романюк О.В." }] 
+    },
+    "2027-01-06": { 
+        add: [{ num: 1, start: "08:15", end: "09:15", subj: "Політологія", type: "ZALIK", room: "--", teacher: "Корнієнко В.О." }] 
+    },
+    "2027-01-07": { 
+        add: [{ num: 2, start: "09:00", end: "10:00", subj: "Організація програмних систем", type: "ZALIK", room: "--", teacher: "Бабюк Н.П." }] 
+    },
+    "2027-01-09": { 
+        add: [{ num: 4, start: "11:00", end: "12:00", subj: "Екологія та основи біобезпеки і біоетики", type: "ZALIK", room: "--", teacher: "Сакалова Г.В." }] 
+    },
+    "2027-01-11": { 
+        add: [{ num: 2, start: "09:00", end: "10:00", subj: "Спеціальні розділи математики", type: "CONS", room: "--", teacher: "Бондаренко З.В." }] 
+    },
+    "2027-01-12": { 
+        add: [{ num: 3, start: "10:00", end: "11:20", subj: "Спеціальні розділи математики", type: "EXAM", room: "--", teacher: "Бондаренко З.В." }] 
+    },
+    "2027-01-13": { 
+        add: [{ num: 2, start: "09:00", end: "10:00", subj: "Комп`ютерна графіка", type: "CONS", room: "--", teacher: "Романюк О.Н." }] 
+    },
+    "2027-01-14": { 
+        add: [{ num: 3, start: "10:00", end: "11:20", subj: "Комп`ютерна графіка", type: "EXAM", room: "--", teacher: "Романюк О.Н." }] 
+    },
+    "2027-01-15": { 
+        add: [{ num: 1, start: "08:15", end: "09:15", subj: "Управління експ. та функц. характ. ПЗ", type: "ZALIK", room: "--", teacher: "Гавенко О.В." }] 
+    },
 };
 
-let viewDate = new Date(); 
+let viewDate = new Date();
 let selectedDay = new Date().getDay();
 if (selectedDay === 0) selectedDay = 7;
 
@@ -110,7 +162,7 @@ function getSemesterInfo(date) {
         }
     }
     const y = date.getFullYear();
-    const m = date.getMonth(); 
+    const m = date.getMonth();
     if (y < 2026 || (y === 2026 && m < 7)) return { id: 4, config: semesterConfigs[4] };
     if ((y === 2026 && m >= 7) || (y === 2027 && m < 1)) return { id: 5, config: semesterConfigs[5] };
     return { id: 6, config: semesterConfigs[6] };
@@ -123,7 +175,7 @@ function getPeriodType(date, semConfig) {
     const endSess = new Date(semConfig.endSession).getTime();
     const startHol = new Date(semConfig.startHolidays).getTime();
     const endHol = new Date(semConfig.endHolidays).getTime();
-    
+
     if (d >= startSess && d <= endSess) return 'session';
     if (d >= startHol && d <= endHol) return 'holidays';
     return 'study';
@@ -134,19 +186,19 @@ function getWeekType(date) {
     if (!semInfo.config) return 1;
     const startSemester = new Date(semInfo.config.startStudy);
     const target = new Date(date);
-    target.setHours(0,0,0,0);
-    
+    target.setHours(0, 0, 0, 0);
+
     const diffTime = target.getTime() - startSemester.getTime();
     const diffDays = Math.round(diffTime / (1000 * 3600 * 24));
-    
+
     if (diffDays < 0) return 1;
-    
+
     const weeksPassed = Math.floor((diffDays + (startSemester.getDay() || 7) - 1) / 7);
-    return (weeksPassed % 2 === 0) ? 1 : 2; 
+    return (weeksPassed % 2 === 0) ? 1 : 2;
 }
 
 function getViewedDate() {
-    const currentViewDayIndex = viewDate.getDay() || 7; 
+    const currentViewDayIndex = viewDate.getDay() || 7;
     const diff = selectedDay - currentViewDayIndex;
     const d = new Date(viewDate);
     d.setDate(viewDate.getDate() + diff);
@@ -162,7 +214,7 @@ function formatDateString(date) {
 
 function applyLateMayFilter(lessons, targetDate) {
     const filterStart = new Date('2026-05-18T00:00:00');
-    const filterEnd = new Date('2026-06-07T23:59:59'); 
+    const filterEnd = new Date('2026-06-07T23:59:59');
     if (targetDate >= filterStart && targetDate <= filterEnd) {
         return lessons.filter(l => {
             const subj = l.subj.toLowerCase();
@@ -183,8 +235,8 @@ function applyLateMayFilter(lessons, targetDate) {
 function applyTimeOverrides(lessons, targetDate) {
     const cutoffDate = new Date('2026-03-30T00:00:00');
     const compareDate = new Date(targetDate);
-    compareDate.setHours(0,0,0,0);
-    
+    compareDate.setHours(0, 0, 0, 0);
+
     if (compareDate >= cutoffDate) {
         const newTimes = {
             1: { start: "08:15", end: "09:00" }, 2: { start: "09:15", end: "10:00" },
@@ -193,7 +245,7 @@ function applyTimeOverrides(lessons, targetDate) {
             7: { start: "14:30", end: "15:15" }, 8: { start: "15:25", end: "16:10" }
         };
         lessons.forEach(l => {
-            if(newTimes[l.num] && !['EXAM', 'CONS', 'ZALIK'].includes(l.type)) {
+            if (newTimes[l.num] && !['EXAM', 'CONS', 'ZALIK'].includes(l.type)) {
                 l.start = newTimes[l.num].start; l.end = newTimes[l.num].end;
             }
         });
@@ -230,8 +282,8 @@ function updateDailyStreak() {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const todayTime = today.getTime();
     let streakData = JSON.parse(localStorage.getItem('daily_streak')) || { count: 0, best: 0, lastVisit: 0 };
-    const diffDays = Math.round((todayTime - streakData.lastVisit) / 86400000); 
-    if (streakData.lastVisit === 0 || diffDays > 3) { streakData.count = 1; streakData.lastVisit = todayTime; } 
+    const diffDays = Math.round((todayTime - streakData.lastVisit) / 86400000);
+    if (streakData.lastVisit === 0 || diffDays > 3) { streakData.count = 1; streakData.lastVisit = todayTime; }
     else if (diffDays > 0 && diffDays <= 3) { streakData.count += 1; streakData.lastVisit = todayTime; }
     if (streakData.count > streakData.best) streakData.best = streakData.count;
     localStorage.setItem('daily_streak', JSON.stringify(streakData));
@@ -239,8 +291,8 @@ function updateDailyStreak() {
 
 function initSwipeGestures() {
     let tStartX = 0; let tStartY = 0; let tEndX = 0; let tEndY = 0;
-    document.addEventListener('touchstart', e => { tStartX = e.changedTouches[0].screenX; tStartY = e.changedTouches[0].screenY; }, {passive: true});
-    document.addEventListener('touchend', e => { tEndX = e.changedTouches[0].screenX; tEndY = e.changedTouches[0].screenY; handleSwipe(); }, {passive: true});
+    document.addEventListener('touchstart', e => { tStartX = e.changedTouches[0].screenX; tStartY = e.changedTouches[0].screenY; }, { passive: true });
+    document.addEventListener('touchend', e => { tEndX = e.changedTouches[0].screenX; tEndY = e.changedTouches[0].screenY; handleSwipe(); }, { passive: true });
     function handleSwipe() {
         const diffX = tEndX - tStartX; const diffY = tEndY - tStartY;
         if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
@@ -257,7 +309,7 @@ function animateScheduleChange(updateStateCallback, direction) {
     container.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
     container.classList.add(outClass);
     setTimeout(() => {
-        updateStateCallback(); 
+        updateStateCallback();
         container.classList.remove(outClass); container.classList.add(inClass);
         setTimeout(() => container.classList.remove(inClass), 250);
     }, 250);
@@ -266,15 +318,15 @@ function animateScheduleChange(updateStateCallback, direction) {
 function navigateDay(direction) {
     let newDay = selectedDay + direction; let weekOffset = 0;
     if (newDay > 7) { weekOffset = 1; newDay = 1; } else if (newDay < 1) { weekOffset = -1; newDay = 7; }
-    
+
     if (weekOffset === -1) {
         const nextViewDate = new Date(viewDate);
         nextViewDate.setDate(nextViewDate.getDate() - 7);
         const mondayOfNextView = new Date(nextViewDate);
         const day = mondayOfNextView.getDay() || 7;
         mondayOfNextView.setDate(mondayOfNextView.getDate() - day + 1);
-        mondayOfNextView.setHours(0,0,0,0);
-        
+        mondayOfNextView.setHours(0, 0, 0, 0);
+
         if (mondayOfNextView < new Date('2026-01-26T00:00:00')) return;
     }
 
@@ -293,11 +345,11 @@ function selectDay(dayIndex) {
 function changeWeek(offset) {
     const nextViewDate = new Date(viewDate);
     nextViewDate.setDate(nextViewDate.getDate() + (offset * 7));
-    
+
     const mondayOfNextView = new Date(nextViewDate);
     const day = mondayOfNextView.getDay() || 7;
     mondayOfNextView.setDate(mondayOfNextView.getDate() - day + 1);
-    mondayOfNextView.setHours(0,0,0,0);
+    mondayOfNextView.setHours(0, 0, 0, 0);
 
     if (mondayOfNextView < new Date('2026-01-26T00:00:00')) return;
 
@@ -318,7 +370,7 @@ function checkIfTodayView() {
 function isSameWeek(d1, d2) {
     const one = new Date(d1); const two = new Date(d2);
     const day1 = one.getDay() || 7; const day2 = two.getDay() || 7;
-    one.setHours(0,0,0,0); two.setHours(0,0,0,0);
+    one.setHours(0, 0, 0, 0); two.setHours(0, 0, 0, 0);
     one.setDate(one.getDate() - day1 + 1); two.setDate(two.getDate() - day2 + 1);
     return one.getTime() === two.getTime();
 }
@@ -326,17 +378,17 @@ function isSameWeek(d1, d2) {
 function updateDateDisplay() {
     const displayDate = getViewedDate();
     const days = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота'];
-    
+
     let dateStr = displayDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
-    
+
     if (displayDate.getFullYear() !== new Date().getFullYear()) {
         dateStr += ` ${displayDate.getFullYear()} р.`;
     }
-    
+
     document.getElementById('current-date').innerText = `${days[displayDate.getDay()]}, ${dateStr}`;
     const weekType = getWeekType(viewDate);
     const badge = document.getElementById('week-badge');
-    badge.innerText = weekType === 1 ? "Тиждень 1" : "Тиждень 2"; 
+    badge.innerText = weekType === 1 ? "Тиждень 1" : "Тиждень 2";
     badge.className = `week-badge week-${weekType}`;
 }
 
@@ -392,10 +444,10 @@ function renderSchedule() {
 
     let allLessons = (semesterData[currentWeekType] && semesterData[currentWeekType][selectedDay]) || [];
     const isSessionPeriod = (periodType === 'session');
-    
+
     let lessons = [];
     if (!isSessionPeriod) {
-        lessons = allLessons.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
+        lessons = allLessons.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({ ...l }));
     }
 
     const dateStr = formatDateString(displayDate);
@@ -403,14 +455,14 @@ function renderSchedule() {
         const override = dateOverrides[dateStr];
         if (override.remove) lessons = lessons.filter(l => !override.remove.includes(l.num));
         if (override.add) {
-            const added = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l}));
+            const added = override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({ ...l }));
             lessons.push(...added);
         }
     }
-    
+
     lessons.sort((a, b) => a.num - b.num);
     lessons = applyLateMayFilter(lessons, displayDate);
-    applyTimeOverrides(lessons, displayDate); 
+    applyTimeOverrides(lessons, displayDate);
 
     if (!lessons || lessons.length === 0) {
         container.innerHTML = '<div class="empty-day"><i class="bx bx-coffee"></i><br>Пар немає, відпочивай!</div>';
@@ -474,12 +526,12 @@ function updateStatus() {
     const subtitleEl = document.getElementById('time-left-desc');
 
     if (periodType === 'holidays') {
-    const isWinter = now.getMonth() === 0 || now.getMonth() === 11;
-    titleEl.innerText = isWinter ? "Зимові канікули!" : "Літні канікули!";
-    timerEl.innerHTML = isWinter ? "<i class='bx bx-cloud-snow'></i>" : "<i class='bx bx-sun'></i>";
-    subtitleEl.innerHTML = isWinter ? "<i class='bx bx-cloud-snow'></i> Насолоджуйся відпочинком" : "<i class='bx bx-sun'></i> Насолоджуйся відпочинком";
-    return;
-}
+        const isWinter = now.getMonth() === 0 || now.getMonth() === 11;
+        titleEl.innerText = isWinter ? "Зимові канікули!" : "Літні канікули!";
+        timerEl.innerHTML = isWinter ? "<i class='bx bx-cloud-snow'></i>" : "<i class='bx bx-sun'></i>";
+        subtitleEl.innerHTML = isWinter ? "<i class='bx bx-cloud-snow'></i> Насолоджуйся відпочинком" : "<i class='bx bx-sun'></i> Насолоджуйся відпочинком";
+        return;
+    }
 
     if (!isSameWeek(viewDate, now)) {
         titleEl.innerText = "Перегляд розкладу"; timerEl.innerText = "--:--"; subtitleEl.innerText = "Інший тиждень";
@@ -490,22 +542,22 @@ function updateStatus() {
     const currentWeekType = getWeekType(now);
     const semesterData = allSchedules[semInfo.id];
     const isSessionPeriod = (periodType === 'session');
-    
+
     let lessons = [];
     if (!isSessionPeriod && semesterData && semesterData[currentWeekType] && semesterData[currentWeekType][dayOfWeek]) {
-        lessons = semesterData[currentWeekType][dayOfWeek].filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l})); 
+        lessons = semesterData[currentWeekType][dayOfWeek].filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({ ...l }));
     }
-    
+
     const dateStr = formatDateString(now);
     if (dateOverrides[dateStr]) {
         const override = dateOverrides[dateStr];
         if (override.remove) lessons = lessons.filter(l => !override.remove.includes(l.num));
-        if (override.add) lessons.push(...override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({...l})));
+        if (override.add) lessons.push(...override.add.filter(l => !l.subgroup || l.subgroup === currentSettings.subgroup).map(l => ({ ...l })));
     }
 
     lessons.sort((a, b) => a.num - b.num);
     lessons = applyLateMayFilter(lessons, now);
-    applyTimeOverrides(lessons, now); 
+    applyTimeOverrides(lessons, now);
 
     if (!lessons || lessons.length === 0) {
         titleEl.innerText = "Сьогодні вихідний"; timerEl.innerText = "Відпочивай"; subtitleEl.innerText = "Пар немає"; return;
@@ -525,15 +577,15 @@ function updateStatus() {
 
     document.querySelectorAll('.lesson-card').forEach(c => {
         c.classList.remove('active');
-        c.style.background = ''; 
+        c.style.background = '';
     });
 
     if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
         lessons.forEach(lesson => {
             const [endH, endM] = lesson.end.split(':').map(Number);
-            const endDate = new Date(); 
+            const endDate = new Date();
             endDate.setHours(endH, endM, 0);
-            
+
             const card = document.getElementById(`lesson-${lesson.num}`);
             if (card && now > endDate) {
                 card.classList.add('past');
@@ -543,28 +595,28 @@ function updateStatus() {
 
     if (activeLesson) {
         titleEl.innerText = `Зараз: ${activeLesson.subj} (${activeLesson.room})`;
-        
+
         const [startH, startM] = activeLesson.start.split(':').map(Number);
         const [endH, endM] = activeLesson.end.split(':').map(Number);
-        
+
         const startDate = new Date(); startDate.setHours(startH, startM, 0);
         const endDate = new Date(); endDate.setHours(endH, endM, 0);
-        
-        timerEl.innerText = formatTime(endDate - now); 
+
+        timerEl.innerText = formatTime(endDate - now);
         subtitleEl.innerHTML = "<i class='bx bx-timer'></i> до завершення";
-        
+
         if (isSameDate(viewDate, now) && selectedDay === dayOfWeek) {
             const activeCard = document.getElementById(`lesson-${activeLesson.num}`);
             if (activeCard) {
                 activeCard.classList.add('active');
-                
+
                 const totalDuration = endDate - startDate;
                 const elapsed = now - startDate;
                 let progress = (elapsed / totalDuration) * 100;
                 progress = Math.max(0, Math.min(100, progress));
-                
-                const hue = 120 - (progress * 1.2); 
-                
+
+                const hue = 120 - (progress * 1.2);
+
                 activeCard.style.background = `linear-gradient(to right, hsla(${hue}, 80%, 30%, 0.5) ${progress}%, var(--card-bg) ${progress}%)`;
             }
         }
@@ -612,13 +664,13 @@ async function fetchWeather() {
         document.getElementById('weather-temp').innerText = `${Math.round(data.current.temperature_2m)}°C`;
         const code = data.current.weather_code; const isDay = data.current.is_day === 1;
         const iconEl = document.getElementById('weather-icon');
-        if (code <= 1) iconEl.className = isDay ? 'bx bx-sun' : 'bx bx-moon'; 
-        else if (code <= 3) iconEl.className = 'bx bx-cloud'; 
+        if (code <= 1) iconEl.className = isDay ? 'bx bx-sun' : 'bx bx-moon';
+        else if (code <= 3) iconEl.className = 'bx bx-cloud';
         else if (code >= 45 && code <= 48) iconEl.className = 'bx bx-fog';
-        else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) iconEl.className = 'bx bx-cloud-rain'; 
-        else if ((code >= 71 && code <= 77) || code === 85 || code === 86) iconEl.className = 'bx bx-cloud-snow'; 
-        else if (code >= 95) iconEl.className = 'bx bx-cloud-lightning'; 
-        else iconEl.className = 'bx bx-cloud'; 
+        else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) iconEl.className = 'bx bx-cloud-rain';
+        else if ((code >= 71 && code <= 77) || code === 85 || code === 86) iconEl.className = 'bx bx-cloud-snow';
+        else if (code >= 95) iconEl.className = 'bx bx-cloud-lightning';
+        else iconEl.className = 'bx bx-cloud';
         document.getElementById('weather-widget').style.display = 'flex';
     } catch (error) { console.error("Weather err:", error); }
 }

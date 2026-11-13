@@ -1,7 +1,7 @@
 const MY_GOALS = [
     { id: 'cushion', name: 'Финансовая подушка', target: 100000, isCushion: true, isArchived: false },
-    { id: 'SAMSUNG Galaxy A57 5G', name: 'Новый телефон', target: 27800, isArchived: false },
-    { id: 'RAZER Basilisk V3 PRO Wireless 35K', name: 'Новая мышка', target: 9000, isArchived: false },
+    { id: 'SAMSUNG_Galaxy_A57_5G', name: 'Новый телефон (SAMSUNG Galaxy A57 5G)', target: 27800, isArchived: false },
+    { id: 'RAZER_Basilisk_V3_PRO_Wireless_35K', name: 'Новая мышка (RAZER Basilisk V3 PRO Wireless 35K)', target: 9000, isArchived: false },
     { id: 'pc', name: 'Новый ПК', target: 70000, isArchived: false },
     { id: 'japan', name: 'Поездка в Японию', target: 300000, isArchived: false },
     
