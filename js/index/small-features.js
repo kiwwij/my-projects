@@ -83,13 +83,6 @@ function handleCommand(e) {
     } else if (cmd === 'clear' || cmd === 'cls') {
         const output = document.getElementById('terminal-output');
         if (output) output.innerHTML = '';
-    } else if (cmd === 'unlock-all') {
-        if (typeof unlockAllAchievements === 'function') {
-            unlockAllAchievements();
-            writeOutput('Sequence initiated successfully.');
-        } else {
-            writeOutput('Error: Core achievement module missing.');
-        }
     } else if (cmd === 'matrix') {
         document.body.classList.toggle('matrix-mode');
         writeOutput('Visual matrix reconfiguration complete.');
@@ -134,15 +127,6 @@ function handleCommand(e) {
         setTimeout(toggleTerminal, 1500);
     } else if (cmd === 'exit') {
         toggleTerminal();
-    } else if (cmd === 'preset' || cmd === 'godmode') {
-        writeOutput('Applying master profile preset...');
-        applyMasterPreset();
-    } else if (cmd === 'export' || cmd === 'backup') {
-        writeOutput('Generating backup & stats page...');
-        exportProfileStatsHTML();
-    } else if (cmd === 'import' || cmd === 'restore') {
-        writeOutput('Opening file selector for restore...');
-        importProfileBackup();
     } else {
         writeOutput('Unknown command: ' + rawCmd + '. Type "help" or "/help" for a list of commands.');
     }
@@ -215,7 +199,7 @@ function initRetroWebPrank() {
         retroBanner.className = 'retro-top-bar';
         retroBanner.innerHTML = `
             <marquee scrollamount="6">
-                *** WELCOME TO KIWWIJ'S HOMEPAGE (1999 EDITION) *** BEST VIEWED IN NETSCAPE NAVIGATOR 4.0 (800x600) *** НЕ ЗАНИМАЙТЕ ТЕЛЕФОННУЮ ЛИНИЮ, ИДЁТ ЗАГРУЗКА ПРОЕКТОВ... ***
+                *** WELCOME TO KIWWIJ'S HOMEPAGE (1999 EDITION) *** BEST VIEWED IN NETSCAPE NAVIGATOR 4.0 (800x600) *** DO NOT TIE UP THE PHONE LINE; PROJECTS ARE BEING LOADED... ***
             </marquee>
             <div class="retro-sub-bar">
                 <span>[ Visitors: <b>00001337</b> ]</span>
@@ -253,192 +237,236 @@ function initRetroWebPrank() {
 
 document.addEventListener('DOMContentLoaded', initRetroWebPrank);
 
-// Для активации нажать "`" и вписатиь "preset"
-// ============================================================================
-const MASTER_PROFILE_CONFIG = {
-    streakDays: 166,          // Текущее количество дней в стрике
-    bestStreakDays: 166,      // Лучший стрик (рекорд)
-    timeSpentHours: 0,      // Проведённое время на сайте: ЧАСЫ
-    timeSpentMinutes: 0,    // Проведённое время на сайте: МИНУТЫ
-    unlockAllAch: true,      // Открыть все ачивки (true / false)
-    markAllViewed: true,     // Сделать все проекты просмотренными (true / false)
-    enableShowDates: true,   // Сделать кнопку показа дат проектов активной (true / false)
-    theme: 'dark'            // Тема сайта ('dark' или 'light')
-};
-// ============================================================================
+const GH_TOKEN_KEY = 'gh_sync_token';
+const GH_GIST_ID_KEY = 'gh_sync_gist';
 
-async function applyMasterPreset() {
-    try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const streakData = {
-            count: MASTER_PROFILE_CONFIG.streakDays,
-            best: Math.max(MASTER_PROFILE_CONFIG.streakDays, MASTER_PROFILE_CONFIG.bestStreakDays),
-            lastVisit: today.getTime()
-        };
-        localStorage.setItem('daily_streak', JSON.stringify(streakData));
+function showSyncModal(onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.className = 'sync-modal-overlay';
+    
+    overlay.innerHTML = `
+        <div class="sync-modal">
+            <div class="sync-modal-header">
+                <h2><i class='bx bxl-github'></i> Cloud Sync Setup</h2>
+                <button class="sync-close-btn">&times;</button>
+            </div>
+            <div class="sync-modal-body">
+                <p>Enter your <strong>Personal Access Token</strong> (with <code>gist</code> scope) to enable cross-device cloud saving.</p>
+                <input type="password" id="gh-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx..." autocomplete="off">
+            </div>
+            <div class="sync-modal-footer">
+                <button class="sync-btn-cancel">Cancel</button>
+                <button class="sync-btn-confirm"><i class='bx bx-link'></i> Connect</button>
+            </div>
+        </div>
+    `;
 
-        const totalSeconds = (MASTER_PROFILE_CONFIG.timeSpentHours * 3600) + (MASTER_PROFILE_CONFIG.timeSpentMinutes * 60);
-        localStorage.setItem('hub_time_spent', totalSeconds);
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('active'), 10);
 
-        localStorage.setItem('show_dates', MASTER_PROFILE_CONFIG.enableShowDates ? 'true' : 'false');
-        if (MASTER_PROFILE_CONFIG.theme) {
-            localStorage.setItem('theme', MASTER_PROFILE_CONFIG.theme);
+    const closeBtn = overlay.querySelector('.sync-close-btn');
+    const cancelBtn = overlay.querySelector('.sync-btn-cancel');
+    const confirmBtn = overlay.querySelector('.sync-btn-confirm');
+    const input = overlay.querySelector('#gh-token-input');
+
+    input.focus();
+
+    const closeModal = () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.remove(), 300);
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+    const submit = () => {
+        const val = input.value.trim();
+        if (val) {
+            onConfirm(val);
+            closeModal();
         }
+    };
 
-        if (MASTER_PROFILE_CONFIG.unlockAllAch && typeof ACHIEVEMENTS !== 'undefined') {
-            const allAchIds = Object.keys(ACHIEVEMENTS);
-            localStorage.setItem('unlocked_achievements', JSON.stringify(allAchIds));
-        }
+    confirmBtn.addEventListener('click', submit);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+}
 
-        if (MASTER_PROFILE_CONFIG.markAllViewed) {
-            const response = await fetch('projects.json');
-            if (response.ok) {
-                const projectsData = await response.json();
-                const allProjectKeys = Object.keys(projectsData).filter(k => k !== '.html' && k !== '');
-                localStorage.setItem('opened_projects', JSON.stringify(allProjectKeys));
-            }
-        }
+function showConflictModal(onDownload, onUpload) {
+    const overlay = document.createElement('div');
+    overlay.className = 'sync-modal-overlay';
+    
+    overlay.innerHTML = `
+        <div class="sync-modal">
+            <div class="sync-modal-header">
+                <h2><i class='bx bx-error-circle' style="color: #e17055;"></i> Save Conflict Detected</h2>
+            </div>
+            <div class="sync-modal-body">
+                <p>We found an existing cloud save on this GitHub account. How would you like to proceed?</p>
+                <div class="conflict-actions">
+                    <button class="conflict-btn download-btn">
+                        <i class='bx bx-cloud-download'></i>
+                        <div>
+                            <strong>Load from Cloud</strong>
+                            <span>Overwrites current device data</span>
+                        </div>
+                    </button>
+                    <button class="conflict-btn upload-btn">
+                        <i class='bx bx-cloud-upload'></i>
+                        <div>
+                            <strong>Overwrite Cloud</strong>
+                            <span>Saves current device data to cloud</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
 
-        if (typeof writeOutput === 'function') {
-            writeOutput('Master preset applied! Reloading hub...');
-        }
-        setTimeout(() => location.reload(), 600);
-    } catch (err) {
-        console.error('Ошибка применения пресета:', err);
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    overlay.querySelector('.download-btn').addEventListener('click', () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.remove(), 300);
+        onDownload();
+    });
+
+    overlay.querySelector('.upload-btn').addEventListener('click', () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.remove(), 300);
+        onUpload();
+    });
+}
+
+async function initGitHubSync() {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+    const syncBtns = document.querySelectorAll('.gh-sync-btn');
+
+    if (token) {
+        syncBtns.forEach(btn => btn.style.display = 'none');
+        await syncFromGitHub();
+        setTimeout(syncToGitHub, 5000);
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') syncToGitHub();
+        });
+        window.addEventListener('beforeunload', syncToGitHub);
+    } else {
+        syncBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showSyncModal(async (inputToken) => {
+                    syncBtns.forEach(b => b.style.display = 'none');
+                    if (typeof showToast === 'function') showToast('<i class="bx bx-loader-alt bx-spin"></i> Checking cloud data...');
+
+                    try {
+                        const res = await fetch('https://api.github.com/gists', {
+                            headers: { 'Authorization': `token ${inputToken}` }
+                        });
+                        
+                        if (!res.ok) throw new Error("Invalid token");
+                        const gists = await res.json();
+                        const existingGist = gists.find(g => g.description === "kiwwij Hub Save Data");
+
+                        if (existingGist) {
+                            showConflictModal(
+                                async () => {
+                                    localStorage.setItem(GH_TOKEN_KEY, inputToken);
+                                    localStorage.setItem(GH_GIST_ID_KEY, existingGist.id);
+                                    await syncFromGitHub();
+                                    if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
+                                    if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-download"></i> Data loaded! Reloading...');
+                                    setTimeout(() => location.reload(), 1500);
+                                },
+                                async () => {
+                                    localStorage.setItem(GH_TOKEN_KEY, inputToken);
+                                    localStorage.setItem(GH_GIST_ID_KEY, existingGist.id);
+                                    await syncToGitHub();
+                                    if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
+                                    if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-upload"></i> Cloud overwritten! Reloading...');
+                                    setTimeout(() => location.reload(), 1500);
+                                }
+                            );
+                        } else {
+                            localStorage.setItem(GH_TOKEN_KEY, inputToken);
+                            await syncToGitHub();
+                            if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
+                            if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-upload"></i> Cloud save created!');
+                        }
+
+                    } catch (err) {
+                        console.error('Sync error:', err);
+                        if (typeof showToast === 'function') showToast('<i class="bx bx-error"></i> Error! Invalid token.');
+                        syncBtns.forEach(b => b.style.display = 'flex');
+                    }
+                });
+            });
+        });
     }
 }
 
-window.kiwwijPreset = applyMasterPreset;
+async function syncToGitHub() {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+    const gistId = localStorage.getItem(GH_GIST_ID_KEY);
+    if (!token) return;
 
-function exportProfileStatsHTML() {
-    const backupPayload = {
-        daily_streak: JSON.parse(localStorage.getItem('daily_streak')) || { count: 1, best: 1, lastVisit: Date.now() },
+    const payload = {
+        daily_streak: JSON.parse(localStorage.getItem('daily_streak')) || {},
         hub_time_spent: parseInt(localStorage.getItem('hub_time_spent'), 10) || 0,
         unlocked_achievements: JSON.parse(localStorage.getItem('unlocked_achievements')) || [],
         opened_projects: JSON.parse(localStorage.getItem('opened_projects')) || [],
         pinned_projects: JSON.parse(localStorage.getItem('pinned_projects')) || [],
         show_dates: localStorage.getItem('show_dates') || 'false',
         theme: localStorage.getItem('theme') || 'dark',
-        exportDate: new Date().toISOString()
+        last_sync: new Date().toISOString()
     };
 
-    const hours = (backupPayload.hub_time_spent / 3600).toFixed(1);
-    const jsonString = JSON.stringify(backupPayload, null, 2);
+    const requestData = { files: { "kiwwij_hub_save.json": { content: JSON.stringify(payload, null, 2) } } };
 
-    const htmlContent = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>kiwwij Hub | User Stats & Backup</title>
-    <style>
-        body { background: #0d1117; color: #f0f6fc; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .card { background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 30px; max-width: 520px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        h1 { margin: 0 0 8px; font-size: 1.5rem; color: #58a6ff; }
-        .sub { color: #8b949e; font-size: 0.85rem; margin-bottom: 24px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .stat { background: #0d1117; border: 1px solid #30363d; padding: 14px; border-radius: 10px; }
-        .stat-val { font-size: 1.4rem; font-weight: 800; color: #f0f6fc; }
-        .stat-label { font-size: 0.8rem; color: #8b949e; margin-top: 4px; }
-        textarea { width: 100%; height: 90px; background: #0d1117; color: #8b949e; border: 1px solid #30363d; border-radius: 8px; padding: 8px; font-family: monospace; font-size: 0.75rem; resize: none; box-sizing: border-box; margin-bottom: 12px; }
-        .btn { background: #58a6ff; color: #0d1117; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 0.9rem; }
-        .btn:hover { filter: brightness(1.1); }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>📂 kiwwij Hub — Profile Backup</h1>
-        <div class="sub">Exported: ${new Date().toLocaleString()}</div>
-        <div class="grid">
-            <div class="stat"><div class="stat-val">🔥 ${backupPayload.daily_streak.count}d</div><div class="stat-label">Current Streak (Best: ${backupPayload.daily_streak.best}d)</div></div>
-            <div class="stat"><div class="stat-val">⏱️ ${hours}h</div><div class="stat-label">Time Spent (${backupPayload.hub_time_spent}s)</div></div>
-            <div class="stat"><div class="stat-val">🏆 ${backupPayload.unlocked_achievements.length}</div><div class="stat-label">Achievements Unlocked</div></div>
-            <div class="stat"><div class="stat-val">👁️ ${backupPayload.opened_projects.length}</div><div class="stat-label">Projects Viewed</div></div>
-        </div>
-        <textarea id="backup-data" readonly>${jsonString}</textarea>
-        <button class="btn" onclick="downloadJson()">💾 Download .JSON for Restore (/import)</button>
-    </div>
-    <script id="raw-backup" type="application/json">${jsonString}<\/script>
-    <script>
-        function downloadJson() {
-            const data = document.getElementById('raw-backup').textContent;
-            const blob = new Blob([data], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'kiwwij-hub-backup.json';
-            a.click();
+    try {
+        if (gistId) {
+            await fetch(`https://api.github.com/gists/${gistId}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+                body: JSON.stringify(requestData)
+            });
+        } else {
+            requestData.description = "kiwwij Hub Save Data";
+            requestData.public = false; 
+            const res = await fetch('https://api.github.com/gists', {
+                method: 'POST',
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+                body: JSON.stringify(requestData)
+            });
+            const data = await res.json();
+            if (data.id) localStorage.setItem(GH_GIST_ID_KEY, data.id);
         }
-    <\/script>
-</body>
-</html>`;
-
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `kiwwij-hub-stats-${new Date().toISOString().slice(0, 10)}.html`;
-    a.click();
+    } catch (err) {}
 }
 
-function importProfileBackup() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json,.html';
+async function syncFromGitHub() {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+    const gistId = localStorage.getItem(GH_GIST_ID_KEY);
+    if (!token || !gistId) return;
 
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            try {
-                let content = event.target.result;
-                let data;
-
-                if (file.name.endsWith('.html')) {
-                    const match = content.match(/<script id="raw-backup" type="application\/json">([\s\S]*?)<\/script>/);
-                    if (!match) throw new Error('Backup block not found in HTML');
-                    data = JSON.parse(match[1]);
-                } else {
-                    data = JSON.parse(content);
-                }
-
-                if (data.daily_streak) {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    data.daily_streak.lastVisit = today.getTime();
-                    localStorage.setItem('daily_streak', JSON.stringify(data.daily_streak));
-                }
-                if (typeof data.hub_time_spent === 'number') {
-                    localStorage.setItem('hub_time_spent', data.hub_time_spent);
-                }
-                if (Array.isArray(data.unlocked_achievements)) {
-                    localStorage.setItem('unlocked_achievements', JSON.stringify(data.unlocked_achievements));
-                }
-                if (Array.isArray(data.opened_projects)) {
-                    localStorage.setItem('opened_projects', JSON.stringify(data.opened_projects));
-                }
-                if (Array.isArray(data.pinned_projects)) {
-                    localStorage.setItem('pinned_projects', JSON.stringify(data.pinned_projects));
-                }
-                if (data.show_dates) {
-                    localStorage.setItem('show_dates', data.show_dates);
-                }
-                if (data.theme) {
-                    localStorage.setItem('theme', data.theme);
-                }
-
-                if (typeof writeOutput === 'function') {
-                    writeOutput('Backup successfully restored! Reloading...');
-                }
-                setTimeout(() => location.reload(), 600);
-            } catch (err) {
-                if (typeof writeOutput === 'function') {
-                    writeOutput('Error: Invalid backup file.');
-                }
+    try {
+        const res = await fetch(`https://api.github.com/gists/${gistId}`, { headers: { 'Authorization': `token ${token}` } });
+        const data = await res.json();
+        
+        if (data.files && data.files['kiwwij_hub_save.json']) {
+            const save = JSON.parse(data.files['kiwwij_hub_save.json'].content);
+            const localTime = parseInt(localStorage.getItem('hub_time_spent'), 10) || 0;
+            if (save.hub_time_spent && save.hub_time_spent > localTime) localStorage.setItem('hub_time_spent', save.hub_time_spent);
+            if (save.daily_streak) localStorage.setItem('daily_streak', JSON.stringify(save.daily_streak));
+            if (save.unlocked_achievements) localStorage.setItem('unlocked_achievements', JSON.stringify(save.unlocked_achievements));
+            if (save.opened_projects) localStorage.setItem('opened_projects', JSON.stringify(save.opened_projects));
+            if (save.pinned_projects) localStorage.setItem('pinned_projects', JSON.stringify(save.pinned_projects));
+            if (save.theme) {
+                localStorage.setItem('theme', save.theme);
+                document.documentElement.setAttribute('data-theme', save.theme === 'dark' ? 'dark' : null);
             }
-        };
-        reader.readAsText(file);
-    };
-
-    input.click();
+            if (save.show_dates) localStorage.setItem('show_dates', save.show_dates);
+        }
+    } catch (err) {}
 }
+
+document.addEventListener('DOMContentLoaded', initGitHubSync);

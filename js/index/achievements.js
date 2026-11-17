@@ -172,7 +172,13 @@ const ACHIEVEMENTS = {
         desc: "100 hours! You now officially pay rent for this domain.",
         icon: "bxs-hourglass",
         isHidden: true
-    }
+    },
+    cloud_sync: {
+        title: "Cloud Sync",
+        desc: "Your data is safe! You have successfully connected GitHub cloud save.",
+        icon: "bx-cloud-upload",
+        hint: "Set up cloud synchronization via the gear icon."
+    },
 };
 
 const TOTAL_ACHIEVEMENTS = Object.keys(ACHIEVEMENTS).length;

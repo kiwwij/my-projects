@@ -652,7 +652,7 @@
     "date": "2026-11-03"
   },
   "steam-auto-achiever": {
-    "image": "https://raw.githubusercontent.com/kiwwij/steam-auto-achiever/refs/heads/main/assets/app_icon.png?token=GHSAT0AAAAAAD4QEYABGGX27LZFSR2AP6MY2XTWX3A",
+    "image": "bx bxl-steam",
     "description": "Sorry, this project has no description.",
     "stack": ["python", "github"],
     "url": "https://github.com/kiwwij/steam-auto-achiever",
