@@ -373,23 +373,32 @@ async function initGitHubSync() {
                                     localStorage.setItem(GH_TOKEN_KEY, inputToken);
                                     localStorage.setItem(GH_GIST_ID_KEY, existingGist.id);
                                     await syncFromGitHub();
+                                    
                                     if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
+                                    
+                                    await syncToGitHub();
+                                    
                                     if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-download"></i> Data loaded! Reloading...');
-                                    setTimeout(() => location.reload(), 1500);
+                                    
+                                    setTimeout(() => location.reload(), 3000);
                                 },
                                 async () => {
                                     localStorage.setItem(GH_TOKEN_KEY, inputToken);
                                     localStorage.setItem(GH_GIST_ID_KEY, existingGist.id);
-                                    await syncToGitHub();
                                     if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
+                                    
+                                    await syncToGitHub();
+                                    
                                     if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-upload"></i> Cloud overwritten! Reloading...');
-                                    setTimeout(() => location.reload(), 1500);
+                                    setTimeout(() => location.reload(), 3000);
                                 }
                             );
                         } else {
                             localStorage.setItem(GH_TOKEN_KEY, inputToken);
-                            await syncToGitHub();
+                            
                             if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
+                            await syncToGitHub();
+                            
                             if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-upload"></i> Cloud save created!');
                         }
 
