@@ -170,7 +170,7 @@ function initTimeTracker() {
 
     checkTimeAchievements(totalSeconds);
 
-    setInterval(() => {
+    window.timeTrackerInterval = setInterval(() => {
         if (!document.hidden) {
             totalSeconds++;
             localStorage.setItem('hub_time_spent', totalSeconds);
@@ -240,6 +240,57 @@ document.addEventListener('DOMContentLoaded', initRetroWebPrank);
 const GH_TOKEN_KEY = 'gh_sync_token';
 const GH_GIST_ID_KEY = 'gh_sync_gist';
 
+function importStatsFromFile() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                const save = JSON.parse(event.target.result);
+                const validKeys = ['daily_streak', 'hub_time_spent', 'unlocked_achievements', 'opened_projects', 'pinned_projects', 'theme', 'show_dates'];
+                const hasValidData = validKeys.some(k => k in save);
+
+                if (!hasValidData) throw new Error('Invalid save format');
+                
+                if (window.timeTrackerInterval) clearInterval(window.timeTrackerInterval);
+                if (save.daily_streak) localStorage.setItem('daily_streak', JSON.stringify(save.daily_streak));
+                if (typeof save.hub_time_spent === 'number') localStorage.setItem('hub_time_spent', save.hub_time_spent);
+                if (Array.isArray(save.unlocked_achievements)) localStorage.setItem('unlocked_achievements', JSON.stringify(save.unlocked_achievements));
+                if (Array.isArray(save.opened_projects)) localStorage.setItem('opened_projects', JSON.stringify(save.opened_projects));
+                if (Array.isArray(save.pinned_projects)) localStorage.setItem('pinned_projects', JSON.stringify(save.pinned_projects));
+                if (save.show_dates !== undefined) localStorage.setItem('show_dates', String(save.show_dates));
+                if (save.theme) {
+                    localStorage.setItem('theme', save.theme);
+                    document.documentElement.setAttribute('data-theme', save.theme === 'dark' ? 'dark' : null);
+                }
+
+                if (localStorage.getItem(GH_TOKEN_KEY)) {
+                    await syncToGitHub(false);
+                }
+
+                if (typeof showToast === 'function') {
+                    showToast('<i class="bx bx-check-circle"></i> Stats imported! Reloading...');
+                }
+                setTimeout(() => location.reload(), 1200);
+            } catch (err) {
+                console.error('Import error:', err);
+                if (typeof showToast === 'function') {
+                    showToast('<i class="bx bx-error-circle"></i> Invalid JSON save file.');
+                }
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    input.click();
+}
+
 function showSyncModal(onConfirm) {
     const overlay = document.createElement('div');
     overlay.className = 'sync-modal-overlay';
@@ -247,12 +298,22 @@ function showSyncModal(onConfirm) {
     overlay.innerHTML = `
         <div class="sync-modal">
             <div class="sync-modal-header">
-                <h2><i class='bx bxl-github'></i> Cloud Sync Setup</h2>
+                <h2><i class='bx bxl-github'></i> Cloud Sync & Backup</h2>
                 <button class="sync-close-btn">&times;</button>
             </div>
             <div class="sync-modal-body">
-                <p>Enter your <strong>Personal Access Token</strong> (with <code>gist</code> scope) to enable cross-device cloud saving.</p>
+                <p>Enter your <strong>Personal Access Token</strong> (with <code>gist</code> scope) to enable automatic cloud saving.</p>
                 <input type="password" id="gh-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx..." autocomplete="off">
+                
+                <div class="sync-divider"><span>or</span></div>
+                
+                <button class="conflict-btn file-import-btn">
+                    <i class='bx bx-upload'></i>
+                    <div>
+                        <strong>Import from File (.json)</strong>
+                        <span>Restore stats manually from a local backup</span>
+                    </div>
+                </button>
             </div>
             <div class="sync-modal-footer">
                 <button class="sync-btn-cancel">Cancel</button>
@@ -267,6 +328,7 @@ function showSyncModal(onConfirm) {
     const closeBtn = overlay.querySelector('.sync-close-btn');
     const cancelBtn = overlay.querySelector('.sync-btn-cancel');
     const confirmBtn = overlay.querySelector('.sync-btn-confirm');
+    const fileImportBtn = overlay.querySelector('.file-import-btn');
     const input = overlay.querySelector('#gh-token-input');
 
     input.focus();
@@ -280,6 +342,11 @@ function showSyncModal(onConfirm) {
     cancelBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
 
+    fileImportBtn.addEventListener('click', () => {
+        closeModal();
+        importStatsFromFile();
+    });
+
     const submit = () => {
         const val = input.value.trim();
         if (val) {
@@ -290,6 +357,59 @@ function showSyncModal(onConfirm) {
 
     confirmBtn.addEventListener('click', submit);
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+}
+
+function showBackupMenuModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'sync-modal-overlay';
+    
+    overlay.innerHTML = `
+        <div class="sync-modal">
+            <div class="sync-modal-header">
+                <h2><i class='bx bx-cloud'></i> Cloud Sync & Backup</h2>
+                <button class="sync-close-btn">&times;</button>
+            </div>
+            <div class="sync-modal-body">
+                <div class="conflict-actions">
+                    <button class="conflict-btn force-save-btn">
+                        <i class='bx bx-cloud-upload'></i>
+                        <div>
+                            <strong>Save to GitHub Now</strong>
+                            <span>Manually push current stats to Gist</span>
+                        </div>
+                    </button>
+                    <button class="conflict-btn file-import-btn">
+                        <i class='bx bx-upload'></i>
+                        <div>
+                            <strong>Import from File (.json)</strong>
+                            <span>Load stats from a local backup file</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    const closeModal = () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.remove(), 300);
+    };
+
+    overlay.querySelector('.sync-close-btn').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+    overlay.querySelector('.force-save-btn').addEventListener('click', () => {
+        closeModal();
+        syncToGitHub(true);
+    });
+
+    overlay.querySelector('.file-import-btn').addEventListener('click', () => {
+        closeModal();
+        importStatsFromFile();
+    });
 }
 
 function showConflictModal(onDownload, onUpload) {
@@ -339,18 +459,63 @@ function showConflictModal(onDownload, onUpload) {
     });
 }
 
+function updateSyncStatus(state, message = '') {
+    let statusEl = document.getElementById('gh-sync-status');
+    
+    if (!statusEl) {
+        const footer = document.querySelector('footer');
+        if (!footer) return;
+        
+        const sep = document.createElement('span');
+        sep.textContent = '•';
+        sep.id = 'gh-sync-sep';
+        
+        statusEl = document.createElement('span');
+        statusEl.id = 'gh-sync-status';
+        statusEl.className = 'ach-progress';
+        statusEl.style.cursor = 'pointer';
+        statusEl.title = 'Cloud Sync & Backup';
+        statusEl.addEventListener('click', showBackupMenuModal);
+        
+        footer.appendChild(sep);
+        footer.appendChild(statusEl);
+    }
+
+    if (state === 'idle') {
+        statusEl.innerHTML = `<i class='bx bx-cloud'></i>`;
+    } else if (state === 'loading') {
+        statusEl.innerHTML = `<i class='bx bx-cloud-download bx-flashing' style="color: var(--accent);"></i> Loading...`;
+    } else if (state === 'saving') {
+        statusEl.innerHTML = `<i class='bx bx-cloud-upload bx-flashing' style="color: var(--accent);"></i> Saving...`;
+    } else if (state === 'saved') {
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        statusEl.innerHTML = `<i class='bx bx-check-circle' style="color: #00b894;"></i> Saved`;
+        statusEl.title = `Last saved at ${timeStr}. Click for options.`;
+        
+        setTimeout(() => {
+            if (statusEl.innerHTML.includes('Saved')) {
+                statusEl.innerHTML = `<i class='bx bx-cloud'></i>`;
+            }
+        }, 3000);
+    } else if (state === 'error') {
+        statusEl.innerHTML = `<i class='bx bx-error-circle' style="color: #e17055;"></i> Sync Error`;
+        statusEl.title = message || 'Failed to sync with GitHub. Click for options.';
+    }
+}
+
 async function initGitHubSync() {
     const token = localStorage.getItem(GH_TOKEN_KEY);
     const syncBtns = document.querySelectorAll('.gh-sync-btn');
 
     if (token) {
         syncBtns.forEach(btn => btn.style.display = 'none');
-        await syncFromGitHub();
-        setTimeout(syncToGitHub, 5000);
+        updateSyncStatus('idle');
+        
+        setTimeout(() => syncToGitHub(false), 5000);
         window.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') syncToGitHub();
+            if (document.visibilityState === 'hidden') syncToGitHub(false);
         });
-        window.addEventListener('beforeunload', syncToGitHub);
+        window.addEventListener('beforeunload', () => syncToGitHub(false));
     } else {
         syncBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -375,19 +540,16 @@ async function initGitHubSync() {
                                     await syncFromGitHub();
                                     
                                     if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
-                                    
-                                    await syncToGitHub();
+                                    await syncToGitHub(false);
                                     
                                     if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-download"></i> Data loaded! Reloading...');
-                                    
                                     setTimeout(() => location.reload(), 3000);
                                 },
                                 async () => {
                                     localStorage.setItem(GH_TOKEN_KEY, inputToken);
                                     localStorage.setItem(GH_GIST_ID_KEY, existingGist.id);
                                     if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
-                                    
-                                    await syncToGitHub();
+                                    await syncToGitHub(false);
                                     
                                     if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-upload"></i> Cloud overwritten! Reloading...');
                                     setTimeout(() => location.reload(), 3000);
@@ -395,9 +557,8 @@ async function initGitHubSync() {
                             );
                         } else {
                             localStorage.setItem(GH_TOKEN_KEY, inputToken);
-                            
                             if (typeof unlockAchievement === 'function') unlockAchievement('cloud_sync');
-                            await syncToGitHub();
+                            await syncToGitHub(false);
                             
                             if (typeof showToast === 'function') showToast('<i class="bx bx-cloud-upload"></i> Cloud save created!');
                         }
@@ -413,10 +574,12 @@ async function initGitHubSync() {
     }
 }
 
-async function syncToGitHub() {
+async function syncToGitHub(isManual = false) {
     const token = localStorage.getItem(GH_TOKEN_KEY);
     const gistId = localStorage.getItem(GH_GIST_ID_KEY);
     if (!token) return;
+
+    updateSyncStatus('saving');
 
     const payload = {
         daily_streak: JSON.parse(localStorage.getItem('daily_streak')) || {},
@@ -432,8 +595,9 @@ async function syncToGitHub() {
     const requestData = { files: { "kiwwij_hub_save.json": { content: JSON.stringify(payload, null, 2) } } };
 
     try {
+        let res;
         if (gistId) {
-            await fetch(`https://api.github.com/gists/${gistId}`, {
+            res = await fetch(`https://api.github.com/gists/${gistId}`, {
                 method: 'PATCH',
                 headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
                 body: JSON.stringify(requestData)
@@ -441,7 +605,7 @@ async function syncToGitHub() {
         } else {
             requestData.description = "kiwwij Hub Save Data";
             requestData.public = false; 
-            const res = await fetch('https://api.github.com/gists', {
+            res = await fetch('https://api.github.com/gists', {
                 method: 'POST',
                 headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
                 body: JSON.stringify(requestData)
@@ -449,7 +613,17 @@ async function syncToGitHub() {
             const data = await res.json();
             if (data.id) localStorage.setItem(GH_GIST_ID_KEY, data.id);
         }
-    } catch (err) {}
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        updateSyncStatus('saved');
+        if (isManual && typeof showToast === 'function') {
+            showToast('<i class="bx bx-cloud-upload"></i> Progress saved to GitHub!');
+        }
+    } catch (err) {
+        console.error('GitHub save error:', err);
+        updateSyncStatus('error', err.message);
+    }
 }
 
 async function syncFromGitHub() {
@@ -457,25 +631,197 @@ async function syncFromGitHub() {
     const gistId = localStorage.getItem(GH_GIST_ID_KEY);
     if (!token || !gistId) return;
 
+    updateSyncStatus('loading');
+
     try {
-        const res = await fetch(`https://api.github.com/gists/${gistId}`, { headers: { 'Authorization': `token ${token}` } });
+        const res = await fetch(`https://api.github.com/gists/${gistId}`, { 
+            headers: { 'Authorization': `token ${token}` } 
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
         const data = await res.json();
         
         if (data.files && data.files['kiwwij_hub_save.json']) {
             const save = JSON.parse(data.files['kiwwij_hub_save.json'].content);
-            const localTime = parseInt(localStorage.getItem('hub_time_spent'), 10) || 0;
-            if (save.hub_time_spent && save.hub_time_spent > localTime) localStorage.setItem('hub_time_spent', save.hub_time_spent);
+
+            if (window.timeTrackerInterval) clearInterval(window.timeTrackerInterval);
             if (save.daily_streak) localStorage.setItem('daily_streak', JSON.stringify(save.daily_streak));
-            if (save.unlocked_achievements) localStorage.setItem('unlocked_achievements', JSON.stringify(save.unlocked_achievements));
-            if (save.opened_projects) localStorage.setItem('opened_projects', JSON.stringify(save.opened_projects));
-            if (save.pinned_projects) localStorage.setItem('pinned_projects', JSON.stringify(save.pinned_projects));
+            if (typeof save.hub_time_spent === 'number') localStorage.setItem('hub_time_spent', save.hub_time_spent);
+            if (Array.isArray(save.unlocked_achievements)) localStorage.setItem('unlocked_achievements', JSON.stringify(save.unlocked_achievements));
+            if (Array.isArray(save.opened_projects)) localStorage.setItem('opened_projects', JSON.stringify(save.opened_projects));
+            if (Array.isArray(save.pinned_projects)) localStorage.setItem('pinned_projects', JSON.stringify(save.pinned_projects));
+            if (save.show_dates !== undefined) localStorage.setItem('show_dates', String(save.show_dates));
             if (save.theme) {
                 localStorage.setItem('theme', save.theme);
                 document.documentElement.setAttribute('data-theme', save.theme === 'dark' ? 'dark' : null);
             }
-            if (save.show_dates) localStorage.setItem('show_dates', save.show_dates);
         }
-    } catch (err) {}
+        updateSyncStatus('saved');
+    } catch (err) {
+        console.error('GitHub load error:', err);
+        updateSyncStatus('error', err.message);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initGitHubSync);
+
+function updateSyncStatus(state, message = '') {
+    let statusEl = document.getElementById('gh-sync-status');
+    
+    if (!statusEl) {
+        const footer = document.querySelector('footer');
+        if (!footer) return;
+        
+        const sep = document.createElement('span');
+        sep.textContent = '•';
+        sep.id = 'gh-sync-sep';
+        
+        statusEl = document.createElement('span');
+        statusEl.id = 'gh-sync-status';
+        statusEl.className = 'ach-progress';
+        statusEl.style.cursor = 'pointer';
+        statusEl.title = 'Click to force cloud sync';
+        statusEl.addEventListener('click', () => syncToGitHub(true));
+        
+        footer.appendChild(sep);
+        footer.appendChild(statusEl);
+    }
+
+    if (state === 'loading') {
+        statusEl.innerHTML = `<i class='bx bx-cloud-download bx-flashing' style="color: var(--accent);"></i> Loading...`;
+    } else if (state === 'saving') {
+        statusEl.innerHTML = `<i class='bx bx-cloud-upload bx-flashing' style="color: var(--accent);"></i> Saving...`;
+    } else if (state === 'saved') {
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        statusEl.innerHTML = `<i class='bx bx-check-circle' style="color: #00b894;"></i> Saved`;
+        statusEl.title = `Last synced at ${timeStr}. Click to sync now.`;
+        
+        setTimeout(() => {
+            if (statusEl.innerHTML.includes('Saved')) {
+                statusEl.innerHTML = `<i class='bx bx-cloud'></i>`;
+            }
+        }, 3000);
+    } else if (state === 'error') {
+        statusEl.innerHTML = `<i class='bx bx-error-circle' style="color: #e17055;"></i> Sync Error`;
+        statusEl.title = message || 'Failed to sync with GitHub. Click to retry.';
+    }
+}
+
+async function syncToGitHub(isManual = false) {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+    const gistId = localStorage.getItem(GH_GIST_ID_KEY);
+    if (!token) return;
+
+    updateSyncStatus('saving');
+
+    const payload = {
+        daily_streak: JSON.parse(localStorage.getItem('daily_streak')) || {},
+        hub_time_spent: parseInt(localStorage.getItem('hub_time_spent'), 10) || 0,
+        unlocked_achievements: JSON.parse(localStorage.getItem('unlocked_achievements')) || [],
+        opened_projects: JSON.parse(localStorage.getItem('opened_projects')) || [],
+        pinned_projects: JSON.parse(localStorage.getItem('pinned_projects')) || [],
+        show_dates: localStorage.getItem('show_dates') || 'false',
+        theme: localStorage.getItem('theme') || 'dark',
+        last_sync: new Date().toISOString()
+    };
+
+    const requestData = { files: { "kiwwij_hub_save.json": { content: JSON.stringify(payload, null, 2) } } };
+
+    try {
+        let res;
+        if (gistId) {
+            res = await fetch(`https://api.github.com/gists/${gistId}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+                body: JSON.stringify(requestData)
+            });
+        } else {
+            requestData.description = "kiwwij Hub Save Data";
+            requestData.public = false; 
+            res = await fetch('https://api.github.com/gists', {
+                method: 'POST',
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+                body: JSON.stringify(requestData)
+            });
+            const data = await res.json();
+            if (data.id) localStorage.setItem(GH_GIST_ID_KEY, data.id);
+        }
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        updateSyncStatus('saved');
+        if (isManual && typeof showToast === 'function') {
+            showToast('<i class="bx bx-cloud-upload"></i> Progress saved to GitHub!');
+        }
+    } catch (err) {
+        console.error('GitHub save error:', err);
+        updateSyncStatus('error', err.message);
+    }
+}
+
+async function syncFromGitHub() {
+    const token = localStorage.getItem(GH_TOKEN_KEY);
+    const gistId = localStorage.getItem(GH_GIST_ID_KEY);
+    if (!token || !gistId) return;
+
+    updateSyncStatus('loading');
+
+    try {
+        const res = await fetch(`https://api.github.com/gists/${gistId}`, { 
+            headers: { 'Authorization': `token ${token}` } 
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+        
+        if (data.files && data.files['kiwwij_hub_save.json']) {
+            const save = JSON.parse(data.files['kiwwij_hub_save.json'].content);
+            
+            const localTime = parseInt(localStorage.getItem('hub_time_spent'), 10) || 0;
+            if (save.hub_time_spent && save.hub_time_spent > localTime) {
+                localStorage.setItem('hub_time_spent', save.hub_time_spent);
+            }
+            
+            if (save.daily_streak) {
+                const localStreak = JSON.parse(localStorage.getItem('daily_streak')) || { count: 0, best: 0, lastVisit: 0 };
+                const cloudStreak = save.daily_streak;
+                
+                const mergedStreak = {
+                    count: (localStreak.lastVisit >= cloudStreak.lastVisit) 
+                        ? Math.max(localStreak.count, cloudStreak.count) 
+                        : cloudStreak.count,
+                    best: Math.max(localStreak.best || 0, cloudStreak.best || 0),
+                    lastVisit: Math.max(localStreak.lastVisit || 0, cloudStreak.lastVisit || 0)
+                };
+                localStorage.setItem('daily_streak', JSON.stringify(mergedStreak));
+            }
+            
+            if (Array.isArray(save.unlocked_achievements)) {
+                const localAch = JSON.parse(localStorage.getItem('unlocked_achievements')) || [];
+                const mergedAch = [...new Set([...localAch, ...save.unlocked_achievements])];
+                localStorage.setItem('unlocked_achievements', JSON.stringify(mergedAch));
+            }
+            
+            if (Array.isArray(save.opened_projects)) {
+                const localOpened = JSON.parse(localStorage.getItem('opened_projects')) || [];
+                const mergedOpened = [...new Set([...localOpened, ...save.opened_projects])];
+                localStorage.setItem('opened_projects', JSON.stringify(mergedOpened));
+            }
+            
+            if (Array.isArray(save.pinned_projects)) {
+                localStorage.setItem('pinned_projects', JSON.stringify(save.pinned_projects));
+            }
+            if (save.theme) {
+                localStorage.setItem('theme', save.theme);
+                document.documentElement.setAttribute('data-theme', save.theme === 'dark' ? 'dark' : null);
+            }
+            if (save.show_dates) {
+                localStorage.setItem('show_dates', save.show_dates);
+            }
+        }
+        updateSyncStatus('saved');
+    } catch (err) {
+        console.error('GitHub load error:', err);
+        updateSyncStatus('error', err.message);
+    }
+}
