@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="kiwwij">
+  <meta name="description" content="Веб-инструмент для преобразования видео в цветной ASCII-арт в реальном времени с параллельным сравнением оригинала и результата.">
+  <meta property="og:title" content="ASCII Video Studio — сравнение видео и ASCII-арта">
+  <meta property="og:description" content="Конвертация видео в цветные ASCII-символы прямо в браузере с гибкими настройками чёткости, палитры и частоты кадров.">
+  <meta property="og:type" content="website">
+  <title>ASCII Video Studio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23161923'/%3E%3Crect x='6' y='6' width='52' height='52' rx='12' fill='none' stroke='%237c8cf8' stroke-width='3'/%3E%3Ctext x='32' y='41' font-family='monospace' font-size='28' font-weight='700' fill='%237c8cf8' text-anchor='middle'%3E%23%3E%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/ascii-video.css">
+  <script src="../js/ascii-video.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon"><i class="bx bx-terminal"></i></span>
+        <div class="brand-text">
+          <h1>ASCII Video Studio</h1>
+          <p>Сравнение оригинала и цветного ASCII в реальном времени</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <label class="btn btn-primary" for="videoInput" data-tooltip="Выбрать видеофайл с устройства (MP4, WebM, MOV)">
+          <i class="bx bx-upload"></i>
+          <span>Загрузить видео</span>
+        </label>
+        <input type="file" id="videoInput" accept="video/*" hidden>
+
+        <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Справка" data-tooltip="Справка и горячие клавиши">
+          <i class="bx bx-help-circle"></i>
+        </button>
+
+        <button type="button" class="btn btn-icon" id="themeToggle" aria-label="Переключить тему" data-tooltip="Переключить светлую и тёмную тему">
+          <i class="bx bx-sun" id="themeIcon"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="compare-grid" id="dropZone">
+        <article class="stage-card">
+          <div class="stage-header">
+            <div class="stage-title">
+              <i class="bx bx-film"></i>
+              <span>Оригинал</span>
+            </div>
+            <span class="badge" id="videoMetaBadge" data-tooltip="Разрешение исходного видео">Нет файла</span>
+          </div>
+
+          <div class="media-frame" id="originalFrame">
+            <video id="sourceVideo" playsinline preload="metadata"></video>
+
+            <div class="placeholder" id="originalPlaceholder">
+              <svg class="placeholder-svg" viewBox="0 0 120 90" fill="none" aria-hidden="true">
+                <rect x="8" y="14" width="104" height="62" rx="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 5"/>
+                <polygon points="52,34 74,45 52,56" fill="currentColor" opacity="0.75"/>
+                <circle cx="24" cy="26" r="3" fill="currentColor" opacity="0.4"/>
+                <circle cx="34" cy="26" r="3" fill="currentColor" opacity="0.4"/>
+              </svg>
+              <strong>Перетащите видео сюда</strong>
+              <span>или нажмите «Загрузить видео» в шапке</span>
+            </div>
+
+            <div class="loader-overlay hidden" id="videoLoader">
+              <i class="bx bx-loader-alt bx-spin"></i>
+              <span>Подготовка видео…</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="stage-card">
+          <div class="stage-header">
+            <div class="stage-title">
+              <i class="bx bx-code-block"></i>
+              <span>ASCII-результат</span>
+            </div>
+            <div class="stage-badges">
+              <span class="badge" id="gridMetaBadge" data-tooltip="Размер сетки символов (столбцы × строки)">—</span>
+              <span class="badge badge-accent" id="fpsBadge" data-tooltip="Текущая скорость отрисовки кадров в секунду">0 FPS</span>
+            </div>
+          </div>
+
+          <div class="media-frame ascii-frame" id="asciiFrame">
+            <canvas id="asciiCanvas"></canvas>
+
+            <div class="placeholder" id="asciiPlaceholder">
+              <svg class="placeholder-svg" viewBox="0 0 120 90" fill="none" aria-hidden="true">
+                <rect x="8" y="14" width="104" height="62" rx="10" stroke="currentColor" stroke-width="2.5"/>
+                <text x="60" y="38" font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.75">@%#*+=-:.</text>
+                <text x="60" y="53" font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.55">#*+=-:.@%</text>
+                <text x="60" y="68" font-family="JetBrains Mono, monospace" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.35">=-:.@%#*+</text>
+              </svg>
+              <strong>Здесь появится ASCII-видео</strong>
+              <span>Обработка идёт локально, без отправки на сервер</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="playback-bar" aria-label="Управление воспроизведением">
+        <button type="button" class="btn btn-icon" id="playPauseBtn" disabled aria-label="Воспроизвести или поставить на паузу" data-tooltip="Воспроизвести / Пауза (Пробел)">
+          <i class="bx bx-play" id="playPauseIcon"></i>
+        </button>
+
+        <span class="time-label" id="currentTimeLabel">00:00</span>
+
+        <input type="range" id="seekBar" class="seek-slider" min="0" max="100" step="0.05" value="0" disabled data-tooltip="Перемотка видео">
+
+        <span class="time-label" id="durationLabel">00:00</span>
+
+        <button type="button" class="btn btn-icon" id="muteBtn" disabled aria-label="Звук" data-tooltip="Включить или выключить звук (M)">
+          <i class="bx bx-volume-full" id="muteIcon"></i>
+        </button>
+
+        <select id="speedSelect" class="compact-select" disabled data-tooltip="Скорость воспроизведения">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="1.5">1.5×</option>
+          <option value="2">2×</option>
+        </select>
+
+        <div class="playback-export">
+          <button type="button" class="btn btn-secondary" id="snapshotBtn" disabled data-tooltip="Сохранить текущий ASCII-кадр как изображение PNG (S)">
+            <i class="bx bx-camera"></i>
+            <span>PNG</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="copyTextBtn" disabled data-tooltip="Скопировать текущий ASCII-кадр в виде текста">
+            <i class="bx bx-copy"></i>
+            <span>Текст</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="controls-panel" aria-label="Настройки ASCII">
+        <div class="control-item" data-tooltip="Количество символов по ширине: выше значение — выше детализация, но больше нагрузка">
+          <div class="control-head">
+            <label for="colsRange"><i class="bx bx-grid-alt"></i> Чёткость</label>
+            <span class="control-val" id="colsValue">100</span>
+          </div>
+          <input type="range" id="colsRange" min="40" max="180" step="4" value="100">
+        </div>
+
+        <div class="control-item" data-tooltip="Усиление разницы между тёмными и светлыми участками кадра">
+          <div class="control-head">
+            <label for="contrastRange"><i class="bx bx-adjust"></i> Контраст</label>
+            <span class="control-val" id="contrastValue">1.15</span>
+          </div>
+          <input type="range" id="contrastRange" min="0.5" max="2.2" step="0.05" value="1.15">
+        </div>
+
+        <div class="control-item" data-tooltip="Ограничение частоты кадров для экономии ресурсов браузера">
+          <div class="control-head">
+            <label for="fpsSelect"><i class="bx bx-tachometer"></i> Лимит FPS</label>
+          </div>
+          <select id="fpsSelect">
+            <option value="15">15 FPS (экономный)</option>
+            <option value="24">24 FPS (кино)</option>
+            <option value="30" selected>30 FPS (оптимально)</option>
+            <option value="60">60 FPS (максимум)</option>
+          </select>
+        </div>
+
+        <div class="control-item" data-tooltip="Цветовой режим символов">
+          <div class="control-head">
+            <label for="colorModeSelect"><i class="bx bx-palette"></i> Палитра</label>
+          </div>
+          <select id="colorModeSelect">
+            <option value="color" selected>Полный цвет</option>
+            <option value="vibrant">Насыщенный цвет</option>
+            <option value="grayscale">Чёрно-белый</option>
+            <option value="matrix">Зелёная матрица</option>
+            <option value="mono">Монохромный акцент</option>
+          </select>
+        </div>
+
+        <div class="control-item" data-tooltip="Набор символов от самых тёмных к самым светлым">
+          <div class="control-head">
+            <label for="charsetSelect"><i class="bx bx-font"></i> Символы</label>
+          </div>
+          <select id="charsetSelect">
+            <option value="standard" selected>Стандартный (@%#*+=-:.)</option>
+            <option value="detailed">Детальный (расширенный)</option>
+            <option value="blocks">Блочный (█▓▒░)</option>
+            <option value="minimal">Минимализм (#+-. )</option>
+            <option value="binary">Двоичный (10 )</option>
+          </select>
+        </div>
+
+        <div class="control-item control-toggles">
+          <button type="button" class="toggle-chip" id="invertBtn" aria-pressed="false" data-tooltip="Поменять местами символы для тёмных и светлых областей">
+            <i class="bx bx-transfer"></i>
+            <span>Инверсия</span>
+          </button>
+
+          <button type="button" class="toggle-chip" id="canvasBgBtn" aria-pressed="false" data-tooltip="Переключить тёмный или светлый фон под ASCII-сеткой">
+            <i class="bx bx-paint-roll"></i>
+            <span id="canvasBgLabel">Тёмный фон</span>
+          </button>
+
+          <button type="button" class="toggle-chip" id="resetBtn" data-tooltip="Вернуть все параметры рендера к исходным значениям">
+            <i class="bx bx-reset"></i>
+            <span>Сброс</span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Создано kiwwij</span>
+      <span>Всё обрабатывается локально в вашем браузере</span>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop hidden" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="helpModalTitle"><i class="bx bx-info-circle"></i> Справка и управление</h2>
+        <button type="button" class="btn btn-icon" id="closeHelpBtn" aria-label="Закрыть окно" data-tooltip="Закрыть (Esc)">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Инструмент считывает кадры видео на уменьшенном скрытом холсте и переводит каждый пиксель в символ по яркости и цвету. Это снижает нагрузку на процессор и позволяет сравнивать оригинал и результат синхронно.</p>
+        <ul class="shortcuts-list">
+          <li><kbd>Пробел</kbd><span>Воспроизведение или пауза</span></li>
+          <li><kbd>←</kbd> / <kbd>→</kbd><span>Перемотка на 5 секунд назад или вперёд</span></li>
+          <li><kbd>M</kbd><span>Включить или выключить звук</span></li>
+          <li><kbd>S</kbd><span>Сохранить снимок ASCII-кадра в PNG</span></li>
+          <li><kbd>Esc</kbd><span>Закрыть всплывающее окно</span></li>
+        </ul>
+        <p class="modal-tip">Совет: если видео высокого разрешения притормаживает, уменьшите «Чёткость» до 80–100 или выберите лимит 24 FPS.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

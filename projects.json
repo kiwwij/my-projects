@@ -658,6 +658,13 @@
     "url": "https://github.com/kiwwij/steam-auto-achiever",
     "date": "2026-11-11"
   },
+  "ascii-video.html": {
+    "image": "░",
+    "description": "ASCII video generator.",
+    "stack": ["html", "css", "js", "github"],
+    "url": "",
+    "date": "2026-11-23"
+  },
   ".html": {
     "image": "",
     "description": "",
